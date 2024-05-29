@@ -36,7 +36,8 @@
         "url": "https://github.com/StartBootstrap/startbootstrap-one-page-wonder.git"
     },
     "dependencies": {
-        "bootstrap": "5.2.3"
+        "bootstrap": "5.2.3",
+        "startbootstrap-one-page-wonder": "^6.0.6"
     },
     "devDependencies": {
         "autoprefixer": "10.4.14",

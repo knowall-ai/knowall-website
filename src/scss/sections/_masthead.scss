@@ -7,9 +7,10 @@ header.masthead {
     overflow: hidden;
     padding-top: calc(7rem + 72px);
     padding-bottom: 7rem;
-    background: linear-gradient(0deg, $secondary 0%, $primary 100%);
+    //background: linear-gradient(0deg, $secondary 0%, $primary 100%);
+    background-image: url('/assets/img/header-image_02.png');
     background-repeat: no-repeat;
-    background-position: center center;
+    background-position: bottom right;
     background-attachment: scroll;
     background-size: cover;
 
@@ -18,11 +19,13 @@ header.masthead {
         position: relative;
 
         .masthead-heading {
-            font-size: 4rem;
+            font-size: 3rem;
+            //padding-bottom: 75px;
         }
 
         .masthead-subheading {
             font-size: 2rem;
+            //padding-top: 75px;
         }
     }
 
@@ -31,6 +34,7 @@ header.masthead {
         position: absolute;
         border-radius: 100%;
         background: linear-gradient(0deg, $primary 0%, $secondary 100%);
+        opacity: 0.5;
     }
 
     .bg-circle-1 {
@@ -51,7 +55,7 @@ header.masthead {
         height: 20rem;
         width: 20rem;
         bottom: -10rem;
-        right: 5%;
+        right: 15%;
     }
 
     .bg-circle-4 {
@@ -64,12 +68,16 @@ header.masthead {
 
 @media (min-width: 992px) {
     header.masthead {
-        padding-top: calc(10rem + 55px);
+        padding-top: calc(10rem + 0px);
         padding-bottom: 10rem;
 
         .masthead-content {
             .masthead-heading {
                 font-size: 6rem;
+                .masthead-logo {
+                    width: 100px;
+                    height: 100px;
+                }
             }
 
             .masthead-subheading {
