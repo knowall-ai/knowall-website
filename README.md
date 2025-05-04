@@ -1,69 +1,106 @@
-# [Start Bootstrap - One Page Wonder](https://startbootstrap.com/theme/one-page-wonder/)
+# KnowAll.ai Website
 
-[One Page Wonder](https://startbootstrap.com/theme/one-page-wonder/) is a basic one page template for [Bootstrap](https://getbootstrap.com/) created by [Start Bootstrap](https://startbootstrap.com/).
+This repository contains the code for the KnowAll.ai website, an AI consultancy specializing in agent development, Microsoft Copilots, and Bitcoin-powered value-for-value transactions.
 
-## Preview
+## Features
 
-[![One Page Wonder Preview](https://assets.startbootstrap.com/img/screenshots/themes/one-page-wonder.png)](https://startbootstrap.github.io/startbootstrap-one-page-wonder/)
+- Modern, responsive design with dark mode
+- Interactive AI chat assistant powered by OpenAI's GPT-4o
+- Speech recognition for voice input in the chat interface
+- Sections highlighting KnowAll.ai's services and projects
+- Information about Zapp.ie, an open-source platform for Bitcoin microtransactions
+- Details about Microsoft Copilot development and multi-agent teams
 
-**[View Live Preview](https://startbootstrap.github.io/startbootstrap-one-page-wonder/)**
+## Technologies Used
 
-## Status
+- **Next.js**: React framework with App Router
+- **TypeScript**: For type-safe code
+- **Tailwind CSS**: For styling
+- **shadcn/ui**: Component library
+- **OpenAI API**: For the chat assistant
+- **Vercel**: For deployment
 
-[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/StartBootstrap/startbootstrap-one-page-wonder/master/LICENSE)
-[![npm version](https://img.shields.io/npm/v/startbootstrap-one-page-wonder.svg)](https://www.npmjs.com/package/startbootstrap-one-page-wonder)
+## Getting Started
 
-## Download and Installation
+### Prerequisites
 
-To begin using this template, choose one of the following options to get started:
+- Node.js 18.x or later
+- pnpm (recommended) or npm
 
-* [Download the latest release on Start Bootstrap](https://startbootstrap.com/theme/one-page-wonder/)
-* Install via npm: `npm i startbootstrap-one-page-wonder`
-* Clone the repo: `git clone https://github.com/StartBootstrap/startbootstrap-one-page-wonder.git`
-* [Fork, Clone, or Download on GitHub](https://github.com/StartBootstrap/startbootstrap-one-page-wonder)
+### Installation
 
-## Usage
+1. Clone the repository:
+   \`\`\`bash
+   git clone https://github.com/knowall-ai/website.git
+   cd website
+   \`\`\`
 
-### Basic Usage
+2. Install dependencies:
+   \`\`\`bash
+   pnpm install
+   \`\`\`
 
-After downloading, simply edit the HTML and CSS files included with `dist` directory. These are the only files you need to worry about, you can ignore everything else! To preview the changes you make to the code, you can open the `index.html` file in your web browser.
+3. Create a `.env.local` file in the root directory and add your OpenAI API key:
+   \`\`\`
+   OPENAI_API_KEY=your_openai_api_key_here
+   \`\`\`
 
-### Advanced Usage
+4. Start the development server:
+   \`\`\`bash
+   pnpm dev
+   \`\`\`
 
-Clone the source files of the theme and navigate into the theme's root directory. Run `npm install` and then run `npm start` which will open up a preview of the template in your default browser, watch for changes to core template files, and live reload the browser when changes are saved. You can view the `package.json` file to see which scripts are included.
+5. Open [http://localhost:3000](http://localhost:3000) in your browser to see the website.
 
-#### npm Scripts
+## Environment Variables
 
-* `npm run build` builds the project - this builds assets, HTML, JS, and CSS into `dist`
-* `npm run build:assets` copies the files in the `src/assets/` directory into `dist`
-* `npm run build:pug` compiles the Pug located in the `src/pug/` directory into `dist`
-* `npm run build:scripts` brings the `src/js/scripts.js` file into `dist`
-* `npm run build:scss` compiles the SCSS files located in the `src/scss/` directory into `dist`
-* `npm run clean` deletes the `dist` directory to prepare for rebuilding the project
-* `npm run start:debug` runs the project in debug mode
-* `npm start` or `npm run start` runs the project, launches a live preview in your default browser, and watches for changes made to files in `src`
+- `OPENAI_API_KEY`: Your OpenAI API key (required for the chat functionality)
 
-You must have npm installed in order to use this build environment.
+## Deployment
 
-## Bugs and Issues
+The website is deployed on Vercel. Any push to the main branch will trigger a new deployment.
 
-Have a bug or an issue with this template? [Open a new issue](https://github.com/StartBootstrap/startbootstrap-one-page-wonder/issues) here on GitHub or leave a comment on the [template overview page at Start Bootstrap](https://startbootstrap.com/theme/one-page-wonder/).
+To deploy your own instance:
 
-## About
+1. Fork this repository
+2. Create a new project on Vercel
+3. Connect your forked repository
+4. Add the required environment variables
+5. Deploy
 
-Start Bootstrap is an open source library of free Bootstrap templates and themes. All of the free templates and themes on Start Bootstrap are released under the MIT license, which means you can use them for any purpose, even for commercial projects.
+## Project Structure
 
-* <https://startbootstrap.com>
-* <https://twitter.com/SBootstrap>
+- `app/`: Next.js App Router pages and API routes
+- `components/`: Reusable React components
+- `public/`: Static assets like images
+- `types/`: TypeScript type definitions
+- `hooks/`: Custom React hooks
+- `lib/`: Utility functions
 
-Start Bootstrap was created by and is maintained by **[David Miller](https://davidmiller.io/)**.
+## Key Components
 
-* <https://davidmiller.io>
-* <https://twitter.com/davidmillerhere>
-* <https://github.com/davidtmiller>
+- `ConversationInterface`: Interactive chat interface with speech recognition
+- `ServiceCard`: Cards displaying KnowAll.ai's services
+- `BackgroundImage`: Component for handling background images with loading states
+- `Logo`: KnowAll.ai logo with dark mode support
+- `Header` and `Footer`: Site navigation and information
 
-Start Bootstrap is based on the [Bootstrap](https://getbootstrap.com/) framework created by [Mark Otto](https://twitter.com/mdo) and [Jacob Thorton](https://twitter.com/fat).
+## Contributing
 
-## Copyright and License
+Contributions are welcome! Please feel free to submit a Pull Request.
 
-Copyright 2013-2023 Start Bootstrap LLC. Code released under the [MIT](https://github.com/StartBootstrap/startbootstrap-one-page-wonder/blob/master/LICENSE) license.
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Contact
+
+KnowAll.ai - [hello@knowall.ai](mailto:hello@knowall.ai)
+
+Project Link: [https://github.com/knowall-ai/website](https://github.com/knowall-ai/website)
