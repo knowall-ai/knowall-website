@@ -1,9 +1,9 @@
+import { OpenAI } from "openai"
 import { OpenAIStream, StreamingTextResponse } from "ai"
-import OpenAI from "openai"
 
 // Create an OpenAI API client
 const openai = new OpenAI({
-  apiKey: process.env.V0_WEBSITE_KEY,
+  apiKey: process.env.OPENAI_API_KEY,
 })
 
 export const runtime = "nodejs"
