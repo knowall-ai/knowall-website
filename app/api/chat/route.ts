@@ -2,11 +2,11 @@ import { OpenAI } from "openai";
 import { systemPrompt } from "./system-prompt";
 import { logChat } from "./logger";
 
-// Configure for static export
+// Configure for API route
 export const runtime = "nodejs";
 
-// For static export, we need to use these specific settings
-export const dynamic = 'error';
+// Changed from 'error' to 'force-dynamic' to allow API functionality in static export
+export const dynamic = 'force-dynamic';
 export const dynamicParams = false;
 export const revalidate = false;
 

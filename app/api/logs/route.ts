@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getAllChatLogs, getChatLogById } from '../chat/logger';
 
-// Configure for static export
+// Configure for API route
 export const runtime = "nodejs";
-export const dynamic = 'error';
+// Changed from 'error' to 'force-dynamic' to allow header access
+export const dynamic = 'force-dynamic';
 export const dynamicParams = false;
 export const revalidate = false;
 
