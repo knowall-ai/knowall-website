@@ -1,4 +1,5 @@
-import { Zap, Bot, Code, Github, MessageSquare } from "lucide-react"
+import { Zap, Bot, Code, Github } from "lucide-react"
+import EmailIcon from "@/components/email-icon"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import ConversationInterface from "@/components/conversation-interface"
@@ -18,15 +19,15 @@ export default function Home() {
       {/* Hero Section with AI Conversation Interface */}
       <BackgroundImage
         src="/images/green-bg.png"
-        className="flex flex-col items-center justify-center px-4 py-20 md:py-32 overflow-hidden"
+        className="flex flex-col items-center justify-center px-4 py-10 md:py-16 overflow-hidden"
       >
-        <div className="absolute inset-0 bg-black/30"></div>
+        <div className="absolute inset-x-0 top-0 bottom-0 bg-black/30" style={{ height: 'auto' }}></div>
 
         <div className="container relative z-10 max-w-6xl mx-auto">
           <div className="flex flex-col lg:flex-row items-center gap-12">
             <div className="flex-1 text-white">
               <h1 className="text-4xl md:text-6xl font-bold mb-6">
-                Knowledge is <span className="text-lime-300">processing power</span>
+                Intelligence is <span className="text-lime-300">processing power</span>
               </h1>
               <p className="text-xl md:text-2xl mb-8 text-white/90">
                 We build intelligent AI systems that transform businesses through custom Microsoft Copilots, multi-agent
@@ -224,7 +225,7 @@ export default function Home() {
 
             <div className="flex flex-col md:flex-row gap-4 justify-center">
               <Button className="bg-lime-600 text-white hover:bg-lime-700">
-                Email Us <MessageSquare className="ml-2 h-4 w-4" />
+                Email <EmailIcon className="ml-2 h-4 w-4" />
               </Button>
               <WhatsAppButton darkMode={true} />
             </div>

@@ -1,0 +1,186 @@
+[
+  {
+    "id": "1746892881691",
+    "timestamp": "2025-05-10T16:01:21.691Z",
+    "userMessage": "hi",
+    "assistantResponse": "Hello! How can I assist you today?",
+    "userIp": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0"
+  },
+  {
+    "id": "1746892887369",
+    "timestamp": "2025-05-10T16:01:27.369Z",
+    "userMessage": "hi",
+    "assistantResponse": "Hello! How can I assist you today?",
+    "userIp": "127.0.0.1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Windsurf/1.99.1 Chrome/132.0.6834.210 Electron/34.3.2 Safari/537.36"
+  },
+  {
+    "id": "1746893173325",
+    "timestamp": "2025-05-10T16:06:13.325Z",
+    "userMessage": "Do you like Monero",
+    "assistantResponse": "KnowAll.ai works exclusively with Bitcoin and does not support or recommend other cryptocurrencies, including Monero. We consider most other cryptocurrencies to be scams.",
+    "userIp": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0"
+  },
+  {
+    "id": "1746893295278",
+    "timestamp": "2025-05-10T16:08:15.278Z",
+    "userMessage": "I'd like a custom copilot built for our business.",
+    "assistantResponse": "KnowAll.ai specializes in Microsoft Copilot Development. We create tailored Copilots for Microsoft platforms to enhance productivity and cater to your specific business needs. Please contact us for more details on how we can assist you.",
+    "userIp": "127.0.0.1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Windsurf/1.99.1 Chrome/132.0.6834.210 Electron/34.3.2 Safari/537.36"
+  },
+  {
+    "id": "1746893383472",
+    "timestamp": "2025-05-10T16:09:43.472Z",
+    "userMessage": "How can I contact you?",
+    "assistantResponse": "You can contact KnowAll.ai via email at hello@knowall.ai or through WhatsApp at +44 7968847178. Our team spans multiple countries, so we can accommodate various time zones.",
+    "userIp": "127.0.0.1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Windsurf/1.99.1 Chrome/132.0.6834.210 Electron/34.3.2 Safari/537.36"
+  },
+  {
+    "id": "1746893675080",
+    "timestamp": "2025-05-10T16:14:35.080Z",
+    "userMessage": "How may I contact you?",
+    "assistantResponse": "You can contact KnowAll.ai via email at [hello@knowall.ai](mailto:hello@knowall.ai) or on WhatsApp at [+44 7968847178](https://wa.me/447968847178). Feel free to reach out to discuss your needs!",
+    "userIp": "127.0.0.1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Windsurf/1.99.1 Chrome/132.0.6834.210 Electron/34.3.2 Safari/537.36"
+  },
+  {
+    "id": "1746893715034",
+    "timestamp": "2025-05-10T16:15:15.034Z",
+    "userMessage": "I'd like to have a custom bot built for us.",
+    "assistantResponse": "Great! Could you provide more details about your industry, specific use cases, or current challenges? This information will help us tailor the AI agent to fit your needs effectively.",
+    "userIp": "127.0.0.1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Windsurf/1.99.1 Chrome/132.0.6834.210 Electron/34.3.2 Safari/537.36"
+  },
+  {
+    "id": "1746893790247",
+    "timestamp": "2025-05-10T16:16:30.247Z",
+    "userMessage": "The bot is for understanding requirements, and I want to add it to Teams meetings and turn conversations into backlogs.",
+    "assistantResponse": "Thank you for the details. To better assist, could you specify your industry and any particular features you'd like the bot to have, such as integration with other tools or platforms you're using? This will help us craft a solution that aligns with your goals.",
+    "userIp": "127.0.0.1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Windsurf/1.99.1 Chrome/132.0.6834.210 Electron/34.3.2 Safari/537.36"
+  },
+  {
+    "id": "1746893869329",
+    "timestamp": "2025-05-10T16:17:49.329Z",
+    "userMessage": "We are a healthcare provider. We would like it to integrate to Microsoft Teams and DevOps.",
+    "assistantResponse": "Perfect, we can develop a Microsoft Copilot that integrates with Teams and Azure DevOps, converting meeting discussions into actionable backlog items. Could you share any current challenges or specific functionalities you envision this Copilot having in your healthcare setup?",
+    "userIp": "127.0.0.1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Windsurf/1.99.1 Chrome/132.0.6834.210 Electron/34.3.2 Safari/537.36"
+  },
+  {
+    "id": "1746893917521",
+    "timestamp": "2025-05-10T16:18:37.521Z",
+    "userMessage": "We miss requirements that are mentioned. It should build extensive requirements that assist with development and testing.",
+    "assistantResponse": "Understood. We can design a Copilot to capture meeting dialogue accurately, ensuring detailed requirements documentation, and automatically create work items in Azure DevOps. This will enhance both development and testing processes. Would you like more information on our approach or a consultation to discuss further?",
+    "userIp": "127.0.0.1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Windsurf/1.99.1 Chrome/132.0.6834.210 Electron/34.3.2 Safari/537.36"
+  },
+  {
+    "id": "1746893942719",
+    "timestamp": "2025-05-10T16:19:02.719Z",
+    "userMessage": "I'd like to get in touch to find out more.",
+    "assistantResponse": "You can reach out to us via email at [hello@knowall.ai](mailto:hello@knowall.ai) or on WhatsApp at [+44 7968847178](https://wa.me/447968847178). We have team members across multiple countries and can accommodate various time zones to discuss your needs.",
+    "userIp": "127.0.0.1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Windsurf/1.99.1 Chrome/132.0.6834.210 Electron/34.3.2 Safari/537.36"
+  },
+  {
+    "id": "W07OWD5C",
+    "timestamp": "2025-05-10T16:26:41.220Z",
+    "userMessage": "I'd like to have a custom copilot",
+    "assistantResponse": "Great! Could you please share more about your industry, specific use cases, or challenges you're facing? This will help us tailor a solution to meet your needs.",
+    "userIp": "127.0.0.1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Windsurf/1.99.1 Chrome/132.0.6834.210 Electron/34.3.2 Safari/537.36"
+  },
+  {
+    "id": "SCL3A3KO",
+    "timestamp": "2025-05-10T17:06:41.472Z",
+    "userMessage": "hi",
+    "assistantResponse": "Hello! How can I assist you today?",
+    "userIp": "127.0.0.1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Windsurf/1.99.1 Chrome/132.0.6834.210 Electron/34.3.2 Safari/537.36"
+  },
+  {
+    "id": "7IDLBGU7",
+    "timestamp": "2025-05-10T17:06:44.051Z",
+    "userMessage": "hi",
+    "assistantResponse": "Hello! How can I assist you today?",
+    "userIp": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0"
+  },
+  {
+    "id": "SCL3A3KO",
+    "timestamp": "2025-05-10T17:07:00.924Z",
+    "userMessage": "How do I contact you?",
+    "assistantResponse": "You can contact KnowAll.ai via email at [hello@knowall.ai?subject=Conversation ID: SCL3A3KO](mailto:hello@knowall.ai?subject=Conversation%20ID:%20SCL3A3KO) or WhatsApp at [+44 7968847178](https://wa.me/447968847178). Your conversation ID is SCL3A3KO, so you don't need to repeat everything—just mention this ID when reaching out.",
+    "userIp": "127.0.0.1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Windsurf/1.99.1 Chrome/132.0.6834.210 Electron/34.3.2 Safari/537.36"
+  },
+  {
+    "id": "7IDLBGU7",
+    "timestamp": "2025-05-10T17:07:20.610Z",
+    "userMessage": "How can I contact you?",
+    "assistantResponse": "You can contact KnowAll.ai via the following methods:\n\n- **Email**: [hello@knowall.ai?subject=Conversation ID: 7IDLBGU7](mailto:hello@knowall.ai?subject=Conversation%20ID:%207IDLBGU7)\n- **WhatsApp**: [+44 7968847178](https://wa.me/447968847178)\n\nYour conversation ID is 7IDLBGU7. You don't need to repeat the entire conversation when contacting us; simply quote your conversation ID. Also, feel free to add more information to this chat if you wish.",
+    "userIp": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0"
+  },
+  {
+    "id": "YI1LDX90",
+    "timestamp": "2025-05-10T17:14:59.043Z",
+    "userMessage": "Where are you based?",
+    "assistantResponse": "KnowAll.ai has office locations in Cambridge, UK, and El Salvador.",
+    "userIp": "127.0.0.1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Windsurf/1.99.1 Chrome/132.0.6834.210 Electron/34.3.2 Safari/537.36"
+  },
+  {
+    "id": "T73ZKAFE",
+    "timestamp": "2025-05-10T17:16:30.208Z",
+    "userMessage": "Where are you based?",
+    "assistantResponse": "KnowAll.ai doesn't have dedicated offices. Team members work out of Cambridge (UK), El Salvador, Poland, and Ukraine.",
+    "userIp": "127.0.0.1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Windsurf/1.99.1 Chrome/132.0.6834.210 Electron/34.3.2 Safari/537.36"
+  },
+  {
+    "id": "FILWMERQ",
+    "timestamp": "2025-05-10T17:43:14.161Z",
+    "userMessage": "What is T-Minus-15?",
+    "assistantResponse": "T-Minus-15 is an open-source framework developed by KnowAll.ai, available on [GitHub](http://www.github.com/bengweeks/t-minus-15), designed to help businesses deploy and customize AI solutions. It enables seamless integration and operation of AI agents, particularly convenient for those using Microsoft platforms and Bitcoin systems.",
+    "userIp": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0"
+  },
+  {
+    "id": "FILWMERQ",
+    "timestamp": "2025-05-10T17:43:43.121Z",
+    "userMessage": "What services do you do?",
+    "assistantResponse": "KnowAll.ai offers the following services:\n\n1. **AI Agent Development** - Custom AI agents for businesses.\n2. **Microsoft Copilot Development** - Specialized Copilots for Microsoft platforms.\n3. **Bitcoin Integration** - Agent-to-agent transaction systems using Bitcoin.\n4. **AI Consultancy** - Expert advice on AI implementation strategies.\n5. **T-Minus-15 Implementation** - Deploy and customize the T-Minus-15 framework. \n\nWould you like more information on any of these services?",
+    "userIp": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0"
+  },
+  {
+    "id": "FILWMERQ",
+    "timestamp": "2025-05-10T17:44:42.511Z",
+    "userMessage": "I want to have a custom copilot",
+    "assistantResponse": "Great! To tailor a Copilot solution for you, could you please provide some details?\n\n1. **Industry**: What industry are you in?\n2. **Use Case**: What specific tasks would you like the Copilot to assist with?\n3. **Challenges**: Are there any particular challenges you aim to address?\n4. **Goals**: What do you hope to achieve with this solution? \n\nYour information will help us design a more customized proposal.",
+    "userIp": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0"
+  },
+  {
+    "id": "FILWMERQ",
+    "timestamp": "2025-05-10T17:45:09.823Z",
+    "userMessage": "We are a healthcare provider. We want it to build requirements for IT systems",
+    "assistantResponse": "Thank you for the details. To further customize your Copilot solution, could you:\n\n1. Specify which IT systems or processes you'd like it to assist with?\n2. Describe any existing challenges you have with these systems?\n3. Highlight key functionalities or outcomes you're aiming for with the Copilot?\n\nThis information will help us refine the solution.",
+    "userIp": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0"
+  },
+  {
+    "id": "FILWMERQ",
+    "timestamp": "2025-05-10T17:45:20.406Z",
+    "userMessage": "How do I contact you?",
+    "assistantResponse": "You can contact KnowAll.ai via the following methods:\n\n- **Email**: [hello@knowall.ai](mailto:hello@knowall.ai?subject=Conversation%20ID:%20FILWMERQ)\n- **WhatsApp**: [+44 7968847178](https://wa.me/447968847178)\n\nPlease include your conversation ID *FILWMERQ* in the subject line, so you don't need to repeat the entire conversation. Feel free to continue this chat if you wish to add more information before reaching out.",
+    "userIp": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0"
+  }
+]

@@ -1,6 +1,14 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useRef, useCallback } from "react"
+
+// Define the window augmentation for TypeScript
+declare global {
+  interface Window {
+    SpeechRecognition?: typeof SpeechRecognition
+    webkitSpeechRecognition?: typeof SpeechRecognition
+  }
+}
 
 interface SpeechRecognitionProps {
   isRecording: boolean
@@ -8,70 +16,103 @@ interface SpeechRecognitionProps {
   onEnd: () => void
 }
 
-export default function useSpeechRecognition({ isRecording, onResult, onEnd }: SpeechRecognitionProps) {
-  const recognitionRef = useRef<any>(null)
-  const [isSupported, setIsSupported] = useState(false)
-
-  // Initialize speech recognition only once
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
-
+// Create a class-based wrapper for the Web Speech API
+class SpeechRecognitionService {
+  recognition: any = null;
+  isSupported: boolean = false;
+  
+  constructor() {
+    if (typeof window !== 'undefined') {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
       if (SpeechRecognition) {
-        const recognitionInstance = new SpeechRecognition()
-        recognitionInstance.continuous = true
-        recognitionInstance.interimResults = true
-        recognitionInstance.lang = "en-US"
-
-        recognitionInstance.onresult = (event: any) => {
-          const transcript = Array.from(event.results)
-            .map((result: any) => result[0])
-            .map((result) => result.transcript)
-            .join("")
-
-          onResult(transcript)
-        }
-
-        recognitionInstance.onend = () => {
-          onEnd()
-        }
-
-        recognitionRef.current = recognitionInstance
-        setIsSupported(true)
+        this.isSupported = true;
+        this.recognition = new SpeechRecognition();
+        this.recognition.continuous = true;
+        this.recognition.interimResults = true;
+        this.recognition.lang = 'en-US';
       }
     }
+  }
+  
+  start(onResult: (transcript: string) => void, onEnd: () => void) {
+    if (!this.recognition) return false;
+    
+    this.recognition.onresult = (event: any) => {
+      const transcript = Array.from(event.results)
+        .map((result: any) => result[0])
+        .map((result) => result.transcript)
+        .join("");
+      
+      onResult(transcript);
+    };
+    
+    this.recognition.onend = onEnd;
+    
+    try {
+      this.recognition.start();
+      return true;
+    } catch (error) {
+      console.log("Recognition failed to start", error);
+      return false;
+    }
+  }
+  
+  stop() {
+    if (!this.recognition) return;
+    
+    try {
+      this.recognition.stop();
+    } catch (error) {
+      console.log("Recognition failed to stop", error);
+    }
+  }
+}
 
+// Create a singleton instance
+let speechRecognitionService: SpeechRecognitionService | null = null;
+
+// This function ensures we only create one instance
+function getSpeechRecognitionService() {
+  if (!speechRecognitionService && typeof window !== 'undefined') {
+    speechRecognitionService = new SpeechRecognitionService();
+  }
+  return speechRecognitionService;
+}
+
+export default function useSpeechRecognition({ isRecording, onResult, onEnd }: SpeechRecognitionProps) {
+  const [isSupported, setIsSupported] = useState(false);
+  const serviceRef = useRef<SpeechRecognitionService | null>(null);
+  
+  // Memoize callbacks to avoid unnecessary re-renders
+  const handleResult = useCallback(onResult, [onResult]);
+  const handleEnd = useCallback(onEnd, [onEnd]);
+  
+  // Initialize the service once on mount
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
+    const service = getSpeechRecognitionService();
+    serviceRef.current = service;
+    setIsSupported(!!service?.isSupported);
+    
     return () => {
-      if (recognitionRef.current) {
-        try {
-          recognitionRef.current.stop()
-        } catch (error) {
-          // Ignore errors when stopping
-        }
+      if (serviceRef.current) {
+        serviceRef.current.stop();
       }
-    }
-  }, []) // Empty dependency array to run only once
-
+    };
+  }, []);
+  
   // Handle recording state changes
   useEffect(() => {
-    if (!recognitionRef.current || !isSupported) return
-
+    const service = serviceRef.current;
+    if (!service || !isSupported) return;
+    
     if (isRecording) {
-      try {
-        recognitionRef.current.start()
-      } catch (error) {
-        // Recognition might already be started
-        console.log("Recognition already started")
-      }
+      service.start(handleResult, handleEnd);
     } else {
-      try {
-        recognitionRef.current.stop()
-      } catch (error) {
-        // Recognition might not be started
-        console.log("Recognition not started")
-      }
+      service.stop();
     }
-  }, [isRecording, isSupported])
-
-  return isSupported
+  }, [isRecording, isSupported, handleResult, handleEnd]);
+  
+  return isSupported;
 }
