@@ -51,6 +51,16 @@ jobs:
       env:
         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         ADMIN_API_KEY: ${{ secrets.ADMIN_API_KEY || 'default-admin-key' }}
+        
+    - name: Create deployment package
+      run: |
+        # Create a production-ready package without node_modules
+        mkdir -p deploy
+        cp -r .next deploy/
+        cp -r public deploy/
+        cp package.json pnpm-lock.yaml server.js web.config deploy/
+        # Create a minimal package.json for production
+        node -e "const pkg=require('./package.json'); delete pkg.devDependencies; require('fs').writeFileSync('deploy/package.json', JSON.stringify(pkg, null, 2));"
 
     - name: Login to Azure
       uses: azure/login@v1
@@ -67,4 +77,4 @@ jobs:
       uses: azure/webapps-deploy@v2
       with:
         app-name: ${{ env.AZURE_WEBAPP_NAME }}
-        package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+        package: ./deploy
