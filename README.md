@@ -25,7 +25,6 @@ This repository contains the code for the KnowAll.ai website, an AI consultancy 
 ### Prerequisites
 
 - Node.js 22.x or later
-- pnpm (automatically enabled via Corepack in Node.js 22+)
 
 ### Installation
 
@@ -37,7 +36,7 @@ This repository contains the code for the KnowAll.ai website, an AI consultancy 
 
 2. Install dependencies:
    ```bash
-   pnpm install
+   npm install
    ```
 
 3. Create a `.env.local` file in the root directory and add your OpenAI API key:
@@ -47,7 +46,7 @@ This repository contains the code for the KnowAll.ai website, an AI consultancy 
 
 4. Start the development server:
    ```bash
-   pnpm dev
+   npm run dev
    ```
 
 5. Open [http://localhost:3000](http://localhost:3000) in your browser to see the website.
@@ -76,24 +75,27 @@ If you're experiencing issues with the chat functionality not responding:
 
 ## Deployment
 
-The website is deployed on Azure Static Web Apps. Any push to the master branch will trigger a new deployment via GitHub Actions.
+The website is deployed on Azure App Service. Any push to the master branch will trigger a new deployment via GitHub Actions.
 
-### Azure Static Web Apps Configuration
+### Azure App Service Configuration
 
 The deployment uses the following environment variables that must be set in the GitHub repository secrets:
 
-- `AZURE_STATIC_WEB_APPS_API_TOKEN`: The deployment token for Azure Static Web Apps
+- `AZURE_CREDENTIALS`: The Azure service principal credentials for deployment
+- `AZURE_RESOURCE_GROUP`: The name of the Azure resource group
 - `OPENAI_API_KEY`: Your OpenAI API key for the chat functionality
+- `ADMIN_API_KEY`: Your admin API key for accessing the chat logs in production
 
 These secrets are configured in the GitHub repository under Settings > Environments > Production - Azure.
 
-The GitHub Actions workflow (`.github/workflows/azure-static-web-apps.yml`) configures these environment variables for the deployed application.
+The GitHub Actions workflow (`.github/workflows/azure-app-service.yml`) configures these environment variables for the deployed application.
 
 ### Environment Variables
 
 The following environment variables need to be set in the "Production - Azure" GitHub environment:
 
-- `AZURE_STATIC_WEB_APPS_API_TOKEN`: The deployment token for Azure Static Web Apps
+- `AZURE_CREDENTIALS`: The Azure service principal credentials for deployment
+- `AZURE_RESOURCE_GROUP`: The name of the Azure resource group
 - `OPENAI_API_KEY`: Your OpenAI API key for the chat functionality
 - `ADMIN_API_KEY`: Your admin API key for accessing the chat logs in production
 

@@ -20,42 +20,25 @@ jobs:
         with:
           node-version: '22.x'
 
-      - name: Install PNPM
-        uses: pnpm/action-setup@v2
-        with:
-          version: 8
-          run_install: false
-
-      - name: Get pnpm store directory
-        shell: bash
-        run: |
-          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
-        id: pnpm-cache
-
-      - name: Setup pnpm cache
+      - name: Setup Node.js cache
         uses: actions/cache@v3
         with:
-          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
-            ${{ runner.os }}-pnpm-store-
+            ${{ runner.os }}-node-
 
       - name: Install dependencies
-        run: pnpm install
+        run: npm install
 
       - name: Build Next.js app
-        run: pnpm build
+        run: npm run build
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           ADMIN_API_KEY: ${{ secrets.ADMIN_API_KEY || 'default-admin-key' }}
 
-      - name: Prepare deployment package
-        run: |
-          # Create a minimal package.json for production
-          node -e "const pkg=require('./package.json'); delete pkg.devDependencies; require('fs').writeFileSync('package.json.tmp', JSON.stringify(pkg, null, 2));"
-          mv package.json.tmp package.json
-          # Include node_modules in the deployment package
-          zip -r release.zip ./* -x "node_modules/.pnpm/*"
+      - name: Zip artifact for deployment
+        run: zip release.zip ./* -r -x "node_modules/*"
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
@@ -99,15 +82,6 @@ jobs:
             # Set Node.js version using the correct parameter
             az webapp config set --name knowall-website --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} --linux-fx-version "NODE|22-lts"
 
-      - name: Configure startup command
-        uses: azure/CLI@v1
-        with:
-          inlineScript: |
-            # Set a simple startup command since node_modules is included
-            echo "Setting startup command to use node directly"
-            az webapp config appsettings set --name knowall-website --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} --settings WEBSITE_RUN_FROM_PACKAGE=0
-            az webapp config set --name knowall-website --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} --generic-configurations "{\"appCommandLine\":\"cd /home/site/wwwroot && node server.js\"}"
-
       - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
@@ -116,12 +90,10 @@ jobs:
           slot-name: 'Production'
           package: .
           
-      - name: 'Install dependencies on the server'
+      - name: 'Restart web app'
         uses: azure/CLI@v1
         with:
           inlineScript: |
-            # Use the Azure App Service Kudu REST API to run a custom command
+            # Restart the web app to ensure all changes are applied
             az webapp restart --name knowall-website --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }}
-            echo "Restarting the web app to ensure all changes are applied"
-            sleep 30 # Wait for the app to restart
             echo "Web app restarted, deployment complete"
