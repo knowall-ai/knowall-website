@@ -15,18 +15,23 @@ const hasNextModule = fs.existsSync('./node_modules/next');
 if (!hasNodeModules || !hasNextModule) {
   console.log('Dependencies missing, installing...');
   try {
-    // Try to use pnpm if available, otherwise use npm
+    // First, ensure pnpm is installed globally
     try {
       execSync('pnpm --version', { stdio: 'ignore' });
-      console.log('Using pnpm to install dependencies');
-      execSync('pnpm install --production', { stdio: 'inherit' });
+      console.log('pnpm is already installed');
     } catch (e) {
-      console.log('pnpm not available, using npm instead');
-      execSync('npm install --production', { stdio: 'inherit' });
+      console.log('Installing pnpm globally...');
+      execSync('npm install -g pnpm', { stdio: 'inherit' });
+      console.log('pnpm installed successfully!');
     }
+    
+    // Use pnpm to install dependencies
+    console.log('Installing dependencies with pnpm...');
+    execSync('pnpm install', { stdio: 'inherit' });
     console.log('Dependencies installed successfully!');
   } catch (error) {
     console.error('Failed to install dependencies:', error);
+    console.error('Please ensure pnpm is properly configured.');
     process.exit(1);
   }
 }
