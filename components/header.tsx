@@ -10,7 +10,7 @@ export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   const navLinks = [
-    { name: "Home", href: "#home" },
+    { name: "Home", href: "#" },
     { name: "Services", href: "#services" },
     { name: "Zapp.ie", href: "#zapp" },
     { name: "Copilots", href: "#copilots" },
@@ -20,7 +20,7 @@ export default function Header() {
     <header className="sticky top-0 z-50 bg-gray-950/90 backdrop-blur-sm border-b border-gray-800">
       <div className="container max-w-6xl mx-auto px-4 py-3">
         <div className="flex items-center justify-between">
-          <Link href="/" className="flex items-center">
+          <Link href="#" className="flex items-center">
             <Logo darkBackground={true} className="h-12" />
           </Link>
 
