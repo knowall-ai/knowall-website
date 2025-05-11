@@ -99,6 +99,14 @@ jobs:
             # Set Node.js version using the correct parameter
             az webapp config set --name knowall-website --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} --linux-fx-version "NODE|22-lts"
 
+      - name: Configure startup command
+        uses: azure/CLI@v1
+        with:
+          inlineScript: |
+            # Install pnpm globally and use it for startup
+            echo "Setting startup command to use pnpm"
+            az webapp config set --name knowall-website --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} --startup-command "npm install -g pnpm && cd /home/site/wwwroot && pnpm start"
+
       - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
