@@ -6,9 +6,7 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  images: {
-    domains: ['ui-avatars.com'],
-  },
+  // Images configuration removed - not using external image sources
   
   // Prevent watching logs directory to avoid continuous rebuilds
   webpack: (config, { isServer }) => {

@@ -9,7 +9,12 @@ const inter = Inter({ subsets: ["latin"] })
 export const metadata: Metadata = {
   title: "KnowAll.ai - AI Consultancy & Agent Development",
   description: "AI consultancy specializing in agent development and Bitcoin-powered value-for-value transactions.",
-    generator: 'v0.dev'
+  generator: 'v0.dev',
+  icons: {
+    icon: '/favicon.ico',
+    apple: '/favicon.ico',
+    shortcut: '/favicon.ico'
+  }
 }
 
 export default function RootLayout({
