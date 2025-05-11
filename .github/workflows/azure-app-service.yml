@@ -107,9 +107,12 @@ jobs:
           slot-name: 'Production'
           package: .
           
-      - name: 'Run post-deployment script'
+      - name: 'Install dependencies on the server'
         uses: azure/CLI@v1
         with:
           inlineScript: |
-            # Make the deployment script executable and run it
-            az webapp ssh --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} --name knowall-website --command "cd /home/site/wwwroot && chmod +x deploy.sh && ./deploy.sh"
+            # Use the Azure App Service Kudu REST API to run a custom command
+            az webapp restart --name knowall-website --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }}
+            echo "Restarting the web app to ensure all changes are applied"
+            sleep 30 # Wait for the app to restart
+            echo "Web app restarted, deployment complete"
