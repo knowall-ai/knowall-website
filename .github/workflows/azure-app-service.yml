@@ -29,16 +29,24 @@ jobs:
             ${{ runner.os }}-node-
 
       - name: Install dependencies
-        run: npm install --legacy-peer-deps
+        run: |
+          npm install
+          npm install styled-jsx
+          npm list styled-jsx || echo "styled-jsx not installed properly"
 
       - name: Build Next.js app
         run: npm run build
         env:
-          OPENAI_API_KEY: "${{ secrets.OPENAI_API_KEY }}"
-          ADMIN_API_KEY: "${{ secrets.ADMIN_API_KEY || 'default-admin-key' }}"
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          ADMIN_API_KEY: ${{ secrets.ADMIN_API_KEY || 'default-admin-key' }}
 
+      - name: Prepare for deployment
+        run: |
+          # Make sure the .next directory and node_modules are included
+          echo "Preparing deployment package with all necessary dependencies"
+      
       - name: Zip artifact for deployment
-        run: zip release.zip ./* -r -x "node_modules/*"
+        run: zip release.zip ./* ./.next node_modules -r
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
@@ -73,7 +81,7 @@ jobs:
       - name: Set environment variables
         run: |
           echo "Setting up environment variables for Azure App Service"
-          az webapp config appsettings set --name knowall-website --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} --settings OPENAI_API_KEY="${{ secrets.OPENAI_API_KEY }}" ADMIN_API_KEY="${{ secrets.ADMIN_API_KEY }}" NODE_ENV=production
+          az webapp config appsettings set --name knowall-website --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} --settings OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }} ADMIN_API_KEY=${{ secrets.ADMIN_API_KEY }} NODE_ENV=production
 
       - name: Configure Node.js version
         uses: azure/CLI@v1
