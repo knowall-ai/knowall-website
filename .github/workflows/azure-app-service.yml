@@ -97,8 +97,13 @@ jobs:
         with:
           inlineScript: |
             az webapp config appsettings set --name knowall-website --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} --settings OPENAI_API_KEY="${{ secrets.OPENAI_API_KEY }}" ADMIN_API_KEY="${{ secrets.ADMIN_API_KEY }}" NODE_ENV="production"
-            # Ensure Node.js 22 is used
-            az webapp config set --name knowall-website --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} --node-version 22-lts
+
+      - name: Configure Node.js version
+        uses: azure/CLI@v1
+        with:
+          inlineScript: |
+            # Set Node.js version using the correct parameter
+            az webapp config set --name knowall-website --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} --linux-fx-version "NODE|22-lts"
 
       - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
