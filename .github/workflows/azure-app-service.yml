@@ -46,7 +46,7 @@ jobs:
           echo "Preparing deployment package with all necessary dependencies"
       
       - name: Zip artifact for deployment
-        run: zip release.zip ./* ./.next node_modules -r
+        run: zip release.zip ./* ./.next -r
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
