@@ -42,11 +42,25 @@ jobs:
 
       - name: Prepare for deployment
         run: |
-          # Make sure the .next directory and node_modules are included
-          echo "Preparing deployment package with all necessary dependencies"
+          # Optimize the deployment package by removing unnecessary files
+          echo "Preparing optimized deployment package"
+          # Exclude unnecessary files to reduce package size
+          find node_modules -name "*.md" -type f -delete
+          find node_modules -name "LICENSE*" -type f -delete
+          find node_modules -name "*.ts" -not -name "*.d.ts" -type f -delete
+          find node_modules -name "*.map" -type f -delete
+          find node_modules -path "*/test/*" -type d -exec rm -rf {} +
+          find node_modules -path "*/tests/*" -type d -exec rm -rf {} +
+          find node_modules -path "*/docs/*" -type d -exec rm -rf {} +
       
       - name: Zip artifact for deployment
-        run: zip release.zip ./* ./.next -r
+        run: |
+          echo "Creating optimized deployment package"
+          # Use multiple zip commands to better control what's included
+          # First, zip the application code without node_modules
+          zip -r release.zip . -x "node_modules/*" -x ".git/*" -x ".github/*" 
+          # Then add only the essential parts of node_modules
+          zip -r release.zip node_modules -x "node_modules/.bin/*" -x "node_modules/.pnpm/*"
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
