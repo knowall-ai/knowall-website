@@ -28,53 +28,16 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
 
-      - name: Install dependencies
+      - name: npm install, build, and test
         run: |
           npm install
-          npm install styled-jsx --save
-          # Verify styled-jsx is properly installed
-          npm list styled-jsx
-          # Make sure it's in package.json
-          grep -q "styled-jsx" package.json || echo "styled-jsx" >> package.json
-
-      - name: Build Next.js app
-        run: npm run build
+          npm run build --if-present
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           ADMIN_API_KEY: ${{ secrets.ADMIN_API_KEY || 'default-admin-key' }}
 
-      - name: Prepare for deployment
-        run: |
-          # Optimize the deployment package by removing unnecessary files
-          echo "Preparing optimized deployment package"
-          # Copy styled-jsx to a safe location to ensure it's preserved
-          mkdir -p /tmp/styled-jsx-backup
-          cp -r node_modules/styled-jsx /tmp/styled-jsx-backup/
-          
-          # Exclude unnecessary files to reduce package size
-          find node_modules -not -path "*/styled-jsx/*" -name "*.md" -type f -delete
-          find node_modules -not -path "*/styled-jsx/*" -name "LICENSE*" -type f -delete
-          find node_modules -not -path "*/styled-jsx/*" -name "*.ts" -not -name "*.d.ts" -type f -delete
-          find node_modules -not -path "*/styled-jsx/*" -name "*.map" -type f -delete
-          find node_modules -not -path "*/styled-jsx/*" -path "*/test/*" -type d -exec rm -rf {} \; 2>/dev/null || true
-          find node_modules -not -path "*/styled-jsx/*" -path "*/tests/*" -type d -exec rm -rf {} \; 2>/dev/null || true
-          find node_modules -not -path "*/styled-jsx/*" -path "*/docs/*" -type d -exec rm -rf {} \; 2>/dev/null || true
-          
-          # Restore styled-jsx from backup
-          rm -rf node_modules/styled-jsx
-          cp -r /tmp/styled-jsx-backup/styled-jsx node_modules/
-          
-          # Verify styled-jsx is still intact
-          ls -la node_modules/styled-jsx/package.json || echo "CRITICAL: styled-jsx package.json is missing!"
-      
       - name: Zip artifact for deployment
-        run: |
-          echo "Creating optimized deployment package"
-          # Use multiple zip commands to better control what's included
-          # First, zip the application code without node_modules
-          zip -r release.zip . -x "node_modules/*" -x ".git/*" -x ".github/*" 
-          # Then add only the essential parts of node_modules
-          zip -r release.zip node_modules -x "node_modules/.bin/*" -x "node_modules/.pnpm/*"
+        run: zip -r release.zip . -x ".git/*" -x ".github/*"
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
