@@ -14,7 +14,6 @@ export default function Header() {
     { name: "Services", href: "#services" },
     { name: "Zapp.ie", href: "#zapp" },
     { name: "Copilots", href: "#copilots" },
-    { name: "Contact", href: "#contact" },
   ]
 
   return (
@@ -35,7 +34,9 @@ export default function Header() {
           </nav>
 
           <div className="hidden md:flex items-center gap-4">
-            <Button className="bg-lime-600 hover:bg-lime-700 text-white">Contact Us</Button>
+            <Button asChild className="bg-lime-600 hover:bg-lime-700 text-white">
+              <Link href="#contact">Contact Us</Link>
+            </Button>
           </div>
 
           {/* Mobile Menu Button */}
@@ -59,7 +60,9 @@ export default function Header() {
                 </Link>
               ))}
               <div className="pt-2">
-                <Button className="w-full bg-lime-600 hover:bg-lime-700 text-white">Contact Us</Button>
+                <Button asChild className="w-full bg-lime-600 hover:bg-lime-700 text-white">
+                  <Link href="#contact" onClick={() => setIsMenuOpen(false)}>Contact Us</Link>
+                </Button>
               </div>
             </nav>
           </div>

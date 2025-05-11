@@ -2,35 +2,40 @@ name: Deploy to Azure App Service
 
 on:
   push:
-    branches:
-      - master
+    branches: [ "master" ]
   workflow_dispatch:
+
+env:
+  NODE_VERSION: '22.x'
+  AZURE_WEBAPP_NAME: 'knowall-website'
+  AZURE_WEBAPP_PACKAGE_PATH: '.'
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     environment: Production - Azure
-    
+
     steps:
     - uses: actions/checkout@v3
-      
-    - name: Setup Node.js
+
+    - name: Set up Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: 22
-      
-    - name: Setup PNPM
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+
+    - name: Install PNPM
       uses: pnpm/action-setup@v2
       with:
         version: 8
         run_install: false
-      
+
     - name: Get pnpm store directory
-      id: pnpm-cache
       shell: bash
       run: |
         echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
-      
+      id: pnpm-cache
+
     - name: Setup pnpm cache
       uses: actions/cache@v3
       with:
@@ -38,45 +43,29 @@ jobs:
         key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
         restore-keys: |
           ${{ runner.os }}-pnpm-store-
-      
+
     - name: Install dependencies
       run: pnpm install
-      
+
     - name: Build Next.js app
       run: pnpm build
       env:
         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         ADMIN_API_KEY: ${{ secrets.ADMIN_API_KEY || 'default-admin-key' }}
-      
+
+    - name: Login to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        
+    - name: Set Web App Settings
+      uses: azure/CLI@v1
+      with:
+        inlineScript: |
+          az webapp config appsettings set --name ${{ env.AZURE_WEBAPP_NAME }} --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} --settings OPENAI_API_KEY="${{ secrets.OPENAI_API_KEY }}" ADMIN_API_KEY="${{ secrets.ADMIN_API_KEY }}" NODE_ENV="production"
+
     - name: Deploy to Azure Web App
-      id: deploy-to-webapp
       uses: azure/webapps-deploy@v2
       with:
-        app-name: 'knowall-website'
-        slot-name: 'production'
-        publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
-        package: .
-        
-    - name: Set Azure App Settings
-      uses: azure/appservice-settings@v1
-      id: settings
-      with:
-        app-name: 'knowall-website'
-        app-settings-json: |
-          [
-            {
-              "name": "OPENAI_API_KEY",
-              "value": "${{ secrets.OPENAI_API_KEY }}",
-              "slotSetting": false
-            },
-            {
-              "name": "ADMIN_API_KEY",
-              "value": "${{ secrets.ADMIN_API_KEY || 'default-admin-key' }}",
-              "slotSetting": false
-            },
-            {
-              "name": "NODE_ENV",
-              "value": "production",
-              "slotSetting": false
-            }
-          ]
+        app-name: ${{ env.AZURE_WEBAPP_NAME }}
+        package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}

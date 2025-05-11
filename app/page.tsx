@@ -214,7 +214,8 @@ export default function Home() {
       </section>
 
       {/* Contact Section */}
-      <BackgroundImage src="/images/green-bg.png" className="py-20 px-4 text-white">
+      <section id="contact">
+        <BackgroundImage src="/images/green-bg.png" className="py-20 px-4 text-white">
         <div className="absolute inset-0 bg-black/50"></div>
         <div className="container max-w-6xl mx-auto relative z-10">
           <div className="bg-gray-900/80 backdrop-blur-sm p-8 md:p-12 rounded-xl max-w-2xl mx-auto">
@@ -232,6 +233,7 @@ export default function Home() {
           </div>
         </div>
       </BackgroundImage>
+      </section>
 
       <Footer darkMode={true} />
     </main>
