@@ -54,8 +54,8 @@ jobs:
           # Create a minimal package.json for production
           node -e "const pkg=require('./package.json'); delete pkg.devDependencies; require('fs').writeFileSync('package.json.tmp', JSON.stringify(pkg, null, 2));"
           mv package.json.tmp package.json
-          # Create zip file for artifact
-          zip -r release.zip ./* -x "node_modules/*"
+          # Include node_modules in the deployment package
+          zip -r release.zip ./* -x "node_modules/.pnpm/*"
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
@@ -103,10 +103,10 @@ jobs:
         uses: azure/CLI@v1
         with:
           inlineScript: |
-            # Install pnpm globally and use it for startup
-            echo "Setting startup command to use pnpm"
+            # Set a simple startup command since node_modules is included
+            echo "Setting startup command to use node directly"
             az webapp config appsettings set --name knowall-website --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} --settings WEBSITE_RUN_FROM_PACKAGE=0
-            az webapp config set --name knowall-website --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} --generic-configurations "{\"appCommandLine\":\"npm install -g pnpm && cd /home/site/wwwroot && pnpm start\"}"
+            az webapp config set --name knowall-website --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} --generic-configurations "{\"appCommandLine\":\"cd /home/site/wwwroot && node server.js\"}"
 
       - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
