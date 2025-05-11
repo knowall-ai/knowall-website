@@ -59,6 +59,17 @@ export default function Footer({ darkMode = false }: FooterProps) {
                   <span>Zapp.ie</span>
                 </a>
               </li>
+              <li>
+                <a
+                  href="https://github.com/bengweeks/t-minus-15"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-400 hover:text-white transition-colors flex items-center gap-2"
+                >
+                  <Github className="h-4 w-4" />
+                  <span>T-Minus-15</span>
+                </a>
+              </li>
             </ul>
           </div>
 
@@ -93,7 +104,7 @@ export default function Footer({ darkMode = false }: FooterProps) {
                 </svg>
               </a>
               <a
-                href="https://www.linkedin.com/company/knowall/"
+                href="https://www.linkedin.com/company/3593753"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-gray-400 hover:text-white transition-colors"
