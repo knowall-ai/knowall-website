@@ -3,10 +3,8 @@ import { getAllChatLogs, getChatLogById } from '../chat/logger';
 
 // Configure for API route
 export const runtime = "nodejs";
-// Changed from 'error' to 'force-dynamic' to allow header access
+// Set to force-dynamic to ensure the route is always server-rendered
 export const dynamic = 'force-dynamic';
-export const dynamicParams = false;
-export const revalidate = false;
 
 // Get API key from environment variables
 // Fallback to a default key only for development

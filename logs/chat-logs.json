@@ -182,5 +182,13 @@
     "assistantResponse": "You can contact KnowAll.ai via the following methods:\n\n- **Email**: [hello@knowall.ai](mailto:hello@knowall.ai?subject=Conversation%20ID:%20FILWMERQ)\n- **WhatsApp**: [+44 7968847178](https://wa.me/447968847178)\n\nPlease include your conversation ID *FILWMERQ* in the subject line, so you don't need to repeat the entire conversation. Feel free to continue this chat if you wish to add more information before reaching out.",
     "userIp": "::1",
     "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0"
+  },
+  {
+    "id": "B6B77CRX",
+    "timestamp": "2025-05-11T13:30:48.616Z",
+    "userMessage": "hi",
+    "assistantResponse": "Hello! How can I assist you today with your AI needs?",
+    "userIp": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0"
   }
 ]

@@ -5,10 +5,8 @@ import { logChat } from "./logger";
 // Configure for API route
 export const runtime = "nodejs";
 
-// Changed from 'error' to 'force-dynamic' to allow API functionality in static export
+// Set to force-dynamic to ensure the route is always server-rendered
 export const dynamic = 'force-dynamic';
-export const dynamicParams = false;
-export const revalidate = false;
 
 export async function POST(req: Request) {
   try {

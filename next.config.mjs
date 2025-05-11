@@ -7,11 +7,8 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
   images: {
-    unoptimized: true,
     domains: ['ui-avatars.com'],
   },
-  output: 'export', // Enable static exports for Azure Static Web Apps
-  distDir: 'out', // Specify the output directory
   
   // Prevent watching logs directory to avoid continuous rebuilds
   webpack: (config, { isServer }) => {
