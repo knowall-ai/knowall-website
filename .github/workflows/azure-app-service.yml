@@ -51,16 +51,10 @@ jobs:
 
       - name: Prepare deployment package
         run: |
-          # Create a production-ready package
-          mkdir -p deploy
-          cp -r .next deploy/
-          cp -r public deploy/
-          cp package.json pnpm-lock.yaml server.js web.config deploy/
           # Create a minimal package.json for production
-          node -e "const pkg=require('./package.json'); delete pkg.devDependencies; require('fs').writeFileSync('deploy/package.json', JSON.stringify(pkg, null, 2));"
-          # Create zip file
-          cd deploy
-          zip -r ../release.zip ./*
+          node -e "const pkg=require('./package.json'); delete pkg.devDependencies; require('fs').writeFileSync('package.json.tmp', JSON.stringify(pkg, null, 2)); mv package.json.tmp package.json"
+          # Create zip file for artifact
+          zip -r release.zip ./* -x "node_modules/*"
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
@@ -72,7 +66,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     environment:
-      name: 'Production - Azure'
+      name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
     permissions:
       id-token: write #This is required for requesting the JWT
@@ -85,7 +79,7 @@ jobs:
           name: node-app
 
       - name: Unzip artifact for deployment
-        run: unzip release.zip -d deploy
+        run: unzip release.zip
       
       - name: Login to Azure
         uses: azure/login@v1
@@ -107,7 +101,15 @@ jobs:
 
       - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
-        uses: azure/webapps-deploy@v2
+        uses: azure/webapps-deploy@v3
         with:
           app-name: 'knowall-website'
-          package: ./deploy
+          slot-name: 'Production'
+          package: .
+          
+      - name: 'Run post-deployment script'
+        uses: azure/CLI@v1
+        with:
+          inlineScript: |
+            # Make the deployment script executable and run it
+            az webapp ssh --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} --name knowall-website --command "cd /home/site/wwwroot && chmod +x deploy.sh && ./deploy.sh"
