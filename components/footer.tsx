@@ -33,8 +33,8 @@ export default function Footer({ darkMode = false }: FooterProps) {
                 </a>
               </li>
               <li>
-                <a href="#services" className="text-gray-400 hover:text-white transition-colors">
-                  Agent Systems
+                <a href="#copilots" className="text-gray-400 hover:text-white transition-colors">
+                  Multi-Agent Teams
                 </a>
               </li>
               <li>
