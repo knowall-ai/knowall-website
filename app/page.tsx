@@ -39,7 +39,7 @@ export default function Home() {
                   <a href="#services">Our Services</a>
                 </Button>
                 <Button variant="outline" className="border-white text-white hover:bg-white/10" asChild>
-                  <a href="#zapp">Learn About Zapp.ie</a>
+                  <a href="#zapp">Find out more about Zapp.ie</a>
                 </Button>
               </div>
             </div>
