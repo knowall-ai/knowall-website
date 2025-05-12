@@ -65,6 +65,44 @@ So, what challenge are you trying to solve?`,
   // Set isMounted to true when component mounts on client side
   useEffect(() => {
     setIsMounted(true)
+    
+    // Add global error handler to catch unhandled errors
+    const handleGlobalError = (event: ErrorEvent) => {
+      console.error('Global error caught:', event.error);
+      console.error('Error message:', event.message);
+      console.error('Error source:', event.filename, 'line:', event.lineno, 'col:', event.colno);
+    };
+    
+    // Add unhandled rejection handler
+    const handleUnhandledRejection = (event: PromiseRejectionEvent) => {
+      console.error('Unhandled promise rejection:', event.reason);
+      console.error('Promise rejection stack:', event.reason?.stack);
+    };
+    
+    window.addEventListener('error', handleGlobalError);
+    window.addEventListener('unhandledrejection', handleUnhandledRejection);
+    
+    // Run a diagnostic test on the API endpoint
+    const runApiTest = async () => {
+      try {
+        console.log('Running API diagnostic test...');
+        const testResponse = await fetch('/api/chat', {
+          method: 'HEAD',
+        });
+        console.log('API test status:', testResponse.status, testResponse.statusText);
+        console.log('API test headers:', Object.fromEntries(testResponse.headers.entries()));
+      } catch (testError) {
+        console.error('API test error:', testError);
+      }
+    };
+    
+    // Run the test
+    runApiTest();
+    
+    return () => {
+      window.removeEventListener('error', handleGlobalError);
+      window.removeEventListener('unhandledrejection', handleUnhandledRejection);
+    };
   }, [])
   
   // Handle form submission
@@ -98,46 +136,75 @@ So, what challenge are you trying to solve?`,
         }
       ]
       
-      // Call our server-side API route
-      const response = await fetch('/api/chat', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ 
-          messages: apiMessages,
-          conversationId: conversationId 
-        }),
-      })
+      console.log('Sending chat request with conversation ID:', conversationId)
       
-      if (!response.ok) {
-        let errorMessage = 'Failed to get response from chat API';
-        try {
-          const errorData = await response.json();
-          errorMessage = errorData.error || errorMessage;
-        } catch (parseError) {
-          console.error('Error parsing error response:', parseError);
+      let responseData;
+      try {
+        // Call our server-side API route with error handling
+        const response = await fetch('/api/chat', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ 
+            messages: apiMessages,
+            conversationId: conversationId 
+          }),
+        })
+        
+        // Log the actual response for debugging
+        console.log('Response status:', response.status);
+        console.log('Response ok:', response.ok);
+        
+        if (!response.ok) {
+          let errorMessage = `Failed to get response from chat API: ${response.status} ${response.statusText}`;
+          try {
+            const errorData = await response.json();
+            console.error('Error response data:', errorData);
+            errorMessage = errorData.error || errorMessage;
+          } catch (parseError) {
+            console.error('Error parsing response:', parseError);
+          }
+          throw new Error(errorMessage);
         }
+        
+        // Parse the response data
+        responseData = await response.json();
+      } catch (fetchError: unknown) {
+        console.error('Fetch operation failed:', fetchError);
+        const errorMessage = fetchError instanceof Error 
+          ? `Network error: ${fetchError.message}` 
+          : 'Unknown network error';
         throw new Error(errorMessage);
       }
       
-      const data = await response.json();
+      // Use the response data from the try block
+      const data = responseData;
+      
+      console.log('API response data:', data);
       
       // Add the assistant's response to the chat
-      if (data.response) {
+      // Check for various possible field names where the content might be
+      const responseContent = data.response || data.content || data.message || data.assistantResponse;
+      
+      if (responseContent) {
         setMessages((prev) => [
           ...prev,
           {
             id: Date.now().toString(),
             role: "assistant",
-            content: data.response,
+            content: responseContent,
           },
         ])
       } else {
+        console.error('Response data structure:', data);
         throw new Error('No response content received');
       }
     } catch (err) {
       console.error('Error in chat submission:', err);
+      console.error('Error type:', typeof err);
+      console.error('Error properties:', Object.keys(err || {}));
+      console.error('Error stack:', err instanceof Error ? err.stack : 'No stack trace');
       setError(err instanceof Error ? err : new Error('An unknown error occurred'));
     } finally {
       setIsLoading(false)
@@ -227,24 +294,30 @@ So, what challenge are you trying to solve?`,
   }
 
   const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    // Prevent default form submission behavior
-    e.preventDefault()
-    e.stopPropagation()
+    e.preventDefault();
+    console.log('Form submit triggered');
     
-    // Stop recording if active
-    if (isRecording) {
-      setIsRecording(false)
+    try {
+      if (isRecording) {
+        // If we're recording speech, stop recording and submit what we have
+        setIsRecording(false);
+        hasSubmittedTranscript.current = true; // Mark that we're submitting from transcript
+        handleSubmit(e);
+      } else {
+        // Otherwise just submit the text input
+        if (input.trim()) {
+          console.log('Submitting text input:', input.trim());
+          handleSubmit(e);
+        } else {
+          console.log('Empty input, not submitting');
+        }
+      }
+    } catch (formError) {
+      console.error('Form submission wrapper error:', formError);
+      setError(formError instanceof Error ? formError : new Error('Unknown form submission error'));
+      setIsLoading(false);
     }
-    
-    // Only proceed if there's input or we're recording
-    if (input.trim() || isRecording) {
-      // Call our custom handleSubmit function
-      handleSubmit(e)
-    }
-    
-    // Return false to ensure no propagation
-    return false
-  }
+  };
   
   // Show a placeholder during SSR and initial client render
   if (!isMounted) {
@@ -353,7 +426,54 @@ So, what challenge are you trying to solve?`,
       </CardContent>
 
       <CardFooter className="p-3 border-t border-gray-700">
-        <form className="flex w-full gap-2" onSubmit={handleFormSubmit}>
+        <form className="flex w-full gap-2" onSubmit={(e) => {
+          e.preventDefault();
+          if (input.trim()) {
+            // Direct form submission
+            const userMsg = input.trim();
+            // Add user message to UI immediately
+            const userMessage = {
+              id: Date.now().toString(),
+              role: "user",
+              content: userMsg,
+            };
+            setMessages(prev => [...prev, userMessage]);
+            setInput("");
+            setIsLoading(true);
+            
+            // Simple fetch with minimal complexity
+            fetch('/api/chat', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                messages: [
+                  ...messages.map(msg => ({ role: msg.role, content: msg.content })),
+                  { role: userMessage.role, content: userMessage.content }
+                ],
+                conversationId: conversationId
+              })
+            })
+            .then(response => response.json())
+            .then(data => {
+              // Add response to UI
+              setMessages(prev => [
+                ...prev,
+                {
+                  id: Date.now().toString(),
+                  role: "assistant",
+                  content: data.content || "Sorry, I couldn't process that.",
+                }
+              ]);
+            })
+            .catch(err => {
+              console.error("Raw fetch error:", err);
+              setError(new Error(err.message || "Failed to communicate with the server"));
+            })
+            .finally(() => {
+              setIsLoading(false);
+            });
+          }
+        }}>
           <Textarea
             ref={inputRef as React.RefObject<HTMLTextAreaElement>}
             value={input}
@@ -378,14 +498,26 @@ So, what challenge are you trying to solve?`,
           >
             {isRecording ? <MicOff className="h-5 w-5" /> : <Mic className="h-5 w-5 text-gray-300" />}
           </Button>
-          <Button
-            type="submit"
-            size="icon"
-            disabled={!input.trim() && !isRecording}
-            className="bg-lime-600 hover:bg-lime-700"
-          >
-            <Send className="h-5 w-5" />
-          </Button>
+          <div className="flex flex-col">
+            <Button
+              type="submit"
+              size="icon"
+              disabled={!input.trim() && !isRecording}
+              className="bg-lime-600 hover:bg-lime-700"
+              onClick={() => {
+                // Add direct client-side debugging
+                console.log('Send button clicked directly');
+                // Attempt to capture any client-side network status
+                if (!navigator.onLine) {
+                  console.error('Browser reports device is offline');
+                  setError(new Error('Please check your internet connection'));
+                  return;
+                }
+              }}
+            >
+              <Send className="h-5 w-5" />
+            </Button>
+          </div>
         </form>
       </CardFooter>
     </Card>

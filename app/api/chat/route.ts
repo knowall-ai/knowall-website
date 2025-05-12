@@ -2,9 +2,6 @@ import { OpenAI } from "openai";
 import { systemPrompt } from "./system-prompt";
 import { logChat } from "./logger";
 
-// Configure for API route
-export const runtime = "nodejs";
-
 // Set to force-dynamic to ensure the route is always server-rendered
 export const dynamic = 'force-dynamic';
 

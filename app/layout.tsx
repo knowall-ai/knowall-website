@@ -32,7 +32,10 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="preload" as="image" href="/images/green-bg.png" />
-        <meta httpEquiv="Content-Security-Policy" content="upgrade-insecure-requests" />
+        {/* Only apply CSP in production, not in development */}
+        {process.env.NODE_ENV === 'production' && (
+          <meta httpEquiv="Content-Security-Policy" content="upgrade-insecure-requests" />
+        )}
         <link rel="icon" href="/favicon.ico" sizes="any" />
       </head>
       <body className={inter.className}>
