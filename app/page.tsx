@@ -10,6 +10,7 @@ import WhatsAppButton from "@/components/whatsapp-button"
 import BitcoinLogo from "@/components/bitcoin-logo"
 import BackgroundImage from "@/components/background-image"
 import AutoGenLogo from "@/components/autogen-logo"
+import ZappCarousel from "@/components/zapp-carousel"
 
 export default function Home() {
   return (
@@ -31,14 +32,14 @@ export default function Home() {
               </h1>
               <p className="text-xl md:text-2xl mb-8 text-white/90">
                 We build intelligent AI systems that transform businesses through custom Microsoft Copilots, multi-agent
-                teams, and Bitcoin-powered value exchange networks.
+                teams, and integrating incentivizing best practices through value-for-value micro-Bitcoin transactions between people, customers, and AI agents using Zapp.ie.
               </p>
               <div className="flex flex-wrap gap-4">
-                <Button className="bg-lime-500 text-white hover:bg-lime-600 shadow-lg shadow-lime-500/30">
-                  Our Services
+                <Button className="bg-lime-500 text-white hover:bg-lime-600 shadow-lg shadow-lime-500/30" asChild>
+                  <a href="#services">Our Services</a>
                 </Button>
-                <Button variant="outline" className="border-white text-white hover:bg-white/10">
-                  Learn About Zapp.ie
+                <Button variant="outline" className="border-white text-white hover:bg-white/10" asChild>
+                  <a href="#zapp">Learn About Zapp.ie</a>
                 </Button>
               </div>
             </div>
@@ -95,8 +96,8 @@ export default function Home() {
               <p className="text-lg text-gray-200 mb-6">
                 Zapp.ie is an open-source platform that integrates Microsoft Teams with Bitcoin microtransactions and AI
                 agents (Copilots) to enhance collaboration, productivity, and real-value incentives. Built on the
-                "value-for-value" model, it transforms the digital workspace by linking communication tools with
-                financial rewards and AI-driven support.
+                "value-for-value" model, it transforms the digital workspace by linking communication tools with financial
+                rewards and AI-driven support.
               </p>
               <p className="text-lg text-gray-200 mb-6">
                 Using seamless Bitcoin microtransactions, Zapp.ie incentivizes engagement across team members, clients,
@@ -108,7 +109,14 @@ export default function Home() {
                 By aligning incentives and enabling value exchange across people and intelligent systems, it supports
                 more motivated, transparent, and effective collaboration.
               </p>
-              <div className="flex items-center gap-4">
+            </div>
+
+            <div className="flex-1 flex flex-col items-center">
+              <Card className="p-0 w-full max-w-md shadow-lg border-0 bg-gray-900 overflow-hidden mb-4">
+                <img src="/images/zappie.png" alt="Zapp.ie AI Agent" className="w-full h-auto object-cover" />
+              </Card>
+              
+              <div className="flex items-center gap-4 mt-4">
                 <a
                   href="https://github.com/BenGWeeks/Zapp.ie"
                   target="_blank"
@@ -124,13 +132,10 @@ export default function Home() {
                 </div>
               </div>
             </div>
-
-            <div className="flex-1 flex justify-center">
-              <Card className="p-0 w-full max-w-md shadow-lg border-0 bg-gray-900 overflow-hidden">
-                <img src="/images/zappie.png" alt="Zapp.ie AI Agent" className="w-full h-auto object-cover" />
-              </Card>
-            </div>
           </div>
+          
+          {/* Zapp.ie Screenshots Carousel */}
+          <ZappCarousel />
         </div>
       </section>
 
@@ -225,8 +230,10 @@ export default function Home() {
             </p>
 
             <div className="flex flex-col md:flex-row gap-4 justify-center">
-              <Button className="bg-lime-600 text-white hover:bg-lime-700">
-                Email <EmailIcon className="ml-2 h-4 w-4" />
+              <Button className="bg-lime-600 text-white hover:bg-lime-700" asChild>
+                <a href="mailto:info@knowall.ai">
+                  Email <EmailIcon className="ml-2 h-4 w-4" />
+                </a>
               </Button>
               <WhatsAppButton darkMode={true} />
             </div>

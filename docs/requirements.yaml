@@ -1,0 +1,170 @@
+---
+# KnowAll.ai Website Requirements
+
+- project: "KnowAll.ai Website"
+  description: "A modern website for KnowAll.ai with AI chat capabilities and responsive design"
+  features:
+    - name: "Deployment workflow/action"
+      id: deployment-workflow
+      description: "Automated deployment process to Azure App Service"
+      deliverables:
+        - "GitHub Actions workflow file"
+        - "Server.js configuration"
+        - "Web.config file"
+      user_story: "As a Developer, I want to have an automated deployment process to Azure App Service so that changes to the website can be deployed quickly and consistently"
+      scenarios:
+        - name: "Code is pushed to main branch"
+          given: "Changes have been pushed to the main branch"
+          when: "The GitHub Actions workflow is triggered"
+          then: 
+            - "The website is built using pnpm"
+            - "Environment variables are properly configured"
+            - "The application is deployed to Azure App Service"
+            - "The web app is restarted to apply changes"
+
+    - name: "Primary navigation"
+      id: primary-navigation
+      description: "Main navigation menu at the top of the site"
+      deliverables:
+        - "Navigation component"
+        - "Logo linking to top of page"
+      user_story: "As a User, I want to see the main navigation items for the site at the top so that I can quickly navigate to the area I am interested in"
+      scenarios:
+        - name: "User wants to return to top of page"
+          given: "The user is viewing any part of the website"
+          when: "They click on the logo or Home navigation link"
+          then: "The user is navigated to the top of the page"
+
+    - name: "Sally chat"
+      id: sally-chat
+      description: "Interactive AI chat interface with speech recognition capabilities and improved user experience"
+      deliverables:
+        - "Chat component with expanded height"
+        - "Multi-line text input"
+        - "Conversational AI greeting"
+        - "Speech recognition integration"
+        - "OpenAI API integration"
+        - "Error handling"
+      user_story: "As a User, I want to interact with an AI assistant through text or voice so that I can get information about KnowAll's services hands-free and in a comfortable interface"
+      scenarios:
+        - name: "User sends a text message"
+          given: "The user is on the website"
+          when: "They type a message and send it"
+          then: 
+            - "The message is sent to the OpenAI API"
+            - "A response is displayed in the chat interface"
+        - name: "User uses voice input"
+          given: "The user's browser supports speech recognition"
+          when: "They activate the speech recognition feature"
+          then: "Their speech is converted to text in the chat input"
+        - name: "User types a longer message"
+          given: "The user is composing a message"
+          when: "Their text exceeds one line"
+          then: "The input field expands to show multiple lines of text"
+        - name: "User wants to format their message"
+          given: "The user is typing in the chat"
+          when: "They press Shift+Enter"
+          then: "A line break is inserted in their message instead of sending it"
+        - name: "User views conversation history"
+          given: "The user has exchanged multiple messages with Sally"
+          when: "They continue the conversation"
+          then: "The expanded chat window provides more space to view the conversation history"
+
+    - name: "Admin logs"
+      id: admin-logs
+      description: "Secure access to chat interaction logs"
+      deliverables:
+        - "Admin interface"
+        - "API key authentication"
+        - "Log storage and retrieval"
+      user_story: "As an Administrator, I want to view logs of chat interactions so that I can monitor usage and improve the system"
+      scenarios:
+        - name: "Admin accesses logs"
+          given: "The admin has the correct API key"
+          when: "They navigate to the admin logs page"
+          then: "They can view comprehensive logs of chat interactions"
+
+    - name: "Custom domain configuration"
+      id: custom-domain
+      description: "Setup for knowall.ai and www.knowall.ai domains"
+      deliverables:
+        - "DNS configuration"
+        - "Domain verification"
+        - "SSL certificates"
+      user_story: "As a Website owner, I want to use custom domains (knowall.ai and www.knowall.ai) so that users can access the site with a professional URL"
+      scenarios:
+        - name: "User visits knowall.ai"
+          given: "The DNS is properly configured"
+          when: "A user enters knowall.ai in their browser"
+          then: "They are directed to the KnowAll website"
+
+    - name: "Responsive design"
+      id: responsive-design
+      description: "Website layout that adapts to different screen sizes"
+      deliverables:
+        - "Responsive CSS"
+        - "Mobile-friendly components"
+      user_story: "As a User, I want the website to work well on all devices so that I can access it from my desktop, tablet, or mobile phone"
+      scenarios:
+        - name: "User views site on mobile"
+          given: "The user is using a mobile device"
+          when: "They load the website"
+          then: "The layout adapts appropriately to the screen size"
+
+    - name: "Favicon"
+      id: favicon
+      description: "Custom favicon for the website"
+      deliverables:
+        - "Favicon files in various sizes"
+        - "Favicon configuration"
+      user_story: "As a User, I want to see the KnowAll logo in my browser tab so that I can easily identify the site among my open tabs"
+      scenarios:
+        - name: "User opens the website"
+          given: "The user navigates to the website"
+          when: "The page loads in their browser"
+          then: "The KnowAll favicon appears in the browser tab"
+
+    - name: "Contact Us"
+      id: contact-us
+      description: "Contact options for users to reach KnowAll"
+      deliverables:
+        - "Email link"
+        - "WhatsApp link"
+        - "Contact section"
+      user_story: "As a User, I want to easily contact KnowAll through email or WhatsApp so that I can get in touch with the company for inquiries"
+      scenarios:
+        - name: "User wants to send an email"
+          given: "The user is on the website"
+          when: "They click on the email link"
+          then: "Their default email client opens with KnowAll's email address"
+        - name: "User wants to contact via WhatsApp"
+          given: "The user is on the website"
+          when: "They click on the WhatsApp link"
+          then: "WhatsApp opens with KnowAll's contact preloaded"
+          
+    - name: "Zapp.ie Image Carousel"
+      id: zapp-carousel
+      description: "Interactive image carousel for the Zapp.ie section displaying platform screenshots"
+      deliverables:
+        - "ZappCarousel component"
+        - "Thumbnail navigation"
+        - "Full-screen image modal"
+        - "Hover effects"
+      user_story: "As a User, I want to see visual examples of the Zapp.ie platform so that I can better understand its features and capabilities"
+      scenarios:
+        - name: "User views Zapp.ie screenshots"
+          given: "The user is viewing the Zapp.ie section"
+          when: "They scroll to the carousel"
+          then: "They can see 4 thumbnails of the platform at once"
+        - name: "User wants to see a detailed image"
+          given: "The user is viewing the thumbnail carousel"
+          when: "They click on a thumbnail"
+          then: "A full-screen modal opens showing the high-quality image"
+        - name: "User navigates through images"
+          given: "The user has opened a full-size image"
+          when: "They click the left/right navigation arrows"
+          then: "They can move between all available screenshots"
+        - name: "User highlights an image"
+          given: "The user is viewing the thumbnail carousel"
+          when: "They hover over a thumbnail"
+          then: "The thumbnail is highlighted with a green border"

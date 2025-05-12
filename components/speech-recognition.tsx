@@ -11,9 +11,14 @@ declare global {
 }
 
 interface SpeechRecognitionProps {
-  isRecording: boolean
   onResult: (transcript: string) => void
   onEnd: () => void
+}
+
+type SpeechRecognitionReturn = {
+  startListening: () => void
+  stopListening: () => void
+  isSupported: boolean
 }
 
 // Create a class-based wrapper for the Web Speech API
@@ -79,7 +84,7 @@ function getSpeechRecognitionService() {
   return speechRecognitionService;
 }
 
-export default function useSpeechRecognition({ isRecording, onResult, onEnd }: SpeechRecognitionProps) {
+export default function useSpeechRecognition({ onResult, onEnd }: SpeechRecognitionProps): SpeechRecognitionReturn {
   const [isSupported, setIsSupported] = useState(false);
   const serviceRef = useRef<SpeechRecognitionService | null>(null);
   
@@ -102,17 +107,21 @@ export default function useSpeechRecognition({ isRecording, onResult, onEnd }: S
     };
   }, []);
   
-  // Handle recording state changes
-  useEffect(() => {
+  const startListening = useCallback(() => {
     const service = serviceRef.current;
     if (!service || !isSupported) return;
-    
-    if (isRecording) {
-      service.start(handleResult, handleEnd);
-    } else {
-      service.stop();
-    }
-  }, [isRecording, isSupported, handleResult, handleEnd]);
+    service.start(handleResult, handleEnd);
+  }, [isSupported, handleResult, handleEnd]);
   
-  return isSupported;
+  const stopListening = useCallback(() => {
+    const service = serviceRef.current;
+    if (!service) return;
+    service.stop();
+  }, []);
+  
+  return {
+    startListening,
+    stopListening,
+    isSupported
+  };
 }

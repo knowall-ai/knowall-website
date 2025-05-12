@@ -1,11 +1,12 @@
 "use client"
 
 import type React from "react"
-import { useState, useRef, useEffect } from "react"
+import { useState, useRef, useEffect, useCallback } from "react"
 import { Mic, Send, MicOff, Loader2 } from "lucide-react"
 import SallyAvatar from "./sally-avatar"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { cn } from "@/lib/utils"
@@ -33,7 +34,7 @@ export default function ConversationInterface() {
   const [isRecording, setIsRecording] = useState(false)
   const [transcript, setTranscript] = useState("")
   const messagesEndRef = useRef<HTMLDivElement>(null)
-  const inputRef = useRef<HTMLInputElement>(null)
+  const inputRef = useRef<HTMLTextAreaElement>(null)
   const hasSubmittedTranscript = useRef(false)
   const [isSpeechSupported, setIsSpeechSupported] = useState(false)
   
@@ -45,7 +46,11 @@ export default function ConversationInterface() {
     {
       id: "1",
       role: "assistant",
-      content: `Hello! I'm Sally, the KnowAll.ai assistant. Your conversation ID is ${conversationId}. I'm here to understand your requirements and create an initial brief for our business analysts to follow up on. What AI solution are you interested in exploring?`,
+      content: `I'm Sally, but I'm not your regular bot. My aim is to understand what you want to achieve and understand if we are a good fit to help you. If we are, I can create a brief for the team if you would like me to.
+
+Our conversation will be saved with the ID of ${conversationId} for future reference so you won't need to repeat it.
+
+So, what challenge are you trying to solve?`,
     },
   ])
   const [input, setInput] = useState("")
@@ -53,7 +58,7 @@ export default function ConversationInterface() {
   const [error, setError] = useState<Error | null>(null)
   
   // Handle input change
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInput(e.target.value)
   }
   
@@ -116,20 +121,24 @@ export default function ConversationInterface() {
         throw new Error(errorMessage);
       }
       
-      // Parse the response
-      const responseData = await response.json()
+      const data = await response.json();
       
       // Add the assistant's response to the chat
-      const assistantMessage = {
-        id: responseData.id || Date.now().toString(),
-        role: responseData.role || "assistant",
-        content: responseData.content || "I'm sorry, I couldn't process your request.",
+      if (data.response) {
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: Date.now().toString(),
+            role: "assistant",
+            content: data.response,
+          },
+        ])
+      } else {
+        throw new Error('No response content received');
       }
-      
-      setMessages((prev) => [...prev, assistantMessage])
-    } catch (error) {
-      console.error("Chat API error:", error)
-      setError(error instanceof Error ? error : new Error('An unknown error occurred'))
+    } catch (err) {
+      console.error('Error in chat submission:', err);
+      setError(err instanceof Error ? err : new Error('An unknown error occurred'));
     } finally {
       setIsLoading(false)
     }
@@ -138,12 +147,13 @@ export default function ConversationInterface() {
   // Set mounted state on client - only once
   useEffect(() => {
     setIsMounted(true)
+  }, [])
     
-    // Add event listener to prevent form submission from reloading the page
+  // Add event listener to prevent form submission from reloading the page
+  useEffect(() => {
     const preventFormSubmit = (e: Event) => {
-      if (e.target instanceof HTMLFormElement) {
-        e.preventDefault()
-      }
+      e.preventDefault()
+      return false
     }
     
     document.addEventListener('submit', preventFormSubmit)
@@ -162,13 +172,13 @@ export default function ConversationInterface() {
   const handleSpeechEnd = () => {
     if (isRecording) {
       setIsRecording(false)
-
-      // Only submit if we have a transcript and haven't already submitted it
-      if (transcript.trim() && !hasSubmittedTranscript.current) {
+      
+      // If there's a transcript and we haven't submitted it yet,
+      // set it as input and submit the form
+      if (transcript && !hasSubmittedTranscript.current) {
         hasSubmittedTranscript.current = true
         setInput(transcript)
-
-        // Use setTimeout to ensure state updates have propagated
+        
         setTimeout(() => {
           const fakeEvent = {
             preventDefault: () => {},
@@ -181,48 +191,23 @@ export default function ConversationInterface() {
     }
   }
   
-  // Create a client-side only speech recognition component
-  const SpeechRecognitionComponent = () => {
-    // This is a proper hook call inside a component function
-    const speechSupported = useSpeechRecognition({
-      isRecording,
-      onResult: handleSpeechResult,
-      onEnd: handleSpeechEnd,
-    })
-    
-    // Update the speech support state when this component mounts
-    // We only set this once to avoid an infinite update loop
-    useEffect(() => {
-      setIsSpeechSupported(speechSupported)
-    }, []) // Empty dependency array to run only once on mount
-    
-    // This component doesn't render anything
-    return null
-  }
+  // TEMPORARILY DISABLED SPEECH RECOGNITION TO FIX INFINITE LOOP
+  const speechRecognitionElement = null;
   
-  // Only render the speech recognition component on the client side
-  const speechRecognitionElement = isMounted ? <SpeechRecognitionComponent /> : null
+  // Set speech recognition as not supported for now
+  useEffect(() => {
+    setIsSpeechSupported(false);
+  }, []);
 
   // Update input field with transcript while recording
   useEffect(() => {
     if (isRecording && transcript) {
       setInput(transcript)
     }
-  }, [transcript, isRecording])
+  }, [isRecording, transcript])
 
-  // Use a ref to track if we need to scroll to bottom
-  const shouldScrollRef = useRef(false)
-  const isInitialMount = useRef(true)
-  
-  // Handle scrolling only when new messages are added
+  // Scroll to bottom when messages change
   useEffect(() => {
-    // Skip scrolling on initial render
-    if (isInitialMount.current) {
-      isInitialMount.current = false
-      return
-    }
-    
-    // Only scroll when a new message is added (not on initial load)
     if (messages.length > 1) {
       const timeoutId = setTimeout(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
@@ -272,13 +257,13 @@ export default function ConversationInterface() {
           </div>
         </CardHeader>
         <CardContent className="p-0">
-          <div className="h-[400px] p-4 flex items-center justify-center">
+          <div className="h-[480px] p-4 flex items-center justify-center">
             <Loader2 className="h-8 w-8 animate-spin text-lime-500" />
           </div>
         </CardContent>
         <CardFooter className="p-3 border-t border-gray-700">
           <div className="flex w-full gap-2">
-            <div className="flex-1 h-10 bg-gray-800 rounded-md" />
+            <div className="flex-1 min-h-[60px] bg-gray-800 rounded-md" />
             <div className="w-10 h-10 rounded-md bg-gray-800" />
             <div className="w-10 h-10 rounded-md bg-lime-600" />
           </div>
@@ -301,7 +286,7 @@ export default function ConversationInterface() {
       </CardHeader>
 
       <CardContent className="p-0">
-        <ScrollArea className="h-[400px] p-4">
+        <ScrollArea className="h-[480px] p-4">
           <div className="flex flex-col gap-4">
             {messages.map((message) => (
               <div
@@ -369,12 +354,19 @@ export default function ConversationInterface() {
 
       <CardFooter className="p-3 border-t border-gray-700">
         <form className="flex w-full gap-2" onSubmit={handleFormSubmit}>
-          <Input
-            ref={inputRef}
+          <Textarea
+            ref={inputRef as React.RefObject<HTMLTextAreaElement>}
             value={input}
-            onChange={handleInputChange}
+            onChange={(e) => handleInputChange(e as any)}
             placeholder="Type your message..."
-            className="flex-1 bg-gray-800 border-gray-700 text-white placeholder:text-gray-400"
+            className="flex-1 bg-gray-800 border-gray-700 text-white placeholder:text-gray-400 min-h-[60px] resize-none"
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                handleFormSubmit(e as any);
+              }
+            }}
+            disabled={isLoading}
           />
           <Button
             type="button"
