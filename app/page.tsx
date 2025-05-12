@@ -179,6 +179,9 @@ export default function Home() {
                   <span>Creating custom automations with Power Automate</span>
                 </li>
               </ul>
+              <p className="text-gray-300 mb-4">
+                As part of our comprehensive solutions, we also utilize the full Microsoft Power Platform suite, including Power Apps for custom application development, Power Automate flows for streamlined process automation, Power Pages for secure customer-facing portals, and Power BI for insightful data visualization and analytics. This integrated approach ensures seamless connectivity between your AI solutions and business processes.
+              </p>
             </Card>
 
             <Card className="p-6 shadow-md border-0 bg-gray-800 text-white">
