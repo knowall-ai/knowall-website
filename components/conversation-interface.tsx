@@ -86,11 +86,14 @@ So, what challenge are you trying to solve?`,
     const runApiTest = async () => {
       try {
         console.log('Running API diagnostic test...');
-        const testResponse = await fetch('/api/chat', {
-          method: 'HEAD',
+        // Use a GET request with a simple flag parameter for diagnostics only
+        // This is better than HEAD which might not be supported by the API
+        const testResponse = await fetch('/api/chat?diagnostic=true', {
+          method: 'GET',
         });
         console.log('API test status:', testResponse.status, testResponse.statusText);
         console.log('API test headers:', Object.fromEntries(testResponse.headers.entries()));
+        console.log('API connection test successful');
       } catch (testError) {
         console.error('API test error:', testError);
       }

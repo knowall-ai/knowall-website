@@ -5,6 +5,38 @@ import { logChat } from "./logger";
 // Set to force-dynamic to ensure the route is always server-rendered
 export const dynamic = 'force-dynamic';
 
+// Handle GET requests for diagnostic purposes
+export async function GET(req: Request) {
+  // Check if this is a diagnostic request
+  const url = new URL(req.url);
+  const isDiagnostic = url.searchParams.get('diagnostic') === 'true';
+  
+  if (isDiagnostic) {
+    return new Response(JSON.stringify({
+      status: 'ok',
+      message: 'API endpoint is accessible via GET for diagnostic purposes only',
+      time: new Date().toISOString()
+    }), {
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+        'Cache-Control': 'no-store'
+      }
+    });
+  }
+
+  // If not a diagnostic request, return a method not allowed response
+  return new Response(JSON.stringify({
+    error: 'Method not allowed. Please use POST for chat functionality.'
+  }), {
+    status: 405,
+    headers: {
+      'Content-Type': 'application/json',
+      'Allow': 'POST'
+    }
+  });
+}
+
 export async function POST(req: Request) {
   try {
     // Parse the request body to get the messages and conversation ID
