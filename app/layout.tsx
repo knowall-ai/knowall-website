@@ -14,6 +14,12 @@ export const metadata: Metadata = {
     icon: '/favicon.ico',
     apple: '/favicon.ico',
     shortcut: '/favicon.ico'
+  },
+  metadataBase: new URL('https://knowall.ai'),
+  keywords: ['AI', 'artificial intelligence', 'consultancy', 'chatbot', 'Bitcoin', 'Lightning Network'],
+  robots: {
+    index: true,
+    follow: true
   }
 }
 
@@ -26,6 +32,8 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="preload" as="image" href="/images/green-bg.png" />
+        <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
+        <link rel="icon" href="/favicon.ico" sizes="any" />
       </head>
       <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
