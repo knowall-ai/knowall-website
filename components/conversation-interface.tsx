@@ -46,11 +46,11 @@ export default function ConversationInterface() {
     {
       id: "1",
       role: "assistant",
-      content: `I'm Sally, but I'm not your regular bot. My aim is to understand what you want to achieve and understand if we are a good fit to help you. If we are, I can create a brief for the team if you would like me to.
+      content: `I'm Sally, but I'm not your regular bot! My aim is to understand what you want to achieve and determine if we are a good fit to help you. If we are, I can create a brief for the team if you would like me to.
 
 Our conversation will be saved with the ID of ${conversationId} for future reference so you won't need to repeat it.
 
-So, what challenge are you trying to solve?`,
+We can make this a game! I'll ask you 20 questions to build you a brief and understand exactly what solution you require. Would you like to play 20 questions?`,
     },
   ])
   const [input, setInput] = useState("")
@@ -276,11 +276,19 @@ So, what challenge are you trying to solve?`,
     }
   }, [isRecording, transcript])
 
-  // Scroll to bottom when messages change
+  // Scroll to bottom when messages change - contained within ScrollArea
   useEffect(() => {
     if (messages.length > 1) {
       const timeoutId = setTimeout(() => {
-        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+        if (messagesEndRef.current) {
+          // Get the parent scroll container
+          const scrollContainer = messagesEndRef.current.closest('[data-radix-scroll-area-viewport]');
+          
+          if (scrollContainer) {
+            // Only scroll the chat container, not the whole page
+            scrollContainer.scrollTop = scrollContainer.scrollHeight;
+          }
+        }
       }, 100)
       
       return () => clearTimeout(timeoutId)

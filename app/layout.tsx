@@ -34,7 +34,7 @@ export default function RootLayout({
         <link rel="preload" as="image" href="/images/green-bg.png" />
         {/* Only apply CSP in production, not in development */}
         {process.env.NODE_ENV === 'production' && (
-          <>
+          <>                                                            
             <meta httpEquiv="Content-Security-Policy" content="upgrade-insecure-requests; default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https:;" />
             <meta httpEquiv="Strict-Transport-Security" content="max-age=31536000; includeSubDomains" />
           </>
