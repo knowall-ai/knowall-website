@@ -36,7 +36,7 @@ export default function Home() {
               </p>
               <div className="flex flex-wrap gap-4">
                 <Button className="bg-lime-500 text-white hover:bg-lime-600 shadow-lg shadow-lime-500/30" asChild>
-                  <a href="#services">Learn more about our services</a>
+                  <a href="#services">Our Services</a>
                 </Button>
                 <Button variant="outline" className="border-white text-white hover:bg-white/10" asChild>
                   <a href="#zapp">Find out more about Zapp.ie</a>
