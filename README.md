@@ -73,6 +73,58 @@ If you're experiencing issues with the chat functionality not responding:
 3. Ensure the API key is correctly set in your environment variables
 4. For local development, restart the development server after updating the `.env.local` file
 
+## Testing
+
+The website uses Playwright for end-to-end testing to ensure key functionality works as expected.
+
+### Running Tests
+
+To run all tests:
+
+```bash
+npm run test
+```
+
+### Running Tests in UI Mode
+
+Playwright provides a UI mode that allows you to visualize test execution and debug tests interactively.
+
+Let's add this to our package.json scripts:
+
+```bash
+npm run test:ui
+```
+
+This will open the Playwright UI interface in your browser where you can:
+
+- Run specific tests or test files
+- See test executions in real-time
+- View and debug test steps
+- Examine test reports with screenshots
+
+### Running Tests in Headed Mode
+
+To see the browser window during test execution:
+
+```bash
+npm run test:headed
+```
+
+### Test Structure
+
+Tests are organized in the `tests` directory and follow the naming convention `[feature-name].spec.ts`.
+
+Each test file focuses on a specific feature or requirement from the `/docs/requirements.yaml` file.
+
+### Creating New Tests
+
+To create a new test file:
+
+1. Create a new TypeScript file in the `tests` directory
+2. Import the Playwright test utilities
+3. Write your test cases based on requirements
+4. Run the tests to verify they work as expected
+
 ## Deployment
 
 The website is deployed on Azure App Service. Any push to the master branch will trigger a new deployment via GitHub Actions.

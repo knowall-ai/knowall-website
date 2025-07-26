@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "node server.js",
     "lint": "next lint",
-    "test": "playwright test"
+    "test": "playwright test",
+    "test:ui": "playwright test --ui",
+    "test:headed": "playwright test --headed"
   },
   "engines": {
     "node": ">=22.0.0"
