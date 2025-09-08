@@ -48,7 +48,7 @@ export default function Footer({ darkMode = false }: FooterProps) {
           <div>
             <h4 className="font-semibold mb-4">Projects</h4>
             <ul className="space-y-2">
-              <li>
+              <li style={{ display: "none" }}>
                 <a
                   href="https://github.com/Bengweeks/zapp.ie"
                   target="_blank"
