@@ -38,7 +38,7 @@ export default function Home() {
                 <Button className="bg-lime-500 text-white hover:bg-lime-600 shadow-lg shadow-lime-500/30" asChild>
                   <a href="#services">Our Services</a>
                 </Button>
-                <Button variant="outline" className="border-white text-white hover:bg-white/10" asChild>
+                <Button variant="outline" className="border-white text-white hover:bg-white/10" asChild style={{ display: "none" }}>
                   <a href="#zapp">Find out more about Zapp.ie</a>
                 </Button>
               </div>
@@ -85,7 +85,7 @@ export default function Home() {
       </section>
 
       {/* About Zapp.ie Section */}
-      <section id="zapp" className="py-20 px-4 bg-gray-800 text-white">
+      <section id="zapp" className="py-20 px-4 bg-gray-800 text-white" style={{ display: "none" }}>
         <div className="container max-w-6xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center">
             Zapp.ie: Incentivizing teammates, copilots & customers
