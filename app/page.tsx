@@ -32,7 +32,7 @@ export default function Home() {
               </h1>
               <p className="text-xl md:text-2xl mb-8 text-white/90">
                 We build intelligent AI systems that transform businesses through custom Microsoft Copilots, multi-agent
-                teams, and integrating incentivizing best practices through value-for-value micro-Bitcoin transactions between people, customers, and AI agents<!-- using Zapp.ie-->.
+                teams, and integrating incentivizing best practices through value-for-value micro-Bitcoin transactions between people, customers, and AI agents<span style={{ display: "none" }}> using Zapp.ie</span>.
               </p>
               <div className="flex flex-wrap gap-4">
                 <Button className="bg-lime-500 text-white hover:bg-lime-600 shadow-lg shadow-lime-500/30" asChild>
