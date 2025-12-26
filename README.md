@@ -18,7 +18,7 @@ This repository contains the code for the KnowAll.ai website, an AI consultancy 
 - **Tailwind CSS**: For styling
 - **shadcn/ui**: Component library
 - **OpenAI API**: For the chat assistant
-- **Vercel**: For deployment
+- **Azure App Service**: For deployment
 
 ## Getting Started
 
