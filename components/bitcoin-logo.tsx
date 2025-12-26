@@ -1,9 +1,9 @@
 interface BitcoinLogoProps {
-  className?: string
-  size?: number
+  className?: string;
+  size?: number;
 }
 
-export default function BitcoinLogo({ className = "", size = 24 }: BitcoinLogoProps) {
+export default function BitcoinLogo({ className = '', size = 24 }: BitcoinLogoProps) {
   return (
     <img
       src="/images/bitcoin-logo.png"
@@ -13,5 +13,5 @@ export default function BitcoinLogo({ className = "", size = 24 }: BitcoinLogoPr
       height={size}
       style={{ width: size, height: size }}
     />
-  )
+  );
 }

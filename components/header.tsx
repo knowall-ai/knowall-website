@@ -1,20 +1,20 @@
-"use client"
+'use client';
 
-import { useState } from "react"
-import Link from "next/link"
-import { Menu, X } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import Logo from "@/components/logo"
+import { useState } from 'react';
+import Link from 'next/link';
+import { Menu, X } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import Logo from '@/components/logo';
 
 export default function Header() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const navLinks = [
-    { name: "Home", href: "#" },
-    { name: "Services", href: "#services" },
-    { name: "Zapp.ie", href: "#zapp" },
-    { name: "Copilots", href: "#copilots" },
-  ]
+    { name: 'Home', href: '#' },
+    { name: 'Services', href: '#services' },
+    { name: 'Zapp.ie', href: '#zapp' },
+    { name: 'Copilots', href: '#copilots' },
+  ];
 
   return (
     <header className="sticky top-0 z-50 bg-gray-950/90 backdrop-blur-sm border-b border-gray-800">
@@ -27,7 +27,11 @@ export default function Header() {
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-6">
             {navLinks.map((link) => (
-              <Link key={link.name} href={link.href} className="text-gray-300 hover:text-lime-500 transition-colors">
+              <Link
+                key={link.name}
+                href={link.href}
+                className="text-gray-300 hover:text-lime-500 transition-colors"
+              >
                 {link.name}
               </Link>
             ))}
@@ -40,8 +44,16 @@ export default function Header() {
           </div>
 
           {/* Mobile Menu Button */}
-          <button className="md:hidden" onClick={() => setIsMenuOpen(!isMenuOpen)} aria-label="Toggle menu">
-            {isMenuOpen ? <X className="h-6 w-6 text-gray-300" /> : <Menu className="h-6 w-6 text-gray-300" />}
+          <button
+            className="md:hidden"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            aria-label="Toggle menu"
+          >
+            {isMenuOpen ? (
+              <X className="h-6 w-6 text-gray-300" />
+            ) : (
+              <Menu className="h-6 w-6 text-gray-300" />
+            )}
           </button>
         </div>
 
@@ -61,7 +73,9 @@ export default function Header() {
               ))}
               <div className="pt-2">
                 <Button asChild className="w-full bg-lime-600 hover:bg-lime-700 text-white">
-                  <Link href="#contact" onClick={() => setIsMenuOpen(false)}>Contact Us</Link>
+                  <Link href="#contact" onClick={() => setIsMenuOpen(false)}>
+                    Contact Us
+                  </Link>
                 </Button>
               </div>
             </nav>
@@ -69,5 +83,5 @@ export default function Header() {
         )}
       </div>
     </header>
-  )
+  );
 }

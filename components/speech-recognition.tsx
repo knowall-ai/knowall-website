@@ -1,31 +1,31 @@
-"use client"
+'use client';
 
-import { useState, useEffect, useRef, useCallback } from "react"
+import { useState, useEffect, useRef, useCallback } from 'react';
 
 // Define the window augmentation for TypeScript
 declare global {
   interface Window {
-    SpeechRecognition?: typeof SpeechRecognition
-    webkitSpeechRecognition?: typeof SpeechRecognition
+    SpeechRecognition?: typeof SpeechRecognition;
+    webkitSpeechRecognition?: typeof SpeechRecognition;
   }
 }
 
 interface SpeechRecognitionProps {
-  onResult: (transcript: string) => void
-  onEnd: () => void
+  onResult: (transcript: string) => void;
+  onEnd: () => void;
 }
 
 type SpeechRecognitionReturn = {
-  startListening: () => void
-  stopListening: () => void
-  isSupported: boolean
-}
+  startListening: () => void;
+  stopListening: () => void;
+  isSupported: boolean;
+};
 
 // Create a class-based wrapper for the Web Speech API
 class SpeechRecognitionService {
   recognition: any = null;
   isSupported: boolean = false;
-  
+
   constructor() {
     if (typeof window !== 'undefined') {
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -38,37 +38,37 @@ class SpeechRecognitionService {
       }
     }
   }
-  
+
   start(onResult: (transcript: string) => void, onEnd: () => void) {
     if (!this.recognition) return false;
-    
+
     this.recognition.onresult = (event: any) => {
       const transcript = Array.from(event.results)
         .map((result: any) => result[0])
         .map((result) => result.transcript)
-        .join("");
-      
+        .join('');
+
       onResult(transcript);
     };
-    
+
     this.recognition.onend = onEnd;
-    
+
     try {
       this.recognition.start();
       return true;
     } catch (error) {
-      console.log("Recognition failed to start", error);
+      console.log('Recognition failed to start', error);
       return false;
     }
   }
-  
+
   stop() {
     if (!this.recognition) return;
-    
+
     try {
       this.recognition.stop();
     } catch (error) {
-      console.log("Recognition failed to stop", error);
+      console.log('Recognition failed to stop', error);
     }
   }
 }
@@ -84,44 +84,47 @@ function getSpeechRecognitionService() {
   return speechRecognitionService;
 }
 
-export default function useSpeechRecognition({ onResult, onEnd }: SpeechRecognitionProps): SpeechRecognitionReturn {
+export default function useSpeechRecognition({
+  onResult,
+  onEnd,
+}: SpeechRecognitionProps): SpeechRecognitionReturn {
   const [isSupported, setIsSupported] = useState(false);
   const serviceRef = useRef<SpeechRecognitionService | null>(null);
-  
+
   // Memoize callbacks to avoid unnecessary re-renders
   const handleResult = useCallback(onResult, [onResult]);
   const handleEnd = useCallback(onEnd, [onEnd]);
-  
+
   // Initialize the service once on mount
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    
+
     const service = getSpeechRecognitionService();
     serviceRef.current = service;
     setIsSupported(!!service?.isSupported);
-    
+
     return () => {
       if (serviceRef.current) {
         serviceRef.current.stop();
       }
     };
   }, []);
-  
+
   const startListening = useCallback(() => {
     const service = serviceRef.current;
     if (!service || !isSupported) return;
     service.start(handleResult, handleEnd);
   }, [isSupported, handleResult, handleEnd]);
-  
+
   const stopListening = useCallback(() => {
     const service = serviceRef.current;
     if (!service) return;
     service.stop();
   }, []);
-  
+
   return {
     startListening,
     stopListening,
-    isSupported
+    isSupported,
   };
 }

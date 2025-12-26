@@ -1,6 +1,6 @@
 interface Window {
-  SpeechRecognition?: typeof SpeechRecognition
-  webkitSpeechRecognition?: typeof SpeechRecognition
+  SpeechRecognition?: typeof SpeechRecognition;
+  webkitSpeechRecognition?: typeof SpeechRecognition;
 }
 
-declare var SpeechRecognition: any
+declare var SpeechRecognition: any;

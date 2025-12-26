@@ -1,0 +1,19 @@
+= Troubleshooting Guide
+:toc:
+:toclevels: 2
+
+== Common Issues
+
+[cols="1,2", options="header"]
+|===
+| Problem | Solution
+
+| Azure website not responding (timeout) but App Service shows "Running"
+| Perform a full stop/start cycle (not just restart): +
+`az webapp stop --name knowall-website --resource-group KnowAllAIRG` +
+`az webapp start --name knowall-website --resource-group KnowAllAIRG` +
+ +
+To prevent recurrence, enable "Always On": +
+`az webapp config set --name knowall-website --resource-group KnowAllAIRG --always-on true`
+
+|===

@@ -21,7 +21,7 @@ function initializeLogFile() {
     if (!fs.existsSync(LOG_DIR)) {
       fs.mkdirSync(LOG_DIR, { recursive: true });
     }
-    
+
     if (!fs.existsSync(CHAT_LOG_FILE)) {
       fs.writeFileSync(CHAT_LOG_FILE, JSON.stringify([], null, 2));
     }
@@ -46,7 +46,7 @@ export async function logChat(
       console.warn('Skipping chat logging due to initialization failure');
       return false;
     }
-    
+
     // Create a new log entry
     const newEntry: ChatLogEntry = {
       id: conversationId || Date.now().toString(),
@@ -54,7 +54,7 @@ export async function logChat(
       userMessage,
       assistantResponse,
     };
-    
+
     // Add request metadata if available
     if (request) {
       try {
@@ -64,7 +64,7 @@ export async function logChat(
         console.error('Error extracting request metadata:', error);
       }
     }
-    
+
     try {
       // Read existing logs safely
       let logs: ChatLogEntry[] = [];
@@ -83,10 +83,10 @@ export async function logChat(
 
       // Add the new entry to the logs
       logs.push(newEntry);
-      
+
       // Write the updated logs back to the file
       fs.writeFileSync(CHAT_LOG_FILE, JSON.stringify(logs, null, 2));
-      
+
       console.log(`Chat log saved with ID: ${newEntry.id}`);
       return true;
     } catch (writeError) {
@@ -104,7 +104,7 @@ export async function getAllChatLogs(): Promise<ChatLogEntry[]> {
   try {
     // Initialize log file if it doesn't exist
     initializeLogFile();
-    
+
     // Read and return all logs
     const logsRaw = fs.readFileSync(CHAT_LOG_FILE, 'utf-8');
     return JSON.parse(logsRaw);
@@ -118,7 +118,7 @@ export async function getAllChatLogs(): Promise<ChatLogEntry[]> {
 export async function getChatLogById(id: string): Promise<ChatLogEntry | null> {
   try {
     const logs = await getAllChatLogs();
-    return logs.find(log => log.id === id) || null;
+    return logs.find((log) => log.id === id) || null;
   } catch (error) {
     console.error('Error getting chat log by ID:', error);
     return null;

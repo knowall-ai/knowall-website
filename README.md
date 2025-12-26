@@ -29,22 +29,26 @@ This repository contains the code for the KnowAll.ai website, an AI consultancy 
 ### Installation
 
 1. Clone the repository:
+
    ```bash
    git clone https://github.com/knowall-ai/website.git
    cd website
    ```
 
 2. Install dependencies:
+
    ```bash
    npm install
    ```
 
 3. Create a `.env.local` file in the root directory and add your OpenAI API key:
+
    ```
    OPENAI_API_KEY=your_openai_api_key_here
    ```
 
 4. Start the development server:
+
    ```bash
    npm run dev
    ```
