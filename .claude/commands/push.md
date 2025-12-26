@@ -20,8 +20,7 @@ Push changes to remote after verifying code quality and testing.
 8. Once all checks pass and testing is confirmed:
    - Run `git push` to push to the remote
    - Confirm the push was successful
-9. Monitor the GitHub Actions workflows:
-   - Run `gh run list --limit 1` to get the latest workflow run
-   - Wait for the workflow to complete using `gh run watch` or poll with `gh run view`
-   - If the workflow fails, show the error logs using `gh run view --log-failed`
-   - Report the final status to the user (success or failure with details)
+9. Monitor the GitHub Actions workflows in the background:
+   - Run `gh run list --limit 1` to get the latest workflow run ID
+   - Run `scripts/watch-workflow.sh <run-id>` in the background (using `run_in_background: true`)
+   - Tell the user the workflow is being monitored in the background and they can continue working
