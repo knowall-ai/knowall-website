@@ -1,3 +1,5 @@
+import Image from 'next/image';
+
 interface LogoProps {
   className?: string;
   darkBackground?: boolean;
@@ -5,9 +7,11 @@ interface LogoProps {
 
 export default function Logo({ className = '', darkBackground = false }: LogoProps) {
   return (
-    <img
+    <Image
       src="/images/logo.png"
       alt="KnowAll.ai"
+      width={120}
+      height={48}
       className={`${className} ${darkBackground ? 'brightness-0 invert' : ''}`}
     />
   );

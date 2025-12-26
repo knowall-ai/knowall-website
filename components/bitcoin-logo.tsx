@@ -1,3 +1,5 @@
+import Image from 'next/image';
+
 interface BitcoinLogoProps {
   className?: string;
   size?: number;
@@ -5,7 +7,7 @@ interface BitcoinLogoProps {
 
 export default function BitcoinLogo({ className = '', size = 24 }: BitcoinLogoProps) {
   return (
-    <img
+    <Image
       src="/images/bitcoin-logo.png"
       alt="Bitcoin"
       className={className}

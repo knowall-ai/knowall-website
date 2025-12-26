@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { Zap, Bot, Code, Github } from 'lucide-react';
 import EmailIcon from '@/components/email-icon';
 import { Button } from '@/components/ui/button';
@@ -131,9 +132,11 @@ export default function Home() {
 
             <div className="flex-1 flex flex-col items-center">
               <Card className="p-0 w-full max-w-md shadow-lg border-0 bg-gray-900 overflow-hidden mb-4">
-                <img
+                <Image
                   src="/images/zappie.png"
                   alt="Zapp.ie AI Agent"
+                  width={400}
+                  height={300}
                   className="w-full h-auto object-cover"
                 />
               </Card>
@@ -177,9 +180,11 @@ export default function Home() {
             <Card className="p-6 shadow-md border-0 bg-gray-800 text-white">
               <div className="mb-6">
                 <div className="flex items-center">
-                  <img
+                  <Image
                     src="/images/microsoft-copilot-logo.png"
                     alt="Microsoft Copilot"
+                    width={48}
+                    height={48}
                     className="h-12 w-auto"
                   />
                   <span className="ml-3 text-lg font-medium">Microsoft Copilot</span>
@@ -227,9 +232,11 @@ export default function Home() {
               </p>
 
               <div className="mb-6 overflow-hidden rounded-lg">
-                <img
+                <Image
                   src="/images/multi-agent-medical.png"
                   alt="Multi-Agent System with specialized AI agents"
+                  width={600}
+                  height={400}
                   className="w-full h-auto"
                 />
               </div>
