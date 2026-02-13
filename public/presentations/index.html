@@ -1,137 +1,142 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>KnowAll AI - Presentations</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+      }
 
-        .container {
-            max-width: 900px;
-            width: 100%;
-        }
+      .container {
+        max-width: 900px;
+        width: 100%;
+      }
 
-        .header {
-            text-align: center;
-            color: white;
-            margin-bottom: 50px;
-        }
+      .header {
+        text-align: center;
+        color: white;
+        margin-bottom: 50px;
+      }
 
+      .header h1 {
+        font-size: 3.5rem;
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+
+      .header p {
+        font-size: 1.25rem;
+        opacity: 0.95;
+      }
+
+      .presentations-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 30px;
+        margin-bottom: 50px;
+      }
+
+      .presentation-card {
+        background: white;
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        transition:
+          transform 0.3s ease,
+          box-shadow 0.3s ease;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .presentation-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
+      }
+
+      .presentation-card h2 {
+        color: #667eea;
+        font-size: 1.5rem;
+        margin-bottom: 15px;
+      }
+
+      .presentation-card p {
+        color: #666;
+        line-height: 1.6;
+        margin-bottom: 20px;
+        flex-grow: 1;
+      }
+
+      .presentation-card a {
+        display: inline-block;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 12px 24px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: opacity 0.3s ease;
+        align-self: flex-start;
+      }
+
+      .presentation-card a:hover {
+        opacity: 0.9;
+      }
+
+      .footer {
+        text-align: center;
+        color: white;
+        opacity: 0.8;
+        padding-top: 40px;
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      @media (max-width: 768px) {
         .header h1 {
-            font-size: 3.5rem;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-
-        .header p {
-            font-size: 1.25rem;
-            opacity: 0.95;
+          font-size: 2.5rem;
         }
 
         .presentations-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 30px;
-            margin-bottom: 50px;
+          grid-template-columns: 1fr;
+          gap: 20px;
         }
-
-        .presentation-card {
-            background: white;
-            border-radius: 12px;
-            padding: 30px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .presentation-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
-        }
-
-        .presentation-card h2 {
-            color: #667eea;
-            font-size: 1.5rem;
-            margin-bottom: 15px;
-        }
-
-        .presentation-card p {
-            color: #666;
-            line-height: 1.6;
-            margin-bottom: 20px;
-            flex-grow: 1;
-        }
-
-        .presentation-card a {
-            display: inline-block;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 12px 24px;
-            border-radius: 6px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: opacity 0.3s ease;
-            align-self: flex-start;
-        }
-
-        .presentation-card a:hover {
-            opacity: 0.9;
-        }
-
-        .footer {
-            text-align: center;
-            color: white;
-            opacity: 0.8;
-            padding-top: 40px;
-            border-top: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        @media (max-width: 768px) {
-            .header h1 {
-                font-size: 2.5rem;
-            }
-
-            .presentations-grid {
-                grid-template-columns: 1fr;
-                gap: 20px;
-            }
-        }
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <div class="header">
-            <h1>KnowAll AI</h1>
-            <p>Presentations & Materials</p>
-        </div>
+      <div class="header">
+        <h1>KnowAll AI</h1>
+        <p>Presentations & Materials</p>
+      </div>
 
-        <div class="presentations-grid">
-            <div class="presentation-card">
-                <h2>KnowAll AI Overview</h2>
-                <p>A comprehensive overview of KnowAll AI's agentic AI approach, services, and methodology. Learn how we build intelligent agents that drive business transformation.</p>
-                <a href="knowall-overview.html" target="_blank">View Presentation →</a>
-            </div>
+      <div class="presentations-grid">
+        <div class="presentation-card">
+          <h2>KnowAll AI Overview</h2>
+          <p>
+            A comprehensive overview of KnowAll AI's agentic AI approach, services, and methodology.
+            Learn how we build intelligent agents that drive business transformation.
+          </p>
+          <a href="knowall-overview.html" target="_blank">View Presentation →</a>
         </div>
+      </div>
 
-        <div class="footer">
-            <p>&copy; 2026 KnowAll AI. All rights reserved.</p>
-        </div>
+      <div class="footer">
+        <p>&copy; 2026 KnowAll AI. All rights reserved.</p>
+      </div>
     </div>
-</body>
+  </body>
 </html>
