@@ -1,0 +1,815 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KnowAll.AI - Agentic AI Solutions</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/reset.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/reveal.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/theme/black.css">
+    <style>
+        /* KnowAll Brand Colors & Fonts - Official Guidelines */
+        :root {
+            --knowall-green: #9dff0a;
+            --knowall-grey: #333732;
+            --knowall-dark-grey: #262b25;
+            --knowall-orange: #F7931A;
+            --knowall-light-grey: #e0e0e0;
+        }
+
+        /* Google Fonts Import for Playfair Display and Mulish */
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&family=Mulish:wght@300;400;500;600;700&display=swap');
+
+        /* Override Reveal.js defaults */
+        .reveal {
+            font-family: 'Mulish', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 36px;
+            background: linear-gradient(135deg, var(--knowall-dark-grey) 0%, var(--knowall-grey) 100%);
+        }
+
+        .reveal h1, .reveal h2, .reveal h3, .reveal h4 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            text-transform: none;
+            letter-spacing: normal;
+        }
+
+        .reveal h1 {
+            font-size: 4em;
+            color: var(--knowall-green);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            margin-bottom: 30px;
+            font-weight: 900;
+        }
+
+        .reveal h2 {
+            font-size: 3em;
+            color: var(--knowall-green);
+            margin-bottom: 25px;
+            font-weight: 800;
+        }
+
+        .reveal h3 {
+            font-size: 2em;
+            color: var(--knowall-orange);
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .reveal p, .reveal li {
+            font-size: 0.9em;
+            line-height: 1.6;
+        }
+
+        /* KnowAll Logo */
+        .knowall-logo {
+            position: absolute;
+            top: 30px;
+            right: 50px;
+            font-size: 2rem;
+            font-weight: 700;
+            color: white;
+            z-index: 100;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .knowall-logo-icon {
+            width: 40px;
+            height: 40px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        /* Green Vibrant Backgrounds */
+        .reveal .slides section.green-bg {
+            background: linear-gradient(135deg, var(--knowall-green) 0%, var(--knowall-bright-green) 100%);
+            position: relative;
+        }
+
+        .reveal .slides section.green-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080"><defs><pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/></pattern></defs><rect width="1920" height="1080" fill="url(%23grid)"/></svg>');
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        /* Two-Tone Layout */
+        .reveal .slides section.split-layout {
+            background: linear-gradient(to bottom, var(--knowall-green) 0%, var(--knowall-green) 40%, var(--knowall-darker) 40%, var(--knowall-darker) 100%);
+            padding: 0;
+        }
+
+        .top-section {
+            height: 40vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 50px;
+        }
+
+        .bottom-section {
+            height: 60vh;
+            padding: 50px 100px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        /* Dark Background Slides */
+        .reveal .slides section.dark-bg {
+            background: linear-gradient(135deg, var(--knowall-darker) 0%, var(--knowall-dark) 100%);
+        }
+
+        /* Content Cards */
+        .card-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .card {
+            background: rgba(51, 55, 50, 0.8);
+            border: 3px solid var(--knowall-green);
+            border-radius: 16px;
+            padding: 40px 35px;
+            text-align: center;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: var(--knowall-green);
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 204, 102, 0.3);
+            background: rgba(0, 204, 102, 0.1);
+        }
+
+        .card-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .card h4 {
+            color: var(--knowall-green);
+            font-size: 1.4em;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .card p {
+            font-size: 0.8em;
+            color: var(--knowall-light-grey);
+            line-height: 1.5;
+        }
+
+        /* Grid Layouts */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 40px;
+            margin-top: 40px;
+        }
+
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 25px;
+            margin-top: 40px;
+        }
+
+        /* Feature Boxes */
+        .feature-box {
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid var(--knowall-green);
+            border-radius: 12px;
+            padding: 30px;
+            text-align: left;
+        }
+
+        .feature-box h4 {
+            color: var(--knowall-green);
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .feature-box p {
+            color: var(--knowall-light-grey);
+            font-size: 0.85em;
+            line-height: 1.6;
+        }
+
+        /* Microsoft Partner Logos */
+        .partner-logos {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 50px;
+            margin-top: 50px;
+            flex-wrap: wrap;
+        }
+
+        .partner-logo-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Lists */
+        .reveal ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .reveal ul li {
+            margin-bottom: 20px;
+            padding-left: 40px;
+            position: relative;
+            font-size: 0.9em;
+            line-height: 1.7;
+        }
+
+        .reveal ul li::before {
+            content: "✓";
+            color: var(--knowall-green);
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+            font-size: 1.5em;
+        }
+
+        /* Timeline */
+        .timeline {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            position: relative;
+            margin-top: 60px;
+            padding: 40px 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 10%;
+            right: 10%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--knowall-green) 0%, rgba(0, 204, 102, 0.3) 100%);
+        }
+
+        .timeline-point {
+            background: var(--knowall-darker);
+            border: 4px solid var(--knowall-green);
+            border-radius: 15px;
+            padding: 35px 30px;
+            min-width: 280px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .timeline-point h4 {
+            color: var(--knowall-green);
+            font-size: 1.8em;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .timeline-point p {
+            font-size: 0.85em;
+            color: var(--knowall-light-grey);
+        }
+
+        /* Quote/Hook */
+        .hook {
+            font-size: 2.2em;
+            line-height: 1.6;
+            padding: 60px;
+            border: 4px solid var(--knowall-green);
+            border-radius: 20px;
+            background: rgba(0, 0, 0, 0.6);
+            font-weight: 500;
+            max-width: 1100px;
+            margin: 50px auto;
+            box-shadow: 0 10px 40px rgba(0, 204, 102, 0.2);
+        }
+
+        .hook em {
+            color: var(--knowall-green);
+            font-style: normal;
+            font-weight: 700;
+        }
+
+        /* CTA Button */
+        .cta-button {
+            display: inline-block;
+            padding: 25px 60px;
+            background: linear-gradient(135deg, var(--knowall-green) 0%, var(--knowall-bright-green) 100%);
+            color: #000;
+            font-size: 1.3em;
+            font-weight: 700;
+            text-decoration: none;
+            border-radius: 50px;
+            margin-top: 50px;
+            transition: all 0.3s;
+            box-shadow: 0 8px 25px rgba(0, 204, 102, 0.4);
+            border: none;
+        }
+
+        .cta-button:hover {
+            transform: scale(1.08);
+            box-shadow: 0 15px 50px rgba(0, 204, 102, 0.6);
+        }
+
+        /* Contact Grid */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 50px;
+            margin-top: 60px;
+        }
+
+        .contact-item {
+            text-align: center;
+        }
+
+        .contact-icon {
+            font-size: 3.5em;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .contact-text {
+            font-size: 1em;
+            color: var(--knowall-light-grey);
+        }
+
+        .contact-text a {
+            color: var(--knowall-green);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        /* Subtitle */
+        .subtitle {
+            font-size: 1.2em;
+            color: var(--knowall-light-grey);
+            margin-top: 20px;
+            font-weight: 300;
+            line-height: 1.6;
+        }
+
+        /* Highlight */
+        .highlight {
+            color: var(--knowall-green);
+            font-weight: 700;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .reveal {
+                font-size: 24px;
+            }
+            .card-container, .grid-2, .grid-4 {
+                grid-template-columns: 1fr;
+            }
+            .timeline {
+                flex-direction: column;
+                gap: 30px;
+            }
+            .timeline::before {
+                display: none;
+            }
+        }
+
+        /* Slide Number */
+        .reveal .slide-number {
+            color: var(--knowall-green);
+            font-weight: 700;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 8px 12px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides">
+            
+            <!-- Slide 1: Title -->
+            <section class="green-bg">
+                <div class="knowall-logo">
+                    <div class="knowall-logo-icon">🤖</div>
+                    <span>KnowAll.AI</span>
+                </div>
+                <h1>Agentic AI That Works<br>While You Sleep</h1>
+                <p class="subtitle">Autonomous AI agents that operate independently,<br>learn continuously, and deliver results<br>without constant supervision</p>
+            </section>
+
+            <!-- Slide 2: The Hook -->
+            <section class="dark-bg">
+                <div class="knowall-logo">
+                    <div class="knowall-logo-icon" style="background: var(--knowall-green);">🤖</div>
+                    <span>KnowAll.AI</span>
+                </div>
+                <div class="hook">
+                    "As execution costs drop,<br>requirements matter more.<br><br>
+                    Building is cheap.<br>
+                    Building <em>wrong</em> is expensive."
+                </div>
+            </section>
+
+            <!-- Slide 3: The Challenge -->
+            <section class="split-layout">
+                <div class="knowall-logo">
+                    <div class="knowall-logo-icon" style="background: white;">🤖</div>
+                    <span>KnowAll.AI</span>
+                </div>
+                <div class="top-section">
+                    <h2>The Challenge</h2>
+                    <p class="subtitle" style="color: white;">Every software project faces the same bottleneck</p>
+                </div>
+                <div class="bottom-section">
+                    <div class="grid-2">
+                        <div class="feature-box">
+                            <h4><span style="color: #ff4444;">✗</span> Miscommunication</h4>
+                            <p>Stakeholders and developers speak different languages. Requirements get lost in translation.</p>
+                        </div>
+                        <div class="feature-box">
+                            <h4><span style="color: #ff4444;">✗</span> Incomplete Context</h4>
+                            <p>Documentation is incomplete, assumptions are made, and critical details are missed.</p>
+                        </div>
+                        <div class="feature-box">
+                            <h4><span style="color: #ff4444;">✗</span> Slow Iteration</h4>
+                            <p>Back-and-forth communication takes days. Projects stall waiting for clarifications.</p>
+                        </div>
+                        <div class="feature-box">
+                            <h4><span style="color: #ff4444;">✗</span> Expensive Rework</h4>
+                            <p>Building the wrong thing is far more expensive than getting it right the first time.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 4: Meet Pennie -->
+            <section class="split-layout">
+                <div class="knowall-logo">
+                    <div class="knowall-logo-icon" style="background: white;">🤖</div>
+                    <span>KnowAll.AI</span>
+                </div>
+                <div class="top-section">
+                    <h2>Meet Pennie</h2>
+                    <p class="subtitle" style="color: white;">Your AI Requirements Analyst</p>
+                </div>
+                <div class="bottom-section">
+                    <div class="grid-2" style="grid-template-columns: 200px 1fr;">
+                        <div style="font-size: 10em; text-align: center;">🤖</div>
+                        <div style="text-align: left;">
+                            <ul style="font-size: 0.85em;">
+                                <li><strong style="color: white;">Autonomous Discovery:</strong> Engages with stakeholders to gather and clarify requirements</li>
+                                <li><strong style="color: white;">Context Building:</strong> Creates comprehensive requirement documents with full business context</li>
+                                <li><strong style="color: white;">Validation & Refinement:</strong> Iteratively validates requirements until perfect</li>
+                                <li><strong style="color: white;">Handoff Ready:</strong> Delivers production-ready specifications to development teams</li>
+                                <li><strong style="color: white;">Always Available:</strong> Works across time zones, never misses a detail</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 5: T-Minus-15 -->
+            <section class="green-bg">
+                <div class="knowall-logo">
+                    <div class="knowall-logo-icon" style="background: white;">🤖</div>
+                    <span>KnowAll.AI</span>
+                </div>
+                <h2>T-Minus-15 Methodology</h2>
+                <p class="subtitle" style="color: white;">From Idea to Production in 15 Steps</p>
+                <div class="grid-4">
+                    <div class="card">
+                        <span class="card-icon">🔰</span>
+                        <h4>PREP</h4>
+                        <p>Requirements, planning, and team readiness</p>
+                    </div>
+                    <div class="card">
+                        <span class="card-icon">🎯</span>
+                        <h4>DESIGN</h4>
+                        <p>Architecture, security, and integration planning</p>
+                    </div>
+                    <div class="card">
+                        <span class="card-icon">🔨</span>
+                        <h4>ENGINEER</h4>
+                        <p>Development, testing, and quality assurance</p>
+                    </div>
+                    <div class="card">
+                        <span class="card-icon">🚀</span>
+                        <h4>OPERATE</h4>
+                        <p>Deployment, monitoring, and continuous improvement</p>
+                    </div>
+                </div>
+                <p style="margin-top: 50px; font-size: 0.8em; color: white;">
+                    📚 <a href="https://github.com/T-Minus-15" style="color: white; text-decoration: underline; font-weight: 600;">github.com/T-Minus-15</a> - Open source methodology
+                </p>
+            </section>
+
+            <!-- Slide 6: Security -->
+            <section class="dark-bg">
+                <div class="knowall-logo">
+                    <div class="knowall-logo-icon" style="background: var(--knowall-green);">🤖</div>
+                    <span>KnowAll.AI</span>
+                </div>
+                <h2>Enterprise-Grade Security</h2>
+                <p class="subtitle">Built on Microsoft Azure with enterprise compliance</p>
+                <div class="grid-2">
+                    <div class="feature-box">
+                        <h4>🔐 Data Protection</h4>
+                        <p>End-to-end encryption, secure key management, and data residency controls aligned with your compliance requirements</p>
+                    </div>
+                    <div class="feature-box">
+                        <h4>🛡️ Access Control</h4>
+                        <p>Role-based access control (RBAC), Azure AD integration, and multi-factor authentication for all agent interactions</p>
+                    </div>
+                    <div class="feature-box">
+                        <h4>📊 Audit & Compliance</h4>
+                        <p>Complete audit trails, compliance reporting, and integration with your existing governance frameworks</p>
+                    </div>
+                    <div class="feature-box">
+                        <h4>🔒 Secure Architecture</h4>
+                        <p>Zero-trust architecture, network isolation, and secure API endpoints with rate limiting and threat detection</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 7: Microsoft Integration -->
+            <section class="split-layout">
+                <div class="knowall-logo">
+                    <div class="knowall-logo-icon" style="background: white;">🤖</div>
+                    <span>KnowAll.AI</span>
+                </div>
+                <div class="top-section">
+                    <h2>Seamless Microsoft Integration</h2>
+                    <p class="subtitle" style="color: white;">Works with your existing Microsoft ecosystem</p>
+                </div>
+                <div class="bottom-section">
+                    <div class="card-container">
+                        <div class="card">
+                            <svg viewBox="0 0 96 96" width="80" height="80" style="margin-bottom: 20px;">
+                                <path fill="#0078D4" d="M0 0h45.5v45.5H0z"/>
+                                <path fill="#00A4EF" d="M50.5 0H96v45.5H50.5z"/>
+                                <path fill="#7FBA00" d="M0 50.5h45.5V96H0z"/>
+                                <path fill="#FFB900" d="M50.5 50.5H96V96H50.5z"/>
+                            </svg>
+                            <h4>Microsoft 365</h4>
+                            <p>Teams, Outlook, SharePoint, and the entire M365 ecosystem</p>
+                        </div>
+                        <div class="card">
+                            <div style="width: 80px; height: 80px; background: #742774; border-radius: 10px; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-size: 3em; color: white; font-weight: bold;">P</div>
+                            <h4>Power Platform</h4>
+                            <p>Power Apps, Automate, BI for complete business automation</p>
+                        </div>
+                        <div class="card">
+                            <div style="width: 80px; height: 80px; background: #106EBE; border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center;">
+                                <div style="width: 50px; height: 50px; border: 4px solid white; border-radius: 50%;"></div>
+                            </div>
+                            <h4>Microsoft Copilot</h4>
+                            <p>Custom Copilot development with intelligent assistance</p>
+                        </div>
+                    </div>
+                    <div class="partner-logos">
+                        <div class="partner-logo-item">
+                            <svg viewBox="0 0 200 50" width="180" height="45">
+                                <path fill="#0078D4" d="M0 0h9.5v9.5H0z"/>
+                                <path fill="#00A4EF" d="M10.5 0H20v9.5h-9.5z"/>
+                                <path fill="#7FBA00" d="M0 10.5h9.5V20H0z"/>
+                                <path fill="#FFB900" d="M10.5 10.5H20V20h-9.5z"/>
+                                <text x="28" y="15" font-family="Segoe UI" font-size="14" fill="white" font-weight="600">Microsoft Azure</text>
+                            </svg>
+                        </div>
+                        <div class="partner-logo-item">
+                            <div style="padding: 8px 18px; background: #0078D4; border-radius: 5px; font-size: 0.7em; font-weight: 600; color: white;">Azure DevOps</div>
+                        </div>
+                        <div class="partner-logo-item">
+                            <div style="padding: 8px 18px; background: #005A9E; border-radius: 5px; font-size: 0.7em; font-weight: 600; color: white;">Microsoft Fabric</div>
+                        </div>
+                        <div class="partner-logo-item">
+                            <svg viewBox="0 0 100 100" width="50" height="50">
+                                <path fill="white" d="M50 0C22.4 0 0 22.4 0 50s22.4 50 50 50 50-22.4 50-50S77.6 0 50 0zm23.2 71.5L50 58.6l-23.2 12.9 4.4-25.7L12.5 27.5l25.8-3.7L50 0l11.7 23.8 25.8 3.7-18.7 18.3 4.4 25.7z"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 8: Augmentation -->
+            <section class="green-bg">
+                <div class="knowall-logo">
+                    <div class="knowall-logo-icon" style="background: white;">🤖</div>
+                    <span>KnowAll.AI</span>
+                </div>
+                <h2>Augmenting Your Team</h2>
+                <p class="subtitle" style="color: white;">Not replacing people — empowering them</p>
+                <div class="grid-2">
+                    <div style="text-align: left;">
+                        <ul>
+                            <li>Always available — no sick days, no time off, no burnout</li>
+                            <li>Handles repetitive tasks so humans focus on creative work</li>
+                            <li>Works alongside your team, not instead of them</li>
+                        </ul>
+                    </div>
+                    <div style="text-align: left;">
+                        <ul>
+                            <li>Scales instantly during busy periods without hiring</li>
+                            <li>Works overnight to have answers ready by morning</li>
+                            <li>Continuous learning from every interaction and outcome</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 9: Vision -->
+            <section class="dark-bg">
+                <div class="knowall-logo">
+                    <div class="knowall-logo-icon" style="background: var(--knowall-green);">🤖</div>
+                    <span>KnowAll.AI</span>
+                </div>
+                <h2>Our Vision</h2>
+                <p class="subtitle">Idea to Production in a Single Meeting</p>
+                <div class="timeline">
+                    <div class="timeline-point">
+                        <h4>Today</h4>
+                        <p>AI agents handle requirements, documentation, and handoff to developers</p>
+                    </div>
+                    <div class="timeline-point">
+                        <h4>6 Months</h4>
+                        <p>Complete idea-to-production pipeline in one meeting</p>
+                    </div>
+                    <div class="timeline-point">
+                        <h4>Future</h4>
+                        <p>Business ideas become reality overnight</p>
+                    </div>
+                </div>
+                <p style="margin-top: 70px; font-size: 1.3em; line-height: 1.7; max-width: 900px; margin-left: auto; margin-right: auto;">
+                    Imagine walking into a meeting with an idea and walking out with working software.<br>
+                    <span class="highlight">That's where we're headed.</span>
+                </p>
+            </section>
+
+            <!-- Slide 10: Benefits -->
+            <section class="split-layout">
+                <div class="knowall-logo">
+                    <div class="knowall-logo-icon" style="background: white;">🤖</div>
+                    <span>KnowAll.AI</span>
+                </div>
+                <div class="top-section">
+                    <h2>Real-World Benefits</h2>
+                    <p class="subtitle" style="color: white;">What our clients experience</p>
+                </div>
+                <div class="bottom-section">
+                    <div class="grid-2">
+                        <div class="feature-box">
+                            <h4>⏱️ 70% Faster Requirements</h4>
+                            <p>Requirements gathering that used to take weeks now happens in days, with better quality and completeness</p>
+                        </div>
+                        <div class="feature-box">
+                            <h4>💰 50% Less Rework</h4>
+                            <p>Getting requirements right the first time dramatically reduces expensive development rework</p>
+                        </div>
+                        <div class="feature-box">
+                            <h4>🎯 100% Coverage</h4>
+                            <p>AI agents don't forget to ask questions or skip edge cases — comprehensive every time</p>
+                        </div>
+                        <div class="feature-box">
+                            <h4>🔄 Continuous Availability</h4>
+                            <p>Work continues 24/7 across time zones — no more waiting for business hours</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 11: Partners -->
+            <section class="green-bg">
+                <div class="knowall-logo">
+                    <div class="knowall-logo-icon" style="background: white;">🤖</div>
+                    <span>KnowAll.AI</span>
+                </div>
+                <h2>Trusted Partner Ecosystem</h2>
+                <p class="subtitle" style="color: white;">Built on industry-leading platforms and partnerships</p>
+                <div class="card-container">
+                    <div class="card">
+                        <svg viewBox="0 0 96 96" width="120" height="120" style="margin-bottom: 20px;">
+                            <path fill="#0078D4" d="M0 0h45.5v45.5H0z"/>
+                            <path fill="#00A4EF" d="M50.5 0H96v45.5H50.5z"/>
+                            <path fill="#7FBA00" d="M0 50.5h45.5V96H0z"/>
+                            <path fill="#FFB900" d="M50.5 50.5H96V96H50.5z"/>
+                        </svg>
+                        <h4>Microsoft</h4>
+                        <p>Azure Cloud Platform, M365, Power Platform, Enterprise Security</p>
+                    </div>
+                    <div class="card">
+                        <span class="card-icon">📡</span>
+                        <h4>Eir Business</h4>
+                        <p>Enterprise Connectivity & Infrastructure Solutions Partner</p>
+                    </div>
+                    <div class="card">
+                        <span class="card-icon">⚙️</span>
+                        <h4>XMA</h4>
+                        <p>Technology Services & Enterprise IT Solutions Partner</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 12: CTA -->
+            <section class="dark-bg">
+                <div class="knowall-logo">
+                    <div class="knowall-logo-icon" style="background: var(--knowall-green);">🤖</div>
+                    <span>KnowAll.AI</span>
+                </div>
+                <h2>Ready to Transform Your Business?</h2>
+                <p class="subtitle">Let's build your agentic AI team together</p>
+                <a href="https://knowall.ai" class="cta-button">Get Started Today</a>
+                <div class="contact-grid">
+                    <div class="contact-item">
+                        <span class="contact-icon">📧</span>
+                        <div class="contact-text"><a href="mailto:hello@knowall.ai">hello@knowall.ai</a></div>
+                    </div>
+                    <div class="contact-item">
+                        <span class="contact-icon">🌐</span>
+                        <div class="contact-text"><a href="https://knowall.ai">knowall.ai</a></div>
+                    </div>
+                    <div class="contact-item">
+                        <span class="contact-icon">💼</span>
+                        <div class="contact-text">Enterprise Solutions</div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/reveal.js"></script>
+    <script>
+        Reveal.initialize({
+            hash: true,
+            slideNumber: 'c/t',
+            transition: 'slide',
+            backgroundTransition: 'fade',
+            controls: true,
+            progress: true,
+            center: true,
+            touch: true,
+            loop: false,
+            rtl: false,
+            navigationMode: 'default',
+            shuffle: false,
+            fragments: true,
+            fragmentInURL: true,
+            embedded: false,
+            help: true,
+            pause: true,
+            showNotes: false,
+            autoPlayMedia: null,
+            preloadIframes: null,
+            autoAnimate: true,
+            autoAnimateEasing: 'ease',
+            autoAnimateDuration: 1.0,
+            autoAnimateUnmatched: true,
+            width: 1920,
+            height: 1080,
+            margin: 0.04,
+            minScale: 0.2,
+            maxScale: 2.0,
+            keyboard: true,
+            overview: true
+        });
+    </script>
+</body>
+</html>
