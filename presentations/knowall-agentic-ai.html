@@ -3,421 +3,465 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KnowAll.AI - Agentic AI Solutions</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/reset.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/reveal.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/theme/black.css">
+    <title>KnowAll AI - Agentic AI Solutions</title>
+    <link rel="icon" type="image/png" href="images/logo.svg">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/dist/reset.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/dist/reveal.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/dist/theme/black.css">
+    <link rel="stylesheet" href="https://unpkg.com/lucide-static@latest/font/lucide.css">
     <style>
-        /* KnowAll Brand Colors & Fonts - Official Guidelines */
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&display=swap');
+        
+        /* Note: Muli has been renamed to Mulish */
+        @import url('https://fonts.googleapis.com/css2?family=Mulish:wght@300;400;600;700&display=swap');
+
         :root {
             --knowall-green: #9dff0a;
             --knowall-grey: #333732;
-            --knowall-dark-grey: #262b25;
+            --knowall-dark: #262b25;
             --knowall-orange: #F7931A;
-            --knowall-light-grey: #e0e0e0;
+            --text-white: #ffffff;
+            --text-light: rgba(255, 255, 255, 0.9);
         }
 
-        /* Google Fonts Import for Playfair Display and Mulish */
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&family=Mulish:wght@300;400;500;600;700&display=swap');
-
-        /* Override Reveal.js defaults */
         .reveal {
-            font-family: 'Mulish', -apple-system, BlinkMacSystemFont, sans-serif;
-            font-size: 36px;
-            background: linear-gradient(135deg, var(--knowall-dark-grey) 0%, var(--knowall-grey) 100%);
+            font-family: 'Mulish', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-size: 28px;
+            font-weight: 400;
+            background: var(--knowall-dark);
+            color: var(--text-white);
         }
 
         .reveal h1, .reveal h2, .reveal h3, .reveal h4 {
             font-family: 'Playfair Display', serif;
             font-weight: 700;
             text-transform: none;
-            letter-spacing: normal;
+            letter-spacing: -0.02em;
+            color: var(--text-white);
         }
 
         .reveal h1 {
-            font-size: 4em;
-            color: var(--knowall-green);
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-            margin-bottom: 30px;
+            font-size: 3.8em;
+            line-height: 1.1;
             font-weight: 900;
+            margin-bottom: 0.4em;
         }
 
         .reveal h2 {
             font-size: 3em;
-            color: var(--knowall-green);
-            margin-bottom: 25px;
+            line-height: 1.2;
             font-weight: 800;
+            margin-bottom: 0.5em;
         }
 
         .reveal h3 {
-            font-size: 2em;
-            color: var(--knowall-orange);
-            margin-bottom: 20px;
+            font-size: 1.8em;
+            font-weight: 700;
+            margin-bottom: 0.5em;
+        }
+
+        .reveal p {
+            line-height: 1.6;
+            margin-bottom: 1em;
+            font-family: 'Mulish', sans-serif;
+        }
+
+        .reveal strong {
+            color: var(--knowall-green);
             font-weight: 700;
         }
 
-        .reveal p, .reveal li {
-            font-size: 0.9em;
-            line-height: 1.6;
-        }
-
-        /* KnowAll Logo */
-        .knowall-logo {
+        /* Logo in corner */
+        .logo {
             position: absolute;
             top: 30px;
-            right: 50px;
-            font-size: 2rem;
-            font-weight: 700;
-            color: white;
+            right: 40px;
             z-index: 100;
-            letter-spacing: -0.5px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
         }
 
-        .knowall-logo-icon {
-            width: 40px;
-            height: 40px;
-            background: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
+        .logo img {
+            height: 50px;
+            width: auto;
         }
 
-        /* Green Vibrant Backgrounds */
-        .reveal .slides section.green-bg {
-            background: linear-gradient(135deg, var(--knowall-green) 0%, var(--knowall-bright-green) 100%);
+        /* Gradient backgrounds */
+        .hero-gradient {
+            background: linear-gradient(135deg, var(--knowall-dark) 0%, #1a1f1a 50%, var(--knowall-dark) 100%);
             position: relative;
         }
 
-        .reveal .slides section.green-bg::before {
+        .hero-gradient::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080"><defs><pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/></pattern></defs><rect width="1920" height="1080" fill="url(%23grid)"/></svg>');
-            opacity: 0.3;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(157, 255, 10, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 50%, rgba(157, 255, 10, 0.08) 0%, transparent 50%);
             pointer-events: none;
         }
 
-        /* Two-Tone Layout */
-        .reveal .slides section.split-layout {
-            background: linear-gradient(to bottom, var(--knowall-green) 0%, var(--knowall-green) 40%, var(--knowall-darker) 40%, var(--knowall-darker) 100%);
+        /* Accent bar */
+        .accent-bar {
+            height: 6px;
+            background: var(--knowall-green);
+            width: 100%;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+        }
+
+        /* Subheadline */
+        .subheadline {
+            font-size: 1.2em;
+            color: var(--text-light);
+            font-weight: 400;
+            max-width: 1100px;
+            margin: 0 auto;
+            line-height: 1.5;
+            text-align: center;
+        }
+
+        /* Problem/Solution boxes */
+        .split-box {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            margin-top: 50px;
+            text-align: left;
+        }
+
+        .box {
+            background: var(--knowall-grey);
+            padding: 40px;
+            border-radius: 16px;
+            border: 3px solid var(--knowall-green);
+        }
+
+        .box.old {
+            border-color: #cc3333;
+            opacity: 0.75;
+        }
+
+        .box h3 {
+            color: var(--knowall-green);
+            font-size: 1.6em;
+            margin-bottom: 25px;
+        }
+
+        .box.old h3 {
+            color: #ff6666;
+        }
+
+        .box ul {
+            list-style: none;
             padding: 0;
+            margin: 0;
         }
 
-        .top-section {
-            height: 40vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 50px;
+        .box li {
+            padding: 12px 0 12px 35px;
+            font-size: 0.85em;
+            line-height: 1.5;
+            position: relative;
         }
 
-        .bottom-section {
-            height: 60vh;
-            padding: 50px 100px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
+        .box li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--knowall-green);
+            font-weight: 900;
+            font-size: 1.3em;
         }
 
-        /* Dark Background Slides */
-        .reveal .slides section.dark-bg {
-            background: linear-gradient(135deg, var(--knowall-darker) 0%, var(--knowall-dark) 100%);
+        .box.old li::before {
+            content: '✗';
+            color: #ff6666;
         }
 
-        /* Content Cards */
-        .card-container {
+        /* Feature grid */
+        .feature-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 30px;
-            margin-top: 40px;
+            gap: 35px;
+            margin-top: 50px;
         }
 
-        .card {
-            background: rgba(51, 55, 50, 0.8);
-            border: 3px solid var(--knowall-green);
+        .feature-card {
+            background: var(--knowall-grey);
+            padding: 35px;
             border-radius: 16px;
-            padding: 40px 35px;
             text-align: center;
-            transition: all 0.3s;
-            position: relative;
-            overflow: hidden;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
         }
 
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 5px;
-            background: var(--knowall-green);
+        .feature-card:hover {
+            border-color: var(--knowall-green);
+            transform: translateY(-3px);
         }
 
-        .card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 40px rgba(0, 204, 102, 0.3);
-            background: rgba(0, 204, 102, 0.1);
-        }
-
-        .card-icon {
-            font-size: 4em;
+        .feature-card i {
+            font-size: 3em;
+            color: var(--knowall-green);
             margin-bottom: 20px;
             display: block;
         }
 
-        .card h4 {
-            color: var(--knowall-green);
-            font-size: 1.4em;
-            margin-bottom: 15px;
+        .feature-card h4 {
+            font-size: 1.2em;
+            margin-bottom: 12px;
             font-weight: 700;
         }
 
-        .card p {
+        .feature-card p {
             font-size: 0.8em;
-            color: var(--knowall-light-grey);
+            color: var(--text-light);
             line-height: 1.5;
         }
 
-        /* Grid Layouts */
-        .grid-2 {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 40px;
-            margin-top: 40px;
-        }
-
-        .grid-4 {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 25px;
-            margin-top: 40px;
-        }
-
-        /* Feature Boxes */
-        .feature-box {
-            background: rgba(0, 0, 0, 0.6);
-            border: 2px solid var(--knowall-green);
-            border-radius: 12px;
-            padding: 30px;
-            text-align: left;
-        }
-
-        .feature-box h4 {
-            color: var(--knowall-green);
-            font-size: 1.5em;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .feature-box p {
-            color: var(--knowall-light-grey);
-            font-size: 0.85em;
-            line-height: 1.6;
-        }
-
-        /* Microsoft Partner Logos */
-        .partner-logos {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 50px;
-            margin-top: 50px;
-            flex-wrap: wrap;
-        }
-
-        .partner-logo-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-        }
-
-        /* Lists */
-        .reveal ul {
-            list-style: none;
-            padding-left: 0;
-        }
-
-        .reveal ul li {
-            margin-bottom: 20px;
-            padding-left: 40px;
-            position: relative;
-            font-size: 0.9em;
-            line-height: 1.7;
-        }
-
-        .reveal ul li::before {
-            content: "✓";
-            color: var(--knowall-green);
-            font-weight: bold;
-            position: absolute;
-            left: 0;
-            font-size: 1.5em;
-        }
-
-        /* Timeline */
+        /* Process timeline */
         .timeline {
             display: flex;
-            justify-content: space-around;
+            justify-content: space-between;
             align-items: center;
+            margin: 60px 80px;
             position: relative;
-            margin-top: 60px;
-            padding: 40px 0;
         }
 
         .timeline::before {
             content: '';
             position: absolute;
-            top: 50%;
+            top: 40px;
             left: 10%;
             right: 10%;
             height: 4px;
-            background: linear-gradient(90deg, var(--knowall-green) 0%, rgba(0, 204, 102, 0.3) 100%);
+            background: var(--knowall-green);
+            z-index: 0;
         }
 
-        .timeline-point {
-            background: var(--knowall-darker);
-            border: 4px solid var(--knowall-green);
-            border-radius: 15px;
-            padding: 35px 30px;
-            min-width: 280px;
+        .timeline-step {
             text-align: center;
             position: relative;
             z-index: 1;
+            flex: 1;
         }
 
-        .timeline-point h4 {
-            color: var(--knowall-green);
+        .timeline-step .circle {
+            width: 80px;
+            height: 80px;
+            background: var(--knowall-green);
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-size: 1.8em;
-            margin-bottom: 15px;
-            font-weight: 700;
+            font-weight: 900;
+            color: var(--knowall-dark);
+            border: 5px solid var(--knowall-dark);
         }
 
-        .timeline-point p {
-            font-size: 0.85em;
-            color: var(--knowall-light-grey);
+        .timeline-step h4 {
+            font-size: 1.1em;
+            margin-bottom: 8px;
         }
 
-        /* Quote/Hook */
-        .hook {
-            font-size: 2.2em;
-            line-height: 1.6;
-            padding: 60px;
-            border: 4px solid var(--knowall-green);
-            border-radius: 20px;
-            background: rgba(0, 0, 0, 0.6);
-            font-weight: 500;
-            max-width: 1100px;
-            margin: 50px auto;
-            box-shadow: 0 10px 40px rgba(0, 204, 102, 0.2);
+        .timeline-step p {
+            font-size: 0.7em;
+            color: var(--text-light);
+            max-width: 180px;
+            margin: 0 auto;
         }
 
-        .hook em {
-            color: var(--knowall-green);
-            font-style: normal;
-            font-weight: 700;
+        /* Stats display */
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 40px 0;
         }
 
-        /* CTA Button */
-        .cta-button {
-            display: inline-block;
-            padding: 25px 60px;
-            background: linear-gradient(135deg, var(--knowall-green) 0%, var(--knowall-bright-green) 100%);
-            color: #000;
-            font-size: 1.3em;
-            font-weight: 700;
-            text-decoration: none;
-            border-radius: 50px;
-            margin-top: 50px;
-            transition: all 0.3s;
-            box-shadow: 0 8px 25px rgba(0, 204, 102, 0.4);
-            border: none;
-        }
-
-        .cta-button:hover {
-            transform: scale(1.08);
-            box-shadow: 0 15px 50px rgba(0, 204, 102, 0.6);
-        }
-
-        /* Contact Grid */
-        .contact-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 50px;
-            margin-top: 60px;
-        }
-
-        .contact-item {
+        .stat {
             text-align: center;
         }
 
-        .contact-icon {
+        .stat .number {
             font-size: 3.5em;
-            margin-bottom: 15px;
-            display: block;
+            font-weight: 900;
+            color: var(--knowall-green);
+            line-height: 1;
+            margin-bottom: 12px;
         }
 
-        .contact-text {
-            font-size: 1em;
-            color: var(--knowall-light-grey);
+        .stat .label {
+            font-size: 0.9em;
+            color: var(--text-light);
+            font-weight: 400;
         }
 
-        .contact-text a {
+        /* Case study box */
+        .case-study {
+            background: var(--knowall-grey);
+            padding: 40px;
+            border-radius: 16px;
+            margin: 30px 80px;
+            border: 3px solid var(--knowall-green);
+            text-align: left;
+        }
+
+        .case-study h3 {
+            color: var(--knowall-green);
+            font-size: 1.6em;
+            margin-bottom: 18px;
+        }
+
+        .case-study .highlight {
+            background: rgba(157, 255, 10, 0.1);
+            padding: 25px;
+            border-radius: 12px;
+            margin-top: 20px;
+            font-size: 0.85em;
+            line-height: 1.6;
+        }
+
+        /* CTA section */
+        .cta-section {
+            margin-top: 60px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: var(--knowall-green);
+            color: var(--knowall-dark);
+            padding: 22px 50px;
+            font-size: 1.2em;
+            font-weight: 800;
+            border-radius: 50px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 30px rgba(157, 255, 10, 0.3);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(157, 255, 10, 0.5);
+        }
+
+        .contact-info {
+            margin-top: 40px;
+            font-size: 0.85em;
+            color: var(--text-light);
+        }
+
+        .contact-info a {
             color: var(--knowall-green);
             text-decoration: none;
             font-weight: 600;
         }
 
-        /* Subtitle */
-        .subtitle {
-            font-size: 1.2em;
-            color: var(--knowall-light-grey);
-            margin-top: 20px;
+        /* Big statement */
+        .big-statement {
+            font-size: 2em;
+            line-height: 1.4;
             font-weight: 300;
+            max-width: 1200px;
+            margin: 50px auto;
+            font-style: italic;
+            color: var(--text-light);
+            text-align: center;
+        }
+
+        .big-statement strong {
+            font-weight: 700;
+            font-style: normal;
+        }
+
+        /* Emphasis box */
+        .emphasis-box {
+            background: rgba(157, 255, 10, 0.1);
+            border: 3px solid var(--knowall-green);
+            padding: 35px 50px;
+            border-radius: 16px;
+            margin: 35px 80px;
+            font-size: 1.1em;
             line-height: 1.6;
         }
 
-        /* Highlight */
-        .highlight {
-            color: var(--knowall-green);
-            font-weight: 700;
+        /* Source citation */
+        .source-cite {
+            font-size: 0.6em;
+            color: var(--text-light);
+            font-style: italic;
+            margin-top: 10px;
         }
 
-        /* Responsive */
-        @media (max-width: 768px) {
-            .reveal {
-                font-size: 24px;
-            }
-            .card-container, .grid-2, .grid-4 {
-                grid-template-columns: 1fr;
-            }
-            .timeline {
-                flex-direction: column;
-                gap: 30px;
-            }
-            .timeline::before {
-                display: none;
-            }
+        /* Book image */
+        .book-image {
+            max-width: 200px;
+            margin: 20px auto;
+            display: block;
         }
 
-        /* Slide Number */
-        .reveal .slide-number {
+        /* Intro slide with background image */
+        .intro-slide {
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .intro-slide .logo-center {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        /* Graph/diagram slides */
+        .diagram-slide {
+            text-align: center;
+        }
+
+        .diagram-slide img {
+            max-width: 80%;
+            max-height: 600px;
+            margin: 30px auto;
+        }
+
+        /* List styling */
+        .reveal ul {
+            list-style: none;
+        }
+
+        .reveal li {
+            margin: 15px 0;
+            padding-left: 35px;
+            position: relative;
+        }
+
+        .reveal li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
             color: var(--knowall-green);
-            font-weight: 700;
-            background: rgba(0, 0, 0, 0.5);
-            padding: 8px 12px;
-            border-radius: 5px;
+            font-weight: 900;
+            font-size: 1.1em;
+        }
+
+        /* Slide-specific adjustments */
+        .reveal .slides section {
+            padding: 50px;
+        }
+
+        .reveal .slides section.title-slide {
+            padding: 100px 50px;
+        }
+
+        /* Lucide icon styling */
+        i[data-lucide] {
+            width: 3em;
+            height: 3em;
+            color: var(--knowall-green);
         }
     </style>
 </head>
@@ -425,391 +469,434 @@
     <div class="reveal">
         <div class="slides">
             
-            <!-- Slide 1: Title -->
-            <section class="green-bg">
-                <div class="knowall-logo">
-                    <div class="knowall-logo-icon">🤖</div>
-                    <span>KnowAll.AI</span>
-                </div>
-                <h1>Agentic AI That Works<br>While You Sleep</h1>
-                <p class="subtitle">Autonomous AI agents that operate independently,<br>learn continuously, and deliver results<br>without constant supervision</p>
+            <!-- SLIDE 0: INTRO -->
+            <section class="intro-slide" style="background-image: url('images/intro-bg.svg');">
+                <img src="images/logo.svg" class="logo-center" alt="KnowAll AI">
+                <div class="accent-bar"></div>
             </section>
 
-            <!-- Slide 2: The Hook -->
-            <section class="dark-bg">
-                <div class="knowall-logo">
-                    <div class="knowall-logo-icon" style="background: var(--knowall-green);">🤖</div>
-                    <span>KnowAll.AI</span>
+            <!-- SLIDE 1: HOOK - Provocative Opening -->
+            <section class="hero-gradient title-slide">
+                <div class="logo">
+                    <img src="images/logo.svg" alt="KnowAll AI">
                 </div>
-                <div class="hook">
-                    "As execution costs drop,<br>requirements matter more.<br><br>
-                    Building is cheap.<br>
-                    Building <em>wrong</em> is expensive."
-                </div>
-            </section>
-
-            <!-- Slide 3: The Challenge -->
-            <section class="split-layout">
-                <div class="knowall-logo">
-                    <div class="knowall-logo-icon" style="background: white;">🤖</div>
-                    <span>KnowAll.AI</span>
-                </div>
-                <div class="top-section">
-                    <h2>The Challenge</h2>
-                    <p class="subtitle" style="color: white;">Every software project faces the same bottleneck</p>
-                </div>
-                <div class="bottom-section">
-                    <div class="grid-2">
-                        <div class="feature-box">
-                            <h4><span style="color: #ff4444;">✗</span> Miscommunication</h4>
-                            <p>Stakeholders and developers speak different languages. Requirements get lost in translation.</p>
-                        </div>
-                        <div class="feature-box">
-                            <h4><span style="color: #ff4444;">✗</span> Incomplete Context</h4>
-                            <p>Documentation is incomplete, assumptions are made, and critical details are missed.</p>
-                        </div>
-                        <div class="feature-box">
-                            <h4><span style="color: #ff4444;">✗</span> Slow Iteration</h4>
-                            <p>Back-and-forth communication takes days. Projects stall waiting for clarifications.</p>
-                        </div>
-                        <div class="feature-box">
-                            <h4><span style="color: #ff4444;">✗</span> Expensive Rework</h4>
-                            <p>Building the wrong thing is far more expensive than getting it right the first time.</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Slide 4: Meet Pennie -->
-            <section class="split-layout">
-                <div class="knowall-logo">
-                    <div class="knowall-logo-icon" style="background: white;">🤖</div>
-                    <span>KnowAll.AI</span>
-                </div>
-                <div class="top-section">
-                    <h2>Meet Pennie</h2>
-                    <p class="subtitle" style="color: white;">Your AI Requirements Analyst</p>
-                </div>
-                <div class="bottom-section">
-                    <div class="grid-2" style="grid-template-columns: 200px 1fr;">
-                        <div style="font-size: 10em; text-align: center;">🤖</div>
-                        <div style="text-align: left;">
-                            <ul style="font-size: 0.85em;">
-                                <li><strong style="color: white;">Autonomous Discovery:</strong> Engages with stakeholders to gather and clarify requirements</li>
-                                <li><strong style="color: white;">Context Building:</strong> Creates comprehensive requirement documents with full business context</li>
-                                <li><strong style="color: white;">Validation & Refinement:</strong> Iteratively validates requirements until perfect</li>
-                                <li><strong style="color: white;">Handoff Ready:</strong> Delivers production-ready specifications to development teams</li>
-                                <li><strong style="color: white;">Always Available:</strong> Works across time zones, never misses a detail</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Slide 5: T-Minus-15 -->
-            <section class="green-bg">
-                <div class="knowall-logo">
-                    <div class="knowall-logo-icon" style="background: white;">🤖</div>
-                    <span>KnowAll.AI</span>
-                </div>
-                <h2>T-Minus-15 Methodology</h2>
-                <p class="subtitle" style="color: white;">From Idea to Production in 15 Steps</p>
-                <div class="grid-4">
-                    <div class="card">
-                        <span class="card-icon">🔰</span>
-                        <h4>PREP</h4>
-                        <p>Requirements, planning, and team readiness</p>
-                    </div>
-                    <div class="card">
-                        <span class="card-icon">🎯</span>
-                        <h4>DESIGN</h4>
-                        <p>Architecture, security, and integration planning</p>
-                    </div>
-                    <div class="card">
-                        <span class="card-icon">🔨</span>
-                        <h4>ENGINEER</h4>
-                        <p>Development, testing, and quality assurance</p>
-                    </div>
-                    <div class="card">
-                        <span class="card-icon">🚀</span>
-                        <h4>OPERATE</h4>
-                        <p>Deployment, monitoring, and continuous improvement</p>
-                    </div>
-                </div>
-                <p style="margin-top: 50px; font-size: 0.8em; color: white;">
-                    📚 <a href="https://github.com/T-Minus-15" style="color: white; text-decoration: underline; font-weight: 600;">github.com/T-Minus-15</a> - Open source methodology
+                <h1>AI Assistants Are Everywhere.<br/>AI <strong>Employees</strong> Are Here.</h1>
+                <p class="subheadline">
+                    The companies winning today aren't just using AI to answer questions.<br/>
+                    They're deploying AI agents that <strong>do the work</strong>.
                 </p>
+                <div class="accent-bar"></div>
             </section>
 
-            <!-- Slide 6: Security -->
-            <section class="dark-bg">
-                <div class="knowall-logo">
-                    <div class="knowall-logo-icon" style="background: var(--knowall-green);">🤖</div>
-                    <span>KnowAll.AI</span>
+            <!-- SLIDE 2: PROBLEM - The Real Challenge -->
+            <section>
+                <div class="logo">
+                    <img src="images/logo.svg" alt="KnowAll AI">
                 </div>
-                <h2>Enterprise-Grade Security</h2>
-                <p class="subtitle">Built on Microsoft Azure with enterprise compliance</p>
-                <div class="grid-2">
-                    <div class="feature-box">
-                        <h4>🔐 Data Protection</h4>
-                        <p>End-to-end encryption, secure key management, and data residency controls aligned with your compliance requirements</p>
-                    </div>
-                    <div class="feature-box">
-                        <h4>🛡️ Access Control</h4>
-                        <p>Role-based access control (RBAC), Azure AD integration, and multi-factor authentication for all agent interactions</p>
-                    </div>
-                    <div class="feature-box">
-                        <h4>📊 Audit & Compliance</h4>
-                        <p>Complete audit trails, compliance reporting, and integration with your existing governance frameworks</p>
-                    </div>
-                    <div class="feature-box">
-                        <h4>🔒 Secure Architecture</h4>
-                        <p>Zero-trust architecture, network isolation, and secure API endpoints with rate limiting and threat detection</p>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Slide 7: Microsoft Integration -->
-            <section class="split-layout">
-                <div class="knowall-logo">
-                    <div class="knowall-logo-icon" style="background: white;">🤖</div>
-                    <span>KnowAll.AI</span>
-                </div>
-                <div class="top-section">
-                    <h2>Seamless Microsoft Integration</h2>
-                    <p class="subtitle" style="color: white;">Works with your existing Microsoft ecosystem</p>
-                </div>
-                <div class="bottom-section">
-                    <div class="card-container">
-                        <div class="card">
-                            <svg viewBox="0 0 96 96" width="80" height="80" style="margin-bottom: 20px;">
-                                <path fill="#0078D4" d="M0 0h45.5v45.5H0z"/>
-                                <path fill="#00A4EF" d="M50.5 0H96v45.5H50.5z"/>
-                                <path fill="#7FBA00" d="M0 50.5h45.5V96H0z"/>
-                                <path fill="#FFB900" d="M50.5 50.5H96V96H50.5z"/>
-                            </svg>
-                            <h4>Microsoft 365</h4>
-                            <p>Teams, Outlook, SharePoint, and the entire M365 ecosystem</p>
-                        </div>
-                        <div class="card">
-                            <div style="width: 80px; height: 80px; background: #742774; border-radius: 10px; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-size: 3em; color: white; font-weight: bold;">P</div>
-                            <h4>Power Platform</h4>
-                            <p>Power Apps, Automate, BI for complete business automation</p>
-                        </div>
-                        <div class="card">
-                            <div style="width: 80px; height: 80px; background: #106EBE; border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center;">
-                                <div style="width: 50px; height: 50px; border: 4px solid white; border-radius: 50%;"></div>
-                            </div>
-                            <h4>Microsoft Copilot</h4>
-                            <p>Custom Copilot development with intelligent assistance</p>
-                        </div>
-                    </div>
-                    <div class="partner-logos">
-                        <div class="partner-logo-item">
-                            <svg viewBox="0 0 200 50" width="180" height="45">
-                                <path fill="#0078D4" d="M0 0h9.5v9.5H0z"/>
-                                <path fill="#00A4EF" d="M10.5 0H20v9.5h-9.5z"/>
-                                <path fill="#7FBA00" d="M0 10.5h9.5V20H0z"/>
-                                <path fill="#FFB900" d="M10.5 10.5H20V20h-9.5z"/>
-                                <text x="28" y="15" font-family="Segoe UI" font-size="14" fill="white" font-weight="600">Microsoft Azure</text>
-                            </svg>
-                        </div>
-                        <div class="partner-logo-item">
-                            <div style="padding: 8px 18px; background: #0078D4; border-radius: 5px; font-size: 0.7em; font-weight: 600; color: white;">Azure DevOps</div>
-                        </div>
-                        <div class="partner-logo-item">
-                            <div style="padding: 8px 18px; background: #005A9E; border-radius: 5px; font-size: 0.7em; font-weight: 600; color: white;">Microsoft Fabric</div>
-                        </div>
-                        <div class="partner-logo-item">
-                            <svg viewBox="0 0 100 100" width="50" height="50">
-                                <path fill="white" d="M50 0C22.4 0 0 22.4 0 50s22.4 50 50 50 50-22.4 50-50S77.6 0 50 0zm23.2 71.5L50 58.6l-23.2 12.9 4.4-25.7L12.5 27.5l25.8-3.7L50 0l11.7 23.8 25.8 3.7-18.7 18.3 4.4 25.7z"/>
-                            </svg>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Slide 8: Augmentation -->
-            <section class="green-bg">
-                <div class="knowall-logo">
-                    <div class="knowall-logo-icon" style="background: white;">🤖</div>
-                    <span>KnowAll.AI</span>
-                </div>
-                <h2>Augmenting Your Team</h2>
-                <p class="subtitle" style="color: white;">Not replacing people — empowering them</p>
-                <div class="grid-2">
-                    <div style="text-align: left;">
+                <h2>The Hidden Cost of "Good Enough"</h2>
+                <div class="split-box">
+                    <div class="box old">
+                        <h3>Yesterday's AI</h3>
                         <ul>
-                            <li>Always available — no sick days, no time off, no burnout</li>
-                            <li>Handles repetitive tasks so humans focus on creative work</li>
-                            <li>Works alongside your team, not instead of them</li>
+                            <li>Chatbots that answer questions</li>
+                            <li>Manual handoff to humans</li>
+                            <li>Generic, one-size-fits-all</li>
+                            <li>Can't take action</li>
                         </ul>
                     </div>
-                    <div style="text-align: left;">
+                    <div class="box">
+                        <h3>What You Actually Need</h3>
                         <ul>
-                            <li>Scales instantly during busy periods without hiring</li>
-                            <li>Works overnight to have answers ready by morning</li>
-                            <li>Continuous learning from every interaction and outcome</li>
+                            <li>AI that completes tasks end-to-end</li>
+                            <li>Integrate into your daily e-mails and Teams</li>
+                            <li>Learns your processes & data</li>
+                            <li>Works 24/7 without breaks</li>
+                            <li>Scales instantly with demand</li>
                         </ul>
                     </div>
                 </div>
+                <div class="accent-bar"></div>
             </section>
 
-            <!-- Slide 9: Vision -->
-            <section class="dark-bg">
-                <div class="knowall-logo">
-                    <div class="knowall-logo-icon" style="background: var(--knowall-green);">🤖</div>
-                    <span>KnowAll.AI</span>
+            <!-- SLIDE 3: WHY NOW - Market Forces -->
+            <section>
+                <div class="logo">
+                    <img src="images/logo.svg" alt="KnowAll AI">
                 </div>
-                <h2>Our Vision</h2>
-                <p class="subtitle">Idea to Production in a Single Meeting</p>
+                <h2>The Agentic AI Shift</h2>
+                <p class="big-statement">
+                    AI is moving from <strong>chat</strong> to <strong>action</strong>.<br/>
+                    From answering questions to completing tasks.<br/>
+                    From assistants to <strong>autonomous team members</strong>.
+                </p>
+                <div class="stats">
+                    <div class="stat">
+                        <div class="number">80%</div>
+                        <div class="label">of Fortune 500 companies<br/>investing in AI agents<br/><span class="source-cite">Source: Deloitte AI Report 2025</span></div>
+                    </div>
+                    <div class="stat">
+                        <div class="number">3x</div>
+                        <div class="label">productivity gain from<br/>agentic AI<br/><span class="source-cite">Source: Gartner Research 2025</span></div>
+                    </div>
+                    <div class="stat">
+                        <div class="number">2026</div>
+                        <div class="label">The year agents become<br/>standard business tools<br/><span class="source-cite">Source: PwC Tech Trends</span></div>
+                    </div>
+                </div>
+                <p style="font-size: 0.85em; color: var(--text-light); margin-top: 30px;">
+                    <strong>Hosted on Microsoft infrastructure</strong> with enterprise-grade security and compliance.
+                </p>
+                <div class="accent-bar"></div>
+            </section>
+
+            <!-- SLIDE 4: VISION - The Future State -->
+            <section class="hero-gradient">
+                <div class="logo">
+                    <img src="images/logo.svg" alt="KnowAll AI">
+                </div>
+                <h2>Imagine Your Team Tomorrow</h2>
+                <div class="feature-grid" style="margin-top: 60px;">
+                    <div class="feature-card">
+                        <i data-lucide="headset"></i>
+                        <h4>Customer Support</h4>
+                        <p>AI agents handle tier 1-2 support 24/7, escalating only complex cases to humans</p>
+                    </div>
+                    <div class="feature-card">
+                        <i data-lucide="trending-up"></i>
+                        <h4>Sales Automation</h4>
+                        <p>AI qualifies leads, books meetings, updates CRM, and nurtures prospects automatically</p>
+                    </div>
+                    <div class="feature-card">
+                        <i data-lucide="file-text"></i>
+                        <h4>Document Processing</h4>
+                        <p>Extract data, verify accuracy, route for approval - no human data entry needed</p>
+                    </div>
+                </div>
+                <p class="emphasis-box" style="margin-top: 60px;">
+                    Not sci-fi. Not "someday." <strong>Available now</strong> - hosted on Microsoft infrastructure.
+                </p>
+                <div class="accent-bar"></div>
+            </section>
+
+            <!-- SLIDE 5: SOLUTION OVERVIEW -->
+            <section>
+                <div class="logo">
+                    <img src="images/logo.svg" alt="KnowAll AI">
+                </div>
+                <h2>How We Build AI Employees</h2>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <i data-lucide="server"></i>
+                        <h4>Segregated VMs</h4>
+                        <p>Dedicated virtual machines for each AI agent, firewalled and isolated from external access</p>
+                    </div>
+                    <div class="feature-card">
+                        <i data-lucide="shield"></i>
+                        <h4>Enterprise Security</h4>
+                        <p>Authenticated with Entra ID, role-based access control, hosted in Azure infrastructure</p>
+                    </div>
+                    <div class="feature-card">
+                        <i data-lucide="users"></i>
+                        <h4>Teams Integration</h4>
+                        <p>AI agents collaborate directly in Microsoft Teams with controlled access and permissions</p>
+                    </div>
+                    <div class="feature-card">
+                        <i data-lucide="plug"></i>
+                        <h4>Custom MCP Servers</h4>
+                        <p>Model Context Protocol servers connecting AI to your CRM, ERP, databases, and APIs</p>
+                    </div>
+                    <div class="feature-card">
+                        <i data-lucide="key"></i>
+                        <h4>Least Privilege Access</h4>
+                        <p>AI agents work like contractors - limited access, specific permissions, aligned to your business</p>
+                    </div>
+                    <div class="feature-card">
+                        <i data-lucide="puzzle"></i>
+                        <h4>Custom Skills</h4>
+                        <p>Tailored capabilities for your organization's unique processes and workflows</p>
+                    </div>
+                </div>
+                <div class="accent-bar"></div>
+            </section>
+
+            <!-- SLIDE 6: HOW IT WORKS - Process -->
+            <section>
+                <div class="logo">
+                    <img src="images/logo.svg" alt="KnowAll AI">
+                </div>
+                <h2>From Idea to Production</h2>
                 <div class="timeline">
-                    <div class="timeline-point">
-                        <h4>Today</h4>
-                        <p>AI agents handle requirements, documentation, and handoff to developers</p>
+                    <div class="timeline-step">
+                        <div class="circle">1</div>
+                        <h4>Prep</h4>
+                        <p>Map processes, pain points, quick wins</p>
                     </div>
-                    <div class="timeline-point">
-                        <h4>6 Months</h4>
-                        <p>Complete idea-to-production pipeline in one meeting</p>
+                    <div class="timeline-step">
+                        <div class="circle">2</div>
+                        <h4>Design</h4>
+                        <p>Architect agent capabilities and workflows</p>
                     </div>
-                    <div class="timeline-point">
-                        <h4>Future</h4>
-                        <p>Business ideas become reality overnight</p>
+                    <div class="timeline-step">
+                        <div class="circle">3</div>
+                        <h4>Engineer</h4>
+                        <p>Build custom MCP servers and skills</p>
+                    </div>
+                    <div class="timeline-step">
+                        <div class="circle">4</div>
+                        <h4>Test</h4>
+                        <p>Validate in sandbox environment</p>
+                    </div>
+                    <div class="timeline-step">
+                        <div class="circle">5</div>
+                        <h4>Operate</h4>
+                        <p>Deploy and continuously improve</p>
                     </div>
                 </div>
-                <p style="margin-top: 70px; font-size: 1.3em; line-height: 1.7; max-width: 900px; margin-left: auto; margin-right: auto;">
-                    Imagine walking into a meeting with an idea and walking out with working software.<br>
-                    <span class="highlight">That's where we're headed.</span>
+                <div class="emphasis-box">
+                    <i data-lucide="book-open" style="float: left; margin-right: 15px;"></i>
+                    <strong>T-Minus-15: Secrets of an Elite DevOps Team</strong><br/>
+                    A proven open-source framework our engineering team have been following themselves for years, 
+                    now giving skills and instruction to our agentic AI.
+                </div>
+                <img src="/path/to/book-cover.jpg" alt="T-Minus-15 Book" class="book-image">
+                <div class="accent-bar"></div>
+            </section>
+
+            <!-- SLIDE 7: NEO4J MEMORY GRAPH -->
+            <section class="diagram-slide">
+                <div class="logo">
+                    <img src="images/logo.svg" alt="KnowAll AI">
+                </div>
+                <h2>Long-Term Memory Knowledge Graph</h2>
+                <p style="font-size: 1.1em; margin-bottom: 30px;">
+                    AI agents that <strong>remember</strong> - connecting people, places, companies, and entities 
+                    into a persistent knowledge graph powered by Neo4j.
                 </p>
+                <img src="images/neo4j-graph.svg" alt="Neo4j Memory Graph">
+                <p class="emphasis-box" style="max-width: 900px; margin: 30px auto;">
+                    Unlike traditional chatbots that forget after each conversation, our AI agents build 
+                    a persistent understanding of your business relationships and context over time.
+                </p>
+                <div class="accent-bar"></div>
             </section>
 
-            <!-- Slide 10: Benefits -->
-            <section class="split-layout">
-                <div class="knowall-logo">
-                    <div class="knowall-logo-icon" style="background: white;">🤖</div>
-                    <span>KnowAll.AI</span>
+            <!-- SLIDE 8: BITCOIN LIGHTNING INCENTIVES -->
+            <section class="diagram-slide">
+                <div class="logo">
+                    <img src="images/logo.svg" alt="KnowAll AI">
                 </div>
-                <div class="top-section">
-                    <h2>Real-World Benefits</h2>
-                    <p class="subtitle" style="color: white;">What our clients experience</p>
+                <h2>Agent-to-Agent Incentives</h2>
+                <p style="font-size: 1.1em; margin-bottom: 30px;">
+                    AI agents can't have bank accounts - but they can have <strong>Lightning wallets</strong>.
+                </p>
+                <img src="https://dailycoin.com/wp-content/uploads/2023/07/CVJ.CH-Bitcoin-Lightning-Network-530x278.png" alt="Bitcoin Lightning Network" style="max-width: 600px;">
+                <div class="emphasis-box" style="max-width: 900px; margin: 30px auto;">
+                    <strong>Customer → Agent → Agent transactions</strong><br/>
+                    Using Bitcoin Lightning for micro-payments enables reinforcement learning through tips and incentives.
+                    AI agents can compensate each other for work, creating a self-organizing economic system.
                 </div>
-                <div class="bottom-section">
-                    <div class="grid-2">
-                        <div class="feature-box">
-                            <h4>⏱️ 70% Faster Requirements</h4>
-                            <p>Requirements gathering that used to take weeks now happens in days, with better quality and completeness</p>
-                        </div>
-                        <div class="feature-box">
-                            <h4>💰 50% Less Rework</h4>
-                            <p>Getting requirements right the first time dramatically reduces expensive development rework</p>
-                        </div>
-                        <div class="feature-box">
-                            <h4>🎯 100% Coverage</h4>
-                            <p>AI agents don't forget to ask questions or skip edge cases — comprehensive every time</p>
-                        </div>
-                        <div class="feature-box">
-                            <h4>🔄 Continuous Availability</h4>
-                            <p>Work continues 24/7 across time zones — no more waiting for business hours</p>
-                        </div>
-                    </div>
+                <div style="margin-top: 40px;">
+                    <p style="font-size: 0.9em;"><strong style="color: var(--knowall-orange);">INCENTIVES</strong></p>
+                    <p style="font-size: 0.85em; color: var(--text-light);">TEAMMATES | COPILOTS | CUSTOMERS</p>
                 </div>
+                <div class="accent-bar"></div>
             </section>
 
-            <!-- Slide 11: Partners -->
-            <section class="green-bg">
-                <div class="knowall-logo">
-                    <div class="knowall-logo-icon" style="background: white;">🤖</div>
-                    <span>KnowAll.AI</span>
+            <!-- SLIDE 9: PROOF - Case Study & Results -->
+            <section>
+                <div class="logo">
+                    <img src="images/logo.svg" alt="KnowAll AI">
                 </div>
-                <h2>Trusted Partner Ecosystem</h2>
-                <p class="subtitle" style="color: white;">Built on industry-leading platforms and partnerships</p>
-                <div class="card-container">
-                    <div class="card">
-                        <svg viewBox="0 0 96 96" width="120" height="120" style="margin-bottom: 20px;">
-                            <path fill="#0078D4" d="M0 0h45.5v45.5H0z"/>
-                            <path fill="#00A4EF" d="M50.5 0H96v45.5H50.5z"/>
-                            <path fill="#7FBA00" d="M0 50.5h45.5V96H0z"/>
-                            <path fill="#FFB900" d="M50.5 50.5H96V96H50.5z"/>
-                        </svg>
-                        <h4>Microsoft</h4>
-                        <p>Azure Cloud Platform, M365, Power Platform, Enterprise Security</p>
-                    </div>
-                    <div class="card">
-                        <span class="card-icon">📡</span>
-                        <h4>Eir Business</h4>
-                        <p>Enterprise Connectivity & Infrastructure Solutions Partner</p>
-                    </div>
-                    <div class="card">
-                        <span class="card-icon">⚙️</span>
-                        <h4>XMA</h4>
-                        <p>Technology Services & Enterprise IT Solutions Partner</p>
+                <h2 style="margin-bottom: 20px;">Real Results from Real Clients</h2>
+                <div class="case-study">
+                    <h3><i data-lucide="building" style="display: inline-block; width: 1.2em; height: 1.2em; vertical-align: middle; margin-right: 10px;"></i> Enterprise Manufacturing Client</h3>
+                    <p style="font-size: 0.95em; line-height: 1.6; margin-bottom: 18px;">
+                        <strong>Challenge:</strong> Manual processing of supplier invoices taking 40+ hours per week, 
+                        error rate of 12%, delays in payment approvals.
+                    </p>
+                    <p style="font-size: 0.95em; line-height: 1.6; margin-bottom: 18px;">
+                        <strong>Solution:</strong> AI agent team to extract invoice data, validate against purchase orders, 
+                        route for approval, and update Business Central.
+                    </p>
+                    <div class="highlight">
+                        <strong>Results after 8 weeks:</strong>
+                        <div class="stats" style="margin: 25px 0;">
+                            <div class="stat">
+                                <div class="number" style="font-size: 2.8em;">92%</div>
+                                <div class="label" style="font-size: 0.85em;">Time savings</div>
+                            </div>
+                            <div class="stat">
+                                <div class="number" style="font-size: 2.8em;">3%</div>
+                                <div class="label" style="font-size: 0.85em;">Error rate</div>
+                            </div>
+                            <div class="stat">
+                                <div class="number" style="font-size: 2.8em;">48h</div>
+                                <div class="label" style="font-size: 0.85em;">Approval cycle</div>
+                            </div>
+                        </div>
+                        <p style="margin-top: 18px; font-style: italic; font-size: 0.9em;">
+                            "It's like hiring a team member who never sleeps and never makes the same mistake twice."
+                            <br/><strong>— Operations Director</strong>
+                        </p>
                     </div>
                 </div>
+                <div class="accent-bar"></div>
             </section>
 
-            <!-- Slide 12: CTA -->
-            <section class="dark-bg">
-                <div class="knowall-logo">
-                    <div class="knowall-logo-icon" style="background: var(--knowall-green);">🤖</div>
-                    <span>KnowAll.AI</span>
+            <!-- SLIDE 10: WHAT WE BUILD -->
+            <section>
+                <div class="logo">
+                    <img src="images/logo.svg" alt="KnowAll AI">
                 </div>
-                <h2>Ready to Transform Your Business?</h2>
-                <p class="subtitle">Let's build your agentic AI team together</p>
-                <a href="https://knowall.ai" class="cta-button">Get Started Today</a>
-                <div class="contact-grid">
-                    <div class="contact-item">
-                        <span class="contact-icon">📧</span>
-                        <div class="contact-text"><a href="mailto:hello@knowall.ai">hello@knowall.ai</a></div>
+                <h2>What We Actually Build</h2>
+                <div style="text-align: left; margin: 50px 80px; font-size: 0.95em;">
+                    <div style="margin-bottom: 40px;">
+                        <h3 style="color: var(--knowall-green); margin-bottom: 18px;">
+                            <i data-lucide="user-check" style="display: inline-block; width: 1.2em; height: 1.2em; vertical-align: middle; margin-right: 10px;"></i>
+                            AI Agents as Contractors
+                        </h3>
+                        <p style="line-height: 1.7; color: var(--text-light);">
+                            We treat AI agents like contractors: limited access, least privilege security model, 
+                            specific permissions tailored to their role. They work within your environment 
+                            with controlled boundaries.
+                        </p>
                     </div>
-                    <div class="contact-item">
-                        <span class="contact-icon">🌐</span>
-                        <div class="contact-text"><a href="https://knowall.ai">knowall.ai</a></div>
+                    <div style="margin-bottom: 40px;">
+                        <h3 style="color: var(--knowall-green); margin-bottom: 18px;">
+                            <i data-lucide="server" style="display: inline-block; width: 1.2em; height: 1.2em; vertical-align: middle; margin-right: 10px;"></i>
+                            Custom MCP Servers & Skills
+                        </h3>
+                        <p style="line-height: 1.7; color: var(--text-light);">
+                            Model Context Protocol servers give agents access to your systems. We build custom skills 
+                            to do the work you need, then work with you on defining the prompt and aligning to your business goals.
+                        </p>
                     </div>
-                    <div class="contact-item">
-                        <span class="contact-icon">💼</span>
-                        <div class="contact-text">Enterprise Solutions</div>
+                    <div>
+                        <h3 style="color: var(--knowall-green); margin-bottom: 18px;">
+                            <i data-lucide="shield-check" style="display: inline-block; width: 1.2em; height: 1.2em; vertical-align: middle; margin-right: 10px;"></i>
+                            Enterprise-Grade Security
+                        </h3>
+                        <p style="line-height: 1.7; color: var(--text-light);">
+                            Segregated VMs, firewalled, no external email or Teams access, authenticated with Entra ID, 
+                            hosted in Azure. We setup strict rules on who agents can liaise with and what they can access.
+                        </p>
                     </div>
                 </div>
+                <div class="accent-bar"></div>
+            </section>
+
+            <!-- SLIDE 11: WHY KNOWALL AI -->
+            <section>
+                <div class="logo">
+                    <img src="images/logo.svg" alt="KnowAll AI">
+                </div>
+                <h2>Why KnowAll AI?</h2>
+                <div style="margin: 50px 80px; text-align: left;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 50px;">
+                        <div>
+                            <h3 style="color: var(--knowall-green); margin-bottom: 22px;">
+                                <i data-lucide="building-2" style="display: inline-block; width: 1em; height: 1em; vertical-align: middle; margin-right: 10px;"></i>
+                                Microsoft Experts
+                            </h3>
+                            <p style="font-size: 0.9em; line-height: 1.7; margin-bottom: 35px;">
+                                Deep expertise in Microsoft 365, Azure, and enterprise infrastructure.
+                                We know how to build on the platform your business already trusts.
+                            </p>
+                            
+                            <h3 style="color: var(--knowall-green); margin-bottom: 22px;">
+                                <i data-lucide="book-open" style="display: inline-block; width: 1em; height: 1em; vertical-align: middle; margin-right: 10px;"></i>
+                                Proven Methodology
+                            </h3>
+                            <p style="font-size: 0.9em; line-height: 1.7;">
+                                T-Minus-15 framework ensures we discover requirements thoroughly before building.
+                                <strong>Execution is cheap, but building the wrong thing is expensive</strong>.
+                            </p>
+                        </div>
+                        <div>
+                            <h3 style="color: var(--knowall-green); margin-bottom: 22px;">
+                                <i data-lucide="code" style="display: inline-block; width: 1em; height: 1em; vertical-align: middle; margin-right: 10px;"></i>
+                                Open Source First
+                            </h3>
+                            <p style="font-size: 0.9em; line-height: 1.7; margin-bottom: 35px;">
+                                We build on open standards (MCP) and contribute back to the community.
+                                No vendor lock-in. You own what we build.
+                            </p>
+                            
+                            <h3 style="color: var(--knowall-green); margin-bottom: 22px;">
+                                <i data-lucide="zap" style="display: inline-block; width: 1em; height: 1em; vertical-align: middle; margin-right: 10px;"></i>
+                                Speed to Value
+                            </h3>
+                            <p style="font-size: 0.9em; line-height: 1.7;">
+                                Rapid PoCs, continuous improvement, and iterative delivery.
+                                We're builders, not consultants who write reports.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="accent-bar"></div>
+            </section>
+
+            <!-- SLIDE 12: NEXT STEPS - Clear CTA -->
+            <section class="hero-gradient">
+                <div class="logo">
+                    <img src="images/logo.svg" alt="KnowAll AI">
+                </div>
+                <h2 style="margin-bottom: 30px;">Let's Build Your AI Team</h2>
+                <div class="cta-section">
+                    <p style="font-size: 1.25em; max-width: 950px; margin: 30px auto; line-height: 1.5;">
+                        Start with a <strong>Discovery Day</strong> - a 1-day workshop where we:<br/>
+                        ✓ Interview stakeholders and map automation opportunities<br/>
+                        ✓ Design your first AI agent<br/>
+                        ✓ Build a roadmap for scaling agentic AI
+                    </p>
+                    
+                    <p style="font-size: 1.1em; margin-top: 40px; color: var(--text-light);">
+                        Or jump straight to a <strong>ProtoSprint PoC</strong> (4 days) to build and test a working agent.<br/>
+                        For existing clients, this can be done within your CISP hours.
+                    </p>
+
+                    <a href="https://outlook.office.com/bookwithme/user/5368421cdbb84a1fb9c80e3f1bb142b9@KnowAll.ai?anonymous&ismsaljsauthenabled&ep=owaSlotsEmailSignature" class="cta-button" style="margin-top: 40px;">
+                        Schedule Your Discovery Day
+                    </a>
+
+                    <div class="contact-info">
+                        <p style="font-size: 1em;">
+                            <i data-lucide="mail" style="display: inline-block; width: 0.9em; height: 0.9em; vertical-align: middle;"></i> <a href="mailto:hello@knowall.ai">hello@knowall.ai</a>
+                            &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+                            <i data-lucide="globe" style="display: inline-block; width: 0.9em; height: 0.9em; vertical-align: middle;"></i> <a href="https://knowall.ai">knowall.ai</a>
+                            &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+                            <i data-lucide="github" style="display: inline-block; width: 0.9em; height: 0.9em; vertical-align: middle;"></i> <a href="https://github.com/knowall-ai">github.com/knowall-ai</a>
+                        </p>
+                    </div>
+                </div>
+                <div class="accent-bar"></div>
             </section>
 
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/reveal.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/dist/reveal.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
     <script>
         Reveal.initialize({
             hash: true,
-            slideNumber: 'c/t',
             transition: 'slide',
+            transitionSpeed: 'default',
             backgroundTransition: 'fade',
+            center: true,
             controls: true,
             progress: true,
-            center: true,
-            touch: true,
-            loop: false,
-            rtl: false,
-            navigationMode: 'default',
-            shuffle: false,
-            fragments: true,
-            fragmentInURL: true,
-            embedded: false,
-            help: true,
-            pause: true,
-            showNotes: false,
-            autoPlayMedia: null,
-            preloadIframes: null,
-            autoAnimate: true,
-            autoAnimateEasing: 'ease',
-            autoAnimateDuration: 1.0,
-            autoAnimateUnmatched: true,
+            slideNumber: 'c/t',
+            overview: true,
             width: 1920,
             height: 1080,
             margin: 0.04,
             minScale: 0.2,
-            maxScale: 2.0,
-            keyboard: true,
-            overview: true
+            maxScale: 2.0
         });
+
+        // Initialize Lucide icons
+        lucide.createIcons();
     </script>
 </body>
 </html>
