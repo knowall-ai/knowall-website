@@ -20,11 +20,11 @@ export default function Header() {
     { name: 'Services', href: '#services' },
   ];
 
-  // NOTE: "Thyme" (#thyme) joins this dropdown in the Thyme section follow-up PR,
-  // and "Allie for Accounts" (#allie) once PR #7 merges.
+  // NOTE: "Allie for Accounts" (#allie) joins this dropdown once PR #7 merges.
   const productLinks = [
     { name: 'Zaplie', href: '#zapp' },
     { name: 'Zapdesk', href: '#zapdesk' },
+    { name: 'Thyme', href: '#thyme' },
   ];
 
   const trailingNavLinks = [{ name: 'Copilots', href: '#copilots' }];

@@ -1,5 +1,17 @@
 import Image from 'next/image';
-import { Zap, Bot, Code, Github, Ticket, Mail, ShieldCheck, ExternalLink } from 'lucide-react';
+import {
+  Zap,
+  Bot,
+  Code,
+  Github,
+  Ticket,
+  Mail,
+  ShieldCheck,
+  ExternalLink,
+  Clock,
+  RefreshCw,
+  Smartphone,
+} from 'lucide-react';
 import EmailIcon from '@/components/email-icon';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -254,6 +266,91 @@ export default function Home() {
                 <ExternalLink className="h-5 w-5" />
                 <span>Visit zapdesk.knowall.ai</span>
               </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Thyme Section */}
+      <section id="thyme" className="py-20 px-4 bg-gray-800 text-white">
+        <div className="container max-w-6xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center">
+            Thyme: Time tracking for Business Central
+          </h2>
+
+          <div className="flex flex-col lg:flex-row items-center gap-12">
+            <div className="flex-1">
+              <p className="text-lg text-gray-200 mb-8">
+                Thyme is a modern time tracking web application that integrates with Microsoft
+                Dynamics 365 Business Central. Track your week in an intuitive timesheet grid and
+                let Thyme keep your Business Central Jobs and Job Journal Lines in sync
+                automatically.
+              </p>
+
+              <ul className="space-y-5 mb-10">
+                <li className="flex items-start gap-3">
+                  <Clock className="h-6 w-6 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <span className="text-gray-200">
+                    Weekly timesheet grid with a real-time start/stop timer for accurate tracking
+                  </span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <RefreshCw className="h-6 w-6 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <span className="text-gray-200">
+                    Automatic synchronization with Business Central Jobs and Job Journal Lines
+                  </span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <ShieldCheck className="h-6 w-6 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <span className="text-gray-200">
+                    Secure single sign-on via Microsoft Entra ID
+                  </span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <Smartphone className="h-6 w-6 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <span className="text-gray-200">
+                    Modern dark theme that works on desktop and mobile
+                  </span>
+                </li>
+              </ul>
+
+              <a
+                href="https://thyme.knowall.ai"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 bg-lime-600 hover:bg-lime-700 text-white px-6 py-3 rounded-md transition-colors font-medium shadow-lg shadow-lime-500/20"
+              >
+                <ExternalLink className="h-5 w-5" />
+                <span>Visit thyme.knowall.ai</span>
+              </a>
+            </div>
+
+            {/* Product screenshot (image right, mirroring the Zapdesk section's image-left) */}
+            <div className="flex-1 w-full">
+              <div className="relative">
+                <div
+                  className="absolute -inset-4 bg-lime-500/10 blur-2xl rounded-3xl"
+                  aria-hidden="true"
+                ></div>
+                <div className="relative rounded-xl overflow-hidden border border-gray-700 bg-gray-950 shadow-2xl shadow-lime-500/20">
+                  {/* Browser chrome bar */}
+                  <div className="flex items-center gap-2 px-4 py-3 bg-gray-800 border-b border-gray-700">
+                    <span className="h-3 w-3 rounded-full bg-red-500/80"></span>
+                    <span className="h-3 w-3 rounded-full bg-yellow-500/80"></span>
+                    <span className="h-3 w-3 rounded-full bg-green-500/80"></span>
+                    <span className="ml-3 text-xs text-gray-400 bg-gray-900 rounded-md px-3 py-1">
+                      thyme.knowall.ai
+                    </span>
+                  </div>
+                  <Image
+                    src="/images/products/thyme.png"
+                    alt="Thyme time tracking application homepage"
+                    width={1200}
+                    height={750}
+                    className="w-full h-auto"
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </div>
