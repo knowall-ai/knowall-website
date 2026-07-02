@@ -12,21 +12,24 @@ interface TeamMember {
 const teamMembers: TeamMember[] = [
   {
     name: 'Ben Weeks',
-    title: 'Founder',
+    title: 'Chief Builder',
     npub: 'npub1jutptdc2m8kgjmudtws095qk2tcale0eemvp4j2xnjnl4nh6669slrf04x',
     image: '/images/team/ben-weeks.png',
   },
   {
     name: 'Valeriia Khudiakova',
+    title: 'Chief Planner',
     npub: 'npub1dg75du7l0usuhlg7ttvkm2x9lfcvq29fh43ckc420m6fk7ps2gls09kvl5',
   },
   {
     name: 'Akash Jadhav',
+    title: 'Senior Engineer',
     npub: 'npub1eflxeu2asp4th6yzmmdeescu3jkh5e4refwktj0cgpvl6f3efhmszc4lj0',
     image: '/images/team/akash-jadhav.jpg',
   },
   {
     name: 'Edit Weeks',
+    title: 'Chief Tester',
     npub: 'npub1wdzc9uy9wggfjf8sz8tvj39utkgf0vj8874x05ptqkxf28sqqlnsxw2z0e',
     image: '/images/team/edit-weeks.jpg',
   },
