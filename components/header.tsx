@@ -2,12 +2,14 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Menu, X } from 'lucide-react';
+import { Mail, Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Logo from '@/components/logo';
+import { useContactPanel } from '@/components/contact-panel';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { openContactPanel } = useContactPanel();
 
   const navLinks = [
     { name: 'Home', href: '#' },
@@ -38,23 +40,37 @@ export default function Header() {
           </nav>
 
           <div className="hidden md:flex items-center gap-4">
+            <button
+              onClick={openContactPanel}
+              aria-label="Contact us"
+              title="Contact us"
+              className="text-gray-300 hover:text-lime-500 transition-colors"
+            >
+              <Mail className="h-5 w-5" />
+            </button>
             <Button asChild className="bg-lime-600 hover:bg-lime-700 text-white">
               <Link href="#contact">Contact Us</Link>
             </Button>
           </div>
 
-          {/* Mobile Menu Button */}
-          <button
-            className="md:hidden"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            aria-label="Toggle menu"
-          >
-            {isMenuOpen ? (
-              <X className="h-6 w-6 text-gray-300" />
-            ) : (
-              <Menu className="h-6 w-6 text-gray-300" />
-            )}
-          </button>
+          {/* Mobile Contact + Menu Buttons */}
+          <div className="md:hidden flex items-center gap-4">
+            <button
+              onClick={openContactPanel}
+              aria-label="Contact us"
+              title="Contact us"
+              className="text-gray-300 hover:text-lime-500 transition-colors"
+            >
+              <Mail className="h-5 w-5" />
+            </button>
+            <button onClick={() => setIsMenuOpen(!isMenuOpen)} aria-label="Toggle menu">
+              {isMenuOpen ? (
+                <X className="h-6 w-6 text-gray-300" />
+              ) : (
+                <Menu className="h-6 w-6 text-gray-300" />
+              )}
+            </button>
+          </div>
         </div>
 
         {/* Mobile Navigation */}

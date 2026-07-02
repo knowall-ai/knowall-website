@@ -3,6 +3,7 @@ import './globals.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { ThemeProvider } from '@/components/theme-provider';
+import { ContactPanelProvider } from '@/components/contact-panel';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -58,7 +59,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <ContactPanelProvider>{children}</ContactPanelProvider>
         </ThemeProvider>
       </body>
     </html>
