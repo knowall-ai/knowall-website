@@ -23,5 +23,8 @@
     }
   },
   "include": ["**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "next-env.d.ts", "out/types/**/*.ts"],
-  "exclude": ["node_modules"]
+  // components/ui/calendar.tsx is an unused shadcn/ui component that imports
+  // react-day-picker (not installed; v8 is incompatible with React 19). Exclude
+  // it from type checking until it's either used (and migrated to v9) or removed.
+  "exclude": ["node_modules", "components/ui/calendar.tsx"]
 }
