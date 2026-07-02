@@ -1,10 +1,16 @@
 name: Build and deploy to Azure Web App - knowall-website
 
 on:
+  # Deploy when a release tag is created (e.g., v1.0.0), like Thyme/Zapdesk
   push:
-    branches:
-      - master
+    tags:
+      - 'v*'
+  # Allow manual deployment of any ref
   workflow_dispatch:
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
 
 jobs:
   build:
