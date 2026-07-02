@@ -135,6 +135,9 @@ export default function Footer({ darkMode = false }: FooterProps) {
 
         <div className="mt-12 pt-8 border-t border-gray-800 text-center text-gray-400">
           <p>&copy; KnowAll AI Ltd. All rights reserved.</p>
+          {process.env.NEXT_PUBLIC_APP_VERSION && (
+            <p className="mt-1 text-xs text-gray-500">v{process.env.NEXT_PUBLIC_APP_VERSION}</p>
+          )}
         </div>
       </div>
     </footer>
