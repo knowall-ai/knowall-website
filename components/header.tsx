@@ -25,6 +25,7 @@ export default function Header() {
     { name: 'Zaplie', href: '#zapp' },
     { name: 'Zapdesk', href: '#zapdesk' },
     { name: 'Thyme', href: '#thyme' },
+    { name: 'T-Minus-15', href: '#tminus15' },
   ];
 
   const trailingNavLinks = [{ name: 'Copilots', href: '#copilots' }];
