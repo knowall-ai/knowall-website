@@ -66,7 +66,11 @@ OPENAI_API_KEY=your_openai_api_key_here
 ADMIN_API_KEY=your_admin_api_key_here
 ```
 
-Make sure to replace the placeholder values with your actual API keys.
+Make sure to replace the placeholder values with your actual API keys. See `.env.example` for a template.
+
+Optional variables:
+
+- `NEXT_PUBLIC_NOSTR_CONTACT_NPUB`: Overrides the Nostr npub (public key) that receives contact-form messages. Defaults to the production KnowAll AI npub when unset. This is not a secret — npubs are public keys — but the override is useful for pointing the form at a test identity during development. The contact form sends messages as NIP-04 encrypted Nostr DMs directly from the browser to public relays, so no server-side email credentials are required.
 
 ### Troubleshooting Chat Functionality
 

@@ -12,6 +12,7 @@ import BitcoinLogo from '@/components/bitcoin-logo';
 import BackgroundImage from '@/components/background-image';
 import AutoGenLogo from '@/components/autogen-logo';
 import ZappCarousel from '@/components/zapp-carousel';
+import ContactForm from '@/components/contact-form';
 
 export default function Home() {
   return (
@@ -279,6 +280,14 @@ export default function Home() {
                 </Button>
                 <WhatsAppButton darkMode={true} />
               </div>
+
+              <div className="my-8 flex items-center gap-4">
+                <div className="h-px flex-1 bg-gray-700"></div>
+                <span className="text-sm text-gray-400">or send us a message</span>
+                <div className="h-px flex-1 bg-gray-700"></div>
+              </div>
+
+              <ContactForm />
             </div>
           </div>
         </BackgroundImage>
