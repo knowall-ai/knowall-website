@@ -298,9 +298,10 @@ export default function StoryFeed({ pubkey = KNOWALL_PUBKEY }: StoryFeedProps) {
         <BookOpen className="mx-auto mb-4 h-12 w-12 text-lime-600" />
         <h2 className="mb-2 text-lg font-semibold text-white">Our story is just beginning</h2>
         <p className="mx-auto max-w-xl text-sm leading-relaxed text-gray-400">
-          KnowAll AI was incorporated in El Salvador in 2025 by our CEO, Ben Weeks — an open-source
-          developer with deep roots in the Nostr and Bitcoin communities. Everything we publish
-          lands here first, straight from our Nostr feed.
+          KnowAll AI was founded by our CEO, Ben Weeks — an open-source developer with deep roots in
+          the Nostr and Bitcoin communities — and operates through two companies: KnowAll AI Ltd in
+          the UK and KnowAll AI SAS de CV, incorporated in El Salvador in 2025. Everything we
+          publish lands here first, straight from our Nostr feed.
         </p>
         <Button asChild className="mt-6 bg-lime-600 hover:bg-lime-700 text-white">
           <a href={`https://njump.me/${KNOWALL_NPUB}`} target="_blank" rel="noopener noreferrer">
