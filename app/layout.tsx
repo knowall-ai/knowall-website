@@ -4,6 +4,7 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { ThemeProvider } from '@/components/theme-provider';
 import { ContactPanelProvider } from '@/components/contact-panel';
+import { NostrAuthProvider } from '@/components/auth/nostr-auth-provider';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -42,7 +43,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <>
             <meta
               httpEquiv="Content-Security-Policy"
-              content="upgrade-insecure-requests; default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https:;"
+              content="upgrade-insecure-requests; default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https: wss:;"
             />
             <meta
               httpEquiv="Strict-Transport-Security"
@@ -59,7 +60,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           enableSystem
           disableTransitionOnChange
         >
-          <ContactPanelProvider>{children}</ContactPanelProvider>
+          <NostrAuthProvider>
+            <ContactPanelProvider>{children}</ContactPanelProvider>
+          </NostrAuthProvider>
         </ThemeProvider>
       </body>
     </html>

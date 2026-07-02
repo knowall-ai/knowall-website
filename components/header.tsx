@@ -3,8 +3,8 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { Mail, Menu, X } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import Logo from '@/components/logo';
+import SignInButton from '@/components/auth/sign-in-button';
 import { useContactPanel } from '@/components/contact-panel';
 
 export default function Header() {
@@ -48,9 +48,7 @@ export default function Header() {
             >
               <Mail className="h-5 w-5" />
             </button>
-            <Button asChild className="bg-lime-600 hover:bg-lime-700 text-white">
-              <Link href="#contact">Contact Us</Link>
-            </Button>
+            <SignInButton />
           </div>
 
           {/* Mobile Contact + Menu Buttons */}
@@ -88,11 +86,7 @@ export default function Header() {
                 </Link>
               ))}
               <div className="pt-2">
-                <Button asChild className="w-full bg-lime-600 hover:bg-lime-700 text-white">
-                  <Link href="#contact" onClick={() => setIsMenuOpen(false)}>
-                    Contact Us
-                  </Link>
-                </Button>
+                <SignInButton className="w-full" />
               </div>
             </nav>
           </div>
