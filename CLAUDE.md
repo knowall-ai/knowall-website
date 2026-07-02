@@ -51,7 +51,7 @@ Required for development (`.env.local`):
 - ESLint check
 - Prettier format check
 
-**Deployment** (`.github/workflows/azure-app-service.yml`) deploys to Azure App Service when a `v*` tag is pushed (e.g. `git tag v0.1.1 && git push origin v0.1.1`), or manually via workflow_dispatch. Resource group: `KnowAllAIRG`, App name: `knowall-website`.
+**Deployment** (`.github/workflows/azure-app-service.yml`) deploys to Azure App Service when a `v*` tag is pushed (e.g. `git tag v0.1.1 && git push origin v0.1.1`), or manually via `workflow_dispatch`. Resource group: `KnowAllAIRG`, App name: `knowall-website`.
 
 **Production URL:** https://www.knowall.ai
 
