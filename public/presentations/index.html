@@ -4,6 +4,26 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>KnowAll AI - Presentations</title>
+    <meta
+      name="description"
+      content="Browse KnowAll AI presentations and materials on agentic AI, autonomous agents, and the T-Minus-15 methodology."
+    />
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+    <meta property="og:title" content="KnowAll AI - Presentations" />
+    <meta
+      property="og:description"
+      content="Browse KnowAll AI presentations and materials on agentic AI, autonomous agents, and the T-Minus-15 methodology."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://www.knowall.ai/presentations/" />
+    <meta property="og:image" content="https://www.knowall.ai/opengraph-image.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="KnowAll AI - Presentations" />
+    <meta
+      name="twitter:description"
+      content="Browse KnowAll AI presentations and materials on agentic AI, autonomous agents, and the T-Minus-15 methodology."
+    />
+    <meta name="twitter:image" content="https://www.knowall.ai/twitter-image.png" />
     <style>
       * {
         margin: 0;
@@ -62,7 +82,8 @@
         flex-direction: column;
       }
 
-      .presentation-card:hover {
+      .presentation-card:hover,
+      .presentation-card:focus-within {
         transform: translateY(-8px);
         box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
       }
@@ -94,6 +115,12 @@
 
       .presentation-card a:hover {
         opacity: 0.9;
+      }
+
+      .presentation-card a:focus-visible {
+        opacity: 0.9;
+        outline: 3px solid #667eea;
+        outline-offset: 3px;
       }
 
       .footer {
