@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { Zap, Bot, Code, Github } from 'lucide-react';
+import { Zap, Bot, Code, Github, FileCheck, Banknote, Clock, Leaf } from 'lucide-react';
 import EmailIcon from '@/components/email-icon';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -257,6 +257,143 @@ export default function Home() {
               </ul>
             </Card>
           </div>
+        </div>
+      </section>
+
+      {/* Allie for Accounts Section */}
+      <section id="allie" className="py-20 px-4 bg-gray-800 text-white">
+        <div className="container max-w-6xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center">Allie for Accounts</h2>
+          <p className="text-lg text-center text-gray-300 max-w-3xl mx-auto mb-12">
+            Meet Allie, our AI accounts copilot. She lives in Microsoft Teams and looks after the
+            day-to-day of your accounts department — raising quotes and invoices, chasing payments,
+            and reconciling the books — while keeping you in the loop for the decisions that matter.
+          </p>
+
+          <div className="flex flex-col lg:flex-row items-center gap-12">
+            <div className="flex-1">
+              <p className="text-lg text-gray-200 mb-6">
+                Allie processes incoming invoices automatically, recognising suppliers, amounts, and
+                purchase orders. When something doesn&apos;t look right, she doesn&apos;t guess —
+                she messages you in Teams and asks. A live feed shows every invoice as it arrives,
+                and her reports track the money, time, and carbon saved.
+              </p>
+              <ul className="space-y-2 mb-6">
+                <li className="flex items-start gap-2">
+                  <Zap className="h-5 w-5 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <span>Quotes and invoices raised and tracked in Xero</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <Zap className="h-5 w-5 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <span>Integration with Microsoft Dynamics 365 Business Central</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <Zap className="h-5 w-5 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <span>Automated invoice recognition, payment chasing and reconciliation</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <Zap className="h-5 w-5 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <span>Human-in-the-loop: Allie asks in Teams before making judgement calls</span>
+                </li>
+              </ul>
+              <p className="text-lg text-gray-200">
+                Allie builds on the accounts-payable and invoice automation we delivered for Cairn
+                Homes, packaged as a copilot your whole finance team can talk to.
+              </p>
+            </div>
+
+            <div className="flex-1 w-full max-w-md">
+              <Card className="w-full border-0 bg-gray-950 text-white shadow-lg overflow-hidden">
+                <div className="flex items-center gap-3 px-4 py-3 border-b border-gray-800">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-lime-500/20">
+                    <Bot className="h-5 w-5 text-lime-500" />
+                  </div>
+                  <span className="font-semibold">Allie for Accounts</span>
+                  <div className="ml-auto flex items-center gap-4 text-sm text-gray-400">
+                    <span className="text-white border-b-2 border-lime-500 pb-0.5">Chat</span>
+                    <span>Feed</span>
+                    <span>Reports</span>
+                  </div>
+                </div>
+                <div className="p-4 space-y-4">
+                  <div className="bg-gray-900 rounded-lg p-4">
+                    <div className="flex items-baseline gap-2 mb-1">
+                      <span className="text-sm font-semibold text-lime-400">Allie</span>
+                      <span className="text-xs text-gray-500">9:15 AM</span>
+                    </div>
+                    <p className="text-sm text-gray-200 mb-3">
+                      Hi Ben, I wasn&apos;t able to process an invoice from Contoso. Would you mind
+                      assisting me with it?
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      <span className="text-xs border border-gray-700 rounded px-3 py-1 text-gray-300">
+                        Yes
+                      </span>
+                      <span className="text-xs border border-gray-700 rounded px-3 py-1 text-gray-300">
+                        No
+                      </span>
+                      <span className="text-xs border border-gray-700 rounded px-3 py-1 text-gray-300">
+                        Ask me again tomorrow
+                      </span>
+                    </div>
+                  </div>
+                  <div className="flex justify-end">
+                    <div className="bg-lime-900/40 rounded-lg px-4 py-2 text-sm text-gray-200">
+                      Yes
+                    </div>
+                  </div>
+                  <div className="bg-gray-900 rounded-lg p-4 border-t-2 border-lime-500">
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="font-semibold">Invoice # INV-3453211</span>
+                      <span className="text-xs text-lime-400 border border-lime-500/40 rounded px-2 py-0.5">
+                        Recognised
+                      </span>
+                    </div>
+                    <dl className="space-y-2 text-sm">
+                      <div className="flex justify-between gap-4">
+                        <dt className="text-gray-400">Vendor name</dt>
+                        <dd className="text-gray-200">Contoso Ltd</dd>
+                      </div>
+                      <div className="flex justify-between gap-4">
+                        <dt className="text-gray-400">Invoice date</dt>
+                        <dd className="text-gray-200">08/10/2024</dd>
+                      </div>
+                      <div className="flex justify-between gap-4">
+                        <dt className="text-gray-400">Amount</dt>
+                        <dd className="text-gray-200">€1,500</dd>
+                      </div>
+                    </dl>
+                  </div>
+                </div>
+              </Card>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-16">
+            <div className="bg-gray-900 rounded-lg p-6 text-center">
+              <FileCheck className="h-6 w-6 text-lime-500 mx-auto mb-3" />
+              <p className="text-3xl font-bold mb-1">782</p>
+              <p className="text-sm text-gray-400">Invoices processed in the last 7 days</p>
+            </div>
+            <div className="bg-gray-900 rounded-lg p-6 text-center">
+              <Banknote className="h-6 w-6 text-lime-500 mx-auto mb-3" />
+              <p className="text-3xl font-bold mb-1">€12,300</p>
+              <p className="text-sm text-gray-400">Money saved</p>
+            </div>
+            <div className="bg-gray-900 rounded-lg p-6 text-center">
+              <Clock className="h-6 w-6 text-lime-500 mx-auto mb-3" />
+              <p className="text-3xl font-bold mb-1">34 hrs</p>
+              <p className="text-sm text-gray-400">Time saved</p>
+            </div>
+            <div className="bg-gray-900 rounded-lg p-6 text-center">
+              <Leaf className="h-6 w-6 text-lime-500 mx-auto mb-3" />
+              <p className="text-3xl font-bold mb-1">34 t</p>
+              <p className="text-sm text-gray-400">CO₂ saved</p>
+            </div>
+          </div>
+          <p className="text-xs text-gray-500 text-center mt-4">
+            Illustrative figures from a typical Allie deployment.
+          </p>
         </div>
       </section>
 

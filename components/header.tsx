@@ -14,6 +14,7 @@ export default function Header() {
     { name: 'Services', href: '#services' },
     { name: 'Zapp.ie', href: '#zapp' },
     { name: 'Copilots', href: '#copilots' },
+    { name: 'Allie', href: '#allie' },
   ];
 
   return (
