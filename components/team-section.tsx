@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { ExternalLink } from 'lucide-react';
+import { ExternalLink, UserRound } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 
 interface TeamMember {
@@ -7,7 +7,6 @@ interface TeamMember {
   title?: string;
   npub: string;
   image?: string;
-  initials: string;
 }
 
 const teamMembers: TeamMember[] = [
@@ -16,24 +15,20 @@ const teamMembers: TeamMember[] = [
     title: 'Founder',
     npub: 'npub1jutptdc2m8kgjmudtws095qk2tcale0eemvp4j2xnjnl4nh6669slrf04x',
     image: '/images/team/ben-weeks.png',
-    initials: 'BW',
   },
   {
     name: 'Valeriia Khudiakova',
     npub: 'npub1dg75du7l0usuhlg7ttvkm2x9lfcvq29fh43ckc420m6fk7ps2gls09kvl5',
-    initials: 'VK',
   },
   {
     name: 'Akash Jadhav',
     npub: 'npub1eflxeu2asp4th6yzmmdeescu3jkh5e4refwktj0cgpvl6f3efhmszc4lj0',
     image: '/images/team/akash-jadhav.jpg',
-    initials: 'AJ',
   },
   {
     name: 'Edit Weeks',
     npub: 'npub1wdzc9uy9wggfjf8sz8tvj39utkgf0vj8874x05ptqkxf28sqqlnsxw2z0e',
     image: '/images/team/edit-weeks.jpg',
-    initials: 'EW',
   },
 ];
 
@@ -64,10 +59,11 @@ export default function TeamSection() {
                 />
               ) : (
                 <div
-                  className="h-32 w-32 rounded-full mb-4 ring-2 ring-lime-500/50 bg-gradient-to-br from-gray-700 to-lime-900 flex items-center justify-center"
+                  className="h-32 w-32 rounded-full mb-4 ring-2 ring-lime-500/50 bg-gray-700 flex items-center justify-center"
                   aria-label={member.name}
+                  role="img"
                 >
-                  <span className="text-4xl font-semibold text-lime-300">{member.initials}</span>
+                  <UserRound className="h-20 w-20 text-gray-400" strokeWidth={1.25} />
                 </div>
               )}
               <h3 className="text-xl font-semibold">{member.name}</h3>
