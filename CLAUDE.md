@@ -11,15 +11,18 @@ npm run start        # Start production server (uses server.js, port 8080)
 npm run lint         # Run ESLint
 npm run format       # Format code with Prettier
 npm run format:check # Check formatting without modifying files
-npm run test         # Run Playwright tests
+npm run test         # Run Playwright end-to-end tests
 npm run test:ui      # Run tests with Playwright UI
 npm run test:headed  # Run tests with visible browser
+npm run test:unit    # Run Vitest unit tests
+npm run test:unit:watch # Run unit tests in watch mode
 ```
 
 Run a single test:
 
 ```bash
 npx playwright test tests/primary-navigation.spec.ts
+npx vitest run tests/unit/lib/utils.test.ts
 ```
 
 ## Architecture
@@ -59,4 +62,6 @@ See `docs/TROUBLESHOOTING.adoc` for Azure-specific issues.
 
 ## Testing
 
-Tests are in `tests/` following `[feature-name].spec.ts` convention. Tests reference requirements in `docs/requirements.yaml`.
+End-to-end (Playwright) tests are in `tests/` following the `[feature-name].spec.ts` convention. Unit tests (Vitest + React Testing Library) are in `tests/unit/` following the `[name].test.ts(x)` convention. Tests reference requirement IDs in `docs/requirements.yaml`.
+
+Playwright starts a production server (`npm run build && npm run start` on port 3000, see `playwright.config.ts`) and injects placeholder `OPENAI_API_KEY`/`ADMIN_API_KEY` values, so the full suite passes without real secrets — the chat tests exercise the API's fallback response path.

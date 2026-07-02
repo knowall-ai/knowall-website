@@ -34,6 +34,28 @@
           given: 'The user is viewing any part of the website'
           when: 'They click on the logo or Home navigation link'
           then: 'The user is navigated to the top of the page'
+        - name: 'User opens the mobile menu'
+          given: 'The user is viewing the website on a mobile device'
+          when: 'They tap the menu toggle button in the header'
+          then:
+            - 'The mobile navigation menu opens showing all navigation links'
+            - 'Tapping the toggle again or selecting a link closes the menu'
+
+    - name: 'Services section'
+      id: services-section
+      description: 'Overview of the services KnowAll offers'
+      deliverables:
+        - 'Services section on the homepage'
+        - 'Service cards with icon, title and description'
+      user_story: 'As a User, I want to see an overview of the services KnowAll offers so that I can quickly understand whether they can help my business'
+      scenarios:
+        - name: 'User views the services'
+          given: 'The user is on the homepage'
+          when: 'They scroll to the Services section'
+          then:
+            - 'They see the "Our Services" heading'
+            - 'They see cards for AI Consultancy, Microsoft Copilot Development and Value-for-Value Transactions'
+            - 'Each card shows an icon, a title and a description'
 
     - name: 'Sally chat'
       id: sally-chat
@@ -53,6 +75,10 @@
           then:
             - 'The message is sent to the OpenAI API'
             - 'A response is displayed in the chat interface'
+        - name: 'OpenAI API is unavailable'
+          given: 'The OpenAI API cannot be reached or the API key is invalid'
+          when: 'The user sends a message'
+          then: 'Sally replies with a fallback response acknowledging the message and suggesting the user contact KnowAll directly'
         - name: 'User uses voice input'
           given: "The user's browser supports speech recognition"
           when: 'They activate the speech recognition feature'
@@ -83,6 +109,12 @@
           given: 'The admin has the correct API key'
           when: 'They navigate to the admin logs page'
           then: 'They can view comprehensive logs of chat interactions'
+        - name: 'Visitor without the API key is rejected'
+          given: 'A visitor does not have the correct API key'
+          when: 'They attempt to view the logs via the admin page or the API'
+          then:
+            - 'The API responds with 401 Unauthorized'
+            - 'The admin page shows an authentication error and no logs'
 
     - name: 'Custom domain configuration'
       id: custom-domain
