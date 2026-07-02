@@ -2,8 +2,14 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import Logo from '@/components/logo';
 
 export default function Header() {
@@ -12,9 +18,16 @@ export default function Header() {
   const navLinks = [
     { name: 'Home', href: '#' },
     { name: 'Services', href: '#services' },
-    { name: 'Zaplie', href: '#zapp' },
-    { name: 'Copilots', href: '#copilots' },
   ];
+
+  // NOTE: "Thyme" (#thyme) joins this dropdown in the Thyme section follow-up PR,
+  // and "Allie for Accounts" (#allie) once PR #7 merges.
+  const productLinks = [
+    { name: 'Zaplie', href: '#zapp' },
+    { name: 'Zapdesk', href: '#zapdesk' },
+  ];
+
+  const trailingNavLinks = [{ name: 'Copilots', href: '#copilots' }];
 
   return (
     <header className="sticky top-0 z-50 bg-gray-950/90 backdrop-blur-sm border-b border-gray-800">
@@ -27,6 +40,37 @@ export default function Header() {
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-6">
             {navLinks.map((link) => (
+              <Link
+                key={link.name}
+                href={link.href}
+                className="text-gray-300 hover:text-lime-500 transition-colors"
+              >
+                {link.name}
+              </Link>
+            ))}
+
+            <DropdownMenu>
+              <DropdownMenuTrigger className="flex items-center gap-1 text-gray-300 hover:text-lime-500 transition-colors outline-none data-[state=open]:text-lime-500">
+                Products
+                <ChevronDown className="h-4 w-4" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                align="start"
+                className="bg-gray-900 border-gray-800 text-gray-300"
+              >
+                {productLinks.map((link) => (
+                  <DropdownMenuItem
+                    key={link.name}
+                    asChild
+                    className="focus:bg-gray-800 focus:text-lime-500 cursor-pointer"
+                  >
+                    <Link href={link.href}>{link.name}</Link>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            {trailingNavLinks.map((link) => (
               <Link
                 key={link.name}
                 href={link.href}
@@ -62,6 +106,34 @@ export default function Header() {
           <div className="md:hidden pt-4 pb-6">
             <nav className="flex flex-col gap-4">
               {navLinks.map((link) => (
+                <Link
+                  key={link.name}
+                  href={link.href}
+                  className="text-gray-300 hover:text-lime-500 transition-colors py-2"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  {link.name}
+                </Link>
+              ))}
+
+              {/* Products group */}
+              <div>
+                <span className="block text-gray-500 text-sm font-medium uppercase tracking-wider py-2">
+                  Products
+                </span>
+                {productLinks.map((link) => (
+                  <Link
+                    key={link.name}
+                    href={link.href}
+                    className="block pl-4 text-gray-300 hover:text-lime-500 transition-colors py-2"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    {link.name}
+                  </Link>
+                ))}
+              </div>
+
+              {trailingNavLinks.map((link) => (
                 <Link
                   key={link.name}
                   href={link.href}

@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { Zap, Bot, Code, Github } from 'lucide-react';
+import { Zap, Bot, Code, Github, Ticket, Mail, ShieldCheck, ExternalLink } from 'lucide-react';
 import EmailIcon from '@/components/email-icon';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -169,6 +169,93 @@ export default function Home() {
 
           {/* Zaplie Screenshots Carousel */}
           <ZappCarousel />
+        </div>
+      </section>
+
+      {/* Zapdesk Section */}
+      <section id="zapdesk" className="py-20 px-4 bg-gray-900 text-white">
+        <div className="container max-w-6xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center">
+            Zapdesk: Azure DevOps powered support ticketing
+          </h2>
+
+          <div className="flex flex-col lg:flex-row items-center gap-12">
+            {/* Product screenshot (image left, mirroring the Zaplie section's image-right) */}
+            <div className="flex-1 w-full">
+              <div className="relative">
+                <div
+                  className="absolute -inset-4 bg-lime-500/10 blur-2xl rounded-3xl"
+                  aria-hidden="true"
+                ></div>
+                <div className="relative rounded-xl overflow-hidden border border-gray-700 bg-gray-950 shadow-2xl shadow-lime-500/20">
+                  {/* Browser chrome bar */}
+                  <div className="flex items-center gap-2 px-4 py-3 bg-gray-800 border-b border-gray-700">
+                    <span className="h-3 w-3 rounded-full bg-red-500/80"></span>
+                    <span className="h-3 w-3 rounded-full bg-yellow-500/80"></span>
+                    <span className="h-3 w-3 rounded-full bg-green-500/80"></span>
+                    <span className="ml-3 text-xs text-gray-400 bg-gray-900 rounded-md px-3 py-1">
+                      zapdesk.knowall.ai
+                    </span>
+                  </div>
+                  <Image
+                    src="/images/products/zapdesk.png"
+                    alt="Zapdesk support ticketing portal homepage"
+                    width={1200}
+                    height={750}
+                    className="w-full h-auto"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="flex-1">
+              <p className="text-lg text-gray-300 mb-8">
+                Zapdesk is a Zendesk-style support ticketing portal that uses Azure DevOps as its
+                backend, so your support tickets live alongside your engineering work items. It
+                pairs a familiar helpdesk interface with Bitcoin Lightning tipping, letting
+                customers reward support agents directly for great service.
+              </p>
+
+              <ul className="space-y-5 mb-10">
+                <li className="flex items-start gap-3">
+                  <Ticket className="h-6 w-6 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <span className="text-gray-200">
+                    Azure DevOps work items tagged as &quot;ticket&quot; appear as support tickets,
+                    with permission-based, multi-tenant access
+                  </span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <Mail className="h-6 w-6 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <span className="text-gray-200">
+                    Email-to-ticket creation and replies to requesters via Exchange Online
+                  </span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <ShieldCheck className="h-6 w-6 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <span className="text-gray-200">
+                    Microsoft authentication — sign in with Azure AD/Microsoft accounts
+                  </span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <BitcoinLogo size={24} />
+                  <span className="text-gray-200">
+                    Tip support agents with Bitcoin Lightning via QR (LNURL-pay) or Nostr Wallet
+                    Connect
+                  </span>
+                </li>
+              </ul>
+
+              <a
+                href="https://zapdesk.knowall.ai"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 bg-lime-600 hover:bg-lime-700 text-white px-6 py-3 rounded-md transition-colors font-medium shadow-lg shadow-lime-500/20"
+              >
+                <ExternalLink className="h-5 w-5" />
+                <span>Visit zapdesk.knowall.ai</span>
+              </a>
+            </div>
+          </div>
         </div>
       </section>
 
