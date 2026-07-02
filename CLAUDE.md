@@ -64,4 +64,4 @@ See `docs/TROUBLESHOOTING.adoc` for Azure-specific issues.
 
 End-to-end (Playwright) tests are in `tests/` following the `[feature-name].spec.ts` convention. Unit tests (Vitest + React Testing Library) are in `tests/unit/` following the `[name].test.ts(x)` convention. Tests reference requirement IDs in `docs/requirements.yaml`.
 
-Playwright starts a production server (`npm run build && npm run start` on port 3000, see `playwright.config.ts`) and injects placeholder `OPENAI_API_KEY`/`ADMIN_API_KEY` values, so the full suite passes without real secrets — the chat tests exercise the API's fallback response path.
+Playwright starts a production server (`npm run build && npm run start` on port 3000, see `playwright.config.ts`) and always injects a placeholder (invalid) `OPENAI_API_KEY`, so the chat tests deterministically exercise the API's fallback response path and never call OpenAI — even when a real key is present in the environment. Set `E2E_USE_REAL_OPENAI_KEY=1` to explicitly opt in to passing the real key through. `ADMIN_API_KEY` falls back to a placeholder when unset.

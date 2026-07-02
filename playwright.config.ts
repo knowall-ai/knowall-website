@@ -37,9 +37,15 @@ export default defineConfig({
       // production server on port 3000
       PORT: '3000',
       NODE_ENV: 'production',
-      // Tests must pass without real secrets. An invalid OpenAI key exercises
-      // the chat API's fallback response path; the admin key gates /api/logs.
-      OPENAI_API_KEY: process.env.OPENAI_API_KEY || 'sk-test-invalid-key-for-e2e',
+      // Tests must pass without real secrets. An invalid OpenAI key is always
+      // forced by default so the chat specs deterministically exercise the
+      // API's fallback response path and never make real OpenAI calls. Set
+      // E2E_USE_REAL_OPENAI_KEY=1 to explicitly opt in to passing the real
+      // key through. The admin key gates /api/logs.
+      OPENAI_API_KEY:
+        process.env.E2E_USE_REAL_OPENAI_KEY === '1' && process.env.OPENAI_API_KEY
+          ? process.env.OPENAI_API_KEY
+          : 'sk-test-invalid-key-for-e2e',
       ADMIN_API_KEY: process.env.ADMIN_API_KEY || 'test-admin-key-for-e2e',
     },
   },
