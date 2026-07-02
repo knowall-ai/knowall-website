@@ -62,15 +62,20 @@ export default function StoryPage() {
       <section className="container max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="space-y-6 text-lg text-gray-300">
           <p>
-            KnowAll AI was founded by Ben Weeks
-            {/* TODO: confirm founding year */}, an open-source developer with deep roots in the
-            Nostr and Bitcoin communities, on a simple belief: intelligence is processing power.
+            KnowAll AI was incorporated in El Salvador in 2025 by our CEO, Ben Weeks — an
+            open-source developer with deep roots in the Nostr and Bitcoin communities — on a simple
+            belief: intelligence is processing power.
             {/* TODO: confirm founding story details (what prompted starting the company) */}
           </p>
           <p>
             We are an AI consultancy specialising in agent development. From day one our focus has
             been practical, working systems rather than slideware — AI that plugs into the tools
             businesses already use and quietly gets things done.
+          </p>
+          <p>
+            We don&apos;t have dedicated offices. Instead, we&apos;re a distributed team working out
+            of Cambridge (UK), El Salvador, Poland, and Ukraine — which means we can accommodate
+            clients across time zones.
           </p>
         </div>
 
