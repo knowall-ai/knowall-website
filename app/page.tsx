@@ -1,5 +1,17 @@
 import Image from 'next/image';
-import { Zap, Bot, Code, Github } from 'lucide-react';
+import {
+  Zap,
+  Bot,
+  Code,
+  Github,
+  Ticket,
+  Mail,
+  ShieldCheck,
+  Clock,
+  RefreshCw,
+  Smartphone,
+  ExternalLink,
+} from 'lucide-react';
 import EmailIcon from '@/components/email-icon';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -169,6 +181,114 @@ export default function Home() {
 
           {/* Zaplie Screenshots Carousel */}
           <ZappCarousel />
+        </div>
+      </section>
+
+      {/* Zapdesk Section */}
+      <section id="zapdesk" className="py-20 px-4 bg-gray-900 text-white">
+        <div className="container max-w-6xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center">
+            Zapdesk: Azure DevOps powered support ticketing
+          </h2>
+
+          <p className="text-lg text-gray-300 max-w-3xl mx-auto mb-12 text-center">
+            Zapdesk is a Zendesk-style support ticketing portal that uses Azure DevOps as its
+            backend, so your support tickets live alongside your engineering work items. It pairs a
+            familiar helpdesk interface with Bitcoin Lightning tipping, letting customers reward
+            support agents directly for great service.
+          </p>
+
+          <ul className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto mb-12">
+            <li className="flex items-start gap-3">
+              <Ticket className="h-6 w-6 text-lime-500 mt-0.5 flex-shrink-0" />
+              <span className="text-gray-200">
+                Azure DevOps work items tagged as &quot;ticket&quot; appear as support tickets, with
+                permission-based, multi-tenant access
+              </span>
+            </li>
+            <li className="flex items-start gap-3">
+              <Mail className="h-6 w-6 text-lime-500 mt-0.5 flex-shrink-0" />
+              <span className="text-gray-200">
+                Email-to-ticket creation and replies to requesters via Exchange Online
+              </span>
+            </li>
+            <li className="flex items-start gap-3">
+              <ShieldCheck className="h-6 w-6 text-lime-500 mt-0.5 flex-shrink-0" />
+              <span className="text-gray-200">
+                Microsoft authentication — sign in with Azure AD/Microsoft accounts
+              </span>
+            </li>
+            <li className="flex items-start gap-3">
+              <BitcoinLogo size={24} />
+              <span className="text-gray-200">
+                Tip support agents with Bitcoin Lightning via QR (LNURL-pay) or Nostr Wallet Connect
+              </span>
+            </li>
+          </ul>
+
+          <div className="flex justify-center">
+            <a
+              href="https://zapdesk.knowall.ai"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 bg-lime-600 hover:bg-lime-700 text-white px-6 py-3 rounded-md transition-colors font-medium shadow-lg shadow-lime-500/20"
+            >
+              <ExternalLink className="h-5 w-5" />
+              <span>Visit zapdesk.knowall.ai</span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* Thyme Section */}
+      <section id="thyme" className="py-20 px-4 bg-gray-800 text-white">
+        <div className="container max-w-6xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center">
+            Thyme: Time tracking for Business Central
+          </h2>
+
+          <p className="text-lg text-gray-200 max-w-3xl mx-auto mb-12 text-center">
+            Thyme is a modern time tracking web application that integrates with Microsoft Dynamics
+            365 Business Central. Track your week in an intuitive timesheet grid and let Thyme keep
+            your Business Central Jobs and Job Journal Lines in sync automatically.
+          </p>
+
+          <ul className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto mb-12">
+            <li className="flex items-start gap-3">
+              <Clock className="h-6 w-6 text-lime-500 mt-0.5 flex-shrink-0" />
+              <span className="text-gray-200">
+                Weekly timesheet grid with a real-time start/stop timer for accurate tracking
+              </span>
+            </li>
+            <li className="flex items-start gap-3">
+              <RefreshCw className="h-6 w-6 text-lime-500 mt-0.5 flex-shrink-0" />
+              <span className="text-gray-200">
+                Automatic synchronization with Business Central Jobs and Job Journal Lines
+              </span>
+            </li>
+            <li className="flex items-start gap-3">
+              <ShieldCheck className="h-6 w-6 text-lime-500 mt-0.5 flex-shrink-0" />
+              <span className="text-gray-200">Secure single sign-on via Microsoft Entra ID</span>
+            </li>
+            <li className="flex items-start gap-3">
+              <Smartphone className="h-6 w-6 text-lime-500 mt-0.5 flex-shrink-0" />
+              <span className="text-gray-200">
+                Modern dark theme that works on desktop and mobile
+              </span>
+            </li>
+          </ul>
+
+          <div className="flex justify-center">
+            <a
+              href="https://getthyme.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 bg-lime-600 hover:bg-lime-700 text-white px-6 py-3 rounded-md transition-colors font-medium shadow-lg shadow-lime-500/20"
+            >
+              <ExternalLink className="h-5 w-5" />
+              <span>Visit getthyme.com</span>
+            </a>
+          </div>
         </div>
       </section>
 
