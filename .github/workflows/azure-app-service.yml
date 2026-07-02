@@ -75,7 +75,7 @@ jobs:
           az webapp config appsettings set --name knowall-website --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} --settings OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }} ADMIN_API_KEY=${{ secrets.ADMIN_API_KEY }} NODE_ENV=production
 
       - name: Configure Node.js version
-        uses: azure/CLI@v1
+        uses: azure/CLI@v3
         with:
           inlineScript: |
             # Set Node.js version using the correct parameter
@@ -90,7 +90,7 @@ jobs:
           package: .
 
       - name: 'Restart web app'
-        uses: azure/CLI@v1
+        uses: azure/CLI@v3
         with:
           inlineScript: |
             # Restart the web app to ensure all changes are applied
