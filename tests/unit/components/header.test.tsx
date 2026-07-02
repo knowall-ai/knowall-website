@@ -1,16 +1,33 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import Header from '@/components/header';
+import { NostrAuthProvider } from '@/components/auth/nostr-auth-provider';
+import { ContactPanelProvider } from '@/components/contact-panel';
 
 /**
  * Header component tests
  *
- * Requirements: primary-navigation, responsive-design (docs/requirements.yaml)
+ * Requirements: primary-navigation, responsive-design, contact-us
+ * (docs/requirements.yaml)
+ *
+ * The header depends on the Nostr auth context (Sign In button) and the
+ * contact panel context (mail icon), so it is rendered inside both providers
+ * — the same nesting as app/layout.tsx.
  */
+
+function renderHeader() {
+  return render(
+    <NostrAuthProvider>
+      <ContactPanelProvider>
+        <Header />
+      </ContactPanelProvider>
+    </NostrAuthProvider>
+  );
+}
 
 describe('Header', () => {
   it('renders the logo linking to the top of the page', () => {
-    render(<Header />);
+    renderHeader();
 
     const logo = screen.getByAltText('KnowAll.ai');
     expect(logo).toBeInTheDocument();
@@ -18,7 +35,7 @@ describe('Header', () => {
   });
 
   it('renders all primary navigation links', () => {
-    render(<Header />);
+    renderHeader();
 
     expect(screen.getByRole('link', { name: 'Home' })).toHaveAttribute('href', '#');
     expect(screen.getByRole('link', { name: 'Services' })).toHaveAttribute('href', '#services');
@@ -26,33 +43,49 @@ describe('Header', () => {
     expect(screen.getByRole('link', { name: 'Copilots' })).toHaveAttribute('href', '#copilots');
   });
 
-  it('renders a Contact Us call to action linking to the contact section', () => {
-    render(<Header />);
+  it('renders contact mail buttons for desktop and mobile', () => {
+    renderHeader();
 
-    expect(screen.getByRole('link', { name: 'Contact Us' })).toHaveAttribute('href', '#contact');
+    // One in the desktop action area, one next to the mobile menu toggle
+    expect(screen.getAllByRole('button', { name: 'Contact us' })).toHaveLength(2);
+  });
+
+  it('opens the contact panel when the mail button is clicked', () => {
+    renderHeader();
+
+    fireEvent.click(screen.getAllByRole('button', { name: 'Contact us' })[0]);
+
+    expect(screen.getByText('Message us')).toBeInTheDocument();
+  });
+
+  it('renders a Sign In button when signed out', () => {
+    renderHeader();
+
+    expect(screen.getByRole('button', { name: 'Sign In' })).toBeInTheDocument();
   });
 
   it('renders a mobile menu toggle button', () => {
-    render(<Header />);
+    renderHeader();
 
     expect(screen.getByRole('button', { name: 'Toggle menu' })).toBeInTheDocument();
   });
 
   it('opens the mobile menu when the toggle is clicked', () => {
-    render(<Header />);
+    renderHeader();
 
     // Only the desktop nav links are rendered initially
     expect(screen.getAllByRole('link', { name: 'Home' })).toHaveLength(1);
+    expect(screen.getAllByRole('button', { name: 'Sign In' })).toHaveLength(1);
 
     fireEvent.click(screen.getByRole('button', { name: 'Toggle menu' }));
 
-    // The mobile nav duplicates the links when open
+    // The mobile nav duplicates the links (and the Sign In button) when open
     expect(screen.getAllByRole('link', { name: 'Home' })).toHaveLength(2);
-    expect(screen.getAllByRole('link', { name: 'Contact Us' })).toHaveLength(2);
+    expect(screen.getAllByRole('button', { name: 'Sign In' })).toHaveLength(2);
   });
 
   it('closes the mobile menu when the toggle is clicked again', () => {
-    render(<Header />);
+    renderHeader();
 
     const toggle = screen.getByRole('button', { name: 'Toggle menu' });
     fireEvent.click(toggle);
@@ -62,7 +95,7 @@ describe('Header', () => {
   });
 
   it('closes the mobile menu when a navigation link is clicked', () => {
-    render(<Header />);
+    renderHeader();
 
     fireEvent.click(screen.getByRole('button', { name: 'Toggle menu' }));
     const mobileLinks = screen.getAllByRole('link', { name: 'Services' });

@@ -52,7 +52,8 @@ test.describe('Mobile Navigation', () => {
     await expect(mobileNav.getByRole('link', { name: 'Services' })).toBeVisible();
     await expect(mobileNav.getByRole('link', { name: 'Zapp.ie' })).toBeVisible();
     await expect(mobileNav.getByRole('link', { name: 'Copilots' })).toBeVisible();
-    await expect(mobileNav.getByRole('link', { name: 'Contact Us' })).toBeVisible();
+    // Contact Us was replaced by the Nostr Sign In button in the mobile menu
+    await expect(mobileNav.getByRole('button', { name: 'Sign In' })).toBeVisible();
   });
 
   test('Tapping the toggle again closes the mobile menu', async ({ page }) => {

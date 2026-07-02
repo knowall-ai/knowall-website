@@ -53,9 +53,16 @@ test.describe('Contact Us', () => {
     expect(openedUrls[0]).toContain(encodeURIComponent('KnowAll.ai'));
   });
 
-  test('Header Contact Us button links to the contact section', async ({ page }) => {
-    const contactLink = page.locator('header').getByRole('link', { name: 'Contact Us' });
-    await expect(contactLink).toHaveAttribute('href', '#contact');
+  test('Header mail icon opens the contact panel', async ({ page }) => {
+    // The header Contact Us link was replaced by a mail icon that opens the
+    // Nostr contact panel (slide-out message form)
+    await page.locator('header').getByRole('button', { name: 'Contact us' }).first().click();
+
+    const panel = page.getByRole('dialog');
+    await expect(panel.getByText('Message us')).toBeVisible();
+    await expect(panel.getByLabel('Name')).toBeVisible();
+    await expect(panel.getByLabel('Email')).toBeVisible();
+    await expect(panel.getByLabel('Message')).toBeVisible();
   });
 
   test('Footer shows the contact email address', async ({ page }) => {

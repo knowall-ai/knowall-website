@@ -53,6 +53,16 @@ Required for development (`.env.local`):
 
 - ESLint check
 - Prettier format check
+- TypeScript check (`npm run typecheck`)
+- Unit tests (`npm run test:unit`, Vitest)
+- Playwright e2e tests (Chromium; no secrets needed — chat API falls back without `OPENAI_API_KEY`)
+- Production build (`npm run build`)
+
+**PR lint** (`.github/workflows/pr-lint.yml`) enforces conventional-commit PR titles, a meaningful body, `Fixes #nnn` for feat/fix/perf/refactor, and a `## Test plan` section.
+
+**Claude Code Review** (`.github/workflows/claude-code-review.yml`) is manually dispatched with a PR number (requires `ANTHROPIC_API_KEY` secret).
+
+**Dependabot** (`.github/dependabot.yml`) opens weekly npm and github-actions update PRs.
 
 **Deployment** (`.github/workflows/azure-app-service.yml`) deploys to Azure App Service on push to `master`. Resource group: `KnowAllAIRG`, App name: `knowall-website`.
 
