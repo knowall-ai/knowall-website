@@ -12,6 +12,7 @@ import BitcoinLogo from '@/components/bitcoin-logo';
 import BackgroundImage from '@/components/background-image';
 import AutoGenLogo from '@/components/autogen-logo';
 import ZappCarousel from '@/components/zapp-carousel';
+import TeamSection from '@/components/team-section';
 
 export default function Home() {
   return (
@@ -259,6 +260,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Meet the Team Section */}
+      <TeamSection />
 
       {/* Contact Section */}
       <section id="contact">
