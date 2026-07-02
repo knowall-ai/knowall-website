@@ -9,18 +9,21 @@ import Logo from '@/components/logo';
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  // Hash links point at sections on the homepage (prefixed with '/' so they
+  // still work from other routes like /story); Story is a real route.
   const navLinks = [
-    { name: 'Home', href: '#' },
-    { name: 'Services', href: '#services' },
-    { name: 'Zapp.ie', href: '#zapp' },
-    { name: 'Copilots', href: '#copilots' },
+    { name: 'Home', href: '/' },
+    { name: 'Services', href: '/#services' },
+    { name: 'Zapp.ie', href: '/#zapp' },
+    { name: 'Copilots', href: '/#copilots' },
+    { name: 'Story', href: '/story' },
   ];
 
   return (
     <header className="sticky top-0 z-50 bg-gray-950/90 backdrop-blur-sm border-b border-gray-800">
       <div className="container max-w-6xl mx-auto px-4 py-3">
         <div className="flex items-center justify-between">
-          <Link href="#" className="flex items-center">
+          <Link href="/" className="flex items-center">
             <Logo darkBackground={true} className="h-12" />
           </Link>
 
@@ -39,7 +42,7 @@ export default function Header() {
 
           <div className="hidden md:flex items-center gap-4">
             <Button asChild className="bg-lime-600 hover:bg-lime-700 text-white">
-              <Link href="#contact">Contact Us</Link>
+              <Link href="/#contact">Contact Us</Link>
             </Button>
           </div>
 
@@ -73,7 +76,7 @@ export default function Header() {
               ))}
               <div className="pt-2">
                 <Button asChild className="w-full bg-lime-600 hover:bg-lime-700 text-white">
-                  <Link href="#contact" onClick={() => setIsMenuOpen(false)}>
+                  <Link href="/#contact" onClick={() => setIsMenuOpen(false)}>
                     Contact Us
                   </Link>
                 </Button>
