@@ -11,8 +11,10 @@ export default function Header() {
 
   // Hash links point at sections on the homepage (prefixed with '/' so they
   // still work from other routes like /story); Story is a real route.
+  // Home and the logo use '/#' so that clicking them scrolls to the top when
+  // already on the homepage, while still navigating home from other routes.
   const navLinks = [
-    { name: 'Home', href: '/' },
+    { name: 'Home', href: '/#' },
     { name: 'Services', href: '/#services' },
     { name: 'Zapp.ie', href: '/#zapp' },
     { name: 'Copilots', href: '/#copilots' },
@@ -23,7 +25,7 @@ export default function Header() {
     <header className="sticky top-0 z-50 bg-gray-950/90 backdrop-blur-sm border-b border-gray-800">
       <div className="container max-w-6xl mx-auto px-4 py-3">
         <div className="flex items-center justify-between">
-          <Link href="/" className="flex items-center">
+          <Link href="/#" className="flex items-center">
             <Logo darkBackground={true} className="h-12" />
           </Link>
 

@@ -68,7 +68,7 @@ export default function StoryPage() {
             {/* TODO: confirm founding story details (what prompted starting the company) */}
           </p>
           <p>
-            We are an AI consultancy specialising in agent development. From day one our focus has
+            We are an AI consultancy specializing in agent development. From day one our focus has
             been practical, working systems rather than slideware — AI that plugs into the tools
             businesses already use and quietly gets things done.
           </p>
@@ -88,7 +88,7 @@ export default function StoryPage() {
             <p className="text-gray-300">
               We build custom Microsoft Copilots that integrate with Microsoft 365 and Teams, backed
               by the full Power Platform. And because one agent is rarely enough, we use Microsoft
-              AutoGen to orchestrate multi-agent teams — specialised agents with distinct roles,
+              AutoGen to orchestrate multi-agent teams — specialized agents with distinct roles,
               collaborating with each other and with humans in the loop to solve complex problems.
             </p>
           </div>
@@ -123,7 +123,7 @@ export default function StoryPage() {
         <div className="mt-14 rounded-xl border border-gray-800 bg-gray-900 p-6 sm:p-8">
           <h2 className="text-xl font-semibold text-white mb-3">Find us on Nostr</h2>
           <p className="text-gray-300 mb-4">
-            True to our open-protocol roots, KnowAll AI publishes on Nostr — the decentralised,
+            True to our open-protocol roots, KnowAll AI publishes on Nostr — the decentralized,
             censorship-resistant social protocol built on the same values as Bitcoin.
           </p>
           <p className="font-mono text-sm text-lime-500 break-all mb-6">{COMPANY_NPUB}</p>
