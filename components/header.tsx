@@ -12,7 +12,7 @@ export default function Header() {
   const navLinks = [
     { name: 'Home', href: '#' },
     { name: 'Services', href: '#services' },
-    { name: 'Zapp.ie', href: '#zapp' },
+    { name: 'Zaplie', href: '#zapp' },
     { name: 'Copilots', href: '#copilots' },
   ];
 

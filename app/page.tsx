@@ -38,7 +38,7 @@ export default function Home() {
                 We build intelligent AI systems that transform businesses through custom Microsoft
                 Copilots, multi-agent teams, and integrating incentivizing best practices through
                 value-for-value micro-Bitcoin transactions between people, customers, and AI agents
-                <span style={{ display: 'none' }}> using Zapp.ie</span>.
+                <span> using Zaplie</span>.
               </p>
               <div className="flex flex-wrap gap-4">
                 <Button
@@ -51,9 +51,8 @@ export default function Home() {
                   variant="outline"
                   className="border-white text-white hover:bg-white/10"
                   asChild
-                  style={{ display: 'none' }}
                 >
-                  <a href="#zapp">Find out more about Zapp.ie</a>
+                  <a href="#zapp">Find out more about Zaplie</a>
                 </Button>
               </div>
             </div>
@@ -100,30 +99,30 @@ export default function Home() {
         </div>
       </section>
 
-      {/* About Zapp.ie Section */}
-      <section id="zapp" className="py-20 px-4 bg-gray-800 text-white" style={{ display: 'none' }}>
+      {/* About Zaplie Section */}
+      <section id="zapp" className="py-20 px-4 bg-gray-800 text-white">
         <div className="container max-w-6xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center">
-            Zapp.ie: Incentivizing teammates, copilots & customers
+            Zaplie: Incentivizing teammates, copilots & customers
           </h2>
 
           <div className="flex flex-col lg:flex-row items-center gap-12">
             <div className="flex-1">
               <p className="text-lg text-gray-200 mb-6">
-                Zapp.ie is an open-source platform that integrates Microsoft Teams with Bitcoin
+                Zaplie is an open-source platform that integrates Microsoft Teams with Bitcoin
                 microtransactions and AI agents (Copilots) to enhance collaboration, productivity,
                 and real-value incentives. Built on the &quot;value-for-value&quot; model, it
                 transforms the digital workspace by linking communication tools with financial
                 rewards and AI-driven support.
               </p>
               <p className="text-lg text-gray-200 mb-6">
-                Using seamless Bitcoin microtransactions, Zapp.ie incentivizes engagement across
-                team members, clients, and AI agents. This approach fosters a culture of recognition
-                and accountability, where contributions—whether human or AI—are rewarded in
-                proportion to the value they deliver.
+                Using seamless Bitcoin microtransactions, Zaplie incentivizes engagement across team
+                members, clients, and AI agents. This approach fosters a culture of recognition and
+                accountability, where contributions—whether human or AI—are rewarded in proportion
+                to the value they deliver.
               </p>
               <p className="text-lg text-gray-200 mb-8">
-                With its open-source foundation, Zapp.ie can be tailored to meet the unique needs of
+                With its open-source foundation, Zaplie can be tailored to meet the unique needs of
                 any organization. By aligning incentives and enabling value exchange across people
                 and intelligent systems, it supports more motivated, transparent, and effective
                 collaboration.
@@ -134,16 +133,25 @@ export default function Home() {
               <Card className="p-0 w-full max-w-md shadow-lg border-0 bg-gray-900 overflow-hidden mb-4">
                 <Image
                   src="/images/zappie.png"
-                  alt="Zapp.ie AI Agent"
+                  alt="Zaplie AI Agent"
                   width={400}
                   height={300}
                   className="w-full h-auto object-cover"
                 />
               </Card>
 
-              <div className="flex items-center gap-4 mt-4">
+              <div className="flex flex-wrap items-center justify-center gap-4 mt-4">
                 <a
-                  href="https://github.com/BenGWeeks/Zapp.ie"
+                  href="https://www.getzapl.ie"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 bg-lime-600 hover:bg-lime-700 text-white px-4 py-2 rounded-md transition-colors font-medium"
+                >
+                  <Zap className="h-5 w-5" />
+                  <span>Visit getzapl.ie</span>
+                </a>
+                <a
+                  href="https://github.com/knowall-ai/zaplie-webapp"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 bg-gray-950 hover:bg-black text-white px-4 py-2 rounded-md transition-colors"
@@ -159,7 +167,7 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Zapp.ie Screenshots Carousel */}
+          {/* Zaplie Screenshots Carousel */}
           <ZappCarousel />
         </div>
       </section>
