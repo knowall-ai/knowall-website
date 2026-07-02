@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { Zap, Bot, Code, Github, FileCheck, Banknote, Clock, Leaf } from 'lucide-react';
+import { Zap, Bot, Code, Github, Send } from 'lucide-react';
 import EmailIcon from '@/components/email-icon';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -313,56 +313,113 @@ export default function Home() {
                     <span className="text-white border-b-2 border-lime-500 pb-0.5">Chat</span>
                     <span>Feed</span>
                     <span>Reports</span>
+                    <span>Profile</span>
                   </div>
                 </div>
                 <div className="p-4 space-y-4">
-                  <div className="bg-gray-900 rounded-lg p-4">
-                    <div className="flex items-baseline gap-2 mb-1">
-                      <span className="text-sm font-semibold text-lime-400">Allie</span>
-                      <span className="text-xs text-gray-500">9:15 AM</span>
+                  <div className="flex items-start gap-2">
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-lime-500/20">
+                      <Bot className="h-4 w-4 text-lime-500" />
                     </div>
-                    <p className="text-sm text-gray-200 mb-3">
-                      Hi Ben, I wasn&apos;t able to process an invoice from Contoso. Would you mind
-                      assisting me with it?
-                    </p>
-                    <div className="flex flex-wrap gap-2">
-                      <span className="text-xs border border-gray-700 rounded px-3 py-1 text-gray-300">
-                        Yes
-                      </span>
-                      <span className="text-xs border border-gray-700 rounded px-3 py-1 text-gray-300">
-                        No
-                      </span>
-                      <span className="text-xs border border-gray-700 rounded px-3 py-1 text-gray-300">
-                        Ask me again tomorrow
-                      </span>
+                    <div className="flex-1 bg-gray-900 rounded-lg p-4">
+                      <div className="flex items-baseline gap-2 mb-1">
+                        <span className="text-sm font-semibold text-lime-400">
+                          Allie for Accounts
+                        </span>
+                        <span className="text-xs text-gray-500">5/12, 9:15 AM</span>
+                      </div>
+                      <p className="text-sm text-gray-200 mb-3">
+                        Hi Ben, I wasn&apos;t able to process an invoice from Contoso. Would you
+                        mind assisting me with it?
+                      </p>
+                      <div className="flex flex-wrap gap-2">
+                        <span className="text-xs border border-gray-700 rounded px-3 py-1 text-gray-300">
+                          Yes
+                        </span>
+                        <span className="text-xs border border-gray-700 rounded px-3 py-1 text-gray-300">
+                          No
+                        </span>
+                        <span className="text-xs border border-gray-700 rounded px-3 py-1 text-gray-300">
+                          Ask me again tomorrow
+                        </span>
+                        <span className="text-xs border border-gray-700 rounded px-3 py-1 text-gray-300">
+                          Ask me again in 3 business days
+                        </span>
+                      </div>
                     </div>
                   </div>
-                  <div className="flex justify-end">
-                    <div className="bg-lime-900/40 rounded-lg px-4 py-2 text-sm text-gray-200">
-                      Yes
+                  <div className="flex items-start justify-end gap-2">
+                    <div className="bg-gray-900 rounded-lg px-4 py-2">
+                      <div className="flex items-baseline gap-2 mb-0.5">
+                        <span className="text-sm font-semibold">Ben Weeks</span>
+                        <span className="text-xs text-gray-500">5/12, 9:16 AM</span>
+                      </div>
+                      <p className="text-sm text-gray-200">Yes</p>
+                    </div>
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-lime-900/60 text-xs font-semibold text-lime-300">
+                      BW
                     </div>
                   </div>
-                  <div className="bg-gray-900 rounded-lg p-4 border-t-2 border-lime-500">
-                    <div className="flex items-center justify-between mb-3">
-                      <span className="font-semibold">Invoice # INV-3453211</span>
-                      <span className="text-xs text-lime-400 border border-lime-500/40 rounded px-2 py-0.5">
-                        Recognised
-                      </span>
+                  <div className="flex items-start gap-2">
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-lime-500/20">
+                      <Bot className="h-4 w-4 text-lime-500" />
                     </div>
-                    <dl className="space-y-2 text-sm">
-                      <div className="flex justify-between gap-4">
-                        <dt className="text-gray-400">Vendor name</dt>
-                        <dd className="text-gray-200">Contoso Ltd</dd>
+                    <div className="flex-1 bg-gray-900 rounded-lg p-4 border-t-2 border-lime-500">
+                      <div className="flex items-baseline gap-2 mb-3">
+                        <span className="text-sm font-semibold text-lime-400">
+                          Allie for Accounts
+                        </span>
+                        <span className="text-xs text-gray-500">5/12, 9:17 AM</span>
                       </div>
-                      <div className="flex justify-between gap-4">
-                        <dt className="text-gray-400">Invoice date</dt>
-                        <dd className="text-gray-200">08/10/2024</dd>
+                      <div className="flex items-center justify-between mb-3">
+                        <span className="font-semibold">Invoice # INV-3453211</span>
+                        <span className="text-xs text-lime-400 border border-lime-500/40 rounded px-2 py-0.5">
+                          Recognised
+                        </span>
                       </div>
-                      <div className="flex justify-between gap-4">
-                        <dt className="text-gray-400">Amount</dt>
-                        <dd className="text-gray-200">€1,500</dd>
+                      <dl className="space-y-2 text-sm mb-3">
+                        <div className="flex gap-2">
+                          <dt className="text-gray-400">From:</dt>
+                          <dd className="font-medium text-gray-200">Contoso</dd>
+                        </div>
+                        <div className="flex gap-2">
+                          <dt className="text-gray-400">Invoice date:</dt>
+                          <dd className="font-medium text-gray-200">14/10/2024</dd>
+                        </div>
+                      </dl>
+                      <p className="text-xs text-gray-400 mb-1">VAT number*:</p>
+                      <div className="rounded border border-gray-700 bg-gray-950 px-3 py-1.5 text-xs text-gray-500 mb-3">
+                        Please, enter VAT number
                       </div>
-                    </dl>
+                      <div className="flex gap-2">
+                        <span className="text-xs border border-gray-600 rounded px-3 py-1 text-gray-200">
+                          Open invoice
+                        </span>
+                        <span className="text-xs border border-gray-600 rounded px-3 py-1 text-gray-200">
+                          Submit
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-lime-500/20">
+                      <Bot className="h-4 w-4 text-lime-500" />
+                    </div>
+                    <div className="flex-1 bg-gray-900 rounded-lg p-4">
+                      <div className="flex items-baseline gap-2 mb-1">
+                        <span className="text-sm font-semibold text-lime-400">
+                          Allie for Accounts
+                        </span>
+                        <span className="text-xs text-gray-500">5/12, 9:18 AM</span>
+                      </div>
+                      <p className="text-sm text-gray-200">
+                        Thanks, I have now logged this invoice to accounts.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 rounded-lg border border-gray-800 bg-gray-900 px-4 py-2.5">
+                    <span className="flex-1 text-sm text-gray-500">Type a new message</span>
+                    <Send className="h-4 w-4 text-gray-500" />
                   </div>
                 </div>
               </Card>
@@ -370,25 +427,39 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-16">
-            <div className="bg-gray-900 rounded-lg p-6 text-center">
-              <FileCheck className="h-6 w-6 text-lime-500 mx-auto mb-3" />
-              <p className="text-3xl font-bold mb-1">782</p>
-              <p className="text-sm text-gray-400">Invoices processed in the last 7 days</p>
+            <div className="bg-gray-900 rounded-lg p-6">
+              <p className="text-sm font-semibold mb-2">Invoices processed</p>
+              <p className="text-3xl font-bold">
+                782 <span className="text-sm font-normal text-gray-400">invoices</span>
+              </p>
+              <p className="text-sm text-gray-400 mt-1">
+                in the last 7 days <span className="text-lime-400">108 ↑</span>
+              </p>
             </div>
-            <div className="bg-gray-900 rounded-lg p-6 text-center">
-              <Banknote className="h-6 w-6 text-lime-500 mx-auto mb-3" />
-              <p className="text-3xl font-bold mb-1">€12,300</p>
-              <p className="text-sm text-gray-400">Money saved</p>
+            <div className="bg-gray-900 rounded-lg p-6">
+              <p className="text-sm font-semibold mb-2">Money saved</p>
+              <p className="text-3xl font-bold">€12,300</p>
+              <p className="text-sm text-gray-400 mt-1">
+                in the last 7 days <span className="text-lime-400">€4,220 ↑</span>
+              </p>
             </div>
-            <div className="bg-gray-900 rounded-lg p-6 text-center">
-              <Clock className="h-6 w-6 text-lime-500 mx-auto mb-3" />
-              <p className="text-3xl font-bold mb-1">34 hrs</p>
-              <p className="text-sm text-gray-400">Time saved</p>
+            <div className="bg-gray-900 rounded-lg p-6">
+              <p className="text-sm font-semibold mb-2">Time saved</p>
+              <p className="text-3xl font-bold">
+                34 <span className="text-sm font-normal text-gray-400">hours</span>
+              </p>
+              <p className="text-sm text-gray-400 mt-1">
+                in the last 7 days <span className="text-lime-400">12 ↑</span>
+              </p>
             </div>
-            <div className="bg-gray-900 rounded-lg p-6 text-center">
-              <Leaf className="h-6 w-6 text-lime-500 mx-auto mb-3" />
-              <p className="text-3xl font-bold mb-1">34 t</p>
-              <p className="text-sm text-gray-400">CO₂ saved</p>
+            <div className="bg-gray-900 rounded-lg p-6">
+              <p className="text-sm font-semibold mb-2">CO₂ saved</p>
+              <p className="text-3xl font-bold">
+                34 <span className="text-sm font-normal text-gray-400">tons of carbon</span>
+              </p>
+              <p className="text-sm text-gray-400 mt-1">
+                in the last 7 days <span className="text-lime-400">12 ↑</span>
+              </p>
             </div>
           </div>
           <p className="text-xs text-gray-500 text-center mt-4">
