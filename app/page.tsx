@@ -220,7 +220,10 @@ export default function Home() {
                 ></div>
                 <div className="relative rounded-xl overflow-hidden border border-gray-700 bg-gray-950 shadow-2xl shadow-lime-500/20">
                   {/* Browser chrome bar */}
-                  <div className="flex items-center gap-2 px-4 py-3 bg-gray-800 border-b border-gray-700">
+                  <div
+                    className="flex items-center gap-2 px-4 py-3 bg-gray-800 border-b border-gray-700"
+                    aria-hidden="true"
+                  >
                     <span className="h-3 w-3 rounded-full bg-red-500/80"></span>
                     <span className="h-3 w-3 rounded-full bg-yellow-500/80"></span>
                     <span className="h-3 w-3 rounded-full bg-green-500/80"></span>
@@ -353,7 +356,10 @@ export default function Home() {
                 ></div>
                 <div className="relative rounded-xl overflow-hidden border border-gray-700 bg-gray-950 shadow-2xl shadow-lime-500/20">
                   {/* Browser chrome bar */}
-                  <div className="flex items-center gap-2 px-4 py-3 bg-gray-800 border-b border-gray-700">
+                  <div
+                    className="flex items-center gap-2 px-4 py-3 bg-gray-800 border-b border-gray-700"
+                    aria-hidden="true"
+                  >
                     <span className="h-3 w-3 rounded-full bg-red-500/80"></span>
                     <span className="h-3 w-3 rounded-full bg-yellow-500/80"></span>
                     <span className="h-3 w-3 rounded-full bg-green-500/80"></span>
