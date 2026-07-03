@@ -303,7 +303,15 @@ export default function Home() {
             </div>
 
             <div className="flex-1 w-full max-w-md">
-              <Card className="w-full border-0 bg-gray-950 text-white shadow-lg overflow-hidden">
+              <p className="sr-only">
+                Illustration of a Microsoft Teams chat where Allie asks for help with an
+                unrecognised Contoso invoice, Ben supplies the missing VAT number, and Allie logs
+                the invoice to accounts.
+              </p>
+              <Card
+                aria-hidden="true"
+                className="w-full border-0 bg-gray-950 text-white shadow-lg overflow-hidden"
+              >
                 <div className="flex items-center gap-3 px-4 py-3 border-b border-gray-800">
                   <div className="flex h-9 w-9 items-center justify-center rounded-full bg-lime-500/20">
                     <Bot className="h-5 w-5 text-lime-500" />
