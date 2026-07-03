@@ -31,16 +31,18 @@ describe('Header', () => {
 
     const logo = screen.getByAltText('KnowAll.ai');
     expect(logo).toBeInTheDocument();
-    expect(logo.closest('a')).toHaveAttribute('href', '#');
+    expect(logo.closest('a')).toHaveAttribute('href', '/#');
   });
 
   it('renders all primary navigation links', () => {
     renderHeader();
 
-    expect(screen.getByRole('link', { name: 'Home' })).toHaveAttribute('href', '#');
-    expect(screen.getByRole('link', { name: 'Services' })).toHaveAttribute('href', '#services');
-    expect(screen.getByRole('link', { name: 'Zapp.ie' })).toHaveAttribute('href', '#zapp');
-    expect(screen.getByRole('link', { name: 'Copilots' })).toHaveAttribute('href', '#copilots');
+    // Section links are prefixed with '/' so they resolve from other routes too.
+    expect(screen.getByRole('link', { name: 'Home' })).toHaveAttribute('href', '/#');
+    expect(screen.getByRole('link', { name: 'Services' })).toHaveAttribute('href', '/#services');
+    expect(screen.getByRole('link', { name: 'Copilots' })).toHaveAttribute('href', '/#copilots');
+    // The individual products (Zaplie, Zapdesk, …) now live under a Products dropdown.
+    expect(screen.getByRole('button', { name: 'Products' })).toBeInTheDocument();
   });
 
   it('renders contact mail buttons for desktop and mobile', () => {

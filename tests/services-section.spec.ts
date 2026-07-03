@@ -48,6 +48,6 @@ test.describe('Services Section', () => {
 
   test('Services navigation link points at the services section', async ({ page }) => {
     const servicesLink = page.locator('header nav a', { hasText: 'Services' });
-    await expect(servicesLink).toHaveAttribute('href', '#services');
+    await expect(servicesLink).toHaveAttribute('href', '/#services');
   });
 });

@@ -28,15 +28,15 @@ describe('Footer', () => {
 
     expect(screen.getByRole('link', { name: 'AI Consultancy' })).toHaveAttribute(
       'href',
-      '#services'
+      '/#services'
     );
     expect(screen.getByRole('link', { name: 'Microsoft Copilots' })).toHaveAttribute(
       'href',
-      '#copilots'
+      '/#copilots'
     );
     expect(screen.getByRole('link', { name: 'Bitcoin Integration' })).toHaveAttribute(
       'href',
-      '#zapp'
+      '/#zapp'
     );
   });
 

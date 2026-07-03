@@ -50,7 +50,7 @@ test.describe('Mobile Navigation', () => {
     const mobileNav = page.locator(mobileNavSelector);
     await expect(mobileNav.getByRole('link', { name: 'Home' })).toBeVisible();
     await expect(mobileNav.getByRole('link', { name: 'Services' })).toBeVisible();
-    await expect(mobileNav.getByRole('link', { name: 'Zapp.ie' })).toBeVisible();
+    await expect(mobileNav.getByRole('link', { name: 'Zaplie' })).toBeVisible();
     await expect(mobileNav.getByRole('link', { name: 'Copilots' })).toBeVisible();
     // Contact Us was replaced by the Nostr Sign In button in the mobile menu
     await expect(mobileNav.getByRole('button', { name: 'Sign In' })).toBeVisible();
