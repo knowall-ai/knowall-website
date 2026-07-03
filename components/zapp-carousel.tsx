@@ -8,39 +8,39 @@ import { cn } from '@/lib/utils';
 const images = [
   {
     src: '/images/zapp/01-bot.png',
-    alt: 'Zapp.ie Chat Bot Interface',
+    alt: 'Zaplie Chat Bot Interface',
   },
   {
     src: '/images/zapp/02-feed.png',
-    alt: 'Zapp.ie Activity Feed',
+    alt: 'Zaplie Activity Feed',
   },
   {
     src: '/images/zapp/03-bounties.png',
-    alt: 'Zapp.ie Bounties System',
+    alt: 'Zaplie Bounties System',
   },
   {
     src: '/images/zapp/04-raisers.png',
-    alt: 'Zapp.ie Group Funding Raisers',
+    alt: 'Zaplie Group Funding Raisers',
   },
   {
     src: '/images/zapp/05-automations.png',
-    alt: 'Zapp.ie Automations Dashboard',
+    alt: 'Zaplie Automations Dashboard',
   },
   {
     src: '/images/zapp/06-project.png',
-    alt: 'Zapp.ie Project Management',
+    alt: 'Zaplie Project Management',
   },
   {
     src: '/images/zapp/07-rewards.png',
-    alt: 'Zapp.ie Rewards Program',
+    alt: 'Zaplie Rewards Program',
   },
   {
     src: '/images/zapp/08-wallet.png',
-    alt: 'Zapp.ie Wallet & Transactions',
+    alt: 'Zaplie Wallet & Transactions',
   },
   {
     src: '/images/zapp/09-sasha.png',
-    alt: 'Zapp.ie User Profile',
+    alt: 'Zaplie User Profile',
   },
 ];
 
