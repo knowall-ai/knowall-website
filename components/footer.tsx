@@ -65,26 +65,47 @@ export default function Footer({ darkMode = false }: FooterProps) {
 
           <div>
             <h4 className="font-semibold mb-4">Products</h4>
-            {/* Mirrors the header Products dropdown (components/header.tsx).
+            {/* Mirrors the header Products dropdown (components/header.tsx), but each
+                item links out to the product's own site where one exists.
                 "Allie for Accounts" joins this list when PR #7 merges. */}
             <ul className="space-y-2">
               <li>
-                <a href="#zapp" className="text-gray-400 hover:text-white transition-colors">
+                <a
+                  href="https://www.getzapl.ie"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-400 hover:text-white transition-colors"
+                >
                   Zaplie
                 </a>
               </li>
               <li>
-                <a href="#zapdesk" className="text-gray-400 hover:text-white transition-colors">
+                <a
+                  href="https://zapdesk.knowall.ai"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-400 hover:text-white transition-colors"
+                >
                   Zapdesk
                 </a>
               </li>
               <li>
-                <a href="#thyme" className="text-gray-400 hover:text-white transition-colors">
+                <a
+                  href="https://getthyme.ai"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-400 hover:text-white transition-colors"
+                >
                   Thyme
                 </a>
               </li>
               <li>
-                <a href="#tminus15" className="text-gray-400 hover:text-white transition-colors">
+                <a
+                  href="https://github.com/T-Minus-15/book"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-400 hover:text-white transition-colors"
+                >
                   T-Minus-15
                 </a>
               </li>
