@@ -8,6 +8,7 @@ import Header from '@/components/header';
 import Footer from '@/components/footer';
 import ServiceCard from '@/components/service-card';
 import WhatsAppButton from '@/components/whatsapp-button';
+import NostrButton from '@/components/nostr-button';
 import BitcoinLogo from '@/components/bitcoin-logo';
 import BackgroundImage from '@/components/background-image';
 import AutoGenLogo from '@/components/autogen-logo';
@@ -494,6 +495,7 @@ export default function Home() {
                   </a>
                 </Button>
                 <WhatsAppButton darkMode={true} />
+                <NostrButton darkMode={true} />
               </div>
             </div>
           </div>
