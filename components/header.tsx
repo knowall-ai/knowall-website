@@ -27,11 +27,12 @@ export default function Header() {
     { name: 'Services', href: '/#services' },
   ];
 
-  // NOTE: "Thyme" (#thyme) joins this dropdown in the Thyme section follow-up PR,
-  // and "Allie for Accounts" (#allie) once PR #7 merges.
+  // NOTE: "Allie for Accounts" (#allie) joins this dropdown once PR #7 merges.
   const productLinks = [
     { name: 'Zaplie', href: '/#zapp' },
     { name: 'Zapdesk', href: '/#zapdesk' },
+    { name: 'Thyme', href: '/#thyme' },
+    { name: 'T-Minus-15', href: '/#tminus15' },
   ];
 
   const trailingNavLinks = [{ name: 'Copilots', href: '/#copilots' }];
@@ -57,7 +58,7 @@ export default function Header() {
             ))}
 
             <DropdownMenu>
-              <DropdownMenuTrigger className="flex items-center gap-1 text-gray-300 hover:text-lime-500 transition-colors outline-none data-[state=open]:text-lime-500">
+              <DropdownMenuTrigger className="flex items-center gap-1 text-gray-300 hover:text-lime-500 transition-colors rounded-sm outline-none focus-visible:ring-2 focus-visible:ring-lime-500 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-950 data-[state=open]:text-lime-500">
                 Products
                 <ChevronDown className="h-4 w-4" />
               </DropdownMenuTrigger>
