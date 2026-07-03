@@ -28,6 +28,7 @@ import BitcoinLogo from '@/components/bitcoin-logo';
 import BackgroundImage from '@/components/background-image';
 import AutoGenLogo from '@/components/autogen-logo';
 import ZappCarousel from '@/components/zapp-carousel';
+import TMinus15Book from '@/components/tminus15-book';
 
 export default function Home() {
   return (
@@ -392,28 +393,9 @@ export default function Home() {
           </h2>
 
           <div className="flex flex-col lg:flex-row items-center gap-12">
-            {/* Book cover (image left, mirroring the Thyme section's image-right) */}
+            {/* Book (image left, mirroring the Thyme section's image-right) */}
             <div className="flex-1 w-full flex justify-center">
-              <div className="relative [perspective:1200px]">
-                <div
-                  className="absolute -inset-8 bg-lime-500/10 blur-2xl rounded-3xl"
-                  aria-hidden="true"
-                ></div>
-                <div className="relative w-64 md:w-72 [transform:rotateY(-14deg)_rotateX(3deg)] [transform-style:preserve-3d] transition-transform duration-500 hover:[transform:rotateY(-6deg)_rotateX(1deg)]">
-                  {/* Book spine edge */}
-                  <div
-                    className="absolute inset-y-0 -left-2 w-2 bg-gray-950 rounded-l-sm [transform:rotateY(-60deg)] origin-right"
-                    aria-hidden="true"
-                  ></div>
-                  <Image
-                    src="/images/products/tminus15-book.png"
-                    alt="T-Minus-15: Secrets of an Elite DevOps Team book cover"
-                    width={533}
-                    height={800}
-                    className="w-full h-auto rounded-r-md rounded-l-sm border border-gray-700 shadow-2xl shadow-lime-500/20"
-                  />
-                </div>
-              </div>
+              <TMinus15Book />
             </div>
 
             <div className="flex-1">
