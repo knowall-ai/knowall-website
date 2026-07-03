@@ -8,7 +8,7 @@ This repository contains the code for the KnowAll.ai website, an AI consultancy 
 - Interactive AI chat assistant powered by OpenAI's GPT-4o
 - Speech recognition for voice input in the chat interface
 - Sections highlighting KnowAll.ai's services and projects
-- Information about Zapp.ie, an open-source platform for Bitcoin microtransactions
+- Information about Zaplie, an open-source platform for Bitcoin microtransactions
 - Details about Microsoft Copilot development and multi-agent teams
 
 ## Technologies Used
