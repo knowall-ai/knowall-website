@@ -67,15 +67,15 @@ export default function Footer({ darkMode = false }: FooterProps) {
           <div>
             <h4 className="font-semibold mb-4">Projects</h4>
             <ul className="space-y-2">
-              <li style={{ display: 'none' }}>
+              <li>
                 <a
-                  href="https://github.com/Bengweeks/zapp.ie"
+                  href="https://github.com/knowall-ai/zaplie-webapp"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-gray-400 hover:text-white transition-colors flex items-center gap-2"
                 >
                   <Github className="h-4 w-4" />
-                  <span>Zapp.ie</span>
+                  <span>Zaplie</span>
                 </a>
               </li>
               <li>
