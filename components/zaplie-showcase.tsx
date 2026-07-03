@@ -9,8 +9,7 @@ import Image from 'next/image';
  * the side screens collapse away on narrow viewports.
  */
 
-const frame =
-  'overflow-hidden rounded-xl border border-gray-700 bg-gray-950 p-1.5 shadow-2xl';
+const frame = 'overflow-hidden rounded-xl border border-gray-700 bg-gray-950 p-1.5 shadow-2xl';
 
 export default function ZaplieShowcase() {
   return (
