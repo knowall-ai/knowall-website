@@ -152,15 +152,6 @@ export default function Home() {
 
               <div className="flex flex-wrap items-center justify-center gap-4 mt-4">
                 <a
-                  href="https://www.getzapl.ie"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 bg-lime-600 hover:bg-lime-700 text-white px-4 py-2 rounded-md transition-colors font-medium"
-                >
-                  <Zap className="h-5 w-5" />
-                  <span>Visit getzapl.ie</span>
-                </a>
-                <a
                   href="https://github.com/knowall-ai/zaplie-webapp"
                   target="_blank"
                   rel="noopener noreferrer"
