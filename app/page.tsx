@@ -23,6 +23,7 @@ import Header from '@/components/header';
 import Footer from '@/components/footer';
 import ServiceCard from '@/components/service-card';
 import WhatsAppButton from '@/components/whatsapp-button';
+import NostrButton from '@/components/nostr-button';
 import BitcoinLogo from '@/components/bitcoin-logo';
 import BackgroundImage from '@/components/background-image';
 import AutoGenLogo from '@/components/autogen-logo';
@@ -318,13 +319,13 @@ export default function Home() {
               </ul>
 
               <a
-                href="https://thyme.knowall.ai"
+                href="https://getthyme.ai"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 bg-lime-600 hover:bg-lime-700 text-white px-6 py-3 rounded-md transition-colors font-medium shadow-lg shadow-lime-500/20"
               >
                 <ExternalLink className="h-5 w-5" />
-                <span>Visit thyme.knowall.ai</span>
+                <span>Visit getthyme.ai</span>
               </a>
             </div>
 
@@ -342,12 +343,12 @@ export default function Home() {
                     <span className="h-3 w-3 rounded-full bg-yellow-500/80"></span>
                     <span className="h-3 w-3 rounded-full bg-green-500/80"></span>
                     <span className="ml-3 text-xs text-gray-400 bg-gray-900 rounded-md px-3 py-1">
-                      thyme.knowall.ai
+                      getthyme.ai
                     </span>
                   </div>
                   <Image
-                    src="/images/products/thyme.png"
-                    alt="Thyme time tracking application homepage"
+                    src="/images/products/thyme-homepage.png"
+                    alt="Thyme time tracking home screen at getthyme.ai"
                     width={1200}
                     height={750}
                     className="w-full h-auto"
@@ -572,6 +573,7 @@ export default function Home() {
                   </a>
                 </Button>
                 <WhatsAppButton darkMode={true} />
+                <NostrButton darkMode={true} />
               </div>
             </div>
           </div>
