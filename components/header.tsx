@@ -25,6 +25,7 @@ export default function Header() {
   const navLinks = [
     { name: 'Home', href: '/#' },
     { name: 'Services', href: '/#services' },
+    { name: 'Team', href: '/#team' },
   ];
 
   // NOTE: "Allie for Accounts" (#allie) joins this dropdown once PR #7 merges.
