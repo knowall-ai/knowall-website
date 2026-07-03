@@ -10,9 +10,9 @@ export default function Logo({ className = '', darkBackground = false }: LogoPro
     <Image
       src="/images/logo.png"
       alt="KnowAll.ai"
-      width={120}
+      width={66}
       height={48}
-      className={`${className} ${darkBackground ? 'brightness-0 invert' : ''}`}
+      className={`w-auto ${className} ${darkBackground ? 'brightness-0 invert' : ''}`}
     />
   );
 }
