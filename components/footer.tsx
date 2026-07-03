@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { Github } from 'lucide-react';
 import Logo from '@/components/logo';
 import NostrLogo from '@/components/nostr-logo';
@@ -19,30 +20,46 @@ export default function Footer({ darkMode = false }: FooterProps) {
               AI consultancy specializing in agent development and Bitcoin-powered value-for-value
               transactions.
             </p>
+            <ul className="space-y-2 mt-4">
+              <li>
+                <Link href="/story" className="text-gray-400 hover:text-white transition-colors">
+                  Our Story
+                </Link>
+              </li>
+            </ul>
           </div>
 
           <div>
             <h4 className="font-semibold mb-4">Services</h4>
             <ul className="space-y-2">
               <li>
-                <a href="#services" className="text-gray-400 hover:text-white transition-colors">
+                <Link
+                  href="/#services"
+                  className="text-gray-400 hover:text-white transition-colors"
+                >
                   AI Consultancy
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#copilots" className="text-gray-400 hover:text-white transition-colors">
+                <Link
+                  href="/#copilots"
+                  className="text-gray-400 hover:text-white transition-colors"
+                >
                   Microsoft Copilots
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#copilots" className="text-gray-400 hover:text-white transition-colors">
+                <Link
+                  href="/#copilots"
+                  className="text-gray-400 hover:text-white transition-colors"
+                >
                   Multi-Agent Teams
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#zapp" className="text-gray-400 hover:text-white transition-colors">
+                <Link href="/#zapp" className="text-gray-400 hover:text-white transition-colors">
                   Bitcoin Integration
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -50,15 +67,15 @@ export default function Footer({ darkMode = false }: FooterProps) {
           <div>
             <h4 className="font-semibold mb-4">Projects</h4>
             <ul className="space-y-2">
-              <li style={{ display: 'none' }}>
+              <li>
                 <a
-                  href="https://github.com/Bengweeks/zapp.ie"
+                  href="https://github.com/knowall-ai/zaplie-webapp"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-gray-400 hover:text-white transition-colors flex items-center gap-2"
                 >
                   <Github className="h-4 w-4" />
-                  <span>Zapp.ie</span>
+                  <span>Zaplie</span>
                 </a>
               </li>
               <li>
