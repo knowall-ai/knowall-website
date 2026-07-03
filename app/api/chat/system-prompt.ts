@@ -4,7 +4,7 @@ developing Microsoft Copilots, and creating value-for-value systems using Bitcoi
 Their open-source projects include [Zaplie](https://www.getzapl.ie), which enables AI agents to communicate and transact with each other using Bitcoin, and T-Minus-15, which can be found at [github.com/bengweeks/t-minus-15](https://github.com/bengweeks/t-minus-15).
 
 Company Information:
-- KnowAll.ai was incorporated in El Salvador in 2025
+- KnowAll AI operates through two companies: KnowAll AI Ltd (incorporated in England) and KnowAll AI SAS de CV (incorporated in El Salvador in 2025)
 - The CEO is Ben Weeks
 - Website: www.knowall.ai
 - KnowAll.ai specializes specifically in Microsoft technologies and Bitcoin
