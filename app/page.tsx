@@ -28,6 +28,7 @@ import BitcoinLogo from '@/components/bitcoin-logo';
 import BackgroundImage from '@/components/background-image';
 import AutoGenLogo from '@/components/autogen-logo';
 import ZappCarousel from '@/components/zapp-carousel';
+import TMinus15Book from '@/components/tminus15-book';
 
 export default function Home() {
   return (
@@ -145,16 +146,34 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="flex-1 flex flex-col items-center">
-              <Card className="p-0 w-full max-w-md shadow-lg border-0 bg-gray-900 overflow-hidden mb-4">
-                <Image
-                  src="/images/zappie.png"
-                  alt="Zaplie AI Agent"
-                  width={400}
-                  height={300}
-                  className="w-full h-auto object-cover"
-                />
-              </Card>
+            <div className="flex-1 w-full flex flex-col items-center">
+              <div className="relative w-full">
+                <div
+                  className="absolute -inset-4 bg-lime-500/10 blur-2xl rounded-3xl"
+                  aria-hidden="true"
+                ></div>
+                <div className="relative rounded-xl overflow-hidden border border-gray-700 bg-gray-950 shadow-2xl shadow-lime-500/20">
+                  {/* Browser chrome bar */}
+                  <div
+                    className="flex items-center gap-2 px-4 py-3 bg-gray-800 border-b border-gray-700"
+                    aria-hidden="true"
+                  >
+                    <span className="h-3 w-3 rounded-full bg-red-500/80"></span>
+                    <span className="h-3 w-3 rounded-full bg-yellow-500/80"></span>
+                    <span className="h-3 w-3 rounded-full bg-green-500/80"></span>
+                    <span className="ml-3 text-xs text-gray-400 bg-gray-900 rounded-md px-3 py-1">
+                      www.getzapl.ie
+                    </span>
+                  </div>
+                  <Image
+                    src="/images/zapp/02-feed.png"
+                    alt="Zaplie feed in Microsoft Teams showing zaps sent between teammates"
+                    width={1200}
+                    height={675}
+                    className="w-full h-auto"
+                  />
+                </div>
+              </div>
 
               <div className="flex flex-wrap items-center justify-center gap-4 mt-4">
                 <a
@@ -205,7 +224,10 @@ export default function Home() {
                 ></div>
                 <div className="relative rounded-xl overflow-hidden border border-gray-700 bg-gray-950 shadow-2xl shadow-lime-500/20">
                   {/* Browser chrome bar */}
-                  <div className="flex items-center gap-2 px-4 py-3 bg-gray-800 border-b border-gray-700">
+                  <div
+                    className="flex items-center gap-2 px-4 py-3 bg-gray-800 border-b border-gray-700"
+                    aria-hidden="true"
+                  >
                     <span className="h-3 w-3 rounded-full bg-red-500/80"></span>
                     <span className="h-3 w-3 rounded-full bg-yellow-500/80"></span>
                     <span className="h-3 w-3 rounded-full bg-green-500/80"></span>
@@ -338,7 +360,10 @@ export default function Home() {
                 ></div>
                 <div className="relative rounded-xl overflow-hidden border border-gray-700 bg-gray-950 shadow-2xl shadow-lime-500/20">
                   {/* Browser chrome bar */}
-                  <div className="flex items-center gap-2 px-4 py-3 bg-gray-800 border-b border-gray-700">
+                  <div
+                    className="flex items-center gap-2 px-4 py-3 bg-gray-800 border-b border-gray-700"
+                    aria-hidden="true"
+                  >
                     <span className="h-3 w-3 rounded-full bg-red-500/80"></span>
                     <span className="h-3 w-3 rounded-full bg-yellow-500/80"></span>
                     <span className="h-3 w-3 rounded-full bg-green-500/80"></span>
@@ -368,28 +393,9 @@ export default function Home() {
           </h2>
 
           <div className="flex flex-col lg:flex-row items-center gap-12">
-            {/* Book cover (image left, mirroring the Thyme section's image-right) */}
+            {/* Book (image left, mirroring the Thyme section's image-right) */}
             <div className="flex-1 w-full flex justify-center">
-              <div className="relative [perspective:1200px]">
-                <div
-                  className="absolute -inset-8 bg-lime-500/10 blur-2xl rounded-3xl"
-                  aria-hidden="true"
-                ></div>
-                <div className="relative w-64 md:w-72 [transform:rotateY(-14deg)_rotateX(3deg)] [transform-style:preserve-3d] transition-transform duration-500 hover:[transform:rotateY(-6deg)_rotateX(1deg)]">
-                  {/* Book spine edge */}
-                  <div
-                    className="absolute inset-y-0 -left-2 w-2 bg-gray-950 rounded-l-sm [transform:rotateY(-60deg)] origin-right"
-                    aria-hidden="true"
-                  ></div>
-                  <Image
-                    src="/images/products/tminus15-book.png"
-                    alt="T-Minus-15: Secrets of an Elite DevOps Team book cover"
-                    width={533}
-                    height={800}
-                    className="w-full h-auto rounded-r-md rounded-l-sm border border-gray-700 shadow-2xl shadow-lime-500/20"
-                  />
-                </div>
-              </div>
+              <TMinus15Book />
             </div>
 
             <div className="flex-1">
