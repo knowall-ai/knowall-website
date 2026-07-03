@@ -1,4 +1,3 @@
-import { Github } from 'lucide-react';
 import Logo from '@/components/logo';
 import NostrLogo from '@/components/nostr-logo';
 
@@ -48,28 +47,28 @@ export default function Footer({ darkMode = false }: FooterProps) {
           </div>
 
           <div>
-            <h4 className="font-semibold mb-4">Projects</h4>
+            <h4 className="font-semibold mb-4">Products</h4>
+            {/* Mirrors the header Products dropdown (components/header.tsx).
+                "Allie for Accounts" joins this list when PR #7 merges. */}
             <ul className="space-y-2">
               <li>
-                <a
-                  href="https://github.com/knowall-ai/zaplie-webapp"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-gray-400 hover:text-white transition-colors flex items-center gap-2"
-                >
-                  <Github className="h-4 w-4" />
-                  <span>Zaplie</span>
+                <a href="#zapp" className="text-gray-400 hover:text-white transition-colors">
+                  Zaplie
                 </a>
               </li>
               <li>
-                <a
-                  href="https://github.com/bengweeks/t-minus-15"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-gray-400 hover:text-white transition-colors flex items-center gap-2"
-                >
-                  <Github className="h-4 w-4" />
-                  <span>T-Minus-15</span>
+                <a href="#zapdesk" className="text-gray-400 hover:text-white transition-colors">
+                  Zapdesk
+                </a>
+              </li>
+              <li>
+                <a href="#thyme" className="text-gray-400 hover:text-white transition-colors">
+                  Thyme
+                </a>
+              </li>
+              <li>
+                <a href="#tminus15" className="text-gray-400 hover:text-white transition-colors">
+                  T-Minus-15
                 </a>
               </li>
             </ul>
