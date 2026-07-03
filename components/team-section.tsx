@@ -55,7 +55,7 @@ export default function TeamSection() {
               {member.image ? (
                 <Image
                   src={member.image}
-                  alt={member.name}
+                  alt=""
                   width={128}
                   height={128}
                   className="h-32 w-32 rounded-full object-cover mb-4 ring-2 ring-lime-500/50"
@@ -63,8 +63,7 @@ export default function TeamSection() {
               ) : (
                 <div
                   className="h-32 w-32 rounded-full mb-4 ring-2 ring-lime-500/50 bg-gray-700 flex items-center justify-center"
-                  aria-label={member.name}
-                  role="img"
+                  aria-hidden="true"
                 >
                   <UserRound className="h-20 w-20 text-gray-400" strokeWidth={1.25} />
                 </div>
