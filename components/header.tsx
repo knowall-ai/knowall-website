@@ -30,7 +30,7 @@ export default function Header() {
 
   // NOTE: "Allie for Accounts" (#allie) joins this dropdown once PR #7 merges.
   const productLinks = [
-    { name: 'Zaplie', href: '/#zapp' },
+    { name: 'Zaplie', href: '/#zaplie' },
     { name: 'Zapdesk', href: '/#zapdesk' },
     { name: 'Thyme', href: '/#thyme' },
     { name: 'T-Minus-15', href: '/#tminus15' },
