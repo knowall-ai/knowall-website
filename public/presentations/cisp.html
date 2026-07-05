@@ -1,0 +1,1020 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CISP — Continuous Improvement Service Plan</title>
+    <meta
+      name="description"
+      content="CISP from KnowAll AI: the Continuous Improvement Service Plan — proactive, flexible ongoing support via pre-purchased time-and-material blocks on ~12-month contracts, delivering a predictable cadence of continuous improvement across your Microsoft, AI and custom solutions."
+    />
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/reset.css"
+      integrity="sha384-AJKv9Ui5SfA0VsFksFI9GuA1ztX9Ca3CLP6HGfX4YY/tYSVodC+PUszaQZFIlkuy"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/reveal.css"
+      integrity="sha384-rH4u5W+BK28t3M3TabJv90WpfU+EcQLxwZ83OS9p3400xZdZPsZfl/mFFCNGD/2M"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/theme/black.css"
+      integrity="sha384-/ZvODhFsGDTGwNNKm3urEF4uoXGBg4+MtyMIHL6Vt56FE20B5x9vIe6fTXzlOR3D"
+      crossorigin="anonymous"
+    />
+    <meta property="og:title" content="CISP — Continuous Improvement Service Plan" />
+    <meta property="og:description" content="CISP from KnowAll AI: the Continuous Improvement Service Plan — proactive, flexible ongoing support via pre-purchased time-and-material blocks on ~12-month contracts, delivering a predictable cadence of continuous improvement across your Microsoft, AI and custom solutions." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://www.knowall.ai/presentations/cisp.html" />
+    <meta property="og:image" content="https://www.knowall.ai/opengraph-image.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="CISP — Continuous Improvement Service Plan" />
+    <meta name="twitter:description" content="CISP from KnowAll AI: the Continuous Improvement Service Plan — proactive, flexible ongoing support via pre-purchased time-and-material blocks on ~12-month contracts, delivering a predictable cadence of continuous improvement across your Microsoft, AI and custom solutions." />
+    <meta name="twitter:image" content="https://www.knowall.ai/twitter-image.png" />
+    <style>
+      /* KnowAll Brand Colors - Vibrant Green Theme */
+      :root {
+        --knowall-green: #00cc66;
+        --knowall-bright-green: #00ff7f;
+        --knowall-dark: #1a1a1a;
+        --knowall-darker: #0d0d0d;
+        --knowall-grey: #2d2d2d;
+        --knowall-light-grey: #e0e0e0;
+        --microsoft-blue: #0078d4;
+
+        /* Typography scale */
+        --font-size-h1: 3.1em;
+        --font-size-h2: 2.3em;
+        --font-size-h3: 2em;
+        --font-size-icon-lg: 4em;
+        --font-size-icon-md: 3.5em;
+
+        /* Spacing and sizing */
+        --card-padding: 35px 25px;
+        --card-radius: 15px;
+        --timeline-point-min-width: 280px;
+
+        /* Focus ring for keyboard navigation */
+        --focus-ring: 3px solid var(--knowall-bright-green);
+
+        /* Subtle grid overlay used on green slides */
+        --grid-pattern: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080"><defs><pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/></pattern></defs><rect width="1920" height="1080" fill="url(%23grid)"/></svg>');
+      }
+
+      /* Override Reveal.js defaults */
+      .reveal {
+        font-family:
+          'Segoe UI',
+          -apple-system,
+          BlinkMacSystemFont,
+          sans-serif;
+        font-size: 36px;
+      }
+
+      .reveal h1,
+      .reveal h2,
+      .reveal h3,
+      .reveal h4 {
+        font-weight: 700;
+        text-transform: none;
+        letter-spacing: normal;
+      }
+
+      .reveal h1 {
+        font-size: var(--font-size-h1);
+        color: white;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        margin-bottom: 30px;
+        padding-right: 210px;
+      }
+
+      .reveal h2 {
+        font-size: var(--font-size-h2);
+        color: white;
+        margin-bottom: 25px;
+        font-weight: 700;
+        padding-right: 210px;
+      }
+
+      .reveal h3 {
+        font-size: var(--font-size-h3);
+        color: var(--knowall-green);
+        margin-bottom: 20px;
+      }
+
+      .reveal p,
+      .reveal li {
+        font-size: 0.9em;
+        line-height: 1.6;
+      }
+
+      /* KnowAll Logo */
+      .knowall-logo {
+        position: absolute;
+        top: 30px;
+        right: 50px;
+        font-size: 2rem;
+        font-weight: 700;
+        color: white;
+        z-index: 100;
+        letter-spacing: -0.5px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .knowall-logo-icon {
+        width: 40px;
+        height: 40px;
+        background: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+      }
+
+      /* Green Vibrant Backgrounds */
+      .reveal .slides section.green-bg {
+        background: linear-gradient(
+          135deg,
+          var(--knowall-green) 0%,
+          var(--knowall-bright-green) 100%
+        );
+        position: relative;
+      }
+
+      .reveal .slides section.green-bg::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: var(--grid-pattern);
+        opacity: 0.3;
+        pointer-events: none;
+      }
+
+      /* Two-Tone Layout */
+      .reveal .slides section.split-layout {
+        background: linear-gradient(
+          to bottom,
+          var(--knowall-green) 0%,
+          var(--knowall-green) 40%,
+          var(--knowall-darker) 40%,
+          var(--knowall-darker) 100%
+        );
+        padding: 0;
+      }
+
+      .top-section {
+        height: 40vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 50px;
+      }
+
+      .bottom-section {
+        height: 60vh;
+        padding: 50px 100px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      /* WCAG AA contrast on green backgrounds: light text on the vibrant green
+         gradient fails 4.5:1 (white is ~1.4:1 against the bright-green stop),
+         so text on green areas is dark instead (9:1+ against both stops). */
+      .reveal .slides section.green-bg,
+      .reveal .slides section.split-layout .top-section {
+        color: var(--knowall-darker);
+      }
+
+      .reveal .slides section.green-bg h1,
+      .reveal .slides section.green-bg h2,
+      .reveal .slides section.split-layout .top-section h2 {
+        color: var(--knowall-darker);
+        text-shadow: none;
+      }
+
+      .reveal .slides section.green-bg .subtitle,
+      .reveal .slides section.split-layout .top-section .subtitle {
+        color: var(--knowall-darker);
+        font-weight: 500;
+      }
+
+      .reveal .slides section.green-bg ul li::before {
+        color: var(--knowall-darker);
+      }
+
+      .reveal .slides section.green-bg .card {
+        background: rgba(0, 0, 0, 0.8);
+      }
+
+      .reveal .slides section.green-bg .knowall-logo,
+      .reveal .slides section.split-layout .knowall-logo {
+        color: var(--knowall-darker);
+      }
+
+      .reveal .slides section.green-bg a {
+        color: var(--knowall-darker);
+      }
+
+      /* Dark Background Slides */
+      .reveal .slides section.dark-bg {
+        background: linear-gradient(135deg, var(--knowall-darker) 0%, var(--knowall-dark) 100%);
+      }
+
+      /* Content Cards */
+      .card-container {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 30px;
+        margin-top: 40px;
+      }
+
+      .card {
+        background: rgba(255, 255, 255, 0.05);
+        border: 3px solid var(--knowall-green);
+        border-radius: var(--card-radius);
+        padding: var(--card-padding);
+        text-align: center;
+        transition: all 0.3s;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 5px;
+        background: var(--knowall-green);
+      }
+
+      .card:hover,
+      .card:focus-visible,
+      .card:focus-within {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 40px rgba(0, 204, 102, 0.3);
+        background: rgba(0, 204, 102, 0.1);
+      }
+
+      .card:focus-visible,
+      .card:focus-within {
+        outline: var(--focus-ring);
+        outline-offset: 3px;
+      }
+
+      .card-icon {
+        font-size: var(--font-size-icon-lg);
+        margin-bottom: 20px;
+        display: block;
+      }
+
+      .card h4 {
+        color: var(--knowall-green);
+        font-size: 1.4em;
+        margin-bottom: 15px;
+        font-weight: 700;
+      }
+
+      .card p {
+        font-size: 0.8em;
+        color: var(--knowall-light-grey);
+        line-height: 1.5;
+      }
+
+      /* Grid Layouts */
+      .grid-2 {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 40px;
+        margin-top: 40px;
+      }
+
+      .grid-4 {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 25px;
+        margin-top: 40px;
+      }
+
+      /* Feature Boxes */
+      .feature-box {
+        background: rgba(0, 0, 0, 0.6);
+        border: 2px solid var(--knowall-green);
+        border-radius: 12px;
+        padding: 30px;
+        text-align: left;
+      }
+
+      .feature-box h4 {
+        color: var(--knowall-green);
+        font-size: 1.5em;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .feature-box p {
+        color: var(--knowall-light-grey);
+        font-size: 0.85em;
+        line-height: 1.6;
+      }
+
+      /* Microsoft Partner Logos */
+      .partner-logos {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 50px;
+        margin-top: 50px;
+        flex-wrap: wrap;
+      }
+
+      .partner-logo-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+      }
+
+      /* Lists */
+      .reveal ul {
+        list-style: none;
+        padding-left: 0;
+      }
+
+      .reveal ul li {
+        margin-bottom: 20px;
+        padding-left: 40px;
+        position: relative;
+        font-size: 0.9em;
+        line-height: 1.7;
+      }
+
+      .reveal ul li::before {
+        content: '✓';
+        color: var(--knowall-green);
+        font-weight: bold;
+        position: absolute;
+        left: 0;
+        font-size: 1.5em;
+      }
+
+      /* Timeline */
+      .timeline {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        position: relative;
+        margin-top: 60px;
+        padding: 40px 0;
+      }
+
+      .timeline::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 10%;
+        right: 10%;
+        height: 4px;
+        background: linear-gradient(90deg, var(--knowall-green) 0%, rgba(0, 204, 102, 0.3) 100%);
+      }
+
+      .timeline-point {
+        background: var(--knowall-darker);
+        border: 4px solid var(--knowall-green);
+        border-radius: var(--card-radius);
+        padding: 35px 30px;
+        min-width: var(--timeline-point-min-width);
+        text-align: center;
+        position: relative;
+        z-index: 1;
+      }
+
+      .timeline-point h4 {
+        color: var(--knowall-green);
+        font-size: 1.8em;
+        margin-bottom: 15px;
+        font-weight: 700;
+      }
+
+      .timeline-point p {
+        font-size: 0.85em;
+        color: var(--knowall-light-grey);
+      }
+
+      /* Quote/Hook */
+      .hook {
+        font-size: 2.2em;
+        line-height: 1.6;
+        padding: 60px;
+        border: 4px solid var(--knowall-green);
+        border-radius: 20px;
+        background: rgba(0, 0, 0, 0.6);
+        font-weight: 500;
+        max-width: 1100px;
+        margin: 50px auto;
+        box-shadow: 0 10px 40px rgba(0, 204, 102, 0.2);
+      }
+
+      .hook em {
+        color: var(--knowall-green);
+        font-style: normal;
+        font-weight: 700;
+      }
+
+      /* CTA Button */
+      .cta-button {
+        display: inline-block;
+        padding: 25px 60px;
+        background: linear-gradient(
+          135deg,
+          var(--knowall-green) 0%,
+          var(--knowall-bright-green) 100%
+        );
+        color: #000;
+        font-size: 1.3em;
+        font-weight: 700;
+        text-decoration: none;
+        border-radius: 50px;
+        margin-top: 50px;
+        transition: all 0.3s;
+        box-shadow: 0 8px 25px rgba(0, 204, 102, 0.4);
+        border: none;
+      }
+
+      .cta-button:hover,
+      .cta-button:focus-visible {
+        transform: scale(1.08);
+        box-shadow: 0 15px 50px rgba(0, 204, 102, 0.6);
+      }
+
+      .cta-button:focus-visible {
+        outline: var(--focus-ring);
+        outline-offset: 4px;
+      }
+
+      .reveal .slides a:focus-visible {
+        outline: var(--focus-ring);
+        outline-offset: 3px;
+        border-radius: 3px;
+      }
+
+      /* Contact Grid */
+      .contact-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 50px;
+        margin-top: 60px;
+      }
+
+      .contact-item {
+        text-align: center;
+      }
+
+      .contact-icon {
+        font-size: var(--font-size-icon-md);
+        margin-bottom: 15px;
+        display: block;
+      }
+
+      .contact-text {
+        font-size: 1em;
+        color: var(--knowall-light-grey);
+      }
+
+      .contact-text a {
+        color: var(--knowall-green);
+        text-decoration: none;
+        font-weight: 600;
+      }
+
+      /* Subtitle */
+      .subtitle {
+        font-size: 1.2em;
+        color: var(--knowall-light-grey);
+        margin-top: 20px;
+        font-weight: 300;
+        line-height: 1.6;
+      }
+
+      /* Highlight */
+      .highlight {
+        color: var(--knowall-green);
+        font-weight: 700;
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .reveal {
+          font-size: 24px;
+        }
+        .card-container,
+        .grid-2,
+        .grid-4 {
+          grid-template-columns: 1fr;
+        }
+        .timeline {
+          flex-direction: column;
+          gap: 30px;
+        }
+        .timeline::before {
+          display: none;
+        }
+      }
+
+      /* Slide Number */
+      .reveal .slide-number {
+        color: var(--knowall-green);
+        font-weight: 700;
+        background: rgba(0, 0, 0, 0.5);
+        padding: 8px 12px;
+        border-radius: 5px;
+      }
+
+      /* ---- Additions for the full overview deck (compact content layouts) ---- */
+
+      /* Section divider (wave / green) — big centred label */
+      .divider-label {
+        font-size: 4.2em;
+        font-weight: 800;
+        letter-spacing: 4px;
+        color: var(--knowall-darker);
+        text-shadow: none;
+        margin: 0;
+      }
+      .divider-sub {
+        font-size: 1.3em;
+        font-weight: 700;
+        letter-spacing: 3px;
+        color: var(--knowall-darker);
+        margin-top: 20px;
+      }
+
+      /* Left-aligned content wrapper for dense slides */
+      .content-left {
+        text-align: left;
+      }
+
+      /* Service / case-study two-column layout */
+      .svc-cols {
+        display: grid;
+        grid-template-columns: 1.7fr 1fr;
+        gap: 45px;
+        text-align: left;
+        margin-top: 10px;
+        align-items: start;
+      }
+      .svc-body p {
+        font-size: 0.52em;
+        line-height: 1.45;
+        color: var(--knowall-light-grey);
+        margin: 0 0 14px;
+      }
+      .svc-label {
+        color: var(--knowall-green);
+        font-weight: 700;
+        font-size: 0.62em;
+        margin: 0 0 6px;
+      }
+      .svc-body ul {
+        margin: 0 0 14px;
+      }
+      .svc-body ul li {
+        font-size: 0.52em;
+        line-height: 1.4;
+        margin-bottom: 7px;
+        padding-left: 26px;
+      }
+      .svc-body ul li::before {
+        font-size: 1.2em;
+      }
+
+      /* Info sidebar (Cost / Duration / Technologies etc.) */
+      .info-box {
+        border: 2px solid var(--knowall-green);
+        border-radius: 12px;
+        overflow: hidden;
+        background: rgba(0, 0, 0, 0.45);
+      }
+      .info-row {
+        display: grid;
+        grid-template-columns: 42% 58%;
+        border-bottom: 1px solid rgba(0, 204, 102, 0.3);
+      }
+      .info-row:last-child {
+        border-bottom: none;
+      }
+      .info-row .k {
+        background: rgba(0, 204, 102, 0.15);
+        padding: 12px 14px;
+        font-weight: 700;
+        color: #fff;
+        font-size: 0.5em;
+      }
+      .info-row .v {
+        padding: 12px 14px;
+        font-size: 0.5em;
+        color: var(--knowall-light-grey);
+        line-height: 1.4;
+      }
+      .info-row .v ul {
+        margin: 0;
+        padding: 0;
+      }
+      .info-row .v li {
+        font-size: 1em;
+        margin: 0 0 4px;
+        padding-left: 18px;
+        line-height: 1.35;
+      }
+      .info-row .v li::before {
+        font-size: 1em;
+      }
+
+      /* Key benefits strip */
+      .benefits {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 26px;
+        margin-top: 26px;
+        text-align: left;
+      }
+      .benefit {
+        font-size: 0.5em;
+        color: var(--knowall-light-grey);
+        border-left: 3px solid var(--knowall-green);
+        padding-left: 14px;
+        line-height: 1.4;
+      }
+      .benefits-title {
+        color: var(--knowall-green);
+        font-weight: 700;
+        text-align: left;
+        margin-top: 30px;
+        font-size: 0.75em;
+      }
+
+      /* Rate / SLA tables */
+      .rate-table {
+        border-collapse: collapse;
+        width: 100%;
+        font-size: 0.42em;
+      }
+      .rate-table caption {
+        text-align: left;
+        color: var(--knowall-green);
+        font-weight: 700;
+        padding-bottom: 6px;
+        font-size: 1.15em;
+      }
+      .rate-table th,
+      .rate-table td {
+        border: 1px solid rgba(0, 204, 102, 0.35);
+        padding: 6px 10px;
+        text-align: left;
+      }
+      .rate-table th {
+        background: rgba(0, 204, 102, 0.18);
+        color: #fff;
+        font-weight: 700;
+      }
+      .rate-table td {
+        color: var(--knowall-light-grey);
+      }
+
+      /* Compact card grids for offerings/customers */
+      .grid-5 {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 20px;
+        margin-top: 30px;
+      }
+      .grid-3 {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 30px;
+        margin-top: 30px;
+      }
+      .mini-card {
+        background: rgba(0, 0, 0, 0.55);
+        border: 2px solid var(--knowall-green);
+        border-radius: 12px;
+        padding: 22px 18px;
+        text-align: left;
+      }
+      .mini-card h4 {
+        color: var(--knowall-green);
+        font-size: 0.8em;
+        margin: 0 0 10px;
+        font-weight: 700;
+      }
+      .mini-card p {
+        color: var(--knowall-light-grey);
+        font-size: 0.48em;
+        line-height: 1.45;
+        margin: 0;
+      }
+
+      /* DevOps lifecycle stage chips */
+      .stage-flow {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 14px;
+        margin: 40px 0 45px;
+        flex-wrap: wrap;
+      }
+      .stage-chip {
+        background: linear-gradient(
+          135deg,
+          var(--knowall-green) 0%,
+          var(--knowall-bright-green) 100%
+        );
+        color: var(--knowall-darker);
+        font-weight: 800;
+        padding: 18px 34px;
+        border-radius: 12px;
+        font-size: 0.85em;
+        box-shadow: 0 6px 20px rgba(0, 204, 102, 0.35);
+      }
+      .stage-arrow {
+        color: var(--knowall-green);
+        font-size: 1.4em;
+        font-weight: 700;
+      }
+      .stage-loop {
+        text-align: center;
+        color: var(--knowall-green);
+        font-weight: 700;
+        font-size: 0.7em;
+        margin-bottom: 20px;
+      }
+
+      /* What / How / Why deliverables grid */
+      .why-banner {
+        background: linear-gradient(
+          135deg,
+          var(--knowall-green) 0%,
+          var(--knowall-bright-green) 100%
+        );
+        color: var(--knowall-darker);
+        font-weight: 800;
+        font-size: 0.85em;
+        padding: 20px;
+        border-radius: 12px;
+        margin-top: 30px;
+      }
+      .row-label {
+        color: var(--knowall-green);
+        font-weight: 800;
+        writing-mode: vertical-rl;
+        transform: rotate(180deg);
+        font-size: 0.7em;
+        align-self: center;
+        letter-spacing: 2px;
+      }
+
+      /* Contact grid on the closing slide already exists (.contact-grid) */
+      .thanks-lead {
+        font-size: 1.05em;
+        color: var(--knowall-light-grey);
+        max-width: 900px;
+        margin: 0 auto 20px;
+        line-height: 1.6;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <!-- Slide 1: Title -->
+        <section class="green-bg" role="region" aria-label="Slide 1 of 6: CISP">
+          <div class="knowall-logo">
+            <div class="knowall-logo-icon" aria-hidden="true">🤖</div>
+            <span>KnowAll.AI</span>
+          </div>
+          <h1>CISP</h1>
+          <p class="subtitle">
+            The Continuous Improvement Service Plan — proactive, flexible ongoing support
+            that keeps your Microsoft, AI and custom solutions improving, month after month
+          </p>
+        </section>
+        <!-- Slide 2: What it is -->
+        <section class="dark-bg content-left" role="region" aria-label="Slide 2 of 6: What it is">
+          <div class="knowall-logo">
+            <div class="knowall-logo-icon" style="background: var(--knowall-green)" aria-hidden="true">🤖</div>
+            <span>KnowAll.AI</span>
+          </div>
+          <h2>What It Is</h2>
+          <p class="subtitle" style="max-width: 1550px; margin: 0 0 10px; font-size: 0.9em">
+            The Continuous Improvement Service Plan (CISP) is a proactive and flexible
+            framework for ongoing support and enhancement of your Microsoft, AI and
+            custom-developed solutions. Its focus is continual improvement — keeping your
+            systems effective, secure and aligned with evolving business needs. It is a
+            dynamic, adaptable service model that grows with you for long-term value and
+            resilience.
+          </p>
+          <div class="grid-3" style="margin-top: 30px">
+            <div class="mini-card">
+              <h4>🛡️ Proactive support</h4>
+              <p>Goes beyond monitoring and maintenance — we actively introduce enhancements that strengthen performance, reliability and adaptability.</p>
+            </div>
+            <div class="mini-card">
+              <h4>🔧 Flexible blocks</h4>
+              <p>Support effort is grouped into flexible time-and-material blocks you can direct at whatever backlog items or enhancements matter most.</p>
+            </div>
+            <div class="mini-card">
+              <h4>📈 Continuous improvement</h4>
+              <p>A predictable cadence of value delivery that keeps solutions aligned to your processes without the overhead of many small projects.</p>
+            </div>
+          </div>
+        </section>
+        <!-- Slide 3: How it works -->
+        <section class="dark-bg content-left" role="region" aria-label="Slide 3 of 6: How it works">
+          <div class="knowall-logo">
+            <div class="knowall-logo-icon" style="background: var(--knowall-green)" aria-hidden="true">🤖</div>
+            <span>KnowAll.AI</span>
+          </div>
+          <h2>How It Works</h2>
+          <div class="svc-cols">
+            <div class="svc-body">
+              <p class="svc-label">Delivery</p>
+              <p>
+                Support effort is grouped into flexible time-and-material "blocks" so you can
+                prioritise backlog items or enhancements as needs change. Clients typically
+                sign a twelve-month contract but can consume blocks faster when needed — a
+                predictable cadence of value without the overhead of many small projects.
+              </p>
+              <p>
+                Our proactive support model goes beyond monitoring and maintenance. We focus on
+                continuous improvement, introducing enhancements that strengthen the
+                performance, reliability and adaptability of your systems.
+              </p>
+              <p class="svc-label">Response &amp; resolution targets</p>
+              <table class="rate-table">
+                <thead>
+                  <tr><th>Tier</th><th>First response</th><th>Target resolution</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>Gold</td><td>4 hours</td><td>1 business day</td></tr>
+                  <tr><td>Silver</td><td>8 hours</td><td>2 business days</td></tr>
+                  <tr><td>Bronze</td><td>16 hours</td><td>13 business days</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="info-box">
+              <div class="info-row"><div class="k">Model</div><div class="v">Pre-purchased time-and-material blocks</div></div>
+              <div class="info-row"><div class="k">Contract</div><div class="v">~12-month term; blocks consumable faster when needed</div></div>
+              <div class="info-row"><div class="k">Scope</div><div class="v">Microsoft, AI and custom-developed solutions</div></div>
+              <div class="info-row"><div class="k">Technologies</div><div class="v"><ul><li>Copilot Studio &amp; AI Foundry</li><li>Dataverse &amp; SharePoint</li><li>Logic Apps</li><li>Power Platform</li><li>Custom Apps (incl. React)</li></ul></div></div>
+            </div>
+          </div>
+        </section>
+        <!-- Slide 4: Rates & tiers -->
+        <section class="dark-bg content-left" role="region" aria-label="Slide 4 of 6: Service tiers and rates">
+          <div class="knowall-logo">
+            <div class="knowall-logo-icon" style="background: var(--knowall-green)" aria-hidden="true">🤖</div>
+            <span>KnowAll.AI</span>
+          </div>
+          <h2>Service Tiers &amp; Rates</h2>
+          <div class="svc-cols">
+            <div class="svc-body">
+              <p class="svc-label">Day rates (€)</p>
+              <table class="rate-table">
+                <thead>
+                  <tr><th>Role</th><th>Bronze</th><th>Silver</th><th>Gold</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>Strategic</td><td>1,150</td><td>1,200</td><td>1,250</td></tr>
+                  <tr><td>Prepper / Designer / Engineer / Tester / Operator / Scrum Master</td><td>850</td><td>900</td><td>950</td></tr>
+                </tbody>
+              </table>
+              <p class="svc-label" style="margin-top: 18px">Choose your tier</p>
+              <p>
+                Bronze, Silver and Gold tiers set your response and resolution targets and day
+                rates, so you can match the level of service and priority to the criticality of
+                your solutions.
+              </p>
+            </div>
+            <div class="svc-body">
+              <p class="svc-label">Key benefits</p>
+              <ul>
+                <li>Access to domain experts in the supported technologies</li>
+                <li>Continuous improvement so solutions stay aligned to your business processes</li>
+                <li>Dedicated innovation workshops to explore how AI and automation can help</li>
+                <li>Simple time-and-material block-hours agreement</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+        <!-- Slide 5: Why CISP -->
+        <section class="dark-bg" role="region" aria-label="Slide 5 of 6: Why a CISP">
+          <div class="knowall-logo">
+            <div class="knowall-logo-icon" style="background: var(--knowall-green)" aria-hidden="true">🤖</div>
+            <span>KnowAll.AI</span>
+          </div>
+          <h2>Why a CISP?</h2>
+          <div class="grid-2" style="margin-top: 20px">
+            <div class="feature-box">
+              <h4>👥 Expertise on tap</h4>
+              <p>Direct access to domain experts across the Microsoft, AI and custom technologies your solutions are built on — without hiring in-house.</p>
+            </div>
+            <div class="feature-box">
+              <h4>🔄 Always improving</h4>
+              <p>Continuous improvement keeps your solutions aligned to your business processes as they evolve — not just kept running.</p>
+            </div>
+            <div class="feature-box">
+              <h4>💡 Innovation workshops</h4>
+              <p>Dedicated sessions to explore how emerging AI and automation can unlock new value across your organisation.</p>
+            </div>
+            <div class="feature-box">
+              <h4>📋 Simple &amp; predictable</h4>
+              <p>One straightforward time-and-material block-hours agreement — a predictable cadence of value without project overhead.</p>
+            </div>
+          </div>
+        </section>
+        <!-- Slide 6: Contact / CTA -->
+        <section class="green-bg" role="region" aria-label="Slide 6 of 6: Contact">
+          <div class="knowall-logo">
+            <div class="knowall-logo-icon" aria-hidden="true">🤖</div>
+            <span>KnowAll.AI</span>
+          </div>
+          <h2>Keep Improving, Together</h2>
+          <p class="thanks-lead">
+            Talk to us about a Continuous Improvement Service Plan for your solutions:
+          </p>
+          <div class="contact-grid">
+            <div class="contact-item">
+              <span class="contact-icon" aria-hidden="true">👤</span>
+              <div class="contact-text"><strong>Ben Weeks</strong><br />Chief Builder</div>
+            </div>
+            <div class="contact-item">
+              <span class="contact-icon" aria-hidden="true">📞</span>
+              <div class="contact-text"><a href="tel:+447968847178">+44 7968 847178</a></div>
+            </div>
+            <div class="contact-item">
+              <span class="contact-icon" aria-hidden="true">📧</span>
+              <div class="contact-text"><a href="mailto:Ben.Weeks@KnowAll.ai">Ben.Weeks@KnowAll.ai</a></div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/reveal.js"
+      integrity="sha384-pcvWxkmpELJRfdSUAxBpLYLhA9vF4LnfBamyHqUYyt+7vb606t7WzpBmXRmrkFvQ"
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      Reveal.initialize({
+        hash: true,
+        slideNumber: 'c/t',
+        transition: 'slide',
+        backgroundTransition: 'fade',
+        controls: true,
+        progress: true,
+        center: true,
+        touch: true,
+        loop: false,
+        rtl: false,
+        navigationMode: 'default',
+        shuffle: false,
+        fragments: true,
+        fragmentInURL: true,
+        embedded: false,
+        help: true,
+        pause: true,
+        showNotes: false,
+        autoPlayMedia: null,
+        preloadIframes: null,
+        autoAnimate: true,
+        autoAnimateEasing: 'ease',
+        autoAnimateDuration: 1.0,
+        autoAnimateUnmatched: true,
+        width: 1920,
+        height: 1080,
+        margin: 0.04,
+        minScale: 0.2,
+        maxScale: 2.0,
+        keyboard: true,
+        overview: true,
+      });
+    </script>
+  </body>
+</html>
