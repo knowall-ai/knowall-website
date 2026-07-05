@@ -85,11 +85,7 @@ jobs:
         run: npm ci
 
       - name: Run unit tests
-        # The repo has no unit-test suite yet (`npm run test` is Playwright e2e,
-        # covered by the E2E Tests job). `--if-present` makes this step a no-op
-        # until a `test:unit` script is added, at which point it is enforced
-        # automatically.
-        run: npm run test:unit --if-present
+        run: npm run test:unit
 
   e2e:
     name: E2E Tests
