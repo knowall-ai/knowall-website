@@ -13,7 +13,7 @@ export default function SallyAvatar({ className = '', size = 24 }: SallyAvatarPr
     >
       <Image
         src="/images/sally-avatar.png"
-        alt="Sally"
+        alt="Sallie"
         width={size}
         height={size}
         className="object-cover"

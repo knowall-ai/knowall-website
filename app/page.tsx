@@ -29,6 +29,7 @@ import BackgroundImage from '@/components/background-image';
 import AutoGenLogo from '@/components/autogen-logo';
 import ZappCarousel from '@/components/zapp-carousel';
 import TeamSection from '@/components/team-section';
+import AgentsSection from '@/components/agents-section';
 import TMinus15Book from '@/components/tminus15-book';
 
 export default function Home() {
@@ -564,6 +565,9 @@ export default function Home() {
 
       {/* Meet the Team Section */}
       <TeamSection />
+
+      {/* Meet the Agents Section */}
+      <AgentsSection />
 
       {/* Contact Section */}
       <section id="contact">

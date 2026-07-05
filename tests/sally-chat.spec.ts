@@ -23,9 +23,9 @@ test.describe('Sally Chat', () => {
     await expect(page.getByPlaceholder('Type your message...')).toBeVisible({ timeout: 60000 });
   });
 
-  test('Chat interface renders with Sally header and greeting', async ({ page }) => {
-    await expect(page.getByRole('heading', { name: 'Sally' })).toBeVisible();
-    await expect(page.getByText(/I'm Sally, but I'm not your regular bot!/)).toBeVisible();
+  test('Chat interface renders with Sallie header and greeting', async ({ page }) => {
+    await expect(page.getByRole('heading', { name: 'Sallie' })).toBeVisible();
+    await expect(page.getByText(/I'm Sallie, but I'm not your regular bot!/)).toBeVisible();
     await expect(page.getByText(/Our conversation will be saved with the ID/)).toBeVisible();
   });
 
