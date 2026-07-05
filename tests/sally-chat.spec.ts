@@ -24,7 +24,9 @@ test.describe('Sally Chat', () => {
   });
 
   test('Chat interface renders with Sallie header and greeting', async ({ page }) => {
-    await expect(page.getByRole('heading', { name: 'Sallie' })).toBeVisible();
+    // Scope to the first match: the chat header. (The Meet the Agents section
+    // also has a "Sallie" heading for Sallie the Salesperson.)
+    await expect(page.getByRole('heading', { name: 'Sallie' }).first()).toBeVisible();
     await expect(page.getByText(/I'm Sallie, but I'm not your regular bot!/)).toBeVisible();
     await expect(page.getByText(/Our conversation will be saved with the ID/)).toBeVisible();
   });
