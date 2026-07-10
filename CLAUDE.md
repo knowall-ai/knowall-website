@@ -11,15 +11,18 @@ npm run start        # Start production server (uses server.js, port 8080)
 npm run lint         # Run ESLint
 npm run format       # Format code with Prettier
 npm run format:check # Check formatting without modifying files
-npm run test         # Run Playwright tests
+npm run test         # Run Playwright end-to-end tests
 npm run test:ui      # Run tests with Playwright UI
 npm run test:headed  # Run tests with visible browser
+npm run test:unit    # Run Vitest unit tests
+npm run test:unit:watch # Run unit tests in watch mode
 ```
 
 Run a single test:
 
 ```bash
 npx playwright test tests/primary-navigation.spec.ts
+npx vitest run tests/unit/lib/utils.test.ts
 ```
 
 ## Architecture
@@ -50,8 +53,18 @@ Required for development (`.env.local`):
 
 - ESLint check
 - Prettier format check
+- TypeScript check (`npm run typecheck`)
+- Unit tests (`npm run test:unit`, Vitest)
+- Playwright e2e tests (Chromium; no secrets needed — chat API falls back without `OPENAI_API_KEY`)
+- Production build (`npm run build`)
 
-**Deployment** (`.github/workflows/azure-app-service.yml`) deploys to Azure App Service on push to `master`. Resource group: `KnowAllAIRG`, App name: `knowall-website`.
+**PR lint** (`.github/workflows/pr-lint.yml`) enforces conventional-commit PR titles, a meaningful body, `Fixes #nnn` for feat/fix/perf/refactor, and a `## Test plan` section.
+
+**Claude Code Review** (`.github/workflows/claude-code-review.yml`) is manually dispatched with a PR number (requires `ANTHROPIC_API_KEY` secret).
+
+**Dependabot** (`.github/dependabot.yml`) opens weekly npm and github-actions update PRs.
+
+**Deployment** (`.github/workflows/azure-app-service.yml`) deploys to Azure App Service when a `v*` tag is pushed (e.g. `git tag v0.1.1 && git push origin v0.1.1`), or manually via `workflow_dispatch`. Resource group: `KnowAllAIRG`, App name: `knowall-website`.
 
 **Production URL:** https://www.knowall.ai
 
@@ -59,4 +72,6 @@ See `docs/TROUBLESHOOTING.adoc` for Azure-specific issues.
 
 ## Testing
 
-Tests are in `tests/` following `[feature-name].spec.ts` convention. Tests reference requirements in `docs/requirements.yaml`.
+End-to-end (Playwright) tests are in `tests/` following the `[feature-name].spec.ts` convention. Unit tests (Vitest + React Testing Library) are in `tests/unit/` following the `[name].test.ts(x)` convention. Tests reference requirement IDs in `docs/requirements.yaml`.
+
+Playwright starts a production server (`npm run build && npm run start` on port 3000, see `playwright.config.ts`) and always injects a placeholder (invalid) `OPENAI_API_KEY`, so the chat tests deterministically exercise the API's fallback response path and never call OpenAI — even when a real key is present in the environment. Set `E2E_USE_REAL_OPENAI_KEY=1` to explicitly opt in to passing the real key through. `ADMIN_API_KEY` falls back to a placeholder when unset.
