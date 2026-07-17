@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>KnowAll AI - Presentations</title>
+    <meta
+      name="description"
+      content="Browse KnowAll AI presentations and materials on agentic AI, autonomous agents, and the T-Minus-15 methodology."
+    />
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+    <meta property="og:title" content="KnowAll AI - Presentations" />
+    <meta
+      property="og:description"
+      content="Browse KnowAll AI presentations and materials on agentic AI, autonomous agents, and the T-Minus-15 methodology."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://www.knowall.ai/presentations/" />
+    <meta property="og:image" content="https://www.knowall.ai/opengraph-image.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="KnowAll AI - Presentations" />
+    <meta
+      name="twitter:description"
+      content="Browse KnowAll AI presentations and materials on agentic AI, autonomous agents, and the T-Minus-15 methodology."
+    />
+    <meta name="twitter:image" content="https://www.knowall.ai/twitter-image.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Mulish:wght@400;600;700;800&family=Playfair+Display:wght@900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --lime: #9dfe0a;
+        --lime-flat: #80db08;
+        --charcoal: #2a2d25;
+        --panel: #31352c;
+        --ink: #1d201a;
+        --mist: #cfd4c6;
+        --line: rgba(157, 254, 10, 0.45);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Mulish', 'Segoe UI', sans-serif;
+        background: var(--charcoal);
+        color: #f4f6ef;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .band {
+        position: relative;
+        background: url('images/wave-band.jpg') center / cover no-repeat;
+        padding: 56px 24px 64px;
+        box-shadow: 0 10px 34px rgba(0, 0, 0, 0.45);
+      }
+
+      .band::after {
+        content: '';
+        position: absolute;
+        top: 100%;
+        left: 10%;
+        border-left: 30px solid transparent;
+        border-right: 30px solid transparent;
+        border-top: 28px solid var(--lime-flat);
+      }
+
+      .band-inner {
+        max-width: 960px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+      }
+
+      .band h1 {
+        font-family: 'Playfair Display', Georgia, serif;
+        font-weight: 900;
+        font-size: clamp(2.2rem, 6vw, 3.6rem);
+        color: #ffffff;
+        text-shadow: 3px 3px 0 rgba(29, 32, 26, 0.3);
+      }
+
+      .band p {
+        margin-top: 8px;
+        font-weight: 700;
+        font-size: 1.15rem;
+        color: var(--ink);
+      }
+
+      .band img {
+        height: 110px;
+        width: auto;
+      }
+
+      main {
+        flex: 1;
+        width: 100%;
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 80px 24px 60px;
+      }
+
+      .presentations-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 28px;
+      }
+
+      .presentation-card {
+        background: var(--panel);
+        border: 2px solid var(--line);
+        border-radius: 18px;
+        padding: 34px 36px;
+        display: flex;
+        flex-direction: column;
+        transition:
+          transform 0.25s ease,
+          border-color 0.25s ease,
+          box-shadow 0.25s ease;
+      }
+
+      .presentation-card:hover,
+      .presentation-card:focus-within {
+        transform: translateY(-6px);
+        border-color: var(--lime);
+        box-shadow: 0 18px 44px rgba(0, 0, 0, 0.45);
+      }
+
+      .presentation-card h2 {
+        color: var(--lime);
+        font-size: 1.45rem;
+        font-weight: 800;
+        margin-bottom: 14px;
+      }
+
+      .presentation-card p {
+        color: var(--mist);
+        line-height: 1.6;
+        margin-bottom: 26px;
+        flex-grow: 1;
+      }
+
+      .presentation-card a {
+        display: inline-block;
+        background: var(--lime);
+        color: var(--ink);
+        padding: 12px 28px;
+        border-radius: 999px;
+        text-decoration: none;
+        font-weight: 800;
+        transition:
+          transform 0.2s ease,
+          box-shadow 0.2s ease;
+        align-self: flex-start;
+        box-shadow: 0 8px 24px rgba(157, 254, 10, 0.2);
+      }
+
+      .presentation-card a:hover {
+        transform: scale(1.04);
+        box-shadow: 0 12px 32px rgba(157, 254, 10, 0.35);
+      }
+
+      .presentation-card a:focus-visible {
+        outline: 3px solid var(--lime);
+        outline-offset: 3px;
+      }
+
+      .footer {
+        text-align: center;
+        color: var(--mist);
+        padding: 28px 24px;
+        border-top: 1px solid rgba(157, 254, 10, 0.18);
+        font-size: 0.95rem;
+      }
+
+      @media (max-width: 640px) {
+        .band-inner {
+          flex-direction: column-reverse;
+          text-align: center;
+        }
+
+        .band img {
+          height: 84px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="band">
+      <div class="band-inner">
+        <div>
+          <h1>Presentations</h1>
+          <p>KnowAll AI decks &amp; materials</p>
+        </div>
+        <img src="/images/logo.png" alt="KnowAll.ai" />
+      </div>
+    </header>
+
+    <main>
+      <div class="presentations-grid">
+        <div class="presentation-card">
+          <h2>Agentic AI Solutions</h2>
+          <p>
+            A punchy overview of KnowAll AI's agentic AI approach &mdash; agents that work while you
+            sleep, self-improving agents, graph memory, T-Minus-15 and enterprise-grade security.
+          </p>
+          <a href="knowall-overview.html" target="_blank" rel="noopener noreferrer"
+            >View presentation &rarr;</a
+          >
+        </div>
+        <div class="presentation-card">
+          <h2>Company Overview</h2>
+          <p>
+            The full corporate overview &mdash; who we are, mission and vision, the complete service
+            offerings, case studies, T-Minus-15, Zaplie and how we build AI agents and Microsoft
+            Copilots.
+          </p>
+          <a href="knowall-overview-full.html" target="_blank" rel="noopener noreferrer"
+            >View presentation &rarr;</a
+          >
+        </div>
+        <div class="presentation-card">
+          <h2>The AI Discovery</h2>
+          <p>
+            A focused one-day workshop to uncover where automation and AI can transform your
+            organisation &mdash; pre-work surveys, on-site workshop, 1-to-1 interviews and a
+            prioritised report.
+          </p>
+          <a href="ai-discovery.html" target="_blank" rel="noopener noreferrer"
+            >View presentation &rarr;</a
+          >
+        </div>
+        <div class="presentation-card">
+          <h2>The Agentic Delivery</h2>
+          <p>
+            From requirements to production, fast &mdash; a 4-day Proto-Sprint to prove the concept
+            and phased Projects to scale it, delivered with our open-source T-Minus-15 methodology.
+          </p>
+          <a href="agentic-delivery.html" target="_blank" rel="noopener noreferrer"
+            >View presentation &rarr;</a
+          >
+        </div>
+        <div class="presentation-card">
+          <h2>CISP</h2>
+          <p>
+            The Continuous Improvement Service Plan &mdash; proactive, flexible ongoing support via
+            pre-purchased time-and-material blocks that keeps your solutions improving, month after
+            month.
+          </p>
+          <a href="cisp.html" target="_blank" rel="noopener noreferrer">View presentation &rarr;</a>
+        </div>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <p>&copy; 2026 KnowAll AI. All rights reserved.</p>
+    </footer>
+  </body>
+</html>

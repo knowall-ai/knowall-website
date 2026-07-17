@@ -25,6 +25,14 @@ export default function Footer({ darkMode = false }: FooterProps) {
                   Our Story
                 </Link>
               </li>
+              <li>
+                <a
+                  href="/presentations"
+                  className="text-gray-400 hover:text-white transition-colors"
+                >
+                  Presentations
+                </a>
+              </li>
             </ul>
           </div>
 

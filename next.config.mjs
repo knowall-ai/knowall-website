@@ -13,6 +13,15 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  // /presentations is a static index.html in public/, which Next doesn't
+  // directory-resolve. Redirect (not rewrite) the clean URL onto the file so
+  // the browser lands on /presentations/index.html and the page's relative
+  // deck/asset links resolve under /presentations/ rather than the site root.
+  async redirects() {
+    return [
+      { source: '/presentations', destination: '/presentations/index.html', permanent: false },
+    ];
+  },
   // Images configuration removed - not using external image sources
 
   // Prevent watching logs directory to avoid continuous rebuilds

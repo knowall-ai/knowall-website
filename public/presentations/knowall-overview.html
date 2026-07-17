@@ -1,0 +1,2130 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>KnowAll.ai — Agentic AI Solutions</title>
+    <meta
+      name="description"
+      content="KnowAll AI overview presentation: autonomous AI agents, the T-Minus-15 methodology, enterprise-grade security, and seamless Microsoft integration."
+    />
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+    <meta property="og:title" content="KnowAll.ai — Agentic AI Solutions" />
+    <meta
+      property="og:description"
+      content="KnowAll AI overview presentation: autonomous AI agents, the T-Minus-15 methodology, enterprise-grade security, and seamless Microsoft integration."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://www.knowall.ai/presentations/knowall-overview.html" />
+    <meta property="og:image" content="https://www.knowall.ai/opengraph-image.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="KnowAll.ai — Agentic AI Solutions" />
+    <meta
+      name="twitter:description"
+      content="KnowAll AI overview presentation: autonomous AI agents, the T-Minus-15 methodology, enterprise-grade security, and seamless Microsoft integration."
+    />
+    <meta name="twitter:image" content="https://www.knowall.ai/twitter-image.png" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/reset.css"
+      integrity="sha384-AJKv9Ui5SfA0VsFksFI9GuA1ztX9Ca3CLP6HGfX4YY/tYSVodC+PUszaQZFIlkuy"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/reveal.css"
+      integrity="sha384-rH4u5W+BK28t3M3TabJv90WpfU+EcQLxwZ83OS9p3400xZdZPsZfl/mFFCNGD/2M"
+      crossorigin="anonymous"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Mulish:wght@400;600;700;800&family=Playfair+Display:ital,wght@0,700;0,900;1,700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* ================================================================
+         KnowAll.ai house style
+         Palette and typography lifted from the KnowAll brand deck:
+         lime #9DFE0A on charcoal #333732, Playfair Display headings,
+         Mulish (Muli) body, textured green header band with chevron notch.
+         ================================================================ */
+      :root {
+        --lime: #9dfe0a;
+        --lime-flat: #80db08; /* flat green sampled from the band texture */
+        --charcoal: #2a2d25; /* slide background */
+        --panel: #31352c; /* card background */
+        --ink: #1d201a; /* darkest — text on lime */
+        --mist: #cfd4c6; /* muted body text */
+        --line: rgba(157, 254, 10, 0.45); /* card borders */
+
+        --band-h: 250px;
+        --focus-ring: 3px solid var(--lime);
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        background: var(--charcoal);
+      }
+
+      .reveal {
+        font-family: 'Mulish', 'Segoe UI', sans-serif;
+        font-size: 30px;
+        color: #f4f6ef;
+      }
+
+      .reveal .slides section {
+        height: 1080px;
+        padding: 0;
+        margin: 0;
+        overflow: hidden;
+        text-align: left;
+        background: var(--charcoal);
+      }
+
+      .reveal h1,
+      .reveal h2 {
+        font-family: 'Playfair Display', Georgia, serif;
+        font-weight: 900;
+        letter-spacing: 0.01em;
+        text-transform: none;
+        margin: 0;
+      }
+
+      .reveal h3,
+      .reveal h4 {
+        font-family: 'Mulish', sans-serif;
+        font-weight: 800;
+        margin: 0;
+      }
+
+      .reveal p {
+        line-height: 1.55;
+        margin: 0;
+      }
+
+      .reveal a {
+        color: var(--lime);
+        text-decoration: none;
+      }
+
+      .reveal a:focus-visible {
+        outline: var(--focus-ring);
+        outline-offset: 3px;
+        border-radius: 4px;
+      }
+
+      /* --- Lucide icons ------------------------------------------------ */
+      .ic {
+        width: 1em;
+        height: 1em;
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        flex: none;
+      }
+
+      /* --- Kicker (small uppercase lead-in) ----------------------------- */
+      .kicker {
+        display: flex;
+        align-items: center;
+        gap: 22px;
+        color: var(--lime);
+        font-weight: 800;
+        font-size: 23px;
+        letter-spacing: 0.38em;
+        text-transform: uppercase;
+      }
+
+      .kicker::after {
+        content: '';
+        width: 110px;
+        height: 3px;
+        background: var(--lime);
+        opacity: 0.7;
+      }
+
+      /* --- Logos --------------------------------------------------------- */
+      .logo-dark,
+      .logo-light {
+        width: auto;
+        z-index: 5;
+      }
+
+      .logo-light {
+        filter: brightness(0) invert(1);
+      }
+
+      section > .logo-light {
+        position: absolute;
+        top: 54px;
+        right: 80px;
+        height: 132px;
+      }
+
+      /* --- Header-band slides (house template) --------------------------- */
+      .band {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: var(--band-h);
+        background: url('images/wave-band.jpg') center / cover no-repeat;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 84px 0 96px;
+        box-shadow: 0 10px 34px rgba(0, 0, 0, 0.45);
+      }
+
+      .pill-logo {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .pill-logo img {
+        width: 26px;
+        height: 26px;
+        object-fit: contain;
+      }
+
+      .partner-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 28px;
+      }
+      .partner-grid .card {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+      }
+      .logo-plate {
+        background: #ffffff;
+        border-radius: 14px;
+        height: 104px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        padding: 0 22px;
+      }
+      .logo-plate img {
+        max-height: 54px;
+        max-width: 100%;
+        object-fit: contain;
+      }
+      .plate-word {
+        font-family: 'Mulish', sans-serif;
+        font-weight: 800;
+        font-size: 24px;
+        color: #5a5a5a;
+        letter-spacing: 0.5px;
+      }
+
+      /* --- Meet the team (agents) ------------------------------------------- */
+      .agent-row {
+        display: flex;
+        gap: 16px;
+        margin-top: 20px;
+      }
+      .agent {
+        position: relative;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        text-align: center;
+      }
+      .agent-av {
+        width: 92px;
+        height: 92px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: radial-gradient(circle at 32% 26%, #c4ff5e, #7cc400);
+        box-shadow: 0 10px 26px rgba(0, 0, 0, 0.5);
+        transition: transform 0.16s ease;
+      }
+      .agent:hover .agent-av {
+        transform: translateY(-4px);
+      }
+      .agent-av .ic {
+        width: 42px;
+        height: 42px;
+        color: #16230a;
+      }
+      .agent-name {
+        font-weight: 800;
+        color: #fff;
+        font-size: 22px;
+      }
+      .agent-role {
+        color: var(--lime);
+        font-size: 14px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.6px;
+        margin-top: 2px;
+      }
+      .agent-skills {
+        position: absolute;
+        bottom: calc(100% + 12px);
+        left: 50%;
+        width: 214px;
+        transform: translateX(-50%) translateY(8px);
+        background: #14140f;
+        border: 1px solid var(--lime);
+        border-radius: 14px;
+        padding: 14px 16px;
+        opacity: 0;
+        pointer-events: none;
+        transition: 0.18s ease;
+        box-shadow: 0 22px 44px rgba(0, 0, 0, 0.65);
+        z-index: 6;
+      }
+      .agent-skills::after {
+        content: '';
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        border: 8px solid transparent;
+        border-top-color: var(--lime);
+      }
+      .agent:hover .agent-skills,
+      .agent:focus-visible .agent-skills,
+      .agent:focus-within .agent-skills {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+      .agent:focus-visible {
+        outline: var(--focus-ring);
+        outline-offset: 4px;
+        border-radius: 12px;
+      }
+      .agent-skills h5 {
+        color: #fff;
+        font-size: 15px;
+        margin-bottom: 8px;
+        font-weight: 800;
+      }
+      .agent-skills span {
+        display: block;
+        color: var(--mist);
+        font-size: 15px;
+        line-height: 1.75;
+      }
+      .team-notes {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+        margin-top: 60px;
+      }
+      .team-note {
+        display: flex;
+        gap: 18px;
+        align-items: flex-start;
+        background: rgba(157, 254, 10, 0.06);
+        border: 1px solid rgba(157, 254, 10, 0.28);
+        border-radius: 16px;
+        padding: 22px 26px;
+      }
+      .team-note .ic {
+        flex: none;
+        width: 30px;
+        height: 30px;
+        color: var(--lime);
+        margin-top: 4px;
+      }
+      .team-note p {
+        color: var(--mist);
+        font-size: 20px;
+        line-height: 1.5;
+      }
+      .team-note strong {
+        color: #fff;
+        display: block;
+        font-size: 21px;
+        margin-bottom: 4px;
+      }
+
+      /* chevron notch under the band, as on the house deck */
+      .band::after {
+        content: '';
+        position: absolute;
+        top: var(--band-h);
+        left: 168px;
+        border-left: 32px solid transparent;
+        border-right: 32px solid transparent;
+        border-top: 30px solid var(--lime-flat);
+        filter: drop-shadow(0 5px 5px rgba(0, 0, 0, 0.3));
+      }
+
+      .band h2 {
+        font-size: 82px;
+        color: #ffffff;
+        text-shadow: 4px 4px 0 rgba(29, 32, 26, 0.3);
+      }
+
+      .band .band-sub {
+        margin-top: 10px;
+        font-size: 30px;
+        font-weight: 700;
+        color: var(--ink);
+      }
+
+      .band .logo-dark {
+        height: 168px;
+      }
+
+      .content {
+        position: absolute;
+        top: var(--band-h);
+        left: 0;
+        right: 0;
+        bottom: 0;
+        padding: 100px 96px 72px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 40px;
+      }
+
+      /* --- Dark statement slides ----------------------------------------- */
+      .dark-inner {
+        position: absolute;
+        inset: 0;
+        padding: 120px 130px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 44px;
+        background:
+          radial-gradient(1100px 550px at 88% -10%, rgba(157, 254, 10, 0.09), transparent 60%),
+          var(--charcoal);
+      }
+
+      .dark-inner h2 {
+        font-size: 88px;
+        color: #ffffff;
+      }
+
+      .dark-inner .lead {
+        font-size: 33px;
+        color: var(--mist);
+        max-width: 1250px;
+      }
+
+      /* --- Cards ---------------------------------------------------------- */
+      .cards-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 34px;
+      }
+
+      .cards-3 {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 34px;
+      }
+
+      .cards-5 {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 28px;
+      }
+
+      .card {
+        background: var(--panel);
+        border: 2px solid var(--line);
+        border-radius: 20px;
+        padding: 40px 44px;
+        display: flex;
+        gap: 30px;
+        align-items: flex-start;
+        transition:
+          transform 0.25s ease,
+          box-shadow 0.25s ease,
+          border-color 0.25s ease;
+      }
+
+      .card:hover,
+      .card:focus-visible,
+      .card:focus-within {
+        transform: translateY(-8px);
+        border-color: var(--lime);
+        box-shadow: 0 18px 44px rgba(0, 0, 0, 0.45);
+      }
+
+      .card:focus-visible,
+      .card:focus-within {
+        outline: var(--focus-ring);
+        outline-offset: 3px;
+      }
+
+      .card h4 {
+        color: var(--lime);
+        font-size: 33px;
+        margin-bottom: 12px;
+      }
+
+      .card p {
+        font-size: 26px;
+        color: var(--mist);
+      }
+
+      .chip {
+        flex: none;
+        width: 88px;
+        height: 88px;
+        border-radius: 22px;
+        border: 2px solid var(--lime);
+        background: rgba(157, 254, 10, 0.08);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--lime);
+        font-size: 46px;
+      }
+
+      .chip-white {
+        background: #ffffff;
+        border-color: #ffffff;
+      }
+
+      /* stacked (icon above text) card variant */
+      .card.stack {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 26px;
+      }
+
+      /* --- Stage cards (T-Minus-15) --------------------------------------- */
+      .stage {
+        position: relative;
+        background: var(--panel);
+        border: 2px solid var(--line);
+        border-radius: 20px;
+        padding: 100px 34px 36px;
+        transition: transform 0.25s ease;
+      }
+
+      .stage:hover {
+        transform: translateY(-8px);
+        border-color: var(--lime);
+      }
+
+      .stage .step {
+        position: absolute;
+        top: 26px;
+        left: 34px;
+        font-family: 'Playfair Display', Georgia, serif;
+        font-weight: 900;
+        font-size: 44px;
+        color: rgba(157, 254, 10, 0.35);
+      }
+
+      .stage .chip {
+        position: absolute;
+        top: 24px;
+        right: 26px;
+        width: 72px;
+        height: 72px;
+        border-radius: 18px;
+        font-size: 38px;
+      }
+
+      .stage h4 {
+        color: #ffffff;
+        font-size: 34px;
+        letter-spacing: 0.14em;
+        margin-bottom: 12px;
+      }
+
+      .stage p {
+        font-size: 23px;
+        color: var(--mist);
+      }
+
+      /* --- Check lists ------------------------------------------------------ */
+      .checks {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px 60px;
+      }
+
+      .check {
+        display: flex;
+        gap: 26px;
+        align-items: flex-start;
+        background: var(--panel);
+        border: 2px solid var(--line);
+        border-radius: 18px;
+        padding: 30px 36px;
+        font-size: 27px;
+        color: #eef1e7;
+        line-height: 1.5;
+      }
+
+      .check .ic {
+        color: var(--lime);
+        font-size: 40px;
+        margin-top: 3px;
+      }
+
+      .check strong {
+        color: var(--lime);
+      }
+
+      /* --- Feature rows (Meet Preppie) ---------------------------------------- */
+      .rows {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+      }
+
+      .row {
+        display: flex;
+        gap: 26px;
+        align-items: center;
+      }
+
+      .row .chip {
+        width: 74px;
+        height: 74px;
+        border-radius: 18px;
+        font-size: 38px;
+      }
+
+      .row p {
+        font-size: 26px;
+        color: var(--mist);
+      }
+
+      .row p strong {
+        display: block;
+        color: #ffffff;
+        font-size: 28px;
+        font-weight: 800;
+      }
+
+      /* --- Stats -------------------------------------------------------------- */
+      .stat {
+        text-align: left;
+      }
+
+      .stat .stat-num {
+        font-family: 'Playfair Display', Georgia, serif;
+        font-weight: 900;
+        font-size: 108px;
+        line-height: 1;
+        color: var(--lime);
+        margin-bottom: 18px;
+      }
+
+      .stat h4 {
+        color: #ffffff;
+      }
+
+      /* --- Timeline ------------------------------------------------------------ */
+      .timeline {
+        position: relative;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 44px;
+        margin-top: 30px;
+      }
+
+      .timeline::before {
+        content: '';
+        position: absolute;
+        top: -34px;
+        left: 2%;
+        right: 2%;
+        height: 4px;
+        background: linear-gradient(90deg, var(--lime) 0%, rgba(157, 254, 10, 0.15) 100%);
+      }
+
+      .timeline-point {
+        position: relative;
+        background: var(--panel);
+        border: 2px solid var(--line);
+        border-radius: 20px;
+        padding: 40px 44px;
+      }
+
+      .timeline-point::before {
+        content: '';
+        position: absolute;
+        top: -46px;
+        left: 44px;
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        background: var(--lime);
+        box-shadow: 0 0 0 8px rgba(157, 254, 10, 0.18);
+      }
+
+      .timeline-point h4 {
+        color: var(--lime);
+        font-size: 34px;
+        margin-bottom: 12px;
+      }
+
+      .timeline-point p {
+        font-size: 26px;
+        color: var(--mist);
+      }
+
+      /* --- Quote slide ----------------------------------------------------------- */
+      .quote-mark {
+        font-family: 'Playfair Display', Georgia, serif;
+        font-weight: 900;
+        font-size: 300px;
+        line-height: 0.4;
+        color: var(--lime);
+        opacity: 0.3;
+      }
+
+      .quote {
+        font-family: 'Playfair Display', Georgia, serif;
+        font-weight: 700;
+        font-size: 74px;
+        line-height: 1.35;
+        color: #ffffff;
+        max-width: 1500px;
+      }
+
+      .quote em {
+        font-style: italic;
+        color: var(--lime);
+      }
+
+      /* --- Cover and CTA slides ---------------------------------------------------- */
+      .cover-hero {
+        position: absolute;
+        inset: 0;
+        background: url('images/hero-night.png') center / cover no-repeat;
+      }
+
+      .cover-scrim {
+        position: absolute;
+        inset: 0;
+        background:
+          linear-gradient(180deg, rgba(20, 22, 17, 0.28) 0%, rgba(20, 22, 17, 0.05) 40%),
+          linear-gradient(
+            8deg,
+            rgba(20, 22, 17, 0.94) 12%,
+            rgba(20, 22, 17, 0.35) 55%,
+            transparent 78%
+          );
+      }
+
+      .cover-copy {
+        position: absolute;
+        left: 96px;
+        right: 96px;
+        bottom: 92px;
+        display: flex;
+        flex-direction: column;
+        gap: 34px;
+      }
+
+      .cover-copy h1 {
+        font-size: 128px;
+        line-height: 1.06;
+        color: #ffffff;
+        text-shadow: 0 6px 30px rgba(0, 0, 0, 0.55);
+      }
+
+      .cover-copy h1 em {
+        font-style: italic;
+        color: var(--lime);
+      }
+
+      .cover-copy .lead {
+        font-size: 34px;
+        color: #e6e9de;
+        max-width: 1150px;
+      }
+
+      /* CTA slide: green top, charcoal bottom — mirrors the house cover */
+      .cta-top {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 620px;
+        background: url('images/wave-band.jpg') center / cover no-repeat;
+        padding: 96px;
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+      }
+
+      .cta-top::after {
+        content: '';
+        position: absolute;
+        top: 620px;
+        left: 152px;
+        border-left: 46px solid transparent;
+        border-right: 46px solid transparent;
+        border-top: 44px solid var(--lime-flat);
+      }
+
+      .cta-top h2 {
+        font-size: 108px;
+        line-height: 1.08;
+        color: #ffffff;
+        text-shadow: 4px 4px 0 rgba(29, 32, 26, 0.3);
+        max-width: 1250px;
+        padding-bottom: 30px;
+      }
+
+      .cta-top .logo-dark {
+        position: absolute;
+        top: 70px;
+        right: 96px;
+        height: 190px;
+      }
+
+      .cta-bottom {
+        position: absolute;
+        top: 620px;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        padding: 110px 96px 70px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 60px;
+      }
+
+      .cta-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 20px;
+        padding: 30px 62px;
+        background: var(--lime);
+        color: var(--ink);
+        font-size: 34px;
+        font-weight: 800;
+        border-radius: 999px;
+        transition:
+          transform 0.25s ease,
+          box-shadow 0.25s ease;
+        box-shadow: 0 12px 40px rgba(157, 254, 10, 0.25);
+      }
+
+      .reveal a.cta-button {
+        color: var(--ink);
+      }
+
+      .cta-button:hover,
+      .cta-button:focus-visible {
+        transform: scale(1.05);
+        box-shadow: 0 18px 56px rgba(157, 254, 10, 0.4);
+      }
+
+      .cta-button:focus-visible {
+        outline: var(--focus-ring);
+        outline-offset: 4px;
+      }
+
+      .cta-button .ic {
+        font-size: 38px;
+      }
+
+      .contact-row {
+        display: flex;
+        gap: 64px;
+        align-items: center;
+      }
+
+      .contact-item {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+        font-size: 28px;
+        color: var(--mist);
+      }
+
+      .contact-item .ic {
+        color: var(--lime);
+        font-size: 42px;
+      }
+
+      /* --- Badges / pills ---------------------------------------------------------- */
+      .pill-row {
+        display: flex;
+        gap: 24px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+
+      .pill {
+        padding: 14px 34px;
+        border: 2px solid var(--line);
+        border-radius: 999px;
+        font-size: 24px;
+        font-weight: 700;
+        color: var(--mist);
+        background: var(--panel);
+      }
+
+      .github-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 18px;
+        padding: 16px 38px;
+        border: 2px solid var(--line);
+        border-radius: 999px;
+        font-size: 26px;
+        font-weight: 700;
+        background: var(--panel);
+        width: max-content;
+      }
+
+      .github-link .ic {
+        font-size: 36px;
+      }
+
+      /* --- Reveal chrome ------------------------------------------------------------ */
+      .reveal .slide-number {
+        font-family: 'Mulish', sans-serif;
+        color: var(--lime);
+        font-weight: 800;
+        font-size: 20px;
+        background: rgba(29, 32, 26, 0.75);
+        padding: 8px 14px;
+        border-radius: 6px;
+      }
+
+      .reveal .progress {
+        color: var(--lime);
+        height: 5px;
+      }
+
+      .reveal .controls {
+        color: var(--lime);
+      }
+
+      /* --- Small screens -------------------------------------------------------------- */
+      @media (max-width: 768px) {
+        .cards-2,
+        .cards-3,
+        .cards-5,
+        .checks,
+        .timeline {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Lucide icon sprite (lucide.dev, ISC licence) -->
+    <svg xmlns="http://www.w3.org/2000/svg" style="display: none" aria-hidden="true">
+      <defs>
+        <symbol id="i-message-square-x" viewBox="0 0 24 24">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+          <path d="m14.5 7.5-5 5" />
+          <path d="m9.5 7.5 5 5" />
+        </symbol>
+        <symbol id="i-file-question" viewBox="0 0 24 24">
+          <path d="M12 17h.01" />
+          <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z" />
+          <path d="M9.1 9a3 3 0 0 1 5.82 1c0 2-3 3-3 3" />
+        </symbol>
+        <symbol id="i-timer" viewBox="0 0 24 24">
+          <line x1="10" x2="14" y1="2" y2="2" />
+          <line x1="12" x2="15" y1="14" y2="11" />
+          <circle cx="12" cy="14" r="8" />
+        </symbol>
+        <symbol id="i-coins" viewBox="0 0 24 24">
+          <circle cx="8" cy="8" r="6" />
+          <path d="M18.09 10.37A6 6 0 1 1 10.34 18" />
+          <path d="M7 6h1v4" />
+          <path d="m16.71 13.88.7.71-2.82 2.82" />
+        </symbol>
+        <symbol id="i-clipboard-list" viewBox="0 0 24 24">
+          <rect width="8" height="4" x="8" y="2" rx="1" ry="1" />
+          <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
+          <path d="M12 11h4" />
+          <path d="M12 16h4" />
+          <path d="M8 11h.01" />
+          <path d="M8 16h.01" />
+        </symbol>
+        <symbol id="i-compass" viewBox="0 0 24 24">
+          <path
+            d="m16.24 7.76-1.804 5.411a2 2 0 0 1-1.265 1.265L7.76 16.24l1.804-5.411a2 2 0 0 1 1.265-1.265z"
+          />
+          <circle cx="12" cy="12" r="10" />
+        </symbol>
+        <symbol id="i-code-xml" viewBox="0 0 24 24">
+          <path d="m18 16 4-4-4-4" />
+          <path d="m6 8-4 4 4 4" />
+          <path d="m14.5 4-5 16" />
+        </symbol>
+        <symbol id="i-flask-conical" viewBox="0 0 24 24">
+          <path
+            d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2"
+          />
+          <path d="M8.5 2h7" />
+          <path d="M7 16h10" />
+        </symbol>
+        <symbol id="i-rocket" viewBox="0 0 24 24">
+          <path
+            d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"
+          />
+          <path
+            d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"
+          />
+          <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0" />
+          <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5" />
+        </symbol>
+        <symbol id="i-shield-check" viewBox="0 0 24 24">
+          <path
+            d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"
+          />
+          <path d="m9 12 2 2 4-4" />
+        </symbol>
+        <symbol id="i-key-round" viewBox="0 0 24 24">
+          <path
+            d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z"
+          />
+          <circle cx="16.5" cy="7.5" r=".5" fill="currentColor" />
+        </symbol>
+        <symbol id="i-scroll-text" viewBox="0 0 24 24">
+          <path d="M15 12h-5" />
+          <path d="M15 8h-5" />
+          <path d="M19 17V5a2 2 0 0 0-2-2H4" />
+          <path
+            d="M8 21h12a2 2 0 0 0 2-2v-1a1 1 0 0 0-1-1H11a1 1 0 0 0-1 1v1a2 2 0 1 1-4 0V5a2 2 0 1 0-4 0v2a1 1 0 0 0 1 1h3"
+          />
+        </symbol>
+        <symbol id="i-network" viewBox="0 0 24 24">
+          <rect x="16" y="16" width="6" height="6" rx="1" />
+          <rect x="2" y="16" width="6" height="6" rx="1" />
+          <rect x="9" y="2" width="6" height="6" rx="1" />
+          <path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3" />
+          <path d="M12 12V8" />
+        </symbol>
+        <symbol id="i-check" viewBox="0 0 24 24">
+          <path d="M20 6 9 17l-5-5" />
+        </symbol>
+        <symbol id="i-search" viewBox="0 0 24 24">
+          <circle cx="11" cy="11" r="8" />
+          <path d="m21 21-4.3-4.3" />
+        </symbol>
+        <symbol id="i-file-text" viewBox="0 0 24 24">
+          <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" />
+          <path d="M14 2v4a2 2 0 0 0 2 2h4" />
+          <path d="M10 9H8" />
+          <path d="M16 13H8" />
+          <path d="M16 17H8" />
+        </symbol>
+        <symbol id="i-refresh-cw" viewBox="0 0 24 24">
+          <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
+          <path d="M21 3v5h-5" />
+          <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" />
+          <path d="M8 16H3v5" />
+        </symbol>
+        <symbol id="i-send" viewBox="0 0 24 24">
+          <path
+            d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"
+          />
+          <path d="m21.854 2.147-10.94 10.939" />
+        </symbol>
+        <symbol id="i-clock" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="10" />
+          <polyline points="12 6 12 12 16 14" />
+        </symbol>
+        <symbol id="i-trending-up" viewBox="0 0 24 24">
+          <polyline points="22 7 13.5 15.5 8.5 10.5 2 17" />
+          <polyline points="16 7 22 7 22 13" />
+        </symbol>
+        <symbol id="i-moon" viewBox="0 0 24 24">
+          <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+        </symbol>
+        <symbol id="i-graduation-cap" viewBox="0 0 24 24">
+          <path
+            d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"
+          />
+          <path d="M22 10v6" />
+          <path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5" />
+        </symbol>
+        <symbol id="i-git-pull-request" viewBox="0 0 24 24">
+          <circle cx="18" cy="18" r="3" />
+          <circle cx="6" cy="6" r="3" />
+          <path d="M13 6h3a2 2 0 0 1 2 2v7" />
+          <line x1="6" x2="6" y1="9" y2="21" />
+        </symbol>
+        <symbol id="i-database" viewBox="0 0 24 24">
+          <ellipse cx="12" cy="5" rx="9" ry="3" />
+          <path d="M3 5V19A9 3 0 0 0 21 19V5" />
+          <path d="M3 12A9 3 0 0 0 21 12" />
+        </symbol>
+        <symbol id="i-sprout" viewBox="0 0 24 24">
+          <path d="M7 20h10" />
+          <path d="M10 20c5.5-2.5.8-6.4 3-10" />
+          <path
+            d="M9.5 9.4c1.1.8 1.8 2.2 2.3 3.7-2 .4-3.5.4-4.8-.3-1.2-.6-2.3-1.9-3-4.2 2.8-.5 4.4 0 5.5.8z"
+          />
+          <path
+            d="M14.1 6a7 7 0 0 0-1.1 4c1.9-.1 3.3-.6 4.3-1.4 1-1 1.6-2.3 1.7-4.6-2.7.1-4 1-4.9 2z"
+          />
+        </symbol>
+        <symbol id="i-github" viewBox="0 0 24 24">
+          <path
+            d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"
+          />
+          <path d="M9 18c-4.51 2-5-2-7-2" />
+        </symbol>
+        <symbol id="i-zap" viewBox="0 0 24 24">
+          <path
+            d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"
+          />
+        </symbol>
+        <symbol id="i-radio-tower" viewBox="0 0 24 24">
+          <path d="M4.9 16.1C1 12.2 1 5.8 4.9 1.9" />
+          <path d="M7.8 4.7a6.14 6.14 0 0 0-.8 7.5" />
+          <circle cx="12" cy="9" r="2" />
+          <path d="M16.2 4.8c2 2 2.26 5.11.8 7.47" />
+          <path d="M19.1 1.9a9.96 9.96 0 0 1 0 14.1" />
+          <path d="M9.5 18h5" />
+          <path d="m8 22 4-11 4 11" />
+        </symbol>
+        <symbol id="i-server-cog" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="3" />
+          <path d="M4.5 10H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-.5" />
+          <path d="M4.5 14H4a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-4a2 2 0 0 0-2-2h-.5" />
+          <path d="M6 6h.01" />
+          <path d="M6 18h.01" />
+          <path d="m15.7 13.4-.9-.3" />
+          <path d="m9.2 10.9-.9-.3" />
+          <path d="m10.6 15.7.3-.9" />
+          <path d="m13.6 15.7-.4-1" />
+          <path d="m10.8 9.3-.4-1" />
+          <path d="m8.3 13.6 1-.4" />
+          <path d="m14.7 10.8 1-.4" />
+          <path d="m13.4 8.3-.3.9" />
+        </symbol>
+        <symbol id="i-gauge" viewBox="0 0 24 24">
+          <path d="m12 14 4-4" />
+          <path d="M3.34 19a10 10 0 1 1 17.32 0" />
+        </symbol>
+        <symbol id="i-piggy-bank" viewBox="0 0 24 24">
+          <path
+            d="M19 5c-1.5 0-2.8 1.4-3 2-3.5-1.5-11-.3-11 5 0 1.8 0 3 2 4.5V20h4v-2h3v2h4v-4c1-.5 1.7-1 2-2h2v-4h-2c0-1-.5-1.5-1-2V5z"
+          />
+          <path d="M2 9v1c0 1.1.9 2 2 2h1" />
+          <path d="M16 11h.01" />
+        </symbol>
+        <symbol id="i-target" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="10" />
+          <circle cx="12" cy="12" r="6" />
+          <circle cx="12" cy="12" r="2" />
+        </symbol>
+        <symbol id="i-infinity" viewBox="0 0 24 24">
+          <path
+            d="M12 12c-2-2.67-4-4-6-4a4 4 0 1 0 0 8c2 0 4-1.33 6-4Zm0 0c2 2.67 4 4 6 4a4 4 0 0 0 0-8c-2 0-4 1.33-6 4Z"
+          />
+        </symbol>
+        <symbol id="i-mail" viewBox="0 0 24 24">
+          <rect width="20" height="16" x="2" y="4" rx="2" />
+          <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+        </symbol>
+        <symbol id="i-globe" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="10" />
+          <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" />
+          <path d="M2 12h20" />
+        </symbol>
+        <symbol id="i-calendar-check" viewBox="0 0 24 24">
+          <path d="M8 2v4" />
+          <path d="M16 2v4" />
+          <rect width="18" height="18" x="3" y="4" rx="2" />
+          <path d="M3 10h18" />
+          <path d="m9 16 2 2 4-4" />
+        </symbol>
+        <symbol id="i-handshake" viewBox="0 0 24 24">
+          <path d="m11 17 2 2a1 1 0 1 0 3-3" />
+          <path
+            d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.87l.47.28a2 2 0 0 0 1.42.25L21 4"
+          />
+          <path d="m21 3 1 11h-2" />
+          <path d="M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3" />
+          <path d="M3 4h8" />
+        </symbol>
+        <symbol id="i-users" viewBox="0 0 24 24">
+          <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+          <circle cx="9" cy="7" r="4" />
+          <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+          <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+        </symbol>
+      </defs>
+    </svg>
+
+    <div class="reveal">
+      <div class="slides">
+        <!-- Slide 1: Title -->
+        <section role="region" aria-label="Slide 1 of 15: Agentic AI that works while you sleep">
+          <div
+            class="cover-hero"
+            role="img"
+            aria-label="A robot working at a laptop in a dark office at night, lit by lime-green light"
+          ></div>
+          <div class="cover-scrim" aria-hidden="true"></div>
+          <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
+          <div class="cover-copy">
+            <p class="kicker">KnowAll AI &middot; Company overview</p>
+            <h1>Agentic AI that works<br /><em>while you sleep</em></h1>
+            <p class="lead">
+              Autonomous AI agents that operate independently, learn continuously and deliver
+              results &mdash; without constant supervision.
+            </p>
+          </div>
+        </section>
+
+        <!-- Slide 2: The Hook -->
+        <section
+          role="region"
+          aria-label="Slide 2 of 15: Building is cheap, building wrong is expensive"
+        >
+          <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
+          <div class="dark-inner">
+            <p class="kicker">The shift</p>
+            <div class="quote-mark" aria-hidden="true">&ldquo;</div>
+            <p class="quote">
+              As execution costs collapse, requirements matter more than ever.<br />
+              Building is cheap. Building the <em>wrong thing</em> is expensive.
+            </p>
+          </div>
+        </section>
+
+        <!-- Slide 3: The Challenge -->
+        <section role="region" aria-label="Slide 3 of 15: The challenge">
+          <div class="band">
+            <div>
+              <h2>The challenge</h2>
+              <p class="band-sub">Every software project hits the same bottleneck</p>
+            </div>
+            <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
+          </div>
+          <div class="content">
+            <div class="cards-2">
+              <div class="card">
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="#i-message-square-x" /></svg>
+                </div>
+                <div>
+                  <h4>Miscommunication</h4>
+                  <p>
+                    Stakeholders and developers speak different languages. Requirements get lost in
+                    translation.
+                  </p>
+                </div>
+              </div>
+              <div class="card">
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="#i-file-question" /></svg>
+                </div>
+                <div>
+                  <h4>Incomplete context</h4>
+                  <p>
+                    Documentation is patchy, assumptions go unchallenged and critical details slip
+                    through the cracks.
+                  </p>
+                </div>
+              </div>
+              <div class="card">
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="#i-timer" /></svg>
+                </div>
+                <div>
+                  <h4>Slow iteration</h4>
+                  <p>
+                    Back-and-forth clarification takes days. Projects stall waiting for answers that
+                    should take minutes.
+                  </p>
+                </div>
+              </div>
+              <div class="card">
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="#i-coins" /></svg>
+                </div>
+                <div>
+                  <h4>Expensive rework</h4>
+                  <p>
+                    Building the wrong thing costs far more than taking the time to get it right
+                    first time.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Slide 4: Meet Preppie -->
+        <section
+          role="region"
+          aria-label="Slide 4 of 15: Meet Preppie, your AI requirements analyst"
+        >
+          <div class="band">
+            <div>
+              <h2>Meet Preppie</h2>
+              <p class="band-sub">Your AI requirements analyst &mdash; Preppie the Prepper</p>
+            </div>
+            <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
+          </div>
+          <div class="content" style="flex-direction: row; align-items: center; gap: 80px">
+            <img
+              src="images/requirements-analyst.png"
+              alt="KnowAll's AI requirements-analyst robot reviewing project documents at night"
+              style="
+                width: 430px;
+                height: 520px;
+                object-fit: cover;
+                flex: none;
+                border-radius: 20px;
+                border: 2px solid rgba(157, 254, 10, 0.55);
+                box-shadow: 0 24px 48px rgba(0, 0, 0, 0.5);
+              "
+            />
+            <div class="rows">
+              <div class="row">
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="#i-search" /></svg>
+                </div>
+                <p>
+                  <strong>Autonomous discovery</strong>
+                  Engages stakeholders directly to gather, question and clarify requirements
+                </p>
+              </div>
+              <div class="row">
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="#i-file-text" /></svg>
+                </div>
+                <p>
+                  <strong>Context building</strong>
+                  Produces comprehensive requirement documents with full business context
+                </p>
+              </div>
+              <div class="row">
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="#i-refresh-cw" /></svg>
+                </div>
+                <p>
+                  <strong>Validation &amp; refinement</strong>
+                  Iterates with stakeholders until every requirement is watertight
+                </p>
+              </div>
+              <div class="row">
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="#i-send" /></svg>
+                </div>
+                <p>
+                  <strong>Handoff ready</strong>
+                  Delivers production-ready specifications straight to the delivery team
+                </p>
+              </div>
+              <div class="row">
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="#i-clock" /></svg>
+                </div>
+                <p>
+                  <strong>Always on</strong>
+                  Works across time zones, around the clock &mdash; and never misses a detail
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Slide 5: Meet the team -->
+        <section role="region" aria-label="Slide 5 of 15: Meet the agent team">
+          <div class="band">
+            <div>
+              <h2>Meet the team</h2>
+              <p class="band-sub">
+                Specialist agents that take your project from idea to production
+              </p>
+            </div>
+            <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
+          </div>
+          <div class="content">
+            <p class="lead" style="margin-top: -8px; max-width: 1500px">
+              A full T-Minus-15 delivery team &mdash; each a specialist with its own skills.
+              <strong style="color: #fff; font-weight: 700">Hover any agent</strong> to see what it
+              does.
+            </p>
+            <div class="agent-row">
+              <div class="agent" tabindex="0">
+                <div class="agent-skills">
+                  <h5>Sallie &middot; Sales</h5>
+                  <span>Proposals</span><span>Quotations</span
+                  ><span>Pipeline &amp; opportunities</span>
+                </div>
+                <div class="agent-av">
+                  <svg class="ic"><use href="#i-handshake" /></svg>
+                </div>
+                <div>
+                  <div class="agent-name">Sallie</div>
+                  <div class="agent-role">Sales</div>
+                </div>
+              </div>
+              <div class="agent" tabindex="0">
+                <div class="agent-skills">
+                  <h5>Poppie &middot; Planner</h5>
+                  <span>Epics &amp; roadmap</span><span>Lean business case</span
+                  ><span>Sprint planning</span>
+                </div>
+                <div class="agent-av">
+                  <svg class="ic"><use href="#i-clipboard-list" /></svg>
+                </div>
+                <div>
+                  <div class="agent-name">Poppie</div>
+                  <div class="agent-role">Planner</div>
+                </div>
+              </div>
+              <div class="agent" tabindex="0">
+                <div class="agent-skills">
+                  <h5>Preppie &middot; Prepper</h5>
+                  <span>Requirements</span><span>User stories</span><span>Backlog prep</span>
+                </div>
+                <div class="agent-av">
+                  <svg class="ic"><use href="#i-file-text" /></svg>
+                </div>
+                <div>
+                  <div class="agent-name">Preppie</div>
+                  <div class="agent-role">Prepper</div>
+                </div>
+              </div>
+              <div class="agent" tabindex="0">
+                <div class="agent-skills">
+                  <h5>Dannie &middot; Designer</h5>
+                  <span>Wireframes</span><span>UX &amp; UI design</span
+                  ><span>Brand guidelines</span>
+                </div>
+                <div class="agent-av">
+                  <svg class="ic"><use href="#i-compass" /></svg>
+                </div>
+                <div>
+                  <div class="agent-name">Dannie</div>
+                  <div class="agent-role">Designer</div>
+                </div>
+              </div>
+              <div class="agent" tabindex="0">
+                <div class="agent-skills">
+                  <h5>Ernie &middot; Engineer</h5>
+                  <span>Build &amp; ship</span><span>Code review</span><span>Pull requests</span>
+                </div>
+                <div class="agent-av">
+                  <svg class="ic"><use href="#i-code-xml" /></svg>
+                </div>
+                <div>
+                  <div class="agent-name">Ernie</div>
+                  <div class="agent-role">Engineer</div>
+                </div>
+              </div>
+              <div class="agent" tabindex="0">
+                <div class="agent-skills">
+                  <h5>Teddie &middot; Tester</h5>
+                  <span>E2E tests</span><span>Quality assurance</span><span>Regression</span>
+                </div>
+                <div class="agent-av">
+                  <svg class="ic"><use href="#i-flask-conical" /></svg>
+                </div>
+                <div>
+                  <div class="agent-name">Teddie</div>
+                  <div class="agent-role">Tester</div>
+                </div>
+              </div>
+              <div class="agent" tabindex="0">
+                <div class="agent-skills">
+                  <h5>Ollie &middot; Operator</h5>
+                  <span>Deploy &amp; release</span><span>Monitoring</span
+                  ><span>Continuous improvement</span>
+                </div>
+                <div class="agent-av">
+                  <svg class="ic"><use href="#i-rocket" /></svg>
+                </div>
+                <div>
+                  <div class="agent-name">Ollie</div>
+                  <div class="agent-role">Operator</div>
+                </div>
+              </div>
+              <div class="agent" tabindex="0">
+                <div class="agent-skills">
+                  <h5>Archie &middot; Architect</h5>
+                  <span>Architecture</span><span>Technical review</span><span>Standards</span>
+                </div>
+                <div class="agent-av">
+                  <svg class="ic"><use href="#i-network" /></svg>
+                </div>
+                <div>
+                  <div class="agent-name">Archie</div>
+                  <div class="agent-role">Architect</div>
+                </div>
+              </div>
+            </div>
+            <div class="team-notes">
+              <div class="team-note">
+                <svg class="ic"><use href="#i-target" /></svg>
+                <p>
+                  <strong>Custom-built for your business</strong>
+                  We craft bespoke skills so your agents understand your data, systems and ways of
+                  working.
+                </p>
+              </div>
+              <div class="team-note">
+                <svg class="ic"><use href="#i-refresh-cw" /></svg>
+                <p>
+                  <strong>One definition, many embodiments</strong>
+                  The same agents &amp; skills run in Claude Code, Azure AI Foundry (Microsoft bots)
+                  and OpenClawd.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Slide 6: T-Minus-15 -->
+        <section role="region" aria-label="Slide 6 of 15: The T-Minus-15 methodology">
+          <div class="dark-inner" style="padding: 120px 96px">
+            <div style="display: flex; align-items: center; gap: 56px">
+              <div style="flex: 1">
+                <p class="kicker">Our methodology</p>
+                <h2>T-Minus-15</h2>
+                <p class="lead">
+                  Our open-source delivery methodology &mdash; the best of Agile and DevOps, taking
+                  every solution from idea to production through five stages.
+                </p>
+              </div>
+              <img
+                src="images/tminus15-book.png"
+                alt="The T-Minus-15 methodology book"
+                style="
+                  width: 176px;
+                  height: auto;
+                  flex: none;
+                  border-radius: 8px;
+                  box-shadow: 0 22px 46px rgba(0, 0, 0, 0.6);
+                "
+              />
+            </div>
+            <div class="cards-5">
+              <div class="stage">
+                <span class="step" aria-hidden="true">01</span>
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="#i-clipboard-list" /></svg>
+                </div>
+                <h4>PREP</h4>
+                <p>Deep business understanding and a backlog of user requirements</p>
+              </div>
+              <div class="stage">
+                <span class="step" aria-hidden="true">02</span>
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="#i-compass" /></svg>
+                </div>
+                <h4>DESIGN</h4>
+                <p>Technical architecture, data models and UX/UI design</p>
+              </div>
+              <div class="stage">
+                <span class="step" aria-hidden="true">03</span>
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="#i-code-xml" /></svg>
+                </div>
+                <h4>ENGINEER</h4>
+                <p>Rapid delivery in 2-to-3-week sprints, true to the prep and design</p>
+              </div>
+              <div class="stage">
+                <span class="step" aria-hidden="true">04</span>
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="#i-flask-conical" /></svg>
+                </div>
+                <h4>TEST</h4>
+                <p>Quality review to prove the solution meets the original requirements</p>
+              </div>
+              <div class="stage">
+                <span class="step" aria-hidden="true">05</span>
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="#i-rocket" /></svg>
+                </div>
+                <h4>OPERATE</h4>
+                <p>Continuous integration and deployment, monitoring and improvement</p>
+              </div>
+            </div>
+            <a
+              class="github-link"
+              href="https://github.com/T-Minus-15"
+              aria-label="T-Minus-15 open-source methodology on GitHub"
+            >
+              <svg class="ic" aria-hidden="true"><use href="#i-github" /></svg>
+              github.com/T-Minus-15 &mdash; open-source methodology
+            </a>
+          </div>
+        </section>
+
+        <!-- Slide 7: Self-Improving Agents -->
+        <section role="region" aria-label="Slide 7 of 15: Self-improving agents">
+          <div class="band">
+            <div>
+              <h2>Self-improving agents</h2>
+              <p class="band-sub">Agents that make themselves better over time</p>
+            </div>
+            <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
+          </div>
+          <div class="content">
+            <div class="cards-2">
+              <div class="card">
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="#i-git-pull-request" /></svg>
+                </div>
+                <div>
+                  <h4>Pull requests to their own code</h4>
+                  <p>
+                    Agents propose improvements to their own codebase &mdash; reviewed and merged
+                    just like any developer&rsquo;s contribution.
+                  </p>
+                </div>
+              </div>
+              <div class="card">
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="#i-refresh-cw" /></svg>
+                </div>
+                <div>
+                  <h4>Learns from every outcome</h4>
+                  <p>
+                    Corrections, results and feedback feed the next iteration &mdash; nothing is
+                    learned only once.
+                  </p>
+                </div>
+              </div>
+              <div class="card">
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="#i-trending-up" /></svg>
+                </div>
+                <div>
+                  <h4>Compounding quality</h4>
+                  <p>
+                    Capabilities improve with each cycle &mdash; the system you deploy keeps getting
+                    better after it ships.
+                  </p>
+                </div>
+              </div>
+              <div class="card">
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="#i-users" /></svg>
+                </div>
+                <div>
+                  <h4>Human in the loop</h4>
+                  <p>
+                    Every change is transparent, version-controlled and approved before it goes live
+                    &mdash; no black boxes.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Slide 8: Agent Memory (Neo4j) -->
+        <section role="region" aria-label="Slide 8 of 15: Agent memory that grows">
+          <div class="band">
+            <div>
+              <h2>Agent memory that grows</h2>
+              <p class="band-sub">A living knowledge graph of people, places and concepts</p>
+            </div>
+            <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
+          </div>
+          <div class="content">
+            <div class="cards-2">
+              <div class="card">
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="#i-network" /></svg>
+                </div>
+                <div>
+                  <h4>Semantic graph memory</h4>
+                  <p>
+                    Agents connect people, places and concepts into a living graph &mdash;
+                    remembering how things relate, not just isolated facts.
+                  </p>
+                </div>
+              </div>
+              <div class="card">
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="#i-sprout" /></svg>
+                </div>
+                <div>
+                  <h4>Grows over time</h4>
+                  <p>
+                    Every interaction adds nodes and relationships &mdash; memory compounds and gets
+                    richer the more your agents are used.
+                  </p>
+                </div>
+              </div>
+              <div class="card">
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="#i-target" /></svg>
+                </div>
+                <div>
+                  <h4>Context on recall</h4>
+                  <p>
+                    Knowledge is retrieved with its connections intact &mdash; grounded,
+                    context-aware answers instead of keyword lookups.
+                  </p>
+                </div>
+              </div>
+              <div class="card">
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="#i-database" /></svg>
+                </div>
+                <div>
+                  <h4>Powered by Neo4j</h4>
+                  <p>
+                    Built on our open-source graph memory for any agent &mdash; connect your agents
+                    to a Neo4j knowledge graph.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <a
+              class="github-link"
+              href="https://github.com/knowall-ai/mcp-neo4j-agent-memory"
+              aria-label="mcp-neo4j-agent-memory project on GitHub"
+            >
+              <svg class="ic" aria-hidden="true"><use href="#i-github" /></svg>
+              github.com/knowall-ai/mcp-neo4j-agent-memory &mdash; graph memory for any agent
+            </a>
+          </div>
+        </section>
+
+        <!-- Slide 9: Security -->
+        <section role="region" aria-label="Slide 9 of 15: Enterprise-grade security">
+          <div class="band">
+            <div>
+              <h2>Enterprise-grade security</h2>
+              <p class="band-sub">Built on Microsoft Azure with enterprise compliance</p>
+            </div>
+            <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
+          </div>
+          <div class="content">
+            <div class="cards-2">
+              <div class="card">
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="#i-shield-check" /></svg>
+                </div>
+                <div>
+                  <h4>Data protection</h4>
+                  <p>
+                    End-to-end encryption, secure key management and data-residency controls aligned
+                    with your compliance requirements.
+                  </p>
+                </div>
+              </div>
+              <div class="card">
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="#i-key-round" /></svg>
+                </div>
+                <div>
+                  <h4>Access control</h4>
+                  <p>
+                    Role-based access control, Microsoft Entra ID integration and multi-factor
+                    authentication for every agent interaction.
+                  </p>
+                </div>
+              </div>
+              <div class="card">
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="#i-scroll-text" /></svg>
+                </div>
+                <div>
+                  <h4>Audit &amp; compliance</h4>
+                  <p>
+                    Complete audit trails, compliance reporting and integration with your existing
+                    governance frameworks.
+                  </p>
+                </div>
+              </div>
+              <div class="card">
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="#i-network" /></svg>
+                </div>
+                <div>
+                  <h4>Secure architecture</h4>
+                  <p>
+                    Zero-trust architecture, network isolation and secure API endpoints with rate
+                    limiting and threat detection.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Slide 10: Microsoft Integration -->
+        <section role="region" aria-label="Slide 10 of 15: Seamless Microsoft integration">
+          <div class="band">
+            <div>
+              <h2>Seamless Microsoft integration</h2>
+              <p class="band-sub">Works with the Microsoft ecosystem you already own</p>
+            </div>
+            <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
+          </div>
+          <div class="content">
+            <div class="cards-3">
+              <div class="card stack">
+                <div class="chip chip-white">
+                  <svg
+                    viewBox="0 0 96 96"
+                    width="46"
+                    height="46"
+                    role="img"
+                    aria-label="Microsoft logo"
+                  >
+                    <path fill="#F25022" d="M0 0h45.5v45.5H0z" />
+                    <path fill="#7FBA00" d="M50.5 0H96v45.5H50.5z" />
+                    <path fill="#00A4EF" d="M0 50.5h45.5V96H0z" />
+                    <path fill="#FFB900" d="M50.5 50.5H96V96H50.5z" />
+                  </svg>
+                </div>
+                <div>
+                  <h4>Microsoft 365</h4>
+                  <p>
+                    Agents that live where your people work &mdash; Teams, Outlook, SharePoint and
+                    the entire M365 suite.
+                  </p>
+                </div>
+              </div>
+              <div class="card stack">
+                <div class="chip chip-white">
+                  <img
+                    src="images/logos/power-platform.svg"
+                    alt="Microsoft Power Platform logo"
+                    style="width: 46px; height: 46px; object-fit: contain"
+                  />
+                </div>
+                <div>
+                  <h4>Power Platform</h4>
+                  <p>
+                    Power Apps, Power Automate and Power BI &mdash; complete low-code business
+                    automation, dashboards and workflows.
+                  </p>
+                </div>
+              </div>
+              <div class="card stack">
+                <div class="chip chip-white">
+                  <img
+                    src="/images/microsoft-copilot-logo.png"
+                    alt="Microsoft Copilot logo"
+                    style="width: 54px; height: auto"
+                  />
+                </div>
+                <div>
+                  <h4>Copilots &amp; AI agents</h4>
+                  <p>
+                    Custom copilots and agents built with Copilot Studio, the Bot Framework and
+                    Azure AI Foundry &mdash; grounded in your own data and processes.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="pill-row" role="list" aria-label="Microsoft technologies we work with">
+              <span class="pill pill-logo" role="listitem"
+                ><img src="images/logos/azure.svg" alt="" />Microsoft Azure</span
+              >
+              <span class="pill pill-logo" role="listitem"
+                ><img src="images/logos/azure-devops.svg" alt="" />Azure DevOps</span
+              >
+              <span class="pill pill-logo" role="listitem"
+                ><img src="images/logos/fabric.svg" alt="" />Microsoft Fabric</span
+              >
+              <span class="pill pill-logo" role="listitem"
+                ><img src="images/logos/dataverse.svg" alt="" />Dataverse</span
+              >
+              <span class="pill pill-logo" role="listitem"
+                ><img src="images/logos/sharepoint.svg" alt="" />SharePoint</span
+              >
+              <span class="pill pill-logo" role="listitem"
+                ><img src="images/logos/ai-foundry.svg" alt="" />AI Foundry</span
+              >
+            </div>
+          </div>
+        </section>
+
+        <!-- Slide 11: Augmentation -->
+        <section role="region" aria-label="Slide 11 of 15: Augmenting your team">
+          <div class="band">
+            <div>
+              <h2>Augmenting your team</h2>
+              <p class="band-sub">Not replacing people &mdash; empowering them</p>
+            </div>
+            <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
+          </div>
+          <div class="content">
+            <div class="checks">
+              <p class="check">
+                <svg class="ic" aria-hidden="true"><use href="#i-calendar-check" /></svg>
+                <span
+                  ><strong>Always available</strong> &mdash; no sick days, no time off, no
+                  burnout</span
+                >
+              </p>
+              <p class="check">
+                <svg class="ic" aria-hidden="true"><use href="#i-trending-up" /></svg>
+                <span><strong>Scales instantly</strong> during busy periods, without hiring</span>
+              </p>
+              <p class="check">
+                <svg class="ic" aria-hidden="true"><use href="#i-refresh-cw" /></svg>
+                <span
+                  ><strong>Takes the repetitive work</strong> so your people focus on the creative
+                  work</span
+                >
+              </p>
+              <p class="check">
+                <svg class="ic" aria-hidden="true"><use href="#i-moon" /></svg>
+                <span><strong>Works overnight</strong> so the answers are ready by morning</span>
+              </p>
+              <p class="check">
+                <svg class="ic" aria-hidden="true"><use href="#i-users" /></svg>
+                <span><strong>Works alongside your team</strong> &mdash; not instead of it</span>
+              </p>
+              <p class="check">
+                <svg class="ic" aria-hidden="true"><use href="#i-graduation-cap" /></svg>
+                <span><strong>Learns continuously</strong> from every interaction and outcome</span>
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Slide 12: Vision -->
+        <section role="region" aria-label="Slide 12 of 15: Our vision">
+          <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
+          <div class="dark-inner" style="padding: 120px 96px; gap: 40px">
+            <p class="kicker">Our vision</p>
+            <h2 style="font-size: 78px">Idea to production in a single meeting</h2>
+            <div class="timeline" style="margin-top: 70px">
+              <div class="timeline-point">
+                <h4>Today</h4>
+                <p>
+                  We build solutions with clients in focused 2-day agentic delivery workshops
+                  &mdash; agents gather requirements, build and hand off
+                </p>
+              </div>
+              <div class="timeline-point">
+                <h4>By year-end</h4>
+                <p>
+                  The same solutions built live in 2-hour meetings with your users and stakeholders
+                </p>
+              </div>
+              <div class="timeline-point">
+                <h4>Beyond</h4>
+                <p>Business ideas become working software overnight</p>
+              </div>
+            </div>
+            <p class="quote" style="font-size: 44px; max-width: 1500px; margin-top: 30px">
+              Imagine walking into a meeting with an idea, and walking out with working software.
+              <em>That&rsquo;s where we&rsquo;re headed.</em>
+            </p>
+          </div>
+        </section>
+
+        <!-- Slide 13: Benefits -->
+        <section role="region" aria-label="Slide 13 of 15: Real-world benefits">
+          <div class="band">
+            <div>
+              <h2>Real-world benefits</h2>
+              <p class="band-sub">Grounded in real engagements</p>
+            </div>
+            <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
+          </div>
+          <div class="content">
+            <div class="cards-2">
+              <div class="card stat">
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="#i-gauge" /></svg>
+                </div>
+                <div>
+                  <div class="stat-num">4 days</div>
+                  <h4>Idea to prototype</h4>
+                  <p>
+                    A Proto-Sprint takes a validated idea to a working prototype on the Microsoft
+                    Power Platform &mdash; fixed price, fixed scope.
+                  </p>
+                </div>
+              </div>
+              <div class="card stat">
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="#i-piggy-bank" /></svg>
+                </div>
+                <div>
+                  <div class="stat-num">&asymp;90%</div>
+                  <h4>Straight-through processing</h4>
+                  <p>
+                    Our invoice-automation build for a leading property developer targets &asymp;90%
+                    of 1,600 monthly invoices handled without manual intervention.
+                  </p>
+                </div>
+              </div>
+              <div class="card stat">
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="#i-target" /></svg>
+                </div>
+                <div>
+                  <div class="stat-num">4&ndash;8 wks</div>
+                  <h4>To production</h4>
+                  <p>
+                    Recent case-study builds shipped in four and eight weeks respectively &mdash;
+                    value delivered in weeks, not quarters.
+                  </p>
+                </div>
+              </div>
+              <div class="card stat">
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="#i-infinity" /></svg>
+                </div>
+                <div>
+                  <div class="stat-num">24/7</div>
+                  <h4>Continuous availability</h4>
+                  <p>
+                    Work continues around the clock and across time zones &mdash; no more waiting
+                    for business hours.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Slide 14: Partners -->
+        <section role="region" aria-label="Slide 14 of 15: Trusted partner ecosystem">
+          <div class="band">
+            <div>
+              <h2>Platforms &amp; partners</h2>
+              <p class="band-sub">
+                The technology we build on &mdash; and who we bring it to market with
+              </p>
+            </div>
+            <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
+          </div>
+          <div class="content">
+            <div class="partner-grid">
+              <div class="card">
+                <div class="logo-plate">
+                  <svg viewBox="0 0 96 96" width="40" height="40" role="img" aria-label="Microsoft">
+                    <path fill="#F25022" d="M0 0h45.5v45.5H0z" />
+                    <path fill="#7FBA00" d="M50.5 0H96v45.5H50.5z" />
+                    <path fill="#00A4EF" d="M0 50.5h45.5V96H0z" />
+                    <path fill="#FFB900" d="M50.5 50.5H96V96H50.5z" />
+                  </svg>
+                  <span class="plate-word">Microsoft</span>
+                </div>
+                <p>Azure, Microsoft 365 and Power Platform &mdash; the cloud we build on.</p>
+              </div>
+              <div class="card">
+                <div class="logo-plate">
+                  <img src="images/logos/anthropic-dark.svg" alt="Anthropic" />
+                </div>
+                <p>Claude &mdash; the frontier AI models that power our agents.</p>
+              </div>
+              <div class="card">
+                <div class="logo-plate">
+                  <img src="images/logos/eir.png" alt="eir Business" />
+                </div>
+                <p>Enterprise connectivity and infrastructure across Ireland.</p>
+              </div>
+              <div class="card">
+                <div class="logo-plate">
+                  <img src="images/logos/xma.png" alt="XMA" />
+                </div>
+                <p>Technology services and enterprise IT across the UK.</p>
+              </div>
+            </div>
+            <div class="pill-row" style="justify-content: flex-start">
+              <span class="pill" style="display: inline-flex; align-items: center; gap: 16px">
+                <svg class="ic" style="font-size: 30px; color: var(--lime)" aria-hidden="true">
+                  <use href="#i-handshake" />
+                </svg>
+                Bringing agentic AI to enterprise customers across telecoms, manufacturing,
+                education and healthcare
+              </span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Slide 15: CTA -->
+        <section role="region" aria-label="Slide 15 of 15: Ready to build your agentic AI team">
+          <div class="cta-top">
+            <h2>Let&rsquo;s build your<br />agentic AI team.</h2>
+            <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
+          </div>
+          <div class="cta-bottom">
+            <div style="display: flex; flex-direction: column; gap: 30px; max-width: 1180px">
+              <p style="color: var(--mist); font-size: 27px; line-height: 1.5">
+                Start with a <strong style="color: #fff; font-weight: 800">Discovery Day</strong>
+                &mdash; a focused, hands-on session where we map your highest-value opportunities
+                for agentic AI, prove one live with your team, and leave you with a costed path to
+                production.
+              </p>
+              <a
+                class="cta-button"
+                href="https://www.knowall.ai"
+                aria-label="Book a Discovery Day - visit the KnowAll AI website"
+              >
+                <svg class="ic" aria-hidden="true"><use href="#i-calendar-check" /></svg>
+                Book a Discovery Day
+              </a>
+            </div>
+            <div class="contact-row">
+              <div class="contact-item">
+                <svg class="ic" aria-hidden="true"><use href="#i-mail" /></svg>
+                <a href="mailto:hello@knowall.ai">hello@knowall.ai</a>
+              </div>
+              <div class="contact-item">
+                <svg class="ic" aria-hidden="true"><use href="#i-globe" /></svg>
+                <a href="https://www.knowall.ai">knowall.ai</a>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/reveal.js"
+      integrity="sha384-pcvWxkmpELJRfdSUAxBpLYLhA9vF4LnfBamyHqUYyt+7vb606t7WzpBmXRmrkFvQ"
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      Reveal.initialize({
+        hash: true,
+        slideNumber: 'c/t',
+        transition: 'fade',
+        backgroundTransition: 'fade',
+        controls: true,
+        progress: true,
+        center: false,
+        touch: true,
+        loop: false,
+        keyboard: true,
+        overview: true,
+        width: 1920,
+        height: 1080,
+        margin: 0,
+        minScale: 0.2,
+        maxScale: 2.0,
+      });
+    </script>
+  </body>
+</html>
