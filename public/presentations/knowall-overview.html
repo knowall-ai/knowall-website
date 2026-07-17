@@ -1057,6 +1057,27 @@
           <path d="M22 10v6" />
           <path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5" />
         </symbol>
+        <symbol id="i-git-pull-request" viewBox="0 0 24 24">
+          <circle cx="18" cy="18" r="3" />
+          <circle cx="6" cy="6" r="3" />
+          <path d="M13 6h3a2 2 0 0 1 2 2v7" />
+          <line x1="6" x2="6" y1="9" y2="21" />
+        </symbol>
+        <symbol id="i-database" viewBox="0 0 24 24">
+          <ellipse cx="12" cy="5" rx="9" ry="3" />
+          <path d="M3 5V19A9 3 0 0 0 21 19V5" />
+          <path d="M3 12A9 3 0 0 0 21 12" />
+        </symbol>
+        <symbol id="i-sprout" viewBox="0 0 24 24">
+          <path d="M7 20h10" />
+          <path d="M10 20c5.5-2.5.8-6.4 3-10" />
+          <path
+            d="M9.5 9.4c1.1.8 1.8 2.2 2.3 3.7-2 .4-3.5.4-4.8-.3-1.2-.6-2.3-1.9-3-4.2 2.8-.5 4.4 0 5.5.8z"
+          />
+          <path
+            d="M14.1 6a7 7 0 0 0-1.1 4c1.9-.1 3.3-.6 4.3-1.4 1-1 1.6-2.3 1.7-4.6-2.7.1-4 1-4.9 2z"
+          />
+        </symbol>
         <symbol id="i-github" viewBox="0 0 24 24">
           <path
             d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"
@@ -1150,7 +1171,7 @@
     <div class="reveal">
       <div class="slides">
         <!-- Slide 1: Title -->
-        <section role="region" aria-label="Slide 1 of 12: Agentic AI that works while you sleep">
+        <section role="region" aria-label="Slide 1 of 15: Agentic AI that works while you sleep">
           <div
             class="cover-hero"
             role="img"
@@ -1171,7 +1192,7 @@
         <!-- Slide 2: The Hook -->
         <section
           role="region"
-          aria-label="Slide 2 of 12: Building is cheap, building wrong is expensive"
+          aria-label="Slide 2 of 15: Building is cheap, building wrong is expensive"
         >
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
           <div class="dark-inner">
@@ -1185,7 +1206,7 @@
         </section>
 
         <!-- Slide 3: The Challenge -->
-        <section role="region" aria-label="Slide 3 of 12: The challenge">
+        <section role="region" aria-label="Slide 3 of 15: The challenge">
           <div class="band">
             <div>
               <h2>The challenge</h2>
@@ -1250,7 +1271,7 @@
         <!-- Slide 4: Meet Pennie -->
         <section
           role="region"
-          aria-label="Slide 4 of 12: Meet Preppie, your AI requirements analyst"
+          aria-label="Slide 4 of 15: Meet Preppie, your AI requirements analyst"
         >
           <div class="band">
             <div>
@@ -1263,7 +1284,15 @@
             <img
               src="images/requirements-analyst.png"
               alt="KnowAll's AI requirements-analyst robot reviewing project documents at night"
-              style="width: 430px; height: 520px; object-fit: cover; flex: none; border-radius: 20px; border: 2px solid rgba(157, 254, 10, 0.55); box-shadow: 0 24px 48px rgba(0, 0, 0, 0.5)"
+              style="
+                width: 430px;
+                height: 520px;
+                object-fit: cover;
+                flex: none;
+                border-radius: 20px;
+                border: 2px solid rgba(157, 254, 10, 0.55);
+                box-shadow: 0 24px 48px rgba(0, 0, 0, 0.5);
+              "
             />
             <div class="rows">
               <div class="row">
@@ -1315,8 +1344,8 @@
           </div>
         </section>
 
-        <!-- Slide 4b: Meet the team -->
-        <section role="region" aria-label="Meet the agent team">
+        <!-- Slide 5: Meet the team -->
+        <section role="region" aria-label="Slide 5 of 15: Meet the agent team">
           <div class="band">
             <div>
               <h2>Meet the team</h2>
@@ -1336,9 +1365,12 @@
               <div class="agent">
                 <div class="agent-skills">
                   <h5>Sallie &middot; Sales</h5>
-                  <span>Proposals</span><span>Quotations</span><span>Pipeline &amp; opportunities</span>
+                  <span>Proposals</span><span>Quotations</span
+                  ><span>Pipeline &amp; opportunities</span>
                 </div>
-                <div class="agent-av"><svg class="ic"><use href="#i-handshake" /></svg></div>
+                <div class="agent-av">
+                  <svg class="ic"><use href="#i-handshake" /></svg>
+                </div>
                 <div>
                   <div class="agent-name">Sallie</div>
                   <div class="agent-role">Sales</div>
@@ -1347,9 +1379,12 @@
               <div class="agent">
                 <div class="agent-skills">
                   <h5>Poppie &middot; Planner</h5>
-                  <span>Epics &amp; roadmap</span><span>Lean business case</span><span>Sprint planning</span>
+                  <span>Epics &amp; roadmap</span><span>Lean business case</span
+                  ><span>Sprint planning</span>
                 </div>
-                <div class="agent-av"><svg class="ic"><use href="#i-clipboard-list" /></svg></div>
+                <div class="agent-av">
+                  <svg class="ic"><use href="#i-clipboard-list" /></svg>
+                </div>
                 <div>
                   <div class="agent-name">Poppie</div>
                   <div class="agent-role">Planner</div>
@@ -1360,7 +1395,9 @@
                   <h5>Preppie &middot; Prepper</h5>
                   <span>Requirements</span><span>User stories</span><span>Backlog prep</span>
                 </div>
-                <div class="agent-av"><svg class="ic"><use href="#i-file-text" /></svg></div>
+                <div class="agent-av">
+                  <svg class="ic"><use href="#i-file-text" /></svg>
+                </div>
                 <div>
                   <div class="agent-name">Preppie</div>
                   <div class="agent-role">Prepper</div>
@@ -1369,9 +1406,12 @@
               <div class="agent">
                 <div class="agent-skills">
                   <h5>Dannie &middot; Designer</h5>
-                  <span>Wireframes</span><span>UX &amp; UI design</span><span>Brand guidelines</span>
+                  <span>Wireframes</span><span>UX &amp; UI design</span
+                  ><span>Brand guidelines</span>
                 </div>
-                <div class="agent-av"><svg class="ic"><use href="#i-compass" /></svg></div>
+                <div class="agent-av">
+                  <svg class="ic"><use href="#i-compass" /></svg>
+                </div>
                 <div>
                   <div class="agent-name">Dannie</div>
                   <div class="agent-role">Designer</div>
@@ -1382,7 +1422,9 @@
                   <h5>Ernie &middot; Engineer</h5>
                   <span>Build &amp; ship</span><span>Code review</span><span>Pull requests</span>
                 </div>
-                <div class="agent-av"><svg class="ic"><use href="#i-code-xml" /></svg></div>
+                <div class="agent-av">
+                  <svg class="ic"><use href="#i-code-xml" /></svg>
+                </div>
                 <div>
                   <div class="agent-name">Ernie</div>
                   <div class="agent-role">Engineer</div>
@@ -1393,7 +1435,9 @@
                   <h5>Teddie &middot; Tester</h5>
                   <span>E2E tests</span><span>Quality assurance</span><span>Regression</span>
                 </div>
-                <div class="agent-av"><svg class="ic"><use href="#i-flask-conical" /></svg></div>
+                <div class="agent-av">
+                  <svg class="ic"><use href="#i-flask-conical" /></svg>
+                </div>
                 <div>
                   <div class="agent-name">Teddie</div>
                   <div class="agent-role">Tester</div>
@@ -1402,9 +1446,12 @@
               <div class="agent">
                 <div class="agent-skills">
                   <h5>Ollie &middot; Operator</h5>
-                  <span>Deploy &amp; release</span><span>Monitoring</span><span>Continuous improvement</span>
+                  <span>Deploy &amp; release</span><span>Monitoring</span
+                  ><span>Continuous improvement</span>
                 </div>
-                <div class="agent-av"><svg class="ic"><use href="#i-rocket" /></svg></div>
+                <div class="agent-av">
+                  <svg class="ic"><use href="#i-rocket" /></svg>
+                </div>
                 <div>
                   <div class="agent-name">Ollie</div>
                   <div class="agent-role">Operator</div>
@@ -1415,7 +1462,9 @@
                   <h5>Archie &middot; Architect</h5>
                   <span>Architecture</span><span>Technical review</span><span>Standards</span>
                 </div>
-                <div class="agent-av"><svg class="ic"><use href="#i-network" /></svg></div>
+                <div class="agent-av">
+                  <svg class="ic"><use href="#i-network" /></svg>
+                </div>
                 <div>
                   <div class="agent-name">Archie</div>
                   <div class="agent-role">Architect</div>
@@ -1443,8 +1492,8 @@
           </div>
         </section>
 
-        <!-- Slide 5: T-Minus-15 -->
-        <section role="region" aria-label="Slide 5 of 12: The T-Minus-15 methodology">
+        <!-- Slide 6: T-Minus-15 -->
+        <section role="region" aria-label="Slide 6 of 15: The T-Minus-15 methodology">
           <div class="dark-inner" style="padding: 120px 96px">
             <div style="display: flex; align-items: center; gap: 56px">
               <div style="flex: 1">
@@ -1458,7 +1507,13 @@
               <img
                 src="images/tminus15-book.png"
                 alt="The T-Minus-15 methodology book"
-                style="width: 176px; height: auto; flex: none; border-radius: 8px; box-shadow: 0 22px 46px rgba(0, 0, 0, 0.6)"
+                style="
+                  width: 176px;
+                  height: auto;
+                  flex: none;
+                  border-radius: 8px;
+                  box-shadow: 0 22px 46px rgba(0, 0, 0, 0.6);
+                "
               />
             </div>
             <div class="cards-5">
@@ -1514,8 +1569,142 @@
           </div>
         </section>
 
-        <!-- Slide 6: Security -->
-        <section role="region" aria-label="Slide 6 of 12: Enterprise-grade security">
+        <!-- Slide 7: Self-Improving Agents -->
+        <section role="region" aria-label="Slide 7 of 15: Self-improving agents">
+          <div class="band">
+            <div>
+              <h2>Self-improving agents</h2>
+              <p class="band-sub">Agents that make themselves better over time</p>
+            </div>
+            <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
+          </div>
+          <div class="content">
+            <div class="cards-2">
+              <div class="card">
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="#i-git-pull-request" /></svg>
+                </div>
+                <div>
+                  <h4>Pull requests to their own code</h4>
+                  <p>
+                    Agents propose improvements to their own codebase &mdash; reviewed and merged
+                    just like any developer&rsquo;s contribution.
+                  </p>
+                </div>
+              </div>
+              <div class="card">
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="#i-refresh-cw" /></svg>
+                </div>
+                <div>
+                  <h4>Learns from every outcome</h4>
+                  <p>
+                    Corrections, results and feedback feed the next iteration &mdash; nothing is
+                    learned only once.
+                  </p>
+                </div>
+              </div>
+              <div class="card">
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="#i-trending-up" /></svg>
+                </div>
+                <div>
+                  <h4>Compounding quality</h4>
+                  <p>
+                    Capabilities improve with each cycle &mdash; the system you deploy keeps getting
+                    better after it ships.
+                  </p>
+                </div>
+              </div>
+              <div class="card">
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="#i-users" /></svg>
+                </div>
+                <div>
+                  <h4>Human in the loop</h4>
+                  <p>
+                    Every change is transparent, version-controlled and approved before it goes live
+                    &mdash; no black boxes.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Slide 8: Agent Memory (Neo4j) -->
+        <section role="region" aria-label="Slide 8 of 15: Agent memory that grows">
+          <div class="band">
+            <div>
+              <h2>Agent memory that grows</h2>
+              <p class="band-sub">A living knowledge graph of people, places and concepts</p>
+            </div>
+            <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
+          </div>
+          <div class="content">
+            <div class="cards-2">
+              <div class="card">
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="#i-network" /></svg>
+                </div>
+                <div>
+                  <h4>Semantic graph memory</h4>
+                  <p>
+                    Agents connect people, places and concepts into a living graph &mdash;
+                    remembering how things relate, not just isolated facts.
+                  </p>
+                </div>
+              </div>
+              <div class="card">
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="#i-sprout" /></svg>
+                </div>
+                <div>
+                  <h4>Grows over time</h4>
+                  <p>
+                    Every interaction adds nodes and relationships &mdash; memory compounds and gets
+                    richer the more your agents are used.
+                  </p>
+                </div>
+              </div>
+              <div class="card">
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="#i-target" /></svg>
+                </div>
+                <div>
+                  <h4>Context on recall</h4>
+                  <p>
+                    Knowledge is retrieved with its connections intact &mdash; grounded,
+                    context-aware answers instead of keyword lookups.
+                  </p>
+                </div>
+              </div>
+              <div class="card">
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="#i-database" /></svg>
+                </div>
+                <div>
+                  <h4>Powered by Neo4j</h4>
+                  <p>
+                    Built on our open-source graph memory for any agent &mdash; connect your agents
+                    to a Neo4j knowledge graph.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <a
+              class="github-link"
+              href="https://github.com/knowall-ai/mcp-neo4j-agent-memory"
+              aria-label="mcp-neo4j-agent-memory project on GitHub"
+            >
+              <svg class="ic" aria-hidden="true"><use href="#i-github" /></svg>
+              github.com/knowall-ai/mcp-neo4j-agent-memory &mdash; graph memory for any agent
+            </a>
+          </div>
+        </section>
+
+        <!-- Slide 9: Security -->
+        <section role="region" aria-label="Slide 9 of 15: Enterprise-grade security">
           <div class="band">
             <div>
               <h2>Enterprise-grade security</h2>
@@ -1577,8 +1766,8 @@
           </div>
         </section>
 
-        <!-- Slide 7: Microsoft Integration -->
-        <section role="region" aria-label="Slide 7 of 12: Seamless Microsoft integration">
+        <!-- Slide 10: Microsoft Integration -->
+        <section role="region" aria-label="Slide 10 of 15: Seamless Microsoft integration">
           <div class="band">
             <div>
               <h2>Seamless Microsoft integration</h2>
@@ -1667,8 +1856,8 @@
           </div>
         </section>
 
-        <!-- Slide 8: Augmentation -->
-        <section role="region" aria-label="Slide 8 of 12: Augmenting your team">
+        <!-- Slide 11: Augmentation -->
+        <section role="region" aria-label="Slide 11 of 15: Augmenting your team">
           <div class="band">
             <div>
               <h2>Augmenting your team</h2>
@@ -1712,8 +1901,8 @@
           </div>
         </section>
 
-        <!-- Slide 9: Vision -->
-        <section role="region" aria-label="Slide 9 of 12: Our vision">
+        <!-- Slide 12: Vision -->
+        <section role="region" aria-label="Slide 12 of 15: Our vision">
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
           <div class="dark-inner" style="padding: 120px 96px; gap: 40px">
             <p class="kicker">Our vision</p>
@@ -1722,13 +1911,15 @@
               <div class="timeline-point">
                 <h4>Today</h4>
                 <p>
-                  We build solutions with clients in focused 2-day agentic delivery workshops &mdash;
-                  agents gather requirements, build and hand off
+                  We build solutions with clients in focused 2-day agentic delivery workshops
+                  &mdash; agents gather requirements, build and hand off
                 </p>
               </div>
               <div class="timeline-point">
                 <h4>By year-end</h4>
-                <p>The same solutions built live in 2-hour meetings with your users and stakeholders</p>
+                <p>
+                  The same solutions built live in 2-hour meetings with your users and stakeholders
+                </p>
               </div>
               <div class="timeline-point">
                 <h4>Beyond</h4>
@@ -1742,8 +1933,8 @@
           </div>
         </section>
 
-        <!-- Slide 10: Benefits -->
-        <section role="region" aria-label="Slide 10 of 12: Real-world benefits">
+        <!-- Slide 13: Benefits -->
+        <section role="region" aria-label="Slide 13 of 15: Real-world benefits">
           <div class="band">
             <div>
               <h2>Real-world benefits</h2>
@@ -1809,12 +2000,14 @@
           </div>
         </section>
 
-        <!-- Slide 11: Partners -->
-        <section role="region" aria-label="Slide 11 of 12: Trusted partner ecosystem">
+        <!-- Slide 14: Partners -->
+        <section role="region" aria-label="Slide 14 of 15: Trusted partner ecosystem">
           <div class="band">
             <div>
               <h2>Platforms &amp; partners</h2>
-              <p class="band-sub">The technology we build on &mdash; and who we bring it to market with</p>
+              <p class="band-sub">
+                The technology we build on &mdash; and who we bring it to market with
+              </p>
             </div>
             <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
           </div>
@@ -1856,15 +2049,15 @@
                 <svg class="ic" style="font-size: 30px; color: var(--lime)" aria-hidden="true">
                   <use href="#i-handshake" />
                 </svg>
-                Bringing agentic AI to enterprise customers across telecoms, manufacturing, education
-                and healthcare
+                Bringing agentic AI to enterprise customers across telecoms, manufacturing,
+                education and healthcare
               </span>
             </div>
           </div>
         </section>
 
-        <!-- Slide 12: CTA -->
-        <section role="region" aria-label="Slide 12 of 12: Ready to build your agentic AI team">
+        <!-- Slide 15: CTA -->
+        <section role="region" aria-label="Slide 15 of 15: Ready to build your agentic AI team">
           <div class="cta-top">
             <h2>Let&rsquo;s build your<br />agentic AI team.</h2>
             <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
@@ -1873,8 +2066,8 @@
             <div style="display: flex; flex-direction: column; gap: 30px; max-width: 1180px">
               <p style="color: var(--mist); font-size: 27px; line-height: 1.5">
                 Start with a <strong style="color: #fff; font-weight: 800">Discovery Day</strong>
-                &mdash; a focused, hands-on session where we map your highest-value opportunities for
-                agentic AI, prove one live with your team, and leave you with a costed path to
+                &mdash; a focused, hands-on session where we map your highest-value opportunities
+                for agentic AI, prove one live with your team, and leave you with a costed path to
                 production.
               </p>
               <a
