@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "node server.js",
-    "lint": "next lint",
+    "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "typecheck": "tsc --noEmit",
@@ -56,7 +56,7 @@
     "embla-carousel-react": "8.6.0",
     "input-otp": "1.4.2",
     "lucide-react": "^0.454.0",
-    "next": "^15.5.20",
+    "next": "^16.2.10",
     "next-themes": "^0.4.4",
     "nostr-tools": "^2.23.9",
     "openai": "latest",
@@ -84,17 +84,18 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@vitejs/plugin-react": "^6.0.3",
-    "eslint": "^8.57.1",
-    "eslint-config-next": "^15.5.9",
+    "eslint": "^9.37.0",
+    "eslint-config-next": "^16.2.10",
     "eslint-config-prettier": "^10.1.8",
     "jsdom": "^29.1.1",
     "postcss": "^8",
     "prettier": "^3.7.4",
     "tailwindcss": "^3.4.17",
-    "typescript": "^7",
+    "typescript": "^5.9.3",
     "vitest": "^4.1.9"
   },
   "overrides": {
+    "eslint": "^9.37.0",
     "next": {
       "postcss": "^8.5.10"
     }
