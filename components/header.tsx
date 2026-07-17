@@ -28,12 +28,12 @@ export default function Header() {
     { name: 'Team', href: '/#team' },
   ];
 
-  // NOTE: "Allie for Accounts" (#allie) joins this dropdown once PR #7 merges.
   const productLinks = [
     { name: 'Zaplie', href: '/#zapp' },
     { name: 'Zapdesk', href: '/#zapdesk' },
     { name: 'Thyme', href: '/#thyme' },
     { name: 'T-Minus-15', href: '/#tminus15' },
+    { name: 'Allie', href: '/#allie' },
   ];
 
   const trailingNavLinks = [{ name: 'Copilots', href: '/#copilots' }];
