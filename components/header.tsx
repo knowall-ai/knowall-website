@@ -45,6 +45,9 @@ export default function Header() {
     if (href === '/#' && window.location.pathname === '/') {
       e.preventDefault();
       window.scrollTo({ top: 0, behavior: 'smooth' });
+      // Clear any stale section hash (e.g. '#services') from the URL so a
+      // refresh stays at the top rather than jumping back to the old section.
+      window.history.replaceState(null, '', '/');
     }
   };
 
