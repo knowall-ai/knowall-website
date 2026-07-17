@@ -600,8 +600,8 @@ export default function Home() {
                 </li>
               </ul>
               <p className="text-lg text-gray-200">
-                Allie builds on the accounts-payable and invoice automation we delivered for Cairn
-                Homes, packaged as a copilot your whole finance team can talk to.
+                Allie builds on the accounts-payable and invoice automation we&apos;ve delivered in
+                production, packaged as a copilot your whole finance team can talk to.
               </p>
             </div>
 
