@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, type MouseEvent } from 'react';
 import Link from 'next/link';
 import { BookOpen, ChevronDown, Mail, Menu, X } from 'lucide-react';
 import {
@@ -38,11 +38,21 @@ export default function Header() {
 
   const trailingNavLinks = [{ name: 'Copilots', href: '/#copilots' }];
 
+  // Next 16 no longer resets scroll to the top for the empty '/#' hash (section
+  // hashes like '/#services' still scroll to their element). Scroll to the top
+  // explicitly when a '/#' link is clicked while already on the homepage.
+  const handleTopLink = (href: string) => (e: MouseEvent<HTMLAnchorElement>) => {
+    if (href === '/#' && window.location.pathname === '/') {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
   return (
     <header className="sticky top-0 z-50 bg-gray-950/90 backdrop-blur-sm border-b border-gray-800">
       <div className="container max-w-6xl mx-auto px-4 py-3">
         <div className="flex items-center justify-between">
-          <Link href="/#" className="flex items-center">
+          <Link href="/#" className="flex items-center" onClick={handleTopLink('/#')}>
             <Logo darkBackground={true} className="h-12" />
           </Link>
 
@@ -52,6 +62,7 @@ export default function Header() {
               <Link
                 key={link.name}
                 href={link.href}
+                onClick={handleTopLink(link.href)}
                 className="text-gray-300 hover:text-lime-500 transition-colors"
               >
                 {link.name}
@@ -139,7 +150,10 @@ export default function Header() {
                   key={link.name}
                   href={link.href}
                   className="text-gray-300 hover:text-lime-500 transition-colors py-2"
-                  onClick={() => setIsMenuOpen(false)}
+                  onClick={(e) => {
+                    handleTopLink(link.href)(e);
+                    setIsMenuOpen(false);
+                  }}
                 >
                   {link.name}
                 </Link>
