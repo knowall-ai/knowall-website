@@ -185,15 +185,182 @@
         box-shadow: 0 10px 34px rgba(0, 0, 0, 0.45);
       }
 
+      .pill-logo {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .pill-logo img {
+        width: 26px;
+        height: 26px;
+        object-fit: contain;
+      }
+
+      .partner-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 28px;
+      }
+      .partner-grid .card {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+      }
+      .logo-plate {
+        background: #ffffff;
+        border-radius: 14px;
+        height: 104px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        padding: 0 22px;
+      }
+      .logo-plate img {
+        max-height: 54px;
+        max-width: 100%;
+        object-fit: contain;
+      }
+      .plate-word {
+        font-family: 'Mulish', sans-serif;
+        font-weight: 800;
+        font-size: 24px;
+        color: #5a5a5a;
+        letter-spacing: 0.5px;
+      }
+
+      /* --- Meet the team (agents) ------------------------------------------- */
+      .agent-row {
+        display: flex;
+        gap: 16px;
+        margin-top: 20px;
+      }
+      .agent {
+        position: relative;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        text-align: center;
+      }
+      .agent-av {
+        width: 92px;
+        height: 92px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: radial-gradient(circle at 32% 26%, #c4ff5e, #7cc400);
+        box-shadow: 0 10px 26px rgba(0, 0, 0, 0.5);
+        transition: transform 0.16s ease;
+      }
+      .agent:hover .agent-av {
+        transform: translateY(-4px);
+      }
+      .agent-av .ic {
+        width: 42px;
+        height: 42px;
+        color: #16230a;
+      }
+      .agent-name {
+        font-weight: 800;
+        color: #fff;
+        font-size: 22px;
+      }
+      .agent-role {
+        color: var(--lime);
+        font-size: 14px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.6px;
+        margin-top: 2px;
+      }
+      .agent-skills {
+        position: absolute;
+        bottom: calc(100% + 12px);
+        left: 50%;
+        width: 214px;
+        transform: translateX(-50%) translateY(8px);
+        background: #14140f;
+        border: 1px solid var(--lime);
+        border-radius: 14px;
+        padding: 14px 16px;
+        opacity: 0;
+        pointer-events: none;
+        transition: 0.18s ease;
+        box-shadow: 0 22px 44px rgba(0, 0, 0, 0.65);
+        z-index: 6;
+      }
+      .agent-skills::after {
+        content: '';
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        border: 8px solid transparent;
+        border-top-color: var(--lime);
+      }
+      .agent:hover .agent-skills {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+      .agent-skills h5 {
+        color: #fff;
+        font-size: 15px;
+        margin-bottom: 8px;
+        font-weight: 800;
+      }
+      .agent-skills span {
+        display: block;
+        color: var(--mist);
+        font-size: 15px;
+        line-height: 1.75;
+      }
+      .team-notes {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+        margin-top: 60px;
+      }
+      .team-note {
+        display: flex;
+        gap: 18px;
+        align-items: flex-start;
+        background: rgba(157, 254, 10, 0.06);
+        border: 1px solid rgba(157, 254, 10, 0.28);
+        border-radius: 16px;
+        padding: 22px 26px;
+      }
+      .team-note .ic {
+        flex: none;
+        width: 30px;
+        height: 30px;
+        color: var(--lime);
+        margin-top: 4px;
+      }
+      .team-note p {
+        color: var(--mist);
+        font-size: 20px;
+        line-height: 1.5;
+      }
+      .team-note strong {
+        color: #fff;
+        display: block;
+        font-size: 21px;
+        margin-bottom: 4px;
+      }
+
       /* chevron notch under the band, as on the house deck */
       .band::after {
         content: '';
         position: absolute;
         top: var(--band-h);
-        left: 152px;
-        border-left: 46px solid transparent;
-        border-right: 46px solid transparent;
-        border-top: 44px solid var(--lime-flat);
+        left: 168px;
+        border-left: 32px solid transparent;
+        border-right: 32px solid transparent;
+        border-top: 30px solid var(--lime-flat);
+        filter: drop-shadow(0 5px 5px rgba(0, 0, 0, 0.3));
       }
 
       .band h2 {
@@ -876,6 +1043,20 @@
           <circle cx="12" cy="12" r="10" />
           <polyline points="12 6 12 12 16 14" />
         </symbol>
+        <symbol id="i-trending-up" viewBox="0 0 24 24">
+          <polyline points="22 7 13.5 15.5 8.5 10.5 2 17" />
+          <polyline points="16 7 22 7 22 13" />
+        </symbol>
+        <symbol id="i-moon" viewBox="0 0 24 24">
+          <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+        </symbol>
+        <symbol id="i-graduation-cap" viewBox="0 0 24 24">
+          <path
+            d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"
+          />
+          <path d="M22 10v6" />
+          <path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5" />
+        </symbol>
         <symbol id="i-github" viewBox="0 0 24 24">
           <path
             d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"
@@ -1069,20 +1250,20 @@
         <!-- Slide 4: Meet Pennie -->
         <section
           role="region"
-          aria-label="Slide 4 of 12: Meet Pennie, your AI requirements analyst"
+          aria-label="Slide 4 of 12: Meet Preppie, your AI requirements analyst"
         >
           <div class="band">
             <div>
-              <h2>Meet Pennie</h2>
-              <p class="band-sub">Your AI requirements analyst</p>
+              <h2>Meet Preppie</h2>
+              <p class="band-sub">Your AI requirements analyst &mdash; Preppie the Prepper</p>
             </div>
             <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
           </div>
           <div class="content" style="flex-direction: row; align-items: center; gap: 80px">
             <img
-              src="images/pennie.png"
-              alt="Pennie, KnowAll's robot requirements analyst, holding a checklist"
-              style="width: 460px; flex: none; filter: drop-shadow(0 24px 48px rgba(0, 0, 0, 0.45))"
+              src="images/requirements-analyst.png"
+              alt="KnowAll's AI requirements-analyst robot reviewing project documents at night"
+              style="width: 430px; height: 520px; object-fit: cover; flex: none; border-radius: 20px; border: 2px solid rgba(157, 254, 10, 0.55); box-shadow: 0 24px 48px rgba(0, 0, 0, 0.5)"
             />
             <div class="rows">
               <div class="row">
@@ -1134,16 +1315,152 @@
           </div>
         </section>
 
+        <!-- Slide 4b: Meet the team -->
+        <section role="region" aria-label="Meet the agent team">
+          <div class="band">
+            <div>
+              <h2>Meet the team</h2>
+              <p class="band-sub">
+                Specialist agents that take your project from idea to production
+              </p>
+            </div>
+            <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
+          </div>
+          <div class="content">
+            <p class="lead" style="margin-top: -8px; max-width: 1500px">
+              A full T-Minus-15 delivery team &mdash; each a specialist with its own skills.
+              <strong style="color: #fff; font-weight: 700">Hover any agent</strong> to see what it
+              does.
+            </p>
+            <div class="agent-row">
+              <div class="agent">
+                <div class="agent-skills">
+                  <h5>Sallie &middot; Sales</h5>
+                  <span>Proposals</span><span>Quotations</span><span>Pipeline &amp; opportunities</span>
+                </div>
+                <div class="agent-av"><svg class="ic"><use href="#i-handshake" /></svg></div>
+                <div>
+                  <div class="agent-name">Sallie</div>
+                  <div class="agent-role">Sales</div>
+                </div>
+              </div>
+              <div class="agent">
+                <div class="agent-skills">
+                  <h5>Poppie &middot; Planner</h5>
+                  <span>Epics &amp; roadmap</span><span>Lean business case</span><span>Sprint planning</span>
+                </div>
+                <div class="agent-av"><svg class="ic"><use href="#i-clipboard-list" /></svg></div>
+                <div>
+                  <div class="agent-name">Poppie</div>
+                  <div class="agent-role">Planner</div>
+                </div>
+              </div>
+              <div class="agent">
+                <div class="agent-skills">
+                  <h5>Preppie &middot; Prepper</h5>
+                  <span>Requirements</span><span>User stories</span><span>Backlog prep</span>
+                </div>
+                <div class="agent-av"><svg class="ic"><use href="#i-file-text" /></svg></div>
+                <div>
+                  <div class="agent-name">Preppie</div>
+                  <div class="agent-role">Prepper</div>
+                </div>
+              </div>
+              <div class="agent">
+                <div class="agent-skills">
+                  <h5>Dannie &middot; Designer</h5>
+                  <span>Wireframes</span><span>UX &amp; UI design</span><span>Brand guidelines</span>
+                </div>
+                <div class="agent-av"><svg class="ic"><use href="#i-compass" /></svg></div>
+                <div>
+                  <div class="agent-name">Dannie</div>
+                  <div class="agent-role">Designer</div>
+                </div>
+              </div>
+              <div class="agent">
+                <div class="agent-skills">
+                  <h5>Ernie &middot; Engineer</h5>
+                  <span>Build &amp; ship</span><span>Code review</span><span>Pull requests</span>
+                </div>
+                <div class="agent-av"><svg class="ic"><use href="#i-code-xml" /></svg></div>
+                <div>
+                  <div class="agent-name">Ernie</div>
+                  <div class="agent-role">Engineer</div>
+                </div>
+              </div>
+              <div class="agent">
+                <div class="agent-skills">
+                  <h5>Teddie &middot; Tester</h5>
+                  <span>E2E tests</span><span>Quality assurance</span><span>Regression</span>
+                </div>
+                <div class="agent-av"><svg class="ic"><use href="#i-flask-conical" /></svg></div>
+                <div>
+                  <div class="agent-name">Teddie</div>
+                  <div class="agent-role">Tester</div>
+                </div>
+              </div>
+              <div class="agent">
+                <div class="agent-skills">
+                  <h5>Ollie &middot; Operator</h5>
+                  <span>Deploy &amp; release</span><span>Monitoring</span><span>Continuous improvement</span>
+                </div>
+                <div class="agent-av"><svg class="ic"><use href="#i-rocket" /></svg></div>
+                <div>
+                  <div class="agent-name">Ollie</div>
+                  <div class="agent-role">Operator</div>
+                </div>
+              </div>
+              <div class="agent">
+                <div class="agent-skills">
+                  <h5>Archie &middot; Architect</h5>
+                  <span>Architecture</span><span>Technical review</span><span>Standards</span>
+                </div>
+                <div class="agent-av"><svg class="ic"><use href="#i-network" /></svg></div>
+                <div>
+                  <div class="agent-name">Archie</div>
+                  <div class="agent-role">Architect</div>
+                </div>
+              </div>
+            </div>
+            <div class="team-notes">
+              <div class="team-note">
+                <svg class="ic"><use href="#i-target" /></svg>
+                <p>
+                  <strong>Custom-built for your business</strong>
+                  We craft bespoke skills so your agents understand your data, systems and ways of
+                  working.
+                </p>
+              </div>
+              <div class="team-note">
+                <svg class="ic"><use href="#i-refresh-cw" /></svg>
+                <p>
+                  <strong>One definition, many embodiments</strong>
+                  The same agents &amp; skills run in Claude Code, Azure AI Foundry (Microsoft bots)
+                  and OpenClawd.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
         <!-- Slide 5: T-Minus-15 -->
         <section role="region" aria-label="Slide 5 of 12: The T-Minus-15 methodology">
-          <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
           <div class="dark-inner" style="padding: 120px 96px">
-            <p class="kicker">Our methodology</p>
-            <h2>T-Minus-15</h2>
-            <p class="lead">
-              Our open-source delivery methodology &mdash; the best of Agile and DevOps, taking
-              every solution from idea to production through five stages.
-            </p>
+            <div style="display: flex; align-items: center; gap: 56px">
+              <div style="flex: 1">
+                <p class="kicker">Our methodology</p>
+                <h2>T-Minus-15</h2>
+                <p class="lead">
+                  Our open-source delivery methodology &mdash; the best of Agile and DevOps, taking
+                  every solution from idea to production through five stages.
+                </p>
+              </div>
+              <img
+                src="images/tminus15-book.png"
+                alt="The T-Minus-15 methodology book"
+                style="width: 176px; height: auto; flex: none; border-radius: 8px; box-shadow: 0 22px 46px rgba(0, 0, 0, 0.6)"
+              />
+            </div>
             <div class="cards-5">
               <div class="stage">
                 <span class="step" aria-hidden="true">01</span>
@@ -1295,8 +1612,12 @@
                 </div>
               </div>
               <div class="card stack">
-                <div class="chip" aria-hidden="true">
-                  <svg class="ic"><use href="#i-zap" /></svg>
+                <div class="chip chip-white">
+                  <img
+                    src="images/logos/power-platform.svg"
+                    alt="Microsoft Power Platform logo"
+                    style="width: 46px; height: 46px; object-fit: contain"
+                  />
                 </div>
                 <div>
                   <h4>Power Platform</h4>
@@ -1315,21 +1636,33 @@
                   />
                 </div>
                 <div>
-                  <h4>Microsoft Copilot</h4>
+                  <h4>Copilots &amp; AI agents</h4>
                   <p>
-                    Custom Copilot and Copilot Studio development, grounded in your own data and
-                    business processes.
+                    Custom copilots and agents built with Copilot Studio, the Bot Framework and
+                    Azure AI Foundry &mdash; grounded in your own data and processes.
                   </p>
                 </div>
               </div>
             </div>
             <div class="pill-row" role="list" aria-label="Microsoft technologies we work with">
-              <span class="pill" role="listitem">Microsoft Azure</span>
-              <span class="pill" role="listitem">Azure DevOps</span>
-              <span class="pill" role="listitem">Microsoft Fabric</span>
-              <span class="pill" role="listitem">Dataverse</span>
-              <span class="pill" role="listitem">SharePoint</span>
-              <span class="pill" role="listitem">AI Foundry</span>
+              <span class="pill pill-logo" role="listitem"
+                ><img src="images/logos/azure.svg" alt="" />Microsoft Azure</span
+              >
+              <span class="pill pill-logo" role="listitem"
+                ><img src="images/logos/azure-devops.svg" alt="" />Azure DevOps</span
+              >
+              <span class="pill pill-logo" role="listitem"
+                ><img src="images/logos/fabric.svg" alt="" />Microsoft Fabric</span
+              >
+              <span class="pill pill-logo" role="listitem"
+                ><img src="images/logos/dataverse.svg" alt="" />Dataverse</span
+              >
+              <span class="pill pill-logo" role="listitem"
+                ><img src="images/logos/sharepoint.svg" alt="" />SharePoint</span
+              >
+              <span class="pill pill-logo" role="listitem"
+                ><img src="images/logos/ai-foundry.svg" alt="" />AI Foundry</span
+              >
             </div>
           </div>
         </section>
@@ -1346,33 +1679,33 @@
           <div class="content">
             <div class="checks">
               <p class="check">
-                <svg class="ic" aria-hidden="true"><use href="#i-check" /></svg>
+                <svg class="ic" aria-hidden="true"><use href="#i-calendar-check" /></svg>
                 <span
                   ><strong>Always available</strong> &mdash; no sick days, no time off, no
                   burnout</span
                 >
               </p>
               <p class="check">
-                <svg class="ic" aria-hidden="true"><use href="#i-check" /></svg>
+                <svg class="ic" aria-hidden="true"><use href="#i-trending-up" /></svg>
                 <span><strong>Scales instantly</strong> during busy periods, without hiring</span>
               </p>
               <p class="check">
-                <svg class="ic" aria-hidden="true"><use href="#i-check" /></svg>
+                <svg class="ic" aria-hidden="true"><use href="#i-refresh-cw" /></svg>
                 <span
                   ><strong>Takes the repetitive work</strong> so your people focus on the creative
                   work</span
                 >
               </p>
               <p class="check">
-                <svg class="ic" aria-hidden="true"><use href="#i-check" /></svg>
+                <svg class="ic" aria-hidden="true"><use href="#i-moon" /></svg>
                 <span><strong>Works overnight</strong> so the answers are ready by morning</span>
               </p>
               <p class="check">
-                <svg class="ic" aria-hidden="true"><use href="#i-check" /></svg>
+                <svg class="ic" aria-hidden="true"><use href="#i-users" /></svg>
                 <span><strong>Works alongside your team</strong> &mdash; not instead of it</span>
               </p>
               <p class="check">
-                <svg class="ic" aria-hidden="true"><use href="#i-check" /></svg>
+                <svg class="ic" aria-hidden="true"><use href="#i-graduation-cap" /></svg>
                 <span><strong>Learns continuously</strong> from every interaction and outcome</span>
               </p>
             </div>
@@ -1388,11 +1721,14 @@
             <div class="timeline" style="margin-top: 70px">
               <div class="timeline-point">
                 <h4>Today</h4>
-                <p>AI agents handle requirements, documentation and handoff to delivery teams</p>
+                <p>
+                  We build solutions with clients in focused 2-day agentic delivery workshops &mdash;
+                  agents gather requirements, build and hand off
+                </p>
               </div>
               <div class="timeline-point">
-                <h4>6 months</h4>
-                <p>A complete idea-to-production pipeline compressed into one meeting</p>
+                <h4>By year-end</h4>
+                <p>The same solutions built live in 2-hour meetings with your users and stakeholders</p>
               </div>
               <div class="timeline-point">
                 <h4>Beyond</h4>
@@ -1425,7 +1761,7 @@
                   <div class="stat-num">70%</div>
                   <h4>Faster requirements</h4>
                   <p>
-                    Requirements gathering that took weeks now happens in days &mdash; with better
+                    Requirements gathering that took weeks now happens in hours &mdash; with better
                     quality and completeness.
                   </p>
                 </div>
@@ -1477,53 +1813,42 @@
         <section role="region" aria-label="Slide 11 of 12: Trusted partner ecosystem">
           <div class="band">
             <div>
-              <h2>A trusted partner ecosystem</h2>
-              <p class="band-sub">Built on industry-leading platforms and partnerships</p>
+              <h2>Platforms &amp; partners</h2>
+              <p class="band-sub">The technology we build on &mdash; and who we bring it to market with</p>
             </div>
             <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
           </div>
           <div class="content">
-            <div class="cards-3">
-              <div class="card stack">
-                <div class="chip chip-white">
-                  <svg
-                    viewBox="0 0 96 96"
-                    width="46"
-                    height="46"
-                    role="img"
-                    aria-label="Microsoft logo"
-                  >
+            <div class="partner-grid">
+              <div class="card">
+                <div class="logo-plate">
+                  <svg viewBox="0 0 96 96" width="40" height="40" role="img" aria-label="Microsoft">
                     <path fill="#F25022" d="M0 0h45.5v45.5H0z" />
                     <path fill="#7FBA00" d="M50.5 0H96v45.5H50.5z" />
                     <path fill="#00A4EF" d="M0 50.5h45.5V96H0z" />
                     <path fill="#FFB900" d="M50.5 50.5H96V96H50.5z" />
                   </svg>
+                  <span class="plate-word">Microsoft</span>
                 </div>
-                <div>
-                  <h4>Microsoft</h4>
-                  <p>
-                    Azure cloud platform, Microsoft 365, Power Platform and enterprise-grade
-                    security.
-                  </p>
-                </div>
+                <p>Azure, Microsoft 365 and Power Platform &mdash; the cloud we build on.</p>
               </div>
-              <div class="card stack">
-                <div class="chip" aria-hidden="true">
-                  <svg class="ic"><use href="#i-radio-tower" /></svg>
+              <div class="card">
+                <div class="logo-plate">
+                  <img src="images/logos/anthropic-dark.svg" alt="Anthropic" />
                 </div>
-                <div>
-                  <h4>Eir Business</h4>
-                  <p>Enterprise connectivity and infrastructure solutions partner in Ireland.</p>
-                </div>
+                <p>Claude &mdash; the frontier AI models that power our agents.</p>
               </div>
-              <div class="card stack">
-                <div class="chip" aria-hidden="true">
-                  <svg class="ic"><use href="#i-server-cog" /></svg>
+              <div class="card">
+                <div class="logo-plate">
+                  <img src="images/logos/eir.png" alt="eir Business" />
                 </div>
-                <div>
-                  <h4>XMA</h4>
-                  <p>Technology services and enterprise IT solutions partner in the UK.</p>
+                <p>Enterprise connectivity and infrastructure across Ireland.</p>
+              </div>
+              <div class="card">
+                <div class="logo-plate">
+                  <img src="images/logos/xma.png" alt="XMA" />
                 </div>
+                <p>Technology services and enterprise IT across the UK.</p>
               </div>
             </div>
             <div class="pill-row" style="justify-content: flex-start">
@@ -1531,7 +1856,8 @@
                 <svg class="ic" style="font-size: 30px; color: var(--lime)" aria-hidden="true">
                   <use href="#i-handshake" />
                 </svg>
-                Delivering together across telecoms, manufacturing, education and healthcare
+                Bringing agentic AI to enterprise customers across telecoms, manufacturing, education
+                and healthcare
               </span>
             </div>
           </div>
@@ -1544,14 +1870,22 @@
             <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
           </div>
           <div class="cta-bottom">
-            <a
-              class="cta-button"
-              href="https://www.knowall.ai"
-              aria-label="Book a Discovery Day - visit the KnowAll AI website"
-            >
-              <svg class="ic" aria-hidden="true"><use href="#i-calendar-check" /></svg>
-              Book a Discovery Day
-            </a>
+            <div style="display: flex; flex-direction: column; gap: 30px; max-width: 1180px">
+              <p style="color: var(--mist); font-size: 27px; line-height: 1.5">
+                Start with a <strong style="color: #fff; font-weight: 800">Discovery Day</strong>
+                &mdash; a focused, hands-on session where we map your highest-value opportunities for
+                agentic AI, prove one live with your team, and leave you with a costed path to
+                production.
+              </p>
+              <a
+                class="cta-button"
+                href="https://www.knowall.ai"
+                aria-label="Book a Discovery Day - visit the KnowAll AI website"
+              >
+                <svg class="ic" aria-hidden="true"><use href="#i-calendar-check" /></svg>
+                Book a Discovery Day
+              </a>
+            </div>
             <div class="contact-row">
               <div class="contact-item">
                 <svg class="ic" aria-hidden="true"><use href="#i-mail" /></svg>
