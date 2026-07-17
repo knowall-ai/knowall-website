@@ -28,6 +28,7 @@ import BitcoinLogo from '@/components/bitcoin-logo';
 import BackgroundImage from '@/components/background-image';
 import AutoGenLogo from '@/components/autogen-logo';
 import ZappCarousel from '@/components/zapp-carousel';
+import ZaplieShowcase from '@/components/zaplie-showcase';
 import TeamSection from '@/components/team-section';
 import TMinus15Book from '@/components/tminus15-book';
 
@@ -148,44 +149,9 @@ export default function Home() {
             </div>
 
             <div className="flex-1 w-full flex flex-col items-center">
-              <div className="relative w-full">
-                <div
-                  className="absolute -inset-4 bg-lime-500/10 blur-2xl rounded-3xl"
-                  aria-hidden="true"
-                ></div>
-                <div className="relative rounded-xl overflow-hidden border border-gray-700 bg-gray-950 shadow-2xl shadow-lime-500/20">
-                  {/* Browser chrome bar */}
-                  <div
-                    className="flex items-center gap-2 px-4 py-3 bg-gray-800 border-b border-gray-700"
-                    aria-hidden="true"
-                  >
-                    <span className="h-3 w-3 rounded-full bg-red-500/80"></span>
-                    <span className="h-3 w-3 rounded-full bg-yellow-500/80"></span>
-                    <span className="h-3 w-3 rounded-full bg-green-500/80"></span>
-                    <span className="ml-3 text-xs text-gray-400 bg-gray-900 rounded-md px-3 py-1">
-                      www.getzapl.ie
-                    </span>
-                  </div>
-                  <Image
-                    src="/images/zapp/02-feed.png"
-                    alt="Zaplie feed in Microsoft Teams showing zaps sent between teammates"
-                    width={1200}
-                    height={675}
-                    className="w-full h-auto"
-                  />
-                </div>
-              </div>
+              <ZaplieShowcase />
 
               <div className="flex flex-wrap items-center justify-center gap-4 mt-4">
-                <a
-                  href="https://www.getzapl.ie"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 bg-lime-600 hover:bg-lime-700 text-white px-4 py-2 rounded-md transition-colors font-medium"
-                >
-                  <Zap className="h-5 w-5" />
-                  <span>Visit getzapl.ie</span>
-                </a>
                 <a
                   href="https://github.com/knowall-ai/zaplie-webapp"
                   target="_blank"

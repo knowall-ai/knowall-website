@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import { Github } from 'lucide-react';
 import Logo from '@/components/logo';
 import NostrLogo from '@/components/nostr-logo';
 
@@ -65,28 +64,49 @@ export default function Footer({ darkMode = false }: FooterProps) {
           </div>
 
           <div>
-            <h4 className="font-semibold mb-4">Projects</h4>
+            <h4 className="font-semibold mb-4">Products</h4>
+            {/* Mirrors the header Products dropdown (components/header.tsx), but each
+                item links out to the product's own site where one exists.
+                "Allie for Accounts" joins this list when PR #7 merges. */}
             <ul className="space-y-2">
               <li>
                 <a
                   href="https://github.com/knowall-ai/zaplie-webapp"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-gray-400 hover:text-white transition-colors flex items-center gap-2"
+                  className="text-gray-400 hover:text-white transition-colors"
                 >
-                  <Github className="h-4 w-4" />
-                  <span>Zaplie</span>
+                  Zaplie
                 </a>
               </li>
               <li>
                 <a
-                  href="https://github.com/bengweeks/t-minus-15"
+                  href="https://zapdesk.knowall.ai"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-gray-400 hover:text-white transition-colors flex items-center gap-2"
+                  className="text-gray-400 hover:text-white transition-colors"
                 >
-                  <Github className="h-4 w-4" />
-                  <span>T-Minus-15</span>
+                  Zapdesk
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://getthyme.ai"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-400 hover:text-white transition-colors"
+                >
+                  Thyme
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://github.com/T-Minus-15/book"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-400 hover:text-white transition-colors"
+                >
+                  T-Minus-15
                 </a>
               </li>
             </ul>
