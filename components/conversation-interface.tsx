@@ -337,7 +337,10 @@ We can make this a game! I'll ask you 20 questions to build you a brief and unde
   // Show a placeholder during SSR and initial client render
   if (!isMounted) {
     return (
-      <Card className="w-full shadow-xl border-0 bg-gray-900/90 backdrop-blur-sm">
+      <Card
+        data-testid="sallie-chat"
+        className="w-full shadow-xl border-0 bg-gray-900/90 backdrop-blur-sm"
+      >
         <CardHeader className="p-4 border-b border-gray-700 bg-lime-600/90 text-white rounded-t-lg">
           <div className="flex items-center gap-2">
             <SallyAvatar className="h-10 w-10" size={40} />
@@ -362,7 +365,10 @@ We can make this a game! I'll ask you 20 questions to build you a brief and unde
 
   // Render the full component when on client side
   return (
-    <Card className="w-full shadow-xl border-0 bg-gray-900/90 backdrop-blur-sm">
+    <Card
+      data-testid="sallie-chat"
+      className="w-full shadow-xl border-0 bg-gray-900/90 backdrop-blur-sm"
+    >
       {/* Include the speech recognition component */}
       {speechRecognitionElement}
 
