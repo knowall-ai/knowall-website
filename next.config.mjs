@@ -13,6 +13,11 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  // /presentations is a static index.html in public/, which Next doesn't
+  // directory-resolve — rewrite the clean URL onto the file so footer links work.
+  async rewrites() {
+    return [{ source: '/presentations', destination: '/presentations/index.html' }];
+  },
   // Images configuration removed - not using external image sources
 
   // Prevent watching logs directory to avoid continuous rebuilds
