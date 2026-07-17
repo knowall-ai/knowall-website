@@ -88,5 +88,5 @@ for (const deck of decks) {
 }
 
 await browser.close();
-server.close();
+await new Promise((resolve) => server.close(resolve));
 console.log(`Done — ${total} screenshots in docs/screenshots/`);
