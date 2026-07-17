@@ -301,9 +301,16 @@
         border: 8px solid transparent;
         border-top-color: var(--lime);
       }
-      .agent:hover .agent-skills {
+      .agent:hover .agent-skills,
+      .agent:focus-visible .agent-skills,
+      .agent:focus-within .agent-skills {
         opacity: 1;
         transform: translateX(-50%) translateY(0);
+      }
+      .agent:focus-visible {
+        outline: var(--focus-ring);
+        outline-offset: 4px;
+        border-radius: 12px;
       }
       .agent-skills h5 {
         color: #fff;
@@ -1362,7 +1369,7 @@
               does.
             </p>
             <div class="agent-row">
-              <div class="agent">
+              <div class="agent" tabindex="0">
                 <div class="agent-skills">
                   <h5>Sallie &middot; Sales</h5>
                   <span>Proposals</span><span>Quotations</span
@@ -1376,7 +1383,7 @@
                   <div class="agent-role">Sales</div>
                 </div>
               </div>
-              <div class="agent">
+              <div class="agent" tabindex="0">
                 <div class="agent-skills">
                   <h5>Poppie &middot; Planner</h5>
                   <span>Epics &amp; roadmap</span><span>Lean business case</span
@@ -1390,7 +1397,7 @@
                   <div class="agent-role">Planner</div>
                 </div>
               </div>
-              <div class="agent">
+              <div class="agent" tabindex="0">
                 <div class="agent-skills">
                   <h5>Preppie &middot; Prepper</h5>
                   <span>Requirements</span><span>User stories</span><span>Backlog prep</span>
@@ -1403,7 +1410,7 @@
                   <div class="agent-role">Prepper</div>
                 </div>
               </div>
-              <div class="agent">
+              <div class="agent" tabindex="0">
                 <div class="agent-skills">
                   <h5>Dannie &middot; Designer</h5>
                   <span>Wireframes</span><span>UX &amp; UI design</span
@@ -1417,7 +1424,7 @@
                   <div class="agent-role">Designer</div>
                 </div>
               </div>
-              <div class="agent">
+              <div class="agent" tabindex="0">
                 <div class="agent-skills">
                   <h5>Ernie &middot; Engineer</h5>
                   <span>Build &amp; ship</span><span>Code review</span><span>Pull requests</span>
@@ -1430,7 +1437,7 @@
                   <div class="agent-role">Engineer</div>
                 </div>
               </div>
-              <div class="agent">
+              <div class="agent" tabindex="0">
                 <div class="agent-skills">
                   <h5>Teddie &middot; Tester</h5>
                   <span>E2E tests</span><span>Quality assurance</span><span>Regression</span>
@@ -1443,7 +1450,7 @@
                   <div class="agent-role">Tester</div>
                 </div>
               </div>
-              <div class="agent">
+              <div class="agent" tabindex="0">
                 <div class="agent-skills">
                   <h5>Ollie &middot; Operator</h5>
                   <span>Deploy &amp; release</span><span>Monitoring</span
@@ -1457,7 +1464,7 @@
                   <div class="agent-role">Operator</div>
                 </div>
               </div>
-              <div class="agent">
+              <div class="agent" tabindex="0">
                 <div class="agent-skills">
                   <h5>Archie &middot; Architect</h5>
                   <span>Architecture</span><span>Technical review</span><span>Standards</span>
