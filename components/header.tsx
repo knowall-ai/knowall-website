@@ -42,13 +42,26 @@ export default function Header() {
   // hashes like '/#services' still scroll to their element). Scroll to the top
   // explicitly when a '/#' link is clicked while already on the homepage.
   const handleTopLink = (href: string) => (e: MouseEvent<HTMLAnchorElement>) => {
-    if (href === '/#' && window.location.pathname === '/') {
-      e.preventDefault();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      // Clear any stale section hash (e.g. '#services') from the URL so a
-      // refresh stays at the top rather than jumping back to the old section.
-      window.history.replaceState(null, '', '/');
+    // Only handle a plain primary-button click on a '/#' link while already on
+    // the homepage. Let the browser deal with modified/non-primary clicks
+    // (Cmd/Ctrl/Shift-click, middle-click → open in new tab, etc.).
+    if (
+      href !== '/#' ||
+      window.location.pathname !== '/' ||
+      e.button !== 0 ||
+      e.metaKey ||
+      e.ctrlKey ||
+      e.shiftKey ||
+      e.altKey
+    ) {
+      return;
     }
+    e.preventDefault();
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
+    // Clear any stale section hash (e.g. '#services') from the URL so a
+    // refresh stays at the top rather than jumping back to the old section.
+    window.history.replaceState(null, '', '/');
   };
 
   return (
