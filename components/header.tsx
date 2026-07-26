@@ -95,17 +95,19 @@ export default function Header() {
               href="/story"
               aria-label="Our Story"
               title="Our Story"
-              className="text-gray-300 hover:text-lime-500 transition-colors"
+              className="flex flex-col items-center gap-0.5 text-gray-300 hover:text-lime-500 transition-colors"
             >
               <BookOpen className="h-5 w-5" />
+              <span className="text-[10px] text-gray-400">Our Story</span>
             </Link>
             <button
               onClick={openContactPanel}
               aria-label="Contact us"
               title="Contact us"
-              className="text-gray-300 hover:text-lime-500 transition-colors"
+              className="flex flex-col items-center gap-0.5 text-gray-300 hover:text-lime-500 transition-colors"
             >
               <Mail className="h-5 w-5" />
+              <span className="text-[10px] text-gray-400">Message</span>
             </button>
             <SignInButton />
           </div>
@@ -116,9 +118,10 @@ export default function Header() {
               onClick={openContactPanel}
               aria-label="Contact us"
               title="Contact us"
-              className="text-gray-300 hover:text-lime-500 transition-colors"
+              className="flex flex-col items-center gap-0.5 text-gray-300 hover:text-lime-500 transition-colors"
             >
               <Mail className="h-5 w-5" />
+              <span className="text-[10px] text-gray-400">Message</span>
             </button>
             <button onClick={() => setIsMenuOpen(!isMenuOpen)} aria-label="Toggle menu">
               {isMenuOpen ? (
