@@ -71,7 +71,10 @@
         --inset-top: inset 0 1px 0 rgba(255, 255, 255, 0.07);
 
         --band-h: 210px;
-        --deck-hero: url('images/hero-delivery.png');
+        /* reserved strip at the foot of every slide for the floating controls */
+        --ctl-band: 92px;
+        --deck-cover: url('images/cover-delivery.jpg');
+        --deck-hero: url('images/close-delivery.jpg');
         --focus-ring: 3px solid var(--lime);
       }
 
@@ -418,7 +421,7 @@
       .dark-inner {
         position: absolute;
         inset: 0;
-        padding: 120px 130px;
+        padding: 108px 130px calc(52px + var(--ctl-band));
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -443,13 +446,13 @@
       .cards-2 {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 34px;
+        gap: 28px;
       }
 
       .cards-3 {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        gap: 34px;
+        gap: 28px;
       }
 
       .cards-5 {
@@ -462,9 +465,9 @@
         background: linear-gradient(180deg, var(--panel) 0%, var(--panel-lo) 100%);
         border: 1px solid var(--line);
         border-radius: 18px;
-        padding: 38px 42px;
+        padding: 30px 34px;
         display: flex;
-        gap: 30px;
+        gap: 26px;
         align-items: flex-start;
         box-shadow: var(--shadow-card), var(--inset-top);
         transition:
@@ -713,7 +716,7 @@
       .checks {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 30px 60px;
+        gap: 24px 56px;
       }
 
       .check {
@@ -724,8 +727,8 @@
         border: 1px solid var(--line);
         border-radius: 16px;
         box-shadow: var(--shadow-card), var(--inset-top);
-        padding: 28px 34px;
-        font-size: 27px;
+        padding: 23px 28px;
+        font-size: 26px;
         color: #eef1e7;
         line-height: 1.5;
       }
@@ -869,7 +872,7 @@
       .cover-hero {
         position: absolute;
         inset: 0;
-        background: url('images/hero-night.png') center / cover no-repeat;
+        background: var(--deck-cover) center / cover no-repeat;
       }
 
       .cover-scrim {
@@ -921,6 +924,19 @@
         right: 0;
         height: auto;
         bottom: 0;
+        background: var(--charcoal);
+        overflow: hidden;
+        padding: 96px;
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+      }
+
+      .cta-top::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: 0;
         background:
           linear-gradient(
             90deg,
@@ -929,10 +945,11 @@
             rgba(15, 18, 22, 0.16) 100%
           ),
           var(--deck-hero) center 10% / cover no-repeat;
-        padding: 96px;
-        display: flex;
-        align-items: flex-start;
-        justify-content: space-between;
+      }
+
+      .cta-top > h2 {
+        position: relative;
+        z-index: 1;
       }
 
       .cta-top::after {
@@ -986,12 +1003,14 @@
 
       .cta-button {
         display: inline-flex;
+        align-self: flex-start;
+        width: fit-content;
         align-items: center;
         gap: 14px;
-        padding: 22px 44px;
+        padding: 19px 36px;
         background: var(--lime);
         color: var(--ink);
-        font-size: 28px;
+        font-size: 25px;
         font-weight: 800;
         border-radius: 999px;
         transition:
@@ -1016,7 +1035,7 @@
       }
 
       .cta-button .ic {
-        font-size: 32px;
+        font-size: 28px;
       }
 
       .contact-row {
@@ -1050,10 +1069,10 @@
       }
 
       .pill {
-        padding: 13px 30px;
+        padding: 11px 26px;
         border: 1px solid var(--line);
         border-radius: 999px;
-        font-size: 22px;
+        font-size: 21px;
         font-weight: 700;
         color: var(--mist);
         background: var(--panel);
@@ -1127,14 +1146,14 @@
         border: 1px solid var(--line);
         border-left: 3px solid var(--lime);
         border-radius: 16px;
-        padding: 22px 26px;
+        padding: 18px 24px;
         box-shadow: var(--shadow-card), var(--inset-top);
       }
 
       .kpi-val {
         font-family: 'Playfair Display', Georgia, serif;
         font-weight: 900;
-        font-size: 46px;
+        font-size: 42px;
         line-height: 1.02;
         color: var(--lime);
         white-space: nowrap;
@@ -1151,8 +1170,8 @@
 
       /* Denser content rhythm so KPI-heavy slides stay inside the frame. */
       .content {
-        padding: 84px 96px 60px;
-        gap: 30px;
+        padding: 62px 96px calc(16px + var(--ctl-band));
+        gap: 26px;
       }
 
       /* --- Slide lead statement ------------------------------------------------------
@@ -1162,19 +1181,6 @@
         line-height: 1.45;
         color: #dbe3ea;
         max-width: 1500px;
-      }
-
-      /* --- Recurring agent motif on statement slides ---------------------------------- */
-      .dark-inner.with-agent {
-        background:
-          linear-gradient(
-            90deg,
-            var(--charcoal) 26%,
-            rgba(15, 18, 22, 0.82) 52%,
-            rgba(15, 18, 22, 0.3) 100%
-          ),
-          url('images/agent-divider.png') right 15% / cover no-repeat,
-          var(--charcoal);
       }
 
       /* --- Full-bleed deck hero slide -------------------------------------------------- */
@@ -1667,7 +1673,7 @@
 
         <!-- Slide 5: The T-Minus-15 lifecycle -->
         <section role="region" aria-label="Slide 5 of 7: The T-Minus-15 lifecycle">
-          <div class="dark-inner" style="padding: 120px 96px">
+          <div class="dark-inner" style="padding: 108px 96px calc(52px + var(--ctl-band))">
             <div style="display: flex; align-items: center; gap: 56px">
               <div style="flex: 1">
                 <p class="kicker">Our methodology</p>
@@ -1843,9 +1849,26 @@
       document.head.insertAdjacentHTML(
         'beforeend',
         `<style>
-          .reveal .slides > section .slide-cta { position:absolute; right:56px; bottom:82px; z-index:4; display:inline-flex; align-items:center; padding:11px 22px; border:1px solid rgba(157,254,10,.72); border-radius:999px; background:rgba(20,22,17,.82); color:#ffffff !important; font-size:19px; font-weight:800; letter-spacing:.01em; box-shadow:0 8px 24px rgba(0,0,0,.22); }
+          .reveal .slides > section .slide-cta { position:absolute; right:204px; bottom:24px; z-index:4; display:inline-flex; align-items:center; padding:11px 22px; border:1px solid rgba(157,254,10,.72); border-radius:999px; background:rgba(20,22,17,.82); color:#ffffff !important; font-size:19px; font-weight:800; letter-spacing:.01em; box-shadow:0 8px 24px rgba(0,0,0,.22); }
+          .slide-cta.is-clashing, .slide-detail.is-clashing { display:none; }
           .slide-cta:hover, .slide-cta:focus-visible { background:var(--lime); color:var(--ink) !important; outline:3px solid #ffffff; outline-offset:3px; }
-          .reveal .slides > section .slide-detail { position:absolute; left:56px; bottom:82px; z-index:4; padding:11px 22px; border:1px solid rgba(255,255,255,.68); border-radius:999px; background:rgba(20,22,17,.82); color:#ffffff; font:800 19px/1 Arial,sans-serif; cursor:pointer; box-shadow:0 8px 24px rgba(0,0,0,.22); } .slide-detail:hover, .slide-detail:focus-visible { background:#ffffff; color:var(--ink); outline:3px solid var(--lime); outline-offset:3px; } .deck-detail-dialog { width:min(720px,calc(100vw - 64px)); padding:54px; border:1px solid rgba(157,254,10,.8); border-radius:18px; background:#161a14; color:#fff; box-shadow:0 24px 80px rgba(0,0,0,.65); } .deck-detail-dialog::backdrop { background:rgba(0,0,0,.72); } .deck-detail-dialog h2 { margin:10px 0 18px; color:var(--lime); font-size:38px; } .deck-detail-dialog p { margin:0; font-size:22px; line-height:1.45; } .deck-detail-eyebrow { color:var(--lime); font-size:14px !important; font-weight:800; letter-spacing:.12em; } .deck-detail-close { position:absolute; top:16px; right:20px; border:0; background:transparent; color:#fff; font-size:36px; cursor:pointer; }
+          .reveal .slides > section .slide-detail { position:absolute; left:56px; bottom:24px; z-index:4; padding:11px 22px; border:1px solid rgba(255,255,255,.68); border-radius:999px; background:rgba(20,22,17,.82); color:#ffffff; font:800 19px/1 Arial,sans-serif; cursor:pointer; box-shadow:0 8px 24px rgba(0,0,0,.22); } .slide-detail:hover, .slide-detail:focus-visible { background:#ffffff; color:var(--ink); outline:3px solid var(--lime); outline-offset:3px; } .deck-detail-dialog { width:min(720px,calc(100vw - 64px)); padding:54px; border:1px solid rgba(157,254,10,.8); border-radius:18px; background:#161a14; color:#fff; box-shadow:0 24px 80px rgba(0,0,0,.65); } .deck-detail-dialog::backdrop { background:rgba(0,0,0,.72); } .deck-detail-dialog h2 { margin:10px 0 18px; color:var(--lime); font-size:38px; } .deck-detail-dialog p { margin:0; font-size:22px; line-height:1.45; } .deck-detail-eyebrow { color:var(--lime); font-size:14px !important; font-weight:800; letter-spacing:.12em; } .deck-detail-close { position:absolute; top:16px; right:20px; border:0; background:transparent; color:#fff; font-size:36px; cursor:pointer; }
+          /* --- Barely-there drift on full-bleed agent imagery ---------------
+             Enough that the picture breathes under the words; not enough to
+             read as an effect. Off entirely for prefers-reduced-motion. */
+          @keyframes deckDrift { from { transform: scale(1.001); } to { transform: scale(1.055); } }
+          .reveal .slides > section.present .cover-hero,
+          .reveal .slides > section.present .cta-top::before,
+          .reveal .slides > section.present .dark-inner.with-agent::before {
+            animation: deckDrift 30s ease-out both;
+            will-change: transform;
+          }
+          @media (prefers-reduced-motion: reduce) {
+            .reveal .slides > section.present .cover-hero,
+            .reveal .slides > section.present .cta-top::before,
+            .reveal .slides > section.present .dark-inner.with-agent::before { animation: none; }
+          }
+
         </style>`
       );
       const deliverySlides = Array.from(document.querySelectorAll('.reveal .slides > section'));
@@ -1888,6 +1911,61 @@
           slide.append(button);
         });
       }
+      // --- Sequenced reveal -------------------------------------------------
+      // Cards, KPIs and bullet groups arrive one at a time so the presenter can
+      // talk to each. Titles, kickers and leads are never fragmented, and the
+      // cover and closing slides always arrive whole.
+      (function addDeckFragments() {
+        const groups = [
+          ['.cards-2 > .card, .cards-3 > .card, .cards-5 > .card, .partner-grid > .card', 'fade-up'],
+          ['.cards-5 > .stage', 'fade-up'],
+          ['.checks > .check', 'fade-up'],
+          ['.agent-row > .agent', 'fade-up'],
+          ['.timeline > .timeline-point', 'fade-up'],
+          ['.kpi-row > .kpi', 'fade-in'],
+          ['.pill-row > .pill', 'fade-in'],
+          ['.loop-stage', 'fade-in'],
+        ];
+        const sections = Array.from(document.querySelectorAll('.reveal .slides > section'));
+        sections.forEach((section, index) => {
+          if (index === 0 || index === sections.length - 1) return;
+          groups.forEach(([selector, effect]) => {
+            section.querySelectorAll(selector).forEach((el) => {
+              if (el.classList.contains('fragment')) return;
+              el.classList.add('fragment', effect);
+            });
+          });
+        });
+      })();
+
+      // --- A floating control never covers slide content --------------------
+      // Every slide reserves a strip at its foot for these pills, but a few
+      // slides carry enough content to reach into it. Rather than let a pill
+      // sit on a KPI, measure on each slide change and drop the pill on the
+      // slides that need the room. Measured, not hard-coded, so it stays true
+      // if the copy changes.
+      const CONTENT_SELECTOR =
+        '.card, .check, .kpi, .pill, .stage, .agent, .timeline-point, .loop-stage,' +
+        ' h1, h2, h3, h4, p, img, svg, .quote, .quote-mark';
+      function guardFloatingControls(slide) {
+        if (!slide) return;
+        const controls = slide.querySelectorAll('.slide-cta, .slide-detail');
+        if (!controls.length) return;
+        controls.forEach((control) => control.classList.remove('is-clashing'));
+        const content = Array.from(slide.querySelectorAll(CONTENT_SELECTOR)).filter(
+          (el) => !el.closest('.slide-cta') && !el.closest('.slide-detail') && el.getClientRects().length
+        );
+        controls.forEach((control) => {
+          const box = control.getBoundingClientRect();
+          const clashes = content.some((el) => {
+            const r = el.getBoundingClientRect();
+            if (r.width < 6 || r.height < 6) return false;
+            return !(r.right <= box.left || box.right <= r.left || r.bottom <= box.top || box.bottom <= r.top);
+          });
+          if (clashes) control.classList.add('is-clashing');
+        });
+      }
+
       Reveal.initialize({
         hash: true,
         slideNumber: 'c/t',
@@ -1906,6 +1984,9 @@
         minScale: 0.2,
         maxScale: 2.0,
       });
+      Reveal.on('ready', (event) => guardFloatingControls(event.currentSlide));
+      Reveal.on('slidechanged', (event) => guardFloatingControls(event.currentSlide));
+      Reveal.on('resize', () => guardFloatingControls(Reveal.getCurrentSlide()));
     </script>
   </body>
 </html>
