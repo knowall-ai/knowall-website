@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -26,13 +26,13 @@ export default function LogsPage() {
     try {
       setLoading(true);
       setError(null);
-      
+
       const response = await fetch('/api/logs', {
         headers: {
-          'Authorization': `Bearer ${apiKey}`
-        }
+          Authorization: `Bearer ${apiKey}`,
+        },
       });
-      
+
       if (!response.ok) {
         if (response.status === 401) {
           setError('Unauthorized: Invalid API key');
@@ -42,7 +42,7 @@ export default function LogsPage() {
         }
         return;
       }
-      
+
       const data = await response.json();
       setLogs(data);
       setAuthenticated(true);
@@ -68,7 +68,7 @@ export default function LogsPage() {
   return (
     <div className="container mx-auto py-8">
       <h1 className="text-3xl font-bold mb-6">Chat Logs Admin</h1>
-      
+
       {!authenticated ? (
         <Card>
           <CardHeader>
@@ -104,9 +104,9 @@ export default function LogsPage() {
               Logout
             </Button>
           </div>
-          
+
           {error && <p className="text-red-500 mb-4">{error}</p>}
-          
+
           {logs.length === 0 ? (
             <p>No chat logs found.</p>
           ) : (

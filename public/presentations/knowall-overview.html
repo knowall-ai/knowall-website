@@ -2087,7 +2087,10 @@
         <!-- Slide 12: Vision -->
         <section role="region" aria-label="Slide 12 of 15: Our vision">
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
-          <div class="dark-inner" style="padding: 108px 96px calc(52px + var(--ctl-band)); gap: 40px">
+          <div
+            class="dark-inner"
+            style="padding: 108px 96px calc(52px + var(--ctl-band)); gap: 40px"
+          >
             <p class="kicker">Our vision</p>
             <h2 style="font-size: 78px">Idea to production in a single meeting</h2>
             <div class="timeline" style="margin-top: 70px">
@@ -2358,7 +2361,10 @@
       // cover and closing slides always arrive whole.
       (function addDeckFragments() {
         const groups = [
-          ['.cards-2 > .card, .cards-3 > .card, .cards-5 > .card, .partner-grid > .card', 'fade-up'],
+          [
+            '.cards-2 > .card, .cards-3 > .card, .cards-5 > .card, .partner-grid > .card',
+            'fade-up',
+          ],
           ['.cards-5 > .stage', 'fade-up'],
           ['.checks > .check', 'fade-up'],
           ['.agent-row > .agent', 'fade-up'],
@@ -2394,14 +2400,20 @@
         if (!controls.length) return;
         controls.forEach((control) => control.classList.remove('is-clashing'));
         const content = Array.from(slide.querySelectorAll(CONTENT_SELECTOR)).filter(
-          (el) => !el.closest('.slide-cta') && !el.closest('.slide-detail') && el.getClientRects().length
+          (el) =>
+            !el.closest('.slide-cta') && !el.closest('.slide-detail') && el.getClientRects().length
         );
         controls.forEach((control) => {
           const box = control.getBoundingClientRect();
           const clashes = content.some((el) => {
             const r = el.getBoundingClientRect();
             if (r.width < 6 || r.height < 6) return false;
-            return !(r.right <= box.left || box.right <= r.left || r.bottom <= box.top || box.bottom <= r.top);
+            return !(
+              r.right <= box.left ||
+              box.right <= r.left ||
+              r.bottom <= box.top ||
+              box.bottom <= r.top
+            );
           });
           if (clashes) control.classList.add('is-clashing');
         });
