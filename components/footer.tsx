@@ -26,12 +26,12 @@ export default function Footer({ darkMode = false }: FooterProps) {
                 </Link>
               </li>
               <li>
-                <a
-                  href="/presentations"
+                <Link
+                  href="/presentations/"
                   className="text-gray-400 hover:text-white transition-colors"
                 >
                   Presentations
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
