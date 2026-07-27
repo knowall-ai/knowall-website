@@ -7,7 +7,7 @@
 // over a local HTTP server so absolute asset paths (/images/...) resolve.
 import { chromium } from '@playwright/test';
 import { fileURLToPath } from 'node:url';
-import { dirname, join, normalize, extname } from 'node:path';
+import { dirname, join, normalize, extname, relative, isAbsolute } from 'node:path';
 import { mkdir, readFile } from 'node:fs/promises';
 import { createServer } from 'node:http';
 
@@ -38,9 +38,12 @@ const MIME = {
 // resolve exactly as they do on the deployed site.
 const server = createServer(async (req, res) => {
   try {
-    const path = normalize(decodeURIComponent(new URL(req.url, 'http://x').pathname));
-    const file = join(publicDir, path);
-    if (!file.startsWith(publicDir)) throw new Error('traversal');
+    const pathname = normalize(decodeURIComponent(new URL(req.url, 'http://x').pathname));
+    const file = join(publicDir, pathname.replace(/^[/\\]+/, ''));
+    const fileRelativeToPublic = relative(publicDir, file);
+    if (fileRelativeToPublic.startsWith('..') || isAbsolute(fileRelativeToPublic)) {
+      throw new Error('traversal');
+    }
     const body = await readFile(file);
     res.writeHead(200, { 'content-type': MIME[extname(file)] || 'application/octet-stream' });
     res.end(body);
