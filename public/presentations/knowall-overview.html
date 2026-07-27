@@ -221,6 +221,15 @@
         max-width: 100%;
         object-fit: contain;
       }
+      .logo-plate .eir-business-logo {
+        max-height: none;
+        max-width: none;
+        width: 100%;
+        transform: scale(0.9);
+      }
+      .eir-business-plate {
+        background: #005c63;
+      }
       .plate-word {
         font-family: 'Mulish', sans-serif;
         font-weight: 800;
@@ -362,12 +371,13 @@
       .band::after {
         content: '';
         position: absolute;
-        top: var(--band-h);
+        top: calc(var(--band-h) - 1px);
         left: 168px;
         border-left: 32px solid transparent;
         border-right: 32px solid transparent;
         border-top: 30px solid var(--lime-flat);
         filter: drop-shadow(0 5px 5px rgba(0, 0, 0, 0.3));
+        z-index: 2;
       }
 
       .band h2 {
@@ -515,7 +525,7 @@
         background: var(--panel);
         border: 2px solid var(--line);
         border-radius: 20px;
-        padding: 100px 34px 36px;
+        padding: 118px 34px 32px;
         transition: transform 0.25s ease;
       }
 
@@ -775,11 +785,12 @@
       .cta-top::after {
         content: '';
         position: absolute;
-        top: 620px;
+        top: 619px;
         left: 152px;
         border-left: 46px solid transparent;
         border-right: 46px solid transparent;
         border-top: 44px solid var(--lime-flat);
+        z-index: 2;
       }
 
       .cta-top h2 {
@@ -814,11 +825,11 @@
       .cta-button {
         display: inline-flex;
         align-items: center;
-        gap: 20px;
-        padding: 30px 62px;
+        gap: 14px;
+        padding: 22px 44px;
         background: var(--lime);
         color: var(--ink);
-        font-size: 34px;
+        font-size: 28px;
         font-weight: 800;
         border-radius: 999px;
         transition:
@@ -843,7 +854,7 @@
       }
 
       .cta-button .ic {
-        font-size: 38px;
+        font-size: 32px;
       }
 
       .contact-row {
@@ -2039,8 +2050,12 @@
                 <p>Claude &mdash; the frontier AI models that power our agents.</p>
               </div>
               <div class="card">
-                <div class="logo-plate">
-                  <img src="images/logos/eir.png" alt="eir Business" />
+                <div class="logo-plate eir-business-plate">
+                  <img
+                    class="eir-business-logo"
+                    src="https://www.eir.ie/opencms/export/sites/default/.galleries/business/Slate/Home/002_eir_business_logo_450x450_0302262x-1.png"
+                    alt="eir Business"
+                  />
                 </div>
                 <p>Enterprise connectivity and infrastructure across Ireland.</p>
               </div>
@@ -2079,8 +2094,8 @@
               </p>
               <a
                 class="cta-button"
-                href="https://www.knowall.ai"
-                aria-label="Book a Discovery Day - visit the KnowAll AI website"
+                href="https://www.knowall.ai/#contact"
+                aria-label="Book a Discovery Day - open the KnowAll AI contact section"
               >
                 <svg class="ic" aria-hidden="true"><use href="#i-calendar-check" /></svg>
                 Book a Discovery Day

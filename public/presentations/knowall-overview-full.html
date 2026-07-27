@@ -358,12 +358,13 @@
       .band::after {
         content: '';
         position: absolute;
-        top: var(--band-h);
+        top: calc(var(--band-h) - 1px);
         left: 168px;
         border-left: 32px solid transparent;
         border-right: 32px solid transparent;
         border-top: 30px solid var(--lime-flat);
         filter: drop-shadow(0 5px 5px rgba(0, 0, 0, 0.3));
+        z-index: 2;
       }
 
       .band h2 {
@@ -511,7 +512,7 @@
         background: var(--panel);
         border: 2px solid var(--line);
         border-radius: 20px;
-        padding: 100px 34px 36px;
+        padding: 118px 34px 32px;
         transition: transform 0.25s ease;
       }
 
@@ -771,11 +772,12 @@
       .cta-top::after {
         content: '';
         position: absolute;
-        top: 620px;
+        top: 619px;
         left: 152px;
         border-left: 46px solid transparent;
         border-right: 46px solid transparent;
         border-top: 44px solid var(--lime-flat);
+        z-index: 2;
       }
 
       .cta-top h2 {
@@ -810,11 +812,11 @@
       .cta-button {
         display: inline-flex;
         align-items: center;
-        gap: 20px;
-        padding: 30px 62px;
+        gap: 14px;
+        padding: 22px 44px;
         background: var(--lime);
         color: var(--ink);
-        font-size: 34px;
+        font-size: 28px;
         font-weight: 800;
         border-radius: 999px;
         transition:
@@ -839,7 +841,7 @@
       }
 
       .cta-button .ic {
-        font-size: 38px;
+        font-size: 32px;
       }
 
       .contact-row {
