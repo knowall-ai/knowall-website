@@ -63,6 +63,10 @@ const browser = await chromium.launch();
 const page = await browser.newPage({
   viewport: { width: 1280, height: 720 },
   deviceScaleFactor: 1,
+  // The decks drift their full-bleed imagery slowly (Ken Burns). Asking for
+  // reduced motion switches that off, so captures are deterministic — and it
+  // exercises the prefers-reduced-motion path at the same time.
+  reducedMotion: 'reduce',
 });
 
 let total = 0;
@@ -76,8 +80,10 @@ for (const deck of decks) {
     { timeout: 20000 }
   );
   // Kill transitions so captures are crisp and deterministic.
+  // fragments:false shows every fragment at once, so a still capture shows the
+  // finished slide rather than its first build step.
   await page.evaluate(() =>
-    window.Reveal.configure({ transition: 'none', transitionSpeed: 'fast' })
+    window.Reveal.configure({ transition: 'none', transitionSpeed: 'fast', fragments: false })
   );
   const count = await page.evaluate(() => window.Reveal.getTotalSlides());
   for (let i = 0; i < count; i++) {
