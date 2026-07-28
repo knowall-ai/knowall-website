@@ -980,6 +980,102 @@
         font-size: 36px;
       }
 
+      /* Memory / sleep-consolidation slide */
+      .memory-split {
+        display: grid;
+        grid-template-columns: 0.9fr 1.1fr;
+        gap: 40px;
+        align-items: center;
+      }
+
+      .memory-graph {
+        margin: 0;
+        padding: 20px 12px 8px;
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        background: linear-gradient(180deg, var(--panel) 0%, var(--panel-lo) 100%);
+        box-shadow: var(--shadow-card), var(--inset-top);
+      }
+
+      .memory-graph svg {
+        width: 100%;
+        height: auto;
+        display: block;
+      }
+
+      .memory-graph figcaption {
+        margin-top: 10px;
+        text-align: center;
+        font-size: 19px;
+        color: var(--muted);
+      }
+
+      .mg-edges path {
+        fill: none;
+        stroke: #9dff0a;
+        stroke-opacity: 0.42;
+        stroke-width: 2;
+      }
+
+      /* Found overnight — drawn as a dashed link that draws itself in */
+      .mg-new path {
+        stroke-opacity: 0.95;
+        stroke-width: 2.5;
+        stroke-dasharray: 7 7;
+      }
+
+      .mg-nodes circle {
+        fill: #9dff0a;
+      }
+
+      .mg-nodes circle[fill^='url'] {
+        fill: url(#mg-glow);
+      }
+
+      .mg-nodes text {
+        fill: #e8f5d8;
+        font-size: 17px;
+        font-weight: 700;
+        text-anchor: middle;
+        letter-spacing: 0.02em;
+      }
+
+      .memory-cards {
+        display: grid;
+        gap: 16px;
+      }
+
+      .memory-cards .card p {
+        font-size: 22px;
+      }
+
+      .github-logo-link .gh-mark {
+        font-size: 46px;
+        flex: 0 0 auto;
+      }
+
+      .github-logo-link span {
+        font-weight: 400;
+        font-size: 24px;
+      }
+
+      @media (prefers-reduced-motion: no-preference) {
+        .reveal .mg-new path {
+          animation: mg-draw 1.6s ease-out both;
+        }
+      }
+
+      @keyframes mg-draw {
+        from {
+          stroke-dashoffset: 240;
+          stroke-opacity: 0;
+        }
+        to {
+          stroke-dashoffset: 0;
+          stroke-opacity: 0.95;
+        }
+      }
+
       /* --- Reveal chrome ------------------------------------------------------------ */
       .reveal .slide-number {
         font-family: 'Mulish', sans-serif;
@@ -1874,72 +1970,118 @@
         </section>
 
         <!-- Slide 9: Agent Memory (Neo4j) -->
-        <section role="region" aria-label="Slide 9 of 18: Agent memory that grows">
+        <section
+          role="region"
+          aria-label="Slide 9 of 18: Memory that consolidates while they sleep"
+        >
           <div class="band">
             <div>
-              <h2>Agent memory that grows</h2>
-              <p class="band-sub">A living knowledge graph of people, places and concepts</p>
+              <h2>Memory that consolidates while they sleep</h2>
+              <p class="band-sub">
+                A living Neo4j knowledge graph of people, places, companies and projects
+              </p>
             </div>
             <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
           </div>
           <div class="content">
-            <div class="cards-2">
-              <div class="card">
-                <div class="chip" aria-hidden="true">
-                  <svg class="ic"><use href="#i-network" /></svg>
+            <div class="memory-split">
+              <figure class="memory-graph" aria-hidden="true">
+                <svg viewBox="0 0 460 300" role="presentation" focusable="false">
+                  <defs>
+                    <radialGradient id="mg-glow">
+                      <stop offset="0%" stop-color="#9dff0a" stop-opacity=".55" />
+                      <stop offset="100%" stop-color="#9dff0a" stop-opacity="0" />
+                    </radialGradient>
+                  </defs>
+                  <g class="mg-edges">
+                    <path d="M120 92 L232 54" /><path d="M120 92 L214 158" />
+                    <path d="M232 54 L348 104" /><path d="M214 158 L348 104" />
+                    <path d="M214 158 L128 226" /><path d="M348 104 L336 226" />
+                    <path d="M128 226 L336 226" />
+                  </g>
+                  <!-- Dashed edges are the links found overnight -->
+                  <g class="mg-edges mg-new">
+                    <path d="M120 92 L336 226" /><path d="M232 54 L128 226" />
+                  </g>
+                  <g class="mg-nodes">
+                    <circle cx="120" cy="92" r="34" fill="url(#mg-glow)" />
+                    <circle cx="120" cy="92" r="13" /><text x="120" y="132">Person</text>
+                    <circle cx="232" cy="54" r="11" /><text x="232" y="30">Company</text>
+                    <circle cx="348" cy="104" r="28" fill="url(#mg-glow)" />
+                    <circle cx="348" cy="104" r="13" /><text x="348" y="144">Project</text>
+                    <circle cx="214" cy="158" r="10" /><text x="214" y="192">Place</text>
+                    <circle cx="128" cy="226" r="10" /><text x="128" y="260">Meeting</text>
+                    <circle cx="336" cy="226" r="10" /><text x="336" y="260">Decision</text>
+                  </g>
+                </svg>
+                <figcaption>
+                  Solid links were already known &mdash; dashed links were found overnight
+                </figcaption>
+              </figure>
+              <div class="memory-cards">
+                <div class="card">
+                  <div class="chip" aria-hidden="true">
+                    <svg class="ic"><use href="#i-network" /></svg>
+                  </div>
+                  <div>
+                    <h4>Concepts, not keywords</h4>
+                    <p>
+                      People, places, companies and projects &mdash; and the relationships
+                      between them. Agents remember how things connect, not isolated facts.
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h4>Semantic graph memory</h4>
-                  <p>
-                    Agents connect people, places and concepts into a living graph &mdash;
-                    remembering how things relate, not just isolated facts.
-                  </p>
+                <div class="card">
+                  <div class="chip" aria-hidden="true">
+                    <svg class="ic"><use href="#i-moon" /></svg>
+                  </div>
+                  <div>
+                    <h4>They sleep on it</h4>
+                    <p>
+                      Overnight, each agent revisits the day&rsquo;s conversations and looks for
+                      what relates to what it already knew &mdash; the same way sleep consolidates
+                      human memory.
+                    </p>
+                  </div>
                 </div>
-              </div>
-              <div class="card">
-                <div class="chip" aria-hidden="true">
-                  <svg class="ic"><use href="#i-sprout" /></svg>
+                <div class="card">
+                  <div class="chip" aria-hidden="true">
+                    <svg class="ic"><use href="#i-refresh-cw" /></svg>
+                  </div>
+                  <div>
+                    <h4>Refined and strengthened</h4>
+                    <p>
+                      Memories are reorganised, duplicates merged and important links reinforced,
+                      so recall gets sharper over time instead of noisier.
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h4>Grows over time</h4>
-                  <p>
-                    Every interaction adds nodes and relationships &mdash; memory compounds and gets
-                    richer the more your agents are used.
-                  </p>
-                </div>
-              </div>
-              <div class="card">
-                <div class="chip" aria-hidden="true">
-                  <svg class="ic"><use href="#i-target" /></svg>
-                </div>
-                <div>
-                  <h4>Context on recall</h4>
-                  <p>
-                    Knowledge is retrieved with its connections intact &mdash; grounded,
-                    context-aware answers instead of keyword lookups.
-                  </p>
-                </div>
-              </div>
-              <div class="card">
-                <div class="chip" aria-hidden="true">
-                  <svg class="ic"><use href="#i-database" /></svg>
-                </div>
-                <div>
-                  <h4>Powered by Neo4j</h4>
-                  <p>
-                    Built on our open-source graph memory for any agent &mdash; connect your agents
-                    to a Neo4j knowledge graph.
-                  </p>
+                <div class="card">
+                  <div class="chip" aria-hidden="true">
+                    <svg class="ic"><use href="#i-sprout" /></svg>
+                  </div>
+                  <div>
+                    <h4>New connections surface</h4>
+                    <p>
+                      Links nobody made explicitly &mdash; this person moved to that company, this
+                      decision affects that project &mdash; emerge from the graph itself.
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
             <a
-              class="github-link"
+              class="github-link github-logo-link"
               href="https://github.com/knowall-ai/mcp-neo4j-agent-memory"
-              aria-label="mcp-neo4j-agent-memory project on GitHub"
+              target="_blank"
+              rel="noopener"
+              aria-label="mcp-neo4j-agent-memory, our open-source Neo4j agent memory, on GitHub"
             >
-              <svg class="ic" aria-hidden="true"><use href="#i-github" /></svg>
-              github.com/knowall-ai/mcp-neo4j-agent-memory &mdash; graph memory for any agent
+              <svg class="ic gh-mark" aria-hidden="true"><use href="#i-github" /></svg>
+              <span>
+                <strong>knowall-ai/mcp-neo4j-agent-memory</strong>
+                &mdash; our graph memory, open source for any agent
+              </span>
             </a>
           </div>
         </section>
