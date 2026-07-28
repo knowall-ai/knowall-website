@@ -1177,12 +1177,13 @@
 
       /* Subtle scene behind a content slide. The scrim does the work:
          the image should register as depth, not as a picture. */
-      .reveal .slides > section.scene > .content {
-        position: relative;
+      /* Full-bleed: the scene covers the WHOLE slide, header included,
+         rather than starting below it (Ben, 2026-07-28). */
+      .reveal .slides > section.scene {
         isolation: isolate;
       }
 
-      .reveal .slides > section.scene > .content::before {
+      .reveal .slides > section.scene::before {
         content: '';
         position: absolute;
         inset: 0;
