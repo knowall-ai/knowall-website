@@ -911,8 +911,9 @@
       .contact-row {
         display: flex;
         flex: none;
-        gap: 48px;
-        align-items: center;
+        flex-direction: column;
+        gap: 14px;
+        align-items: flex-start;
       }
 
       .contact-item {
@@ -985,6 +986,10 @@
 
       .reveal .controls {
         color: var(--lime);
+        /* Reveal's default puts these hard against the viewport edge, so
+           they were clipped half off the slide (Ben, 2026-07-28). */
+        right: 24px;
+        bottom: 18px;
       }
 
       /* --- Small screens -------------------------------------------------------------- */

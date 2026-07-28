@@ -933,8 +933,9 @@
       .contact-row {
         display: flex;
         flex: none;
-        gap: 48px;
-        align-items: center;
+        flex-direction: column;
+        gap: 14px;
+        align-items: flex-start;
       }
 
       .contact-item {
@@ -1052,6 +1053,48 @@
         letter-spacing: 0.02em;
       }
 
+      /* Self-improvement is a LOOP — show the loop, do not list it in
+         four identical boxes floating in dead space (Ben, 2026-07-28). */
+      .cycle {
+        margin: 0 0 26px;
+      }
+
+      .cycle svg {
+        width: 100%;
+        max-height: 240px;
+        height: auto;
+        display: block;
+      }
+
+      .cyc-line, .cyc-return {
+        fill: none;
+        stroke: #9dff0a;
+        stroke-width: 3;
+      }
+
+      .cyc-return {
+        stroke-opacity: 0.45;
+        stroke-dasharray: 9 8;
+      }
+
+      .cyc-stops circle {
+        fill: #9dff0a;
+      }
+
+      .cyc-stops text {
+        fill: #ffffff;
+        font-size: 26px;
+        font-weight: 800;
+        text-anchor: middle;
+      }
+
+      .cyc-caption {
+        fill: #b6c1cc;
+        font-size: 22px;
+        font-style: italic;
+        text-anchor: middle;
+      }
+
       .memory-cards {
         display: grid;
         gap: 10px;
@@ -1119,6 +1162,10 @@
 
       .reveal .controls {
         color: var(--lime);
+        /* Reveal's default puts these hard against the viewport edge, so
+           they were clipped half off the slide (Ben, 2026-07-28). */
+        right: 24px;
+        bottom: 18px;
       }
 
       /* --- Small screens -------------------------------------------------------------- */
@@ -1964,6 +2011,28 @@
             <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
           </div>
           <div class="content">
+            <figure class="cycle" aria-hidden="true">
+              <svg viewBox="0 0 1200 235" role="presentation" focusable="false">
+                <defs>
+                  <marker id="cyc-arrow" viewBox="0 0 10 10" refX="8" refY="5"
+                          markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                    <path d="M0 0 L10 5 L0 10 z" fill="#9dff0a" />
+                  </marker>
+                </defs>
+                <path class="cyc-line" d="M110 60 H1090" marker-end="url(#cyc-arrow)" />
+                <!-- the return leg: what makes it a loop rather than a list -->
+                <path class="cyc-return" d="M1090 60 C1150 60 1150 150 1090 150
+                                            H110 C50 150 50 60 110 60"
+                      marker-end="url(#cyc-arrow)" />
+                <g class="cyc-stops">
+                  <circle cx="110" cy="60" r="13" /><text x="110" y="30">Propose</text>
+                  <circle cx="437" cy="60" r="13" /><text x="437" y="30">Review</text>
+                  <circle cx="763" cy="60" r="13" /><text x="763" y="30">Merge</text>
+                  <circle cx="1090" cy="60" r="13" /><text x="1090" y="30">Measure</text>
+                </g>
+                <text class="cyc-caption" x="600" y="222">every cycle leaves the system better than it found it</text>
+              </svg>
+            </figure>
             <div class="cards-2">
               <div class="card">
                 <div class="chip" aria-hidden="true">
