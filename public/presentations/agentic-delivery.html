@@ -1196,6 +1196,24 @@
           ),
           var(--deck-hero) center 10% / cover no-repeat;
       }
+
+      /* Sequenced auto-reveal: items arrive one at a time when the slide
+         does, with no clicking. Reduced-motion users get them at once. */
+      .reveal .slides > section .seq { opacity: 0; }
+      .reveal .slides > section.present .seq {
+        animation: seq-in 0.52s cubic-bezier(.22,.68,.32,1) both;
+        animation-delay: calc(var(--seq-i, 0) * 0.16s);
+      }
+      @keyframes seq-in {
+        from { opacity: 0; transform: translateY(16px); }
+        to   { opacity: 1; transform: none; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .reveal .slides > section .seq,
+        .reveal .slides > section.present .seq {
+          opacity: 1; animation: none; transform: none;
+        }
+      }
     </style>
   </head>
   <body>
@@ -1931,11 +1949,21 @@
         ];
         const sections = Array.from(document.querySelectorAll('.reveal .slides > section'));
         sections.forEach((section, index) => {
+          let seqIndex = 0;
           if (index === 0 || index === sections.length - 1) return;
           groups.forEach(([selector, effect]) => {
             section.querySelectorAll(selector).forEach((el) => {
-              if (el.classList.contains('fragment')) return;
-              el.classList.add('fragment', effect);
+              if (el.classList.contains('seq')) return;
+              // Auto-reveal, not click-to-reveal. Reveal fragments need a
+              // keypress each: content looked MISSING until clicked (the
+              // "challenge slide is empty" bug), Back consumed a hidden
+              // fragment step instead of changing slide (the "went back
+              // two slides" bug), and presenting meant remembering to
+              // click ~27 times (Ben, 2026-07-28, asked four times).
+              // A staggered CSS animation on slide entry gives the same
+              // one-at-a-time arrival with nothing to press.
+              el.classList.add('seq', effect);
+              el.style.setProperty('--seq-i', seqIndex++);
             });
           });
         });
