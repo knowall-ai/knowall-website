@@ -992,7 +992,7 @@
       /* Memory / sleep-consolidation slide */
       .memory-split {
         display: grid;
-        grid-template-columns: 0.9fr 1.1fr;
+        grid-template-columns: 1.35fr 1fr;
         gap: 32px;
         align-items: start;
       }
@@ -1008,6 +1008,9 @@
 
       .memory-graph svg {
         width: 100%;
+        /* Capped: the content box gives ~700px and an uncapped 560x400
+           graph overflowed UPWARD through the header (2026-07-28). */
+        max-height: 520px;
         height: auto;
         display: block;
       }
@@ -1051,11 +1054,24 @@
 
       .memory-cards {
         display: grid;
-        gap: 12px;
+        gap: 10px;
+      }
+
+      .memory-cards .card {
+        padding: 18px 22px;
+      }
+
+      .memory-cards .card h4 {
+        font-size: 26px;
       }
 
       .memory-cards .card p {
-        font-size: 22px;
+        font-size: 20px;
+        line-height: 1.35;
+      }
+
+      .memory-graph {
+        padding: 18px 16px 10px;
       }
 
       .github-logo-link .gh-mark {
@@ -2018,32 +2034,38 @@
           <div class="content">
             <div class="memory-split">
               <figure class="memory-graph" aria-hidden="true">
-                <svg viewBox="0 0 460 300" role="presentation" focusable="false">
+                <svg viewBox="0 0 560 400" role="presentation" focusable="false">
                   <defs>
                     <radialGradient id="mg-glow">
-                      <stop offset="0%" stop-color="#9dff0a" stop-opacity=".55" />
+                      <stop offset="0%" stop-color="#9dff0a" stop-opacity=".5" />
                       <stop offset="100%" stop-color="#9dff0a" stop-opacity="0" />
                     </radialGradient>
                   </defs>
                   <g class="mg-edges">
-                    <path d="M120 92 L232 54" /><path d="M120 92 L214 158" />
-                    <path d="M232 54 L348 104" /><path d="M214 158 L348 104" />
-                    <path d="M214 158 L128 226" /><path d="M348 104 L336 226" />
-                    <path d="M128 226 L336 226" />
+                    <path d="M138 88 L268 46" /><path d="M138 88 L232 176" />
+                    <path d="M268 46 L410 96" /><path d="M232 176 L410 96" />
+                    <path d="M232 176 L126 268" /><path d="M410 96 L456 214" />
+                    <path d="M126 268 L286 322" /><path d="M286 322 L456 214" />
+                    <path d="M456 214 L470 330" /><path d="M232 176 L286 322" />
+                    <path d="M268 46 L138 88" /><path d="M410 96 L470 330" />
                   </g>
                   <!-- Dashed edges are the links found overnight -->
                   <g class="mg-edges mg-new">
-                    <path d="M120 92 L336 226" /><path d="M232 54 L128 226" />
+                    <path d="M138 88 L456 214" /><path d="M268 46 L126 268" />
+                    <path d="M232 176 L470 330" />
                   </g>
                   <g class="mg-nodes">
-                    <circle cx="120" cy="92" r="34" fill="url(#mg-glow)" />
-                    <circle cx="120" cy="92" r="13" /><text x="120" y="132">Person</text>
-                    <circle cx="232" cy="54" r="11" /><text x="232" y="30">Company</text>
-                    <circle cx="348" cy="104" r="28" fill="url(#mg-glow)" />
-                    <circle cx="348" cy="104" r="13" /><text x="348" y="144">Project</text>
-                    <circle cx="214" cy="158" r="10" /><text x="214" y="192">Place</text>
-                    <circle cx="128" cy="226" r="10" /><text x="128" y="260">Meeting</text>
-                    <circle cx="336" cy="226" r="10" /><text x="336" y="260">Decision</text>
+                    <circle cx="138" cy="88" r="40" fill="url(#mg-glow)" />
+                    <circle cx="138" cy="88" r="15" /><text x="138" y="132">Person</text>
+                    <circle cx="268" cy="46" r="12" /><text x="268" y="24">Company</text>
+                    <circle cx="410" cy="96" r="34" fill="url(#mg-glow)" />
+                    <circle cx="410" cy="96" r="15" /><text x="410" y="140">Project</text>
+                    <circle cx="232" cy="176" r="12" /><text x="232" y="212">Place</text>
+                    <circle cx="126" cy="268" r="11" /><text x="126" y="302">Meeting</text>
+                    <circle cx="286" cy="322" r="11" /><text x="286" y="356">Decision</text>
+                    <circle cx="456" cy="214" r="30" fill="url(#mg-glow)" />
+                    <circle cx="456" cy="214" r="13" /><text x="456" y="256">Opportunity</text>
+                    <circle cx="470" cy="330" r="11" /><text x="470" y="364">Commitment</text>
                   </g>
                 </svg>
                 <figcaption>
