@@ -191,22 +191,28 @@
       }
 
       /* --- Header-band slides (house template) --------------------------- */
+      /* The header used to be a full-width strip with a divider and a
+         drop shadow, which made every content slide look like the same
+         template (Ben, 2026-07-28). Same colours, but presented like the
+         cover: the title sits ON the slide, with a short green rule
+         under it instead of a rule across the whole frame. */
       .band {
         position: absolute;
         top: 0;
         left: 0;
         right: 0;
         height: var(--band-h);
-        background:
-          radial-gradient(900px 320px at 86% -45%, rgba(157, 254, 10, 0.1), transparent 66%),
-          linear-gradient(180deg, #171d24 0%, var(--charcoal) 100%);
-        border-bottom: 1px solid var(--line);
+        background: none;
+        border-bottom: 0;
         display: flex;
         align-items: center;
         justify-content: space-between;
         padding: 0 84px 0 96px;
-        box-shadow: 0 22px 46px rgba(0, 0, 0, 0.55);
+        box-shadow: none;
       }
+
+      /* The deck already draws a short accent rule under the header —
+         no second one needed now the strip is gone. */
 
       .pill-logo {
         display: inline-flex;

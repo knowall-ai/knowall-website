@@ -188,22 +188,28 @@
       }
 
       /* --- Header-band slides (house template) --------------------------- */
+      /* The header used to be a full-width strip with a divider and a
+         drop shadow, which made every content slide look like the same
+         template (Ben, 2026-07-28). Same colours, but presented like the
+         cover: the title sits ON the slide, with a short green rule
+         under it instead of a rule across the whole frame. */
       .band {
         position: absolute;
         top: 0;
         left: 0;
         right: 0;
         height: var(--band-h);
-        background:
-          radial-gradient(900px 320px at 86% -45%, rgba(157, 254, 10, 0.1), transparent 66%),
-          linear-gradient(180deg, #171d24 0%, var(--charcoal) 100%);
-        border-bottom: 1px solid var(--line);
+        background: none;
+        border-bottom: 0;
         display: flex;
         align-items: center;
         justify-content: space-between;
         padding: 0 84px 0 96px;
-        box-shadow: 0 22px 46px rgba(0, 0, 0, 0.55);
+        box-shadow: none;
       }
+
+      /* The deck already draws a short accent rule under the header —
+         no second one needed now the strip is gone. */
 
       .pill-logo {
         display: inline-flex;
@@ -427,7 +433,7 @@
       .band .logo-dark {
         height: 112px;
         filter: brightness(0) invert(1);
-        opacity: 0.9;
+        opacity: 1;
       }
 
       .content {
@@ -871,7 +877,7 @@
         right: 96px;
         height: 150px;
         filter: brightness(0) invert(1);
-        opacity: 0.9;
+        opacity: 1;
       }
 
       .cta-bottom {
@@ -1166,6 +1172,28 @@
            they were clipped half off the slide (Ben, 2026-07-28). */
         right: 24px;
         bottom: 18px;
+      }
+
+
+      /* Subtle scene behind a content slide. The scrim does the work:
+         the image should register as depth, not as a picture. */
+      .reveal .slides > section.scene > .content {
+        position: relative;
+        isolation: isolate;
+      }
+
+      .reveal .slides > section.scene > .content::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        background-image:
+          linear-gradient(180deg, rgba(11,13,16,.86) 0%, rgba(11,13,16,.58) 50%,
+                          rgba(11,13,16,.90) 100%),
+          var(--scene);
+        background-size: cover, cover;
+        background-position: center, center;
+        opacity: 1;
       }
 
       /* --- Small screens -------------------------------------------------------------- */
@@ -2002,7 +2030,7 @@
         </section>
 
         <!-- Slide 8: Self-Improving Agents -->
-        <section role="region" aria-label="Slide 8 of 18: Self-improving agents">
+        <section class="scene" style="--scene: url('/images/bg-topographic-grid-landscape.jpg')" role="region" aria-label="Slide 8 of 18: Self-improving agents">
           <div class="band">
             <div>
               <h2>Self-improving agents</h2>
@@ -2210,7 +2238,7 @@
         </section>
 
         <!-- Slide 10: Security -->
-        <section role="region" aria-label="Slide 10 of 18: Enterprise-grade security">
+        <section class="scene" style="--scene: url('/images/cyber-high-vantage-landscape.jpg')" role="region" aria-label="Slide 10 of 18: Enterprise-grade security">
           <div class="band">
             <div>
               <h2>Enterprise-grade security</h2>
@@ -2273,7 +2301,7 @@
         </section>
 
         <!-- Slide 11: Microsoft Integration -->
-        <section role="region" aria-label="Slide 11 of 18: Seamless Microsoft integration">
+        <section class="scene" style="--scene: url('/images/bg-light-trails-landscape.jpg')" role="region" aria-label="Slide 11 of 18: Seamless Microsoft integration">
           <div class="band">
             <div>
               <h2>Seamless Microsoft integration</h2>
@@ -2363,7 +2391,7 @@
         </section>
 
         <!-- Slide 12: Augmentation -->
-        <section role="region" aria-label="Slide 12 of 18: Augmenting your team">
+        <section class="scene" style="--scene: url('/images/cyber-bridge-bluehour-landscape.jpg')" role="region" aria-label="Slide 12 of 18: Augmenting your team">
           <div class="band">
             <div>
               <h2>Augmenting your team</h2>
@@ -2408,7 +2436,7 @@
         </section>
 
         <!-- Slide 13: Our products -->
-        <section role="region" aria-label="Slide 13 of 18: Our products">
+        <section class="scene" style="--scene: url('/images/cyber-rooftop-empty-landscape.jpg')" role="region" aria-label="Slide 13 of 18: Our products">
           <div class="band">
             <div>
               <h2>Our products</h2>
@@ -2507,7 +2535,7 @@
         </section>
 
         <!-- Slide 15: Benefits -->
-        <section role="region" aria-label="Slide 15 of 18: Real-world benefits">
+        <section class="scene" style="--scene: url('/images/hero-corridor-of-light-landscape.jpg')" role="region" aria-label="Slide 15 of 18: Real-world benefits">
           <div class="band">
             <div>
               <h2>Real-world benefits</h2>
