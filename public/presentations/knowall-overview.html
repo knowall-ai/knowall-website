@@ -1197,6 +1197,22 @@
         opacity: 1;
       }
 
+      /* Real product screenshots, not icons: these are shipping products
+         and showing them is more persuasive than describing them
+         (Ben, 2026-07-28). Cropped to a consistent band so three
+         different apps still read as one row. */
+      .product-shot {
+        display: block;
+        width: 100%;
+        height: 116px;
+        object-fit: cover;
+        object-position: top center;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        margin: 0 0 14px;
+        background: #0b0d10;
+      }
+
       /* --- Small screens -------------------------------------------------------------- */
       @media (max-width: 768px) {
         .cards-2,
@@ -2457,6 +2473,7 @@
                   <svg class="ic"><use href="#i-clipboard-list" /></svg>
                 </div>
                 <div>
+                  <img class="product-shot" src="/images/zapdesk.png" alt="The Zapdesk support portal" />
                   <h4>Zapdesk</h4>
                   <p>
                     Azure DevOps powered support ticketing &mdash; a Zendesk-style portal that uses
@@ -2471,6 +2488,7 @@
                   <svg class="ic"><use href="#i-timer" /></svg>
                 </div>
                 <div>
+                  <img class="product-shot" src="/images/thyme-homepage.png" alt="The Thyme timesheet grid" />
                   <h4>Thyme</h4>
                   <p>
                     Time tracking for Business Central. Track your week in an intuitive timesheet
@@ -2484,6 +2502,7 @@
                   <svg class="ic"><use href="#i-zap" /></svg>
                 </div>
                 <div>
+                  <img class="product-shot" src="/images/zaplie-feed.png" alt="The Zaplie activity feed" />
                   <h4>Zaplie</h4>
                   <p>
                     An open-source platform that integrates Microsoft Teams with Bitcoin
@@ -2502,7 +2521,7 @@
         </section>
 
         <!-- Slide 14: Vision -->
-        <section role="region" aria-label="Slide 14 of 18: Our vision">
+        <section class="scene" style="--scene: url('/images/cyber-rooftop-skyline-landscape.jpg')" role="region" aria-label="Slide 14 of 18: Our vision">
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
           <div
             class="dark-inner"
@@ -2565,10 +2584,10 @@
                   <svg class="ic"><use href="#i-piggy-bank" /></svg>
                 </div>
                 <div>
-                  <div class="stat-num">&asymp;90%</div>
+                  <div class="stat-num">&asymp;80%</div>
                   <h4>Straight-through processing</h4>
                   <p>
-                    Our invoice-automation build for a leading property developer targets &asymp;90%
+                    Our invoice-automation build for a leading property developer targets &asymp;80%
                     of 1,600 monthly invoices handled without manual intervention.
                   </p>
                 </div>
@@ -2578,10 +2597,10 @@
                   <svg class="ic"><use href="#i-target" /></svg>
                 </div>
                 <div>
-                  <div class="stat-num">4&ndash;8 wks</div>
+                  <div class="stat-num">2&ndash;4 wks</div>
                   <h4>To production</h4>
                   <p>
-                    Recent case-study builds shipped in four and eight weeks respectively &mdash;
+                    Recent case-study builds shipped in two to four weeks &mdash;
                     value delivered in weeks, not quarters.
                   </p>
                 </div>
@@ -2663,7 +2682,7 @@
         </section>
 
         <!-- Slide 17: Partners -->
-        <section role="region" aria-label="Slide 17 of 18: Trusted partner ecosystem">
+        <section class="scene" style="--scene: url('/images/cyber-tower-base-scale-landscape.jpg')" role="region" aria-label="Slide 17 of 18: Trusted partner ecosystem">
           <div class="band">
             <div>
               <h2>Platforms &amp; partners</h2>
