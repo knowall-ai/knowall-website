@@ -1213,6 +1213,74 @@
         background: #0b0d10;
       }
 
+      /* The challenge is a CONTRAST, not a list of four complaints: what
+         most organisations think advanced AI is, against what it can
+         actually do (Ben, 2026-07-29). */
+      .versus {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        gap: 34px;
+        align-items: stretch;
+      }
+
+      .versus-side {
+        padding: 34px 38px;
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        background: linear-gradient(180deg, rgba(24,30,37,.86) 0%, rgba(17,21,26,.86) 100%);
+      }
+
+      .versus-side-strong {
+        border-color: rgba(157, 254, 10, 0.55);
+        box-shadow: 0 0 0 1px rgba(157, 254, 10, 0.12) inset;
+      }
+
+      .versus-tag {
+        font-size: 20px;
+        font-weight: 800;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 14px;
+      }
+
+      .versus-side-strong .versus-tag { color: var(--lime); }
+
+      .versus-big {
+        font-family: 'Playfair Display', Georgia, serif;
+        font-size: 52px;
+        font-weight: 700;
+        line-height: 1.1;
+        margin: 0 0 16px;
+        color: #fff;
+      }
+
+      .versus-side-strong .versus-big { color: var(--lime); }
+
+      .versus-sub {
+        font-size: 24px;
+        line-height: 1.45;
+        color: var(--mist);
+        margin: 0;
+      }
+
+      .versus-arrow {
+        align-self: center;
+        font-size: 56px;
+        color: var(--lime);
+        opacity: 0.75;
+      }
+
+      .versus-punch {
+        margin: 34px 0 0;
+        font-size: 28px;
+        line-height: 1.45;
+        color: #e8eef4;
+        max-width: 1500px;
+      }
+
+      .versus-punch em { color: var(--lime); font-style: italic; }
+
       /* --- Small screens -------------------------------------------------------------- */
       @media (max-width: 768px) {
         .cards-2,
@@ -1620,66 +1688,41 @@
         </section>
 
         <!-- Slide 3: The Challenge -->
-        <section role="region" aria-label="Slide 3 of 18: The challenge">
+        <section class="scene" style="--scene: url('/images/scene-atrium.jpg')" role="region" aria-label="Slide 3 of 18: The challenge">
           <div class="band">
             <div>
               <h2>The challenge</h2>
-              <p class="band-sub">Every software project hits the same bottleneck</p>
+              <p class="band-sub">Most organisations mistake a search box for a strategy</p>
             </div>
             <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
           </div>
           <div class="content">
-            <div class="cards-2">
-              <div class="card">
-                <div class="chip" aria-hidden="true">
-                  <svg class="ic"><use href="#i-message-square-x" /></svg>
-                </div>
-                <div>
-                  <h4>Miscommunication</h4>
-                  <p>
-                    Stakeholders and developers speak different languages. Requirements get lost in
-                    translation.
-                  </p>
-                </div>
+            <div class="versus">
+              <div class="versus-side">
+                <div class="versus-tag">What most organisations do</div>
+                <p class="versus-big">Install Copilot.</p>
+                <p class="versus-sub">
+                  Roll it out, let people ask it questions, search their documents a
+                  little faster. Useful &mdash; but it is a better search box, not a
+                  change to how the business runs.
+                </p>
               </div>
-              <div class="card">
-                <div class="chip" aria-hidden="true">
-                  <svg class="ic"><use href="#i-file-question" /></svg>
-                </div>
-                <div>
-                  <h4>Incomplete context</h4>
-                  <p>
-                    Documentation is patchy, assumptions go unchallenged and critical details slip
-                    through the cracks.
-                  </p>
-                </div>
-              </div>
-              <div class="card">
-                <div class="chip" aria-hidden="true">
-                  <svg class="ic"><use href="#i-timer" /></svg>
-                </div>
-                <div>
-                  <h4>Slow iteration</h4>
-                  <p>
-                    Back-and-forth clarification takes days. Projects stall waiting for answers that
-                    should take minutes.
-                  </p>
-                </div>
-              </div>
-              <div class="card">
-                <div class="chip" aria-hidden="true">
-                  <svg class="ic"><use href="#i-coins" /></svg>
-                </div>
-                <div>
-                  <h4>Knowing what to build</h4>
-                  <p>
-                    AI has made implementation cheap. The hard part is no longer building
-                    it &mdash; it is knowing <em>what</em> to build, so the business gets the
-                    tools it actually needs.
-                  </p>
-                </div>
+              <div class="versus-arrow" aria-hidden="true">&rarr;</div>
+              <div class="versus-side versus-side-strong">
+                <div class="versus-tag">What is actually possible</div>
+                <p class="versus-big">Rebuild the work itself.</p>
+                <p class="versus-sub">
+                  Agents that run whole processes end to end, automation that removes
+                  the manual step entirely, and financial innovation that opens
+                  revenue nobody was chasing.
+                </p>
               </div>
             </div>
+            <p class="versus-punch">
+              The hard part is not the technology. It is understanding a business
+              deeply enough to know <em>what would actually move the needle</em> &mdash;
+              and then building the right tool for that job.
+            </p>
           </div>
         </section>
 
@@ -2256,7 +2299,7 @@
         </section>
 
         <!-- Slide 10: Security -->
-        <section class="scene" style="--scene: url('/images/scene-rain-room.jpg')" role="region" aria-label="Slide 10 of 18: Enterprise-grade security">
+        <section class="scene" style="--scene: url('/images/scene-observatory.jpg')" role="region" aria-label="Slide 10 of 18: Enterprise-grade security">
           <div class="band">
             <div>
               <h2>Enterprise-grade security</h2>
@@ -2319,7 +2362,7 @@
         </section>
 
         <!-- Slide 11: Microsoft Integration -->
-        <section class="scene" style="--scene: url('/images/scene-cyber-sky.jpg')" role="region" aria-label="Slide 11 of 18: Seamless Microsoft integration">
+        <section class="scene" style="--scene: url('/images/scene-rain-room.jpg')" role="region" aria-label="Slide 11 of 18: Seamless Microsoft integration">
           <div class="band">
             <div>
               <h2>Seamless Microsoft integration</h2>
@@ -2409,7 +2452,7 @@
         </section>
 
         <!-- Slide 12: Augmentation -->
-        <section class="scene" style="--scene: url('/images/scene-rain-window.jpg')" role="region" aria-label="Slide 12 of 18: Augmenting your team">
+        <section class="scene" style="--scene: url('/images/scene-skybridge.jpg')" role="region" aria-label="Slide 12 of 18: Augmenting your team">
           <div class="band">
             <div>
               <h2>Augmenting your team</h2>
@@ -2454,7 +2497,7 @@
         </section>
 
         <!-- Slide 13: Our products -->
-        <section class="scene" style="--scene: url('/images/scene-bridge.jpg')" role="region" aria-label="Slide 13 of 18: Our products">
+        <section class="scene" style="--scene: url('/images/scene-cyber-sky.jpg')" role="region" aria-label="Slide 13 of 18: Our products">
           <div class="band">
             <div>
               <h2>Our products</h2>
@@ -2521,7 +2564,7 @@
         </section>
 
         <!-- Slide 14: Vision -->
-        <section class="scene" style="--scene: url('/images/scene-rain-room.jpg')" role="region" aria-label="Slide 14 of 18: Our vision">
+        <section class="scene" style="--scene: url('/images/scene-atrium.jpg')" role="region" aria-label="Slide 14 of 18: Our vision">
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
           <div
             class="dark-inner"
@@ -2556,7 +2599,7 @@
         </section>
 
         <!-- Slide 15: Benefits -->
-        <section class="scene" style="--scene: url('/images/scene-cyber-sky.jpg')" role="region" aria-label="Slide 15 of 18: Real-world benefits">
+        <section class="scene" style="--scene: url('/images/scene-rain-window.jpg')" role="region" aria-label="Slide 15 of 18: Real-world benefits">
           <div class="band">
             <div>
               <h2>Real-world benefits</h2>
@@ -2682,7 +2725,7 @@
         </section>
 
         <!-- Slide 17: Partners -->
-        <section class="scene" style="--scene: url('/images/scene-rain-window.jpg')" role="region" aria-label="Slide 17 of 18: Trusted partner ecosystem">
+        <section class="scene" style="--scene: url('/images/scene-downpour.jpg')" role="region" aria-label="Slide 17 of 18: Trusted partner ecosystem">
           <div class="band">
             <div>
               <h2>Platforms &amp; partners</h2>
