@@ -1204,7 +1204,9 @@
       .product-shot {
         display: block;
         width: 100%;
-        height: 116px;
+        /* Taller now the chip icons are gone: more of the actual product
+           is visible, which is the point of showing it (Ben, 2026-07-29). */
+        height: 210px;
         object-fit: cover;
         object-position: top center;
         border: 1px solid var(--line);
@@ -1280,6 +1282,38 @@
       }
 
       .versus-punch em { color: var(--lime); font-style: italic; }
+
+      /* The link belongs to its product, so it sits in that product's
+         card rather than in a separate row underneath. */
+      .cards-3 > .card { display: flex; flex-direction: column; }
+      .cards-3 > .card > div { display: flex; flex-direction: column; flex: 1; }
+
+      .card-link {
+        display: block;
+        margin: 18px auto 0;
+        margin-top: auto;
+        width: max-content;
+        padding: 9px 20px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        background: rgba(11, 13, 16, 0.55);
+        color: var(--mist);
+        font-size: 19px;
+        font-weight: 700;
+      }
+
+      /* On the KPI cards the number is the message, so the icon moves out
+         of its way to the top-right corner (Ben, 2026-07-29). */
+      .card:has(.stat-num) {
+        position: relative;
+      }
+
+      .card:has(.stat-num) > .chip {
+        position: absolute;
+        top: 22px;
+        right: 22px;
+        margin: 0;
+      }
 
       /* --- Small screens -------------------------------------------------------------- */
       @media (max-width: 768px) {
@@ -1951,7 +1985,7 @@
         </section>
 
         <!-- Slide 6: The agents we run ourselves -->
-        <section role="region" aria-label="Slide 6 of 18: The agents we run ourselves">
+        <section class="scene" style="--scene: url('/images/scene-opsfloor.jpg')" role="region" aria-label="Slide 6 of 18: The agents we run ourselves">
           <div class="band">
             <div>
               <h2>The agents we run ourselves</h2>
@@ -2299,7 +2333,7 @@
         </section>
 
         <!-- Slide 10: Security -->
-        <section class="scene" style="--scene: url('/images/scene-observatory.jpg')" role="region" aria-label="Slide 10 of 18: Enterprise-grade security">
+        <section class="scene" style="--scene: url('/images/scene-vault.jpg')" role="region" aria-label="Slide 10 of 18: Enterprise-grade security">
           <div class="band">
             <div>
               <h2>Enterprise-grade security</h2>
@@ -2362,7 +2396,7 @@
         </section>
 
         <!-- Slide 11: Microsoft Integration -->
-        <section class="scene" style="--scene: url('/images/scene-rain-room.jpg')" role="region" aria-label="Slide 11 of 18: Seamless Microsoft integration">
+        <section class="scene" style="--scene: url('/images/scene-controlroom.jpg')" role="region" aria-label="Slide 11 of 18: Seamless Microsoft integration">
           <div class="band">
             <div>
               <h2>Seamless Microsoft integration</h2>
@@ -2512,9 +2546,6 @@
             </p>
             <div class="cards-3">
               <div class="card stack">
-                <div class="chip" aria-hidden="true">
-                  <svg class="ic"><use href="#i-clipboard-list" /></svg>
-                </div>
                 <div>
                   <img class="product-shot" src="/images/zapdesk.png" alt="The Zapdesk support portal" />
                   <h4>Zapdesk</h4>
@@ -2524,12 +2555,10 @@
                     work items. Familiar helpdesk interface, with Bitcoin Lightning tipping so
                     customers can reward agents directly.
                   </p>
+                  <span class="card-link">zapdesk.knowall.ai</span>
                 </div>
               </div>
               <div class="card stack">
-                <div class="chip" aria-hidden="true">
-                  <svg class="ic"><use href="#i-timer" /></svg>
-                </div>
                 <div>
                   <img class="product-shot" src="/images/thyme-homepage.png" alt="The Thyme timesheet grid" />
                   <h4>Thyme</h4>
@@ -2538,12 +2567,10 @@
                     grid and let Thyme keep your Business Central Jobs and Job Journal Lines in sync
                     automatically &mdash; with single sign-on via Microsoft Entra ID.
                   </p>
+                  <span class="card-link">getthyme.ai</span>
                 </div>
               </div>
               <div class="card stack">
-                <div class="chip" aria-hidden="true">
-                  <svg class="ic"><use href="#i-zap" /></svg>
-                </div>
                 <div>
                   <img class="product-shot" src="/images/zaplie-feed.png" alt="The Zaplie activity feed" />
                   <h4>Zaplie</h4>
@@ -2552,19 +2579,15 @@
                     microtransactions and AI agents &mdash; rewarding contributions, whether human
                     or AI, in proportion to the value they deliver.
                   </p>
+                  <span class="card-link">github.com/knowall-ai/zaplie-webapp</span>
                 </div>
               </div>
-            </div>
-            <div class="pill-row" role="list" aria-label="Product websites">
-              <span class="pill" role="listitem">zapdesk.knowall.ai</span>
-              <span class="pill" role="listitem">getthyme.ai</span>
-              <span class="pill" role="listitem">github.com/knowall-ai/zaplie-webapp</span>
             </div>
           </div>
         </section>
 
         <!-- Slide 14: Vision -->
-        <section class="scene" style="--scene: url('/images/scene-atrium.jpg')" role="region" aria-label="Slide 14 of 18: Our vision">
+        <section class="scene" style="--scene: url('/images/scene-rainglass.jpg')" role="region" aria-label="Slide 14 of 18: Our vision">
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
           <div
             class="dark-inner"
@@ -2725,7 +2748,7 @@
         </section>
 
         <!-- Slide 17: Partners -->
-        <section class="scene" style="--scene: url('/images/scene-downpour.jpg')" role="region" aria-label="Slide 17 of 18: Trusted partner ecosystem">
+        <section class="scene" style="--scene: url('/images/scene-boardroom.jpg')" role="region" aria-label="Slide 17 of 18: Trusted partner ecosystem">
           <div class="band">
             <div>
               <h2>Platforms &amp; partners</h2>
@@ -2754,6 +2777,12 @@
                   <img src="images/logos/anthropic-dark.svg" alt="Anthropic" />
                 </div>
                 <p>Claude &mdash; the frontier AI models that power our agents.</p>
+              </div>
+              <div class="card">
+                <div class="logo-plate">
+                  <span class="plate-word">OpenAI</span>
+                </div>
+                <p>GPT &mdash; frontier models behind our voice agents and copilots.</p>
               </div>
               <div class="card">
                 <div class="logo-plate eir-business-plate">
