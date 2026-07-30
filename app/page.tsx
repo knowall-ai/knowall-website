@@ -127,25 +127,45 @@ export default function Home() {
 
           <div className="flex flex-col lg:flex-row items-center gap-12">
             <div className="flex-1">
-              <p className="text-lg text-gray-200 mb-6">
-                Zaplie is an open-source platform that integrates Microsoft Teams with Bitcoin
-                microtransactions and AI agents (Copilots) to enhance collaboration, productivity,
-                and real-value incentives. Built on the &quot;value-for-value&quot; model, it
-                transforms the digital workspace by linking communication tools with financial
-                rewards and AI-driven support.
-              </p>
-              <p className="text-lg text-gray-200 mb-6">
-                Using seamless Bitcoin microtransactions, Zaplie incentivizes engagement across team
-                members, clients, and AI agents. This approach fosters a culture of recognition and
-                accountability, where contributions—whether human or AI—are rewarded in proportion
-                to the value they deliver.
-              </p>
               <p className="text-lg text-gray-200 mb-8">
-                With its open-source foundation, Zaplie can be tailored to meet the unique needs of
-                any organization. By aligning incentives and enabling value exchange across people
-                and intelligent systems, it supports more motivated, transparent, and effective
-                collaboration.
+                Zaplie is an open-source platform that integrates Microsoft Teams with Bitcoin
+                microtransactions and AI agents (Copilots). Built on the value-for-value model, it
+                links communication tools with financial rewards and AI-driven support to enhance
+                collaboration and productivity.
               </p>
+
+              <ul className="space-y-5 mb-10">
+                <li className="flex items-start gap-3">
+                  <div className="flex-shrink-0 mt-0.5">
+                    <BitcoinLogo size={24} />
+                  </div>
+                  <span className="text-gray-200">
+                    Instant Lightning payments reward teammates, clients, and AI agents in
+                    proportion to the value they deliver
+                  </span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <Bot className="h-6 w-6 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <span className="text-gray-200">
+                    AI Copilots participate in your Teams workspace and earn real rewards for their
+                    contributions
+                  </span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <Zap className="h-6 w-6 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <span className="text-gray-200">
+                    Value-for-value model fosters recognition and accountability — every
+                    contribution, human or AI, is incentivized
+                  </span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <Code className="h-6 w-6 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <span className="text-gray-200">
+                    Open-source foundation, adaptable to any organisation&apos;s unique needs with a
+                    transparent, community-driven approach
+                  </span>
+                </li>
+              </ul>
             </div>
 
             <div className="flex-1 w-full flex flex-col items-center">
