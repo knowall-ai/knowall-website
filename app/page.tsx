@@ -121,9 +121,10 @@ export default function Home() {
       {/* About Zaplie Section */}
       <section id="zapp" className="py-20 px-4 bg-gray-800 text-white">
         <div className="container max-w-6xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center">
-            Zaplie: Incentivizing teammates, copilots & customers
-          </h2>
+          <div className="mb-8 text-center">
+            <h2 className="text-3xl md:text-4xl font-bold">Zaplie</h2>
+            <p className="text-xl text-gray-300 mt-2">Incentivizing teammates, copilots &amp; customers</p>
+          </div>
 
           <div className="flex flex-col lg:flex-row items-center gap-12">
             <div className="flex-1">
@@ -177,9 +178,10 @@ export default function Home() {
       {/* Zapdesk Section */}
       <section id="zapdesk" className="py-20 px-4 bg-gray-900 text-white">
         <div className="container max-w-6xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center">
-            Zapdesk: Azure DevOps powered support ticketing
-          </h2>
+          <div className="mb-12 text-center">
+            <h2 className="text-3xl md:text-4xl font-bold">Zapdesk</h2>
+            <p className="text-xl text-gray-300 mt-2">Azure DevOps powered support ticketing</p>
+          </div>
 
           <div className="flex flex-col lg:flex-row items-center gap-12">
             {/* Product screenshot (image left, mirroring the Zaplie section's image-right) */}
@@ -267,9 +269,10 @@ export default function Home() {
       {/* Thyme Section */}
       <section id="thyme" className="py-20 px-4 bg-gray-800 text-white">
         <div className="container max-w-6xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center">
-            Thyme: Time tracking for Business Central
-          </h2>
+          <div className="mb-12 text-center">
+            <h2 className="text-3xl md:text-4xl font-bold">Thyme</h2>
+            <p className="text-xl text-gray-300 mt-2">Time tracking for Business Central</p>
+          </div>
 
           <div className="flex flex-col lg:flex-row items-center gap-12">
             <div className="flex-1">
@@ -355,9 +358,10 @@ export default function Home() {
       {/* T-Minus-15 Section */}
       <section id="tminus15" className="py-20 px-4 bg-gray-900 text-white">
         <div className="container max-w-6xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center">
-            T-Minus-15: Secrets of an Elite DevOps Team
-          </h2>
+          <div className="mb-12 text-center">
+            <h2 className="text-3xl md:text-4xl font-bold">T-Minus-15</h2>
+            <p className="text-xl text-gray-300 mt-2">Secrets of an Elite DevOps Team</p>
+          </div>
 
           <div className="flex flex-col lg:flex-row items-center gap-12">
             {/* Book (image left, mirroring the Thyme section's image-right) */}

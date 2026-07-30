@@ -68,7 +68,7 @@ export default function Footer({ darkMode = false }: FooterProps) {
             {/* Mirrors the header Products dropdown (components/header.tsx), but each
                 item links out to the product's own site where one exists.
                 "Allie for Accounts" joins this list when PR #7 merges. */}
-            <ul className="space-y-2">
+            <ul className="space-y-2 text-center">
               <li>
                 <a
                   href="https://github.com/knowall-ai/zaplie-webapp"
