@@ -36,6 +36,12 @@ const teamMembers: TeamMember[] = [
     npub: 'npub1wdzc9uy9wggfjf8sz8tvj39utkgf0vj8874x05ptqkxf28sqqlnsxw2z0e',
     pubkey: '734582f08572109924f011d6c944bc5d9097b2473faa67d02b058c951e0007e7',
   },
+  {
+    name: 'Wilmer Salazar',
+    title: 'Bitcoin & AI Engineer',
+    npub: 'npub1cplxtxuqnrm26n3g0r0lt8w2jfkurwzu848hztf05ad0ds962syqgkq7nr',
+    pubkey: 'c07e659b8098f6ad4e2878dff59dca926dc1b85c3d4f712d2fa75af6c0ba5408',
+  },
 ];
 
 // purplepag.es is a dedicated profile aggregator; the others are general-purpose relays
@@ -116,11 +122,11 @@ export default function TeamSection() {
           The people behind our AI systems. Connect with us on Nostr.
         </p>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="flex flex-wrap justify-center gap-8">
           {teamMembers.map((member) => (
             <Card
               key={member.npub}
-              className="p-6 shadow-md border-0 bg-gray-900 text-white flex flex-col items-center text-center"
+              className="p-6 shadow-md border-0 bg-gray-900 text-white flex flex-col items-center text-center w-full max-w-xs sm:w-64"
             >
               {pictures[member.pubkey] && !broken[member.pubkey] ? (
                 // eslint-disable-next-line @next/next/no-img-element -- avatar URLs come from Nostr profiles, hosts unknown at build time
