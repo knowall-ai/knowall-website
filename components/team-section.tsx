@@ -20,6 +20,7 @@ const teamMembers: TeamMember[] = [
     name: 'Valeriia Khudiakova',
     title: 'Chief Planner',
     npub: 'npub1dg75du7l0usuhlg7ttvkm2x9lfcvq29fh43ckc420m6fk7ps2gls09kvl5',
+    image: '/images/team/valeriia-khudiakova.jpg',
   },
   {
     name: 'Akash Jadhav',
