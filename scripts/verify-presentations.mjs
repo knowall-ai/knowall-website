@@ -203,3 +203,4 @@ console.log(
 );
 await browser.close();
 await new Promise((r) => server.close(r));
+process.exit(problems > 0 ? 1 : 0);
