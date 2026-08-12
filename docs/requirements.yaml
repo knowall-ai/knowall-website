@@ -233,3 +233,28 @@
           given: 'The KnowAll npub has not published any listings'
           when: 'The visitor opens /shop'
           then: 'A branded "Shop opening soon" empty state with a Follow us on Nostr button is shown'
+
+    - name: 'Story page'
+      id: story-page
+      description: "Live feed of the company's Nostr posts rendered as the Our Story page"
+      deliverables:
+        - 'Story page at /story with header link'
+        - 'Profile hero sourced live from the KnowAll Nostr kind-0 metadata, with static fallbacks'
+        - 'Timeline of top-level kind-1 notes (newest first) with images, videos, links and hashtags'
+        - 'Loading, empty and error states when relays are slow or unreachable'
+      user_story: "As a Visitor, I want to read KnowAll's latest updates straight from their Nostr feed so that I can follow the company's story without needing a Nostr client"
+      scenarios:
+        - name: 'Visitor reads the story'
+          given: 'The user opens /story'
+          when: 'The Nostr relays respond'
+          then:
+            - 'They see the KnowAll profile hero with banner, avatar, name and bio'
+            - 'They see a timeline of posts with relative timestamps linking to njump.me'
+        - name: 'Visitor filters by hashtag'
+          given: 'The user is reading the story timeline'
+          when: 'They click a #hashtag in a post'
+          then: 'The timeline narrows to posts mentioning that hashtag, with a clear-filter control'
+        - name: 'Relays are unreachable'
+          given: 'No Nostr relay can be reached'
+          when: 'The user opens /story'
+          then: 'A fallback message offers a link to read the feed on njump.me'

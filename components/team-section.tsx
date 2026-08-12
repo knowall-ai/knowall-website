@@ -97,10 +97,34 @@ export default function TeamSection() {
       };
     }
 
+    // Closing a socket that is still CONNECTING logs "WebSocket is closed
+    // before the connection is established" (React StrictMode double-invokes
+    // this effect in dev, so cleanup runs while the sockets are still opening).
+    // For a connecting socket, don't close() it now — replace the REQ-sending
+    // open handler so it closes cleanly the moment it connects instead. A relay
+    // that never connects would otherwise stay in-flight, so it is force-closed
+    // by the sweep below.
+    const closeSocket = (ws: WebSocket) => {
+      if (ws.readyState === WebSocket.CONNECTING) {
+        ws.onopen = () => ws.close();
+        // Backstop: if it is still connecting shortly after, close it anyway
+        // rather than leaving the attempt open indefinitely. By this point the
+        // effect is being torn down, so the warning no longer matters.
+        setTimeout(() => {
+          try {
+            ws.close();
+          } catch {
+            // already closed
+          }
+        }, 2000);
+      } else if (ws.readyState === WebSocket.OPEN) {
+        ws.close();
+      }
+    };
     const closeAll = () =>
       sockets.forEach((ws) => {
         try {
-          ws.close();
+          closeSocket(ws);
         } catch {
           // already closed
         }
