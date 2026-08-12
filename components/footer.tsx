@@ -109,6 +109,11 @@ export default function Footer({ darkMode = false }: FooterProps) {
                   T-Minus-15
                 </a>
               </li>
+              <li>
+                <Link href="/#sallie" className="text-gray-400 hover:text-white transition-colors">
+                  Sallie for Sales
+                </Link>
+              </li>
             </ul>
           </div>
 
