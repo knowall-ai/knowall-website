@@ -16,3 +16,6 @@ package-lock.json
 # Generated
 *.min.js
 *.min.css
+
+# Hand-written presentation decks — prettier reflow risks changing slide rendering
+public/presentations/*.html
