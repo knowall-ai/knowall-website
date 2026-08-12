@@ -3,12 +3,17 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { SimplePool } from 'nostr-tools/pool';
 import * as nip19 from 'nostr-tools/nip19';
+import type { EventTemplate } from '@/lib/story-social';
+import type { NostrEvent } from '@/lib/story-notes';
 
-// Minimal NIP-07 surface — we only need the public key for sign-in.
+// Minimal NIP-07 surface — the public key for sign-in, plus signEvent so the
+// story page can publish replies, follows and zap requests. Raw keys never
+// touch this site: all signing happens inside the user's extension.
 declare global {
   interface Window {
     nostr?: {
       getPublicKey: () => Promise<string>;
+      signEvent?: (event: EventTemplate) => Promise<NostrEvent>;
     };
   }
 }
@@ -44,6 +49,12 @@ interface NostrAuthContextValue {
   signIn: () => Promise<void>;
   /** Sign out and forget the persisted pubkey. */
   signOut: () => void;
+  /**
+   * Sign an event template with the user's NIP-07 extension. Rejects when the
+   * extension is missing, can't sign, the user declines the signature, or the
+   * extension's active account no longer matches the signed-in session.
+   */
+  signEvent: (template: EventTemplate) => Promise<NostrEvent>;
 }
 
 const NostrAuthContext = createContext<NostrAuthContextValue | null>(null);
@@ -154,7 +165,38 @@ export function NostrAuthProvider({ children }: { children: React.ReactNode }) {
     setUser(null);
   }, []);
 
-  const value = useMemo(() => ({ user, signIn, signOut }), [user, signIn, signOut]);
+  const signEvent = useCallback(
+    async (template: EventTemplate) => {
+      if (!user) {
+        throw new Error('Sign in first to publish to Nostr.');
+      }
+      if (typeof window === 'undefined' || !window.nostr?.signEvent) {
+        throw new Error(
+          'Your Nostr extension does not support signing. Update it (Alby or nos2x both work), then try again.'
+        );
+      }
+
+      const signed = await window.nostr.signEvent(template);
+      if (!signed?.id || !signed.sig) {
+        throw new Error('The extension returned an unsigned event.');
+      }
+      // The extension's active account can drift from the persisted session
+      // (e.g. the user switched profiles in Alby). Refuse rather than publish
+      // as someone the UI doesn't show.
+      if (signed.pubkey !== user.pubkey) {
+        throw new Error(
+          'Your extension is signed in to a different Nostr account. Sign out and back in, then try again.'
+        );
+      }
+      return signed;
+    },
+    [user]
+  );
+
+  const value = useMemo(
+    () => ({ user, signIn, signOut, signEvent }),
+    [user, signIn, signOut, signEvent]
+  );
 
   return <NostrAuthContext.Provider value={value}>{children}</NostrAuthContext.Provider>;
 }
