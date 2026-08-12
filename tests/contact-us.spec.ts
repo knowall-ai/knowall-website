@@ -56,7 +56,7 @@ test.describe('Contact Us', () => {
   test('Header mail icon opens the contact panel', async ({ page }) => {
     // The header Contact Us link was replaced by a mail icon that opens the
     // Nostr contact panel (slide-out message form)
-    await page.locator('header').getByRole('button', { name: 'Contact us' }).first().click();
+    await page.locator('header').getByRole('button', { name: 'Message' }).first().click();
 
     const panel = page.getByRole('dialog');
     await expect(panel.getByText('Message us')).toBeVisible();

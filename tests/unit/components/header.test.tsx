@@ -49,13 +49,13 @@ describe('Header', () => {
     renderHeader();
 
     // One in the desktop action area, one next to the mobile menu toggle
-    expect(screen.getAllByRole('button', { name: 'Contact us' })).toHaveLength(2);
+    expect(screen.getAllByRole('button', { name: 'Message' })).toHaveLength(2);
   });
 
   it('opens the contact panel when the mail button is clicked', () => {
     renderHeader();
 
-    fireEvent.click(screen.getAllByRole('button', { name: 'Contact us' })[0]);
+    fireEvent.click(screen.getAllByRole('button', { name: 'Message' })[0]);
 
     expect(screen.getByText('Message us')).toBeInTheDocument();
   });
