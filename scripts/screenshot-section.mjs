@@ -15,9 +15,10 @@
 //                   doesn't overlay the top of the section)
 //
 // Requires a running dev/prod server and Playwright (a devDependency). Reads
-// reveal-free, static sections — for full reveal.js decks see
-// scripts/screenshot-presentations.mjs.
+// reveal-free, static sections.
 import { chromium } from '@playwright/test';
+import { mkdir } from 'node:fs/promises';
+import { dirname } from 'node:path';
 
 function arg(name, fallback) {
   const i = process.argv.indexOf(`--${name}`);
@@ -27,27 +28,39 @@ function arg(name, fallback) {
 const url = arg('url', 'http://localhost:3000/');
 const section = arg('section');
 const out = arg('out');
-const width = Number(arg('width', '1280'));
+const widthArg = arg('width', '1280');
+const width = Number(widthArg);
 const keepHeader = process.argv.includes('--keep-header');
 
 if (!section || !out) {
   console.error('Missing --section and/or --out. See the header of this file for usage.');
   process.exit(1);
 }
+if (!Number.isFinite(width) || width <= 0) {
+  console.error(`Invalid --width "${widthArg}": expected a positive number.`);
+  process.exit(1);
+}
+
+// Ensure the output directory exists so the screenshot can be written to an
+// arbitrary --out path.
+await mkdir(dirname(out), { recursive: true });
 
 const browser = await chromium.launch();
-const page = await browser.newPage({ viewport: { width, height: 900 }, deviceScaleFactor: 1 });
-// 'domcontentloaded' (not 'networkidle') — pages with a live chat/websocket may
-// never reach network idle.
-await page.goto(url, { waitUntil: 'domcontentloaded' });
-if (!keepHeader) {
-  // Hide the sticky site header so it doesn't overlay the top of the section.
-  await page.addStyleTag({ content: 'header { display: none !important; }' });
+try {
+  const page = await browser.newPage({ viewport: { width, height: 900 }, deviceScaleFactor: 1 });
+  // 'domcontentloaded' (not 'networkidle') — pages with a live chat/websocket may
+  // never reach network idle.
+  await page.goto(url, { waitUntil: 'domcontentloaded' });
+  if (!keepHeader) {
+    // Hide the sticky site header so it doesn't overlay the top of the section.
+    await page.addStyleTag({ content: 'header { display: none !important; }' });
+  }
+  const el = page.locator(section);
+  await el.waitFor({ state: 'visible', timeout: 20000 });
+  await el.scrollIntoViewIfNeeded();
+  await page.waitForTimeout(800); // let images/fonts settle
+  await el.screenshot({ path: out, timeout: 30000 });
+  console.log(`captured ${section} -> ${out} (width ${width})`);
+} finally {
+  await browser.close();
 }
-const el = page.locator(section);
-await el.waitFor({ state: 'visible', timeout: 20000 });
-await el.scrollIntoViewIfNeeded();
-await page.waitForTimeout(800); // let images/fonts settle
-await el.screenshot({ path: out, timeout: 30000 });
-console.log(`captured ${section} -> ${out} (width ${width})`);
-await browser.close();
