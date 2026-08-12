@@ -71,7 +71,7 @@ export default function Home() {
                   className="border-white text-white hover:bg-white/10"
                   asChild
                 >
-                  <a href="#zapp">Find out more about Zaplie</a>
+                  <a href="#zaplie">Find out more about Zaplie</a>
                 </Button>
               </div>
             </div>
@@ -119,7 +119,7 @@ export default function Home() {
       </section>
 
       {/* About Zaplie Section */}
-      <section id="zapp" className="py-20 px-4 bg-gray-800 text-white">
+      <section id="zaplie" className="py-20 px-4 bg-gray-800 text-white">
         <div className="container max-w-6xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center">
             Zaplie: Incentivizing teammates, copilots & customers
