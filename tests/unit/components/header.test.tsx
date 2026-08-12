@@ -45,6 +45,13 @@ describe('Header', () => {
     expect(screen.getByRole('button', { name: 'Products' })).toBeInTheDocument();
   });
 
+  it('renders Our Story and Shop route links', () => {
+    renderHeader();
+
+    expect(screen.getByRole('link', { name: 'Our Story' })).toHaveAttribute('href', '/story');
+    expect(screen.getByRole('link', { name: 'Shop' })).toHaveAttribute('href', '/shop');
+  });
+
   it('renders contact mail buttons for desktop and mobile', () => {
     renderHeader();
 

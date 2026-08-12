@@ -201,6 +201,39 @@
           when: 'They hover over a thumbnail'
           then: 'The thumbnail is highlighted with a green border'
 
+    - name: 'Shop page'
+      id: shop-page
+      description: 'Shop page listing KnowAll AI products for sale, sourced live from Nostr NIP-99 classified listings (kind 30402)'
+      deliverables:
+        - 'Shop page at /shop with the KnowAll Nostr profile hero'
+        - 'ShopListings component fetching kind-30402 listings from public relays'
+        - 'NIP-99 parsing module (lib/nip99.ts) with unit tests'
+        - 'Client-side search and tag filtering'
+        - 'Buy deep-link to the listing on njump and a message-the-seller flow'
+        - 'Shop links in the header and footer'
+      user_story: 'As a Visitor, I want to browse and buy KnowAll AI products listed on Nostr so that I can purchase merch with Bitcoin over Lightning and message the team about a product'
+      scenarios:
+        - name: 'Visitor browses products'
+          given: 'The KnowAll npub has published NIP-99 listings'
+          when: 'The visitor opens /shop'
+          then:
+            - 'Product cards show image, title, summary, price, tags and availability'
+            - 'The newest version of each listing is shown (replaceable events deduplicated by d tag)'
+        - name: 'Visitor searches and filters'
+          given: 'Products are displayed'
+          when: 'They type in the search box or click a tag chip'
+          then: 'The grid narrows to matching products, with a clear-filters fallback when nothing matches'
+        - name: 'Visitor buys or asks about a product'
+          given: 'A product card is displayed'
+          when: 'They click Buy or Message'
+          then:
+            - 'Buy opens the listing on njump.me where they can zap/purchase with their own Nostr client'
+            - 'Message opens the contact panel prefilled with a product enquiry sent as an encrypted Nostr DM'
+        - name: 'Shop has no listings yet'
+          given: 'The KnowAll npub has not published any listings'
+          when: 'The visitor opens /shop'
+          then: 'A branded "Shop opening soon" empty state with a Follow us on Nostr button is shown'
+
     - name: 'Story page'
       id: story-page
       description: "Live feed of the company's Nostr posts rendered as the Our Story page"

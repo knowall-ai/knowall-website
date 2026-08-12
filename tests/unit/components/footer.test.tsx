@@ -40,6 +40,13 @@ describe('Footer', () => {
     );
   });
 
+  it('renders Our Story and Shop route links', () => {
+    render(<Footer />);
+
+    expect(screen.getByRole('link', { name: 'Our Story' })).toHaveAttribute('href', '/story');
+    expect(screen.getByRole('link', { name: 'Shop' })).toHaveAttribute('href', '/shop');
+  });
+
   it('renders the contact email address', () => {
     render(<Footer />);
 
