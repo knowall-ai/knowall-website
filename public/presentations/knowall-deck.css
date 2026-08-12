@@ -570,6 +570,15 @@ section > .logo-light {
   color: var(--lime);
 }
 
+/* Stacked variant — deliverable checks that live under the Delivery card in a
+   Purpose/Delivery pair, so every deliverable reads as part of Delivery.
+   Single column, tighter rhythm, a little air below the card above. */
+.checks-stacked {
+  grid-template-columns: 1fr;
+  gap: 20px;
+  margin-top: 28px;
+}
+
 /* --- Feature rows (Meet Pennie) ---------------------------------------- */
 .rows {
   display: flex;
