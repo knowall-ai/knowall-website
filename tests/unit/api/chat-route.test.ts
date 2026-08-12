@@ -4,7 +4,7 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 /**
  * Chat API route tests
  *
- * Requirements: sally-chat (docs/requirements.yaml)
+ * Requirements: sally-chat
  * - Messages are sent to the OpenAI API and a response is returned
  * - A fallback response is returned when the OpenAI API is unavailable
  * - The route degrades gracefully when no API key is configured

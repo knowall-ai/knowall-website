@@ -7,7 +7,7 @@ import path from 'path';
 /**
  * Chat logger tests
  *
- * Requirements: admin-logs (docs/requirements.yaml)
+ * Requirements: admin-logs
  * - Chat conversations are stored as JSON in the logs directory
  * - Logs can be retrieved in full or by conversation ID
  */

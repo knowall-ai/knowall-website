@@ -5,7 +5,7 @@ import Footer from '@/components/footer';
 /**
  * Footer component tests
  *
- * Requirements: contact-us (docs/requirements.yaml)
+ * Requirements: contact-us
  */
 
 describe('Footer', () => {
