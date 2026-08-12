@@ -172,7 +172,7 @@ export function formatPrice(price: ListingPrice | null): string {
   });
   const symbol = CURRENCY_SYMBOLS[currency];
   const base = isSats
-    ? `${formattedAmount} sats`
+    ? `${formattedAmount} ${formattedAmount === '1' ? 'sat' : 'sats'}`
     : symbol
       ? `${symbol}${formattedAmount}`
       : `${formattedAmount} ${currency}`;

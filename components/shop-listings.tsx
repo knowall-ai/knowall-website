@@ -25,6 +25,8 @@ import {
 const RELAYS = ['wss://relay.damus.io', 'wss://nos.lol', 'wss://relay.primal.net'];
 const MAX_LISTINGS = 100;
 const RELAY_TIMEOUT_MS = 8000;
+/** REQ subscription id — relay EVENT/EOSE messages are matched against it. */
+const SUBSCRIPTION_ID = 'shop';
 
 /** NIP-19 naddr for a listing — the shareable address njump understands.
  *  At most two relay hints, matching Robotechy's share pattern. */
@@ -101,7 +103,7 @@ export default function ShopListings({ pubkey = KNOWALL_PUBKEY }: ShopListingsPr
         socket.send(
           JSON.stringify([
             'REQ',
-            'shop',
+            SUBSCRIPTION_ID,
             { kinds: [CLASSIFIED_LISTING_KIND], authors: [pubkey], limit: MAX_LISTINGS },
           ])
         );
@@ -109,6 +111,8 @@ export default function ShopListings({ pubkey = KNOWALL_PUBKEY }: ShopListingsPr
       socket.onmessage = (message) => {
         try {
           const data = JSON.parse(message.data as string);
+          // Only handle messages addressed to our subscription id.
+          if (data[1] !== SUBSCRIPTION_ID) return;
           if (
             data[0] === 'EVENT' &&
             data[2]?.kind === CLASSIFIED_LISTING_KIND &&

@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { KNOWALL_PUBKEY } from '../lib/nostr';
 
 /**
  * Shop Page Tests
@@ -10,9 +11,6 @@ import { test, expect } from '@playwright/test';
  * The populated state is exercised deterministically by stubbing WebSocket
  * before the page loads.
  */
-
-// Must match lib/nostr.ts KNOWALL_PUBKEY.
-const KNOWALL_PUBKEY = 'b733ecad265d8df63e15e28d24972141a5ebc21bfdf1532adad2e6701e853892';
 
 test.describe('Shop Page', () => {
   test('renders the shop hero with Nostr identity', async ({ page }) => {
@@ -98,12 +96,14 @@ test.describe('Shop Page', () => {
           setTimeout(() => this.onopen?.(), 0);
         }
 
-        send() {
+        send(payload: string) {
+          // Echo the REQ's subscription id back, as a real relay would.
+          const subscriptionId = JSON.parse(payload)[1] as string;
           setTimeout(() => {
             for (const event of listings) {
-              this.onmessage?.({ data: JSON.stringify(['EVENT', 'shop', event]) });
+              this.onmessage?.({ data: JSON.stringify(['EVENT', subscriptionId, event]) });
             }
-            this.onmessage?.({ data: JSON.stringify(['EOSE', 'shop']) });
+            this.onmessage?.({ data: JSON.stringify(['EOSE', subscriptionId]) });
           }, 0);
         }
 

@@ -238,7 +238,7 @@ describe('dedupeListings', () => {
 describe('formatPrice', () => {
   it('formats sats with thousands separators', () => {
     expect(formatPrice({ amount: 10000, currency: 'SATS' })).toBe('10,000 sats');
-    expect(formatPrice({ amount: 1, currency: 'SAT' })).toBe('1 sats');
+    expect(formatPrice({ amount: 1, currency: 'SAT' })).toBe('1 sat');
   });
 
   it('formats known currencies with their symbol', () => {
