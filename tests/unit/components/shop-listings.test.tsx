@@ -135,9 +135,9 @@ describe('ShopListings', () => {
     expect(screen.getByText('Ten die-cut vinyl stickers')).toBeInTheDocument();
     expect(screen.getByText('10,000 sats')).toBeInTheDocument();
 
-    // Buy deep-links to the listing's naddr on njump.
-    const buy = screen.getByRole('link', { name: /Buy/ });
-    expect(buy).toHaveAttribute('href', expect.stringMatching(/njump\.me\/naddr1/));
+    // Cards link to the on-site product page addressed by the listing's naddr.
+    const view = screen.getByRole('link', { name: /View details/ });
+    expect(view).toHaveAttribute('href', expect.stringMatching(/^\/shop\/naddr1/));
   });
 
   it('deduplicates replaceable events, keeping the newest version', async () => {

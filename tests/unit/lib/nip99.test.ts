@@ -3,6 +3,7 @@ import {
   CLASSIFIED_LISTING_KIND,
   parseListing,
   dedupeListings,
+  selectListing,
   formatPrice,
   filterListings,
   collectTags,
@@ -232,6 +233,33 @@ describe('dedupeListings', () => {
     const junk = makeEvent({ id: 'junk', kind: 1 });
     const listings = dedupeListings([first, junk, second]);
     expect(listings.map((l) => l.id)).toEqual(['second', 'first']);
+  });
+});
+
+describe('selectListing', () => {
+  it('returns the newest version of the addressed listing', () => {
+    const older = makeEvent({ id: 'old', created_at: 100 });
+    const newer = makeEvent({ id: 'new', created_at: 200 });
+    const other = makeEvent({
+      id: 'other',
+      tags: [
+        ['d', 'different-product'],
+        ['title', 'Different'],
+      ],
+    });
+    const listing = selectListing([older, other, newer], 'merchant-pubkey', 'sticker-pack');
+    expect(listing?.id).toBe('new');
+  });
+
+  it('ignores events from other authors even with a matching d tag', () => {
+    const foreign = makeEvent({ id: 'foreign', pubkey: 'someone-else' });
+    expect(selectListing([foreign], 'merchant-pubkey', 'sticker-pack')).toBeNull();
+  });
+
+  it('returns null when the address has no usable listing', () => {
+    expect(selectListing([], 'merchant-pubkey', 'sticker-pack')).toBeNull();
+    const junk = makeEvent({ id: 'junk', kind: 1 });
+    expect(selectListing([junk], 'merchant-pubkey', 'sticker-pack')).toBeNull();
   });
 });
 
