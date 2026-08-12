@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useCallback, useContext, useMemo, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -22,13 +22,20 @@ import { sendContactMessage } from '@/lib/nostr-contact';
 const NOSTR_PROFILE_URL =
   'https://njump.me/npub1kue7etfxtkxlv0s4u2xjf9epgxj7hssmlhc4x2k66tn8q8598zfqj322ar';
 
+interface ContactPanelOptions {
+  /** Prefill the message field (e.g. a shop product enquiry). */
+  message?: string;
+}
+
 interface ContactPanelContextType {
   /** Whether the contact panel is currently open. */
   isOpen: boolean;
   /** Directly control the panel open state (used by the Sheet). */
   setIsOpen: (open: boolean) => void;
-  /** Open the contact panel. */
-  openContactPanel: () => void;
+  /** Open the contact panel, optionally prefilling the message field. */
+  openContactPanel: (options?: ContactPanelOptions) => void;
+  /** Message to prefill when the panel opens (consumed by the form). */
+  prefillMessage: string | null;
 }
 
 const ContactPanelContext = createContext<ContactPanelContextType | null>(null);
@@ -48,12 +55,16 @@ export function useContactPanel(): ContactPanelContextType {
  */
 export function ContactPanelProvider({ children }: { children: React.ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [prefillMessage, setPrefillMessage] = useState<string | null>(null);
 
-  const openContactPanel = useCallback(() => setIsOpen(true), []);
+  const openContactPanel = useCallback((options?: ContactPanelOptions) => {
+    setPrefillMessage(options?.message ?? null);
+    setIsOpen(true);
+  }, []);
 
   const value = useMemo(
-    () => ({ isOpen, setIsOpen, openContactPanel }),
-    [isOpen, openContactPanel]
+    () => ({ isOpen, setIsOpen, openContactPanel, prefillMessage }),
+    [isOpen, openContactPanel, prefillMessage]
   );
 
   return (
@@ -80,7 +91,7 @@ type ContactFormData = z.infer<typeof contactSchema>;
  * contact where most visitors won't have a Nostr identity.
  */
 function ContactPanel() {
-  const { isOpen, setIsOpen } = useContactPanel();
+  const { isOpen, setIsOpen, prefillMessage } = useContactPanel();
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -89,11 +100,21 @@ function ContactPanel() {
     register,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors },
   } = useForm<ContactFormData>({
     resolver: zodResolver(contactSchema),
     mode: 'onChange',
   });
+
+  // A trigger can open the panel with a prefilled message (e.g. a shop product
+  // enquiry). Triggers without a prefill leave any in-progress draft alone.
+  useEffect(() => {
+    if (isOpen && prefillMessage) {
+      setIsSubmitted(false);
+      setValue('message', prefillMessage);
+    }
+  }, [isOpen, prefillMessage, setValue]);
 
   const handleOpenChange = (open: boolean) => {
     setIsOpen(open);
