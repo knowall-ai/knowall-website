@@ -79,10 +79,10 @@
       .memory-graph {
         margin: 0;
         padding: 20px 12px 8px;
-        border: 1px solid var(--line);
-        border-radius: 20px;
-        background: linear-gradient(180deg, var(--panel) 0%, var(--panel-lo) 100%);
-        box-shadow: var(--shadow-card), var(--inset-top);
+        border: 0;
+        border-radius: 0;
+        background: rgba(255, 255, 255, 0.04);
+        box-shadow: none;
       }
 
       .memory-graph svg {
@@ -274,15 +274,16 @@
       }
 
       .versus-side {
-        padding: 34px 38px;
-        border: 1px solid var(--line);
-        border-radius: 20px;
-        background: linear-gradient(180deg, rgba(24,30,37,.86) 0%, rgba(17,21,26,.86) 100%);
+        padding: 10px 0 10px 38px;
+        border: 0;
+        border-left: 3px solid rgba(255, 255, 255, 0.28);
+        border-radius: 0;
+        background: none;
       }
 
       .versus-side-strong {
-        border-color: rgba(157, 254, 10, 0.55);
-        box-shadow: 0 0 0 1px rgba(157, 254, 10, 0.12) inset;
+        border-left-color: var(--lime);
+        box-shadow: none;
       }
 
       .versus-tag {
@@ -338,13 +339,14 @@
 
       .card-link {
         display: block;
-        margin: 18px auto 0;
+        margin: 18px 0 0;
         margin-top: auto;
         width: max-content;
-        padding: 9px 20px;
-        border: 1px solid var(--line);
-        border-radius: 999px;
-        background: rgba(11, 13, 16, 0.55);
+        padding: 9px 0 0;
+        border: 0;
+        border-top: 1px solid rgba(157, 254, 10, 0.45);
+        border-radius: 0;
+        background: none;
         color: var(--mist);
         font-size: 19px;
         font-weight: 700;

@@ -300,18 +300,19 @@ section > .logo-light {
 .team-notes {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 24px;
+  gap: 36px 64px;
   margin-top: 60px;
 }
 .team-note {
   display: flex;
-  gap: 18px;
+  gap: 20px;
   align-items: flex-start;
-  background: linear-gradient(180deg, var(--panel) 0%, var(--panel-lo) 100%);
-  border: 1px solid var(--line);
-  border-radius: 16px;
-  box-shadow: var(--shadow-card), var(--inset-top);
-  padding: 22px 26px;
+  background: none;
+  border: 0;
+  border-left: 3px solid var(--lime);
+  border-radius: 0;
+  box-shadow: none;
+  padding: 6px 0 6px 28px;
 }
 .team-note .ic {
   flex: none;
@@ -403,46 +404,45 @@ section > .logo-light {
   max-width: 1250px;
 }
 
-/* --- Cards ---------------------------------------------------------- */
+/* --- Cards ------------------------------------------------------------
+   De-boxed (Ben, 2026-08-11: "too boxy"). Items are open editorial
+   blocks — a thin lime rule on the left, no fill, no border, no shadow —
+   so the typography, not the container, does the work. */
 .cards-2 {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 28px;
+  gap: 44px 72px;
 }
 
 .cards-3 {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 28px;
+  gap: 44px 56px;
 }
 
 .cards-5 {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 28px;
+  gap: 40px 36px;
 }
 
 .card {
-  background: linear-gradient(180deg, var(--panel) 0%, var(--panel-lo) 100%);
-  border: 1px solid var(--line);
-  border-radius: 18px;
-  padding: 30px 34px;
+  background: none;
+  border: 0;
+  border-left: 3px solid var(--lime);
+  border-radius: 0;
+  padding: 6px 0 6px 32px;
   display: flex;
   gap: 26px;
   align-items: flex-start;
-  box-shadow: var(--shadow-card), var(--inset-top);
-  transition:
-    transform 0.25s ease,
-    box-shadow 0.25s ease,
-    border-color 0.25s ease;
+  box-shadow: none;
+  transition: background-color 0.25s ease;
 }
 
 .card:hover,
 .card:focus-visible,
 .card:focus-within {
-  transform: translateY(-6px);
-  border-color: var(--line-lime);
-  box-shadow: var(--shadow-hi), var(--inset-top);
+  background-color: rgba(255, 255, 255, 0.03);
 }
 
 .card:focus-visible,
@@ -453,7 +453,7 @@ section > .logo-light {
 
 .card h4 {
   color: var(--text);
-  font-size: 32px;
+  font-size: 34px;
   margin-bottom: 12px;
 }
 
@@ -462,24 +462,29 @@ section > .logo-light {
   color: var(--mist);
 }
 
+/* Chips are bare lime icons now — the boxed plate went with the cards.
+   The fixed width keeps text columns aligned across sibling cards. */
 .chip {
   flex: none;
-  width: 78px;
-  height: 78px;
-  border-radius: 20px;
-  border: 1px solid rgba(157, 254, 10, 0.3);
-  background: rgba(157, 254, 10, 0.09);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  width: 64px;
+  height: 64px;
+  border-radius: 0;
+  border: 0;
+  background: none;
+  box-shadow: none;
   display: flex;
   align-items: center;
   justify-content: center;
   color: var(--lime);
-  font-size: 46px;
+  font-size: 52px;
 }
 
+/* logo artwork still needs a white plate to sit on */
 .chip-white {
+  width: 78px;
+  height: 78px;
+  border-radius: 20px;
   background: #ffffff;
-  border-color: #ffffff;
 }
 
 /* stacked (icon above text) card variant */
@@ -489,42 +494,36 @@ section > .logo-light {
   gap: 26px;
 }
 
-/* --- Stage cards (T-Minus-15) --------------------------------------- */
+/* --- Stage cards (T-Minus-15) ----------------------------------------
+   Open columns under a thin lime top rule, like a magazine process
+   spread, instead of five filled boxes. */
 .stage {
   position: relative;
-  background: linear-gradient(180deg, var(--panel) 0%, var(--panel-lo) 100%);
-  border: 1px solid var(--line);
-  border-radius: 18px;
-  padding: 112px 32px 30px;
-  box-shadow: var(--shadow-card), var(--inset-top);
-  transition:
-    transform 0.25s ease,
-    border-color 0.25s ease;
-}
-
-.stage:hover {
-  transform: translateY(-6px);
-  border-color: var(--line-lime);
+  background: none;
+  border: 0;
+  border-top: 3px solid var(--lime);
+  border-radius: 0;
+  padding: 104px 18px 0 2px;
+  box-shadow: none;
 }
 
 .stage .step {
   position: absolute;
-  top: 26px;
-  left: 34px;
+  top: 28px;
+  left: 2px;
   font-family: 'Playfair Display', Georgia, serif;
   font-weight: 900;
   font-size: 44px;
-  color: rgba(157, 254, 10, 0.35);
+  color: rgba(157, 254, 10, 0.45);
 }
 
 .stage .chip {
   position: absolute;
-  top: 24px;
-  right: 26px;
-  width: 72px;
-  height: 72px;
-  border-radius: 18px;
-  font-size: 38px;
+  top: 26px;
+  right: 6px;
+  width: 64px;
+  height: 64px;
+  font-size: 42px;
 }
 
 .stage h4 {
@@ -539,22 +538,23 @@ section > .logo-light {
   color: var(--mist);
 }
 
-/* --- Check lists ------------------------------------------------------ */
+/* --- Check lists -------------------------------------------------------
+   Open rows — the lime check mark is enough structure on its own. */
 .checks {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 24px 56px;
+  gap: 36px 72px;
 }
 
 .check {
   display: flex;
   gap: 26px;
   align-items: flex-start;
-  background: linear-gradient(180deg, var(--panel) 0%, var(--panel-lo) 100%);
-  border: 1px solid var(--line);
-  border-radius: 16px;
-  box-shadow: var(--shadow-card), var(--inset-top);
-  padding: 23px 28px;
+  background: none;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 4px 0;
   font-size: 26px;
   color: #eef1e7;
   line-height: 1.5;
@@ -584,10 +584,9 @@ section > .logo-light {
 }
 
 .row .chip {
-  width: 74px;
-  height: 74px;
-  border-radius: 18px;
-  font-size: 38px;
+  width: 64px;
+  height: 64px;
+  font-size: 44px;
 }
 
 .row p {
@@ -641,18 +640,18 @@ section > .logo-light {
 
 .timeline-point {
   position: relative;
-  background: linear-gradient(180deg, var(--panel) 0%, var(--panel-lo) 100%);
-  border: 1px solid var(--line);
-  border-radius: 18px;
-  padding: 38px 42px;
-  box-shadow: var(--shadow-card), var(--inset-top);
+  background: none;
+  border: 0;
+  border-radius: 0;
+  padding: 26px 10px 0 2px;
+  box-shadow: none;
 }
 
 .timeline-point::before {
   content: '';
   position: absolute;
   top: -46px;
-  left: 44px;
+  left: 2px;
   width: 26px;
   height: 26px;
   border-radius: 50%;
@@ -883,36 +882,50 @@ section > .logo-light {
   font-size: 42px;
 }
 
-/* --- Badges / pills ---------------------------------------------------------- */
+/* --- Badges / pills -----------------------------------------------------------
+   Pills are plain footnote text with a lime dot marker — no capsules. */
 .pill-row {
   display: flex;
-  gap: 24px;
+  gap: 14px 44px;
   flex-wrap: wrap;
   align-items: center;
 }
 
 .pill {
-  padding: 11px 26px;
-  border: 1px solid var(--line);
-  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  padding: 4px 0;
+  border: 0;
+  border-radius: 0;
   font-size: 21px;
   font-weight: 700;
   color: var(--mist);
-  background: var(--panel);
-  box-shadow: var(--inset-top);
+  background: none;
+  box-shadow: none;
+}
+
+.pill::before {
+  content: '';
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--lime);
+  opacity: 0.85;
 }
 
 .github-link {
   display: inline-flex;
   align-items: center;
   gap: 18px;
-  padding: 16px 38px;
+  padding: 15px 38px;
   border: 1px solid var(--line);
   border-radius: 999px;
   font-size: 26px;
   font-weight: 700;
-  background: linear-gradient(180deg, var(--panel) 0%, var(--panel-lo) 100%);
-  box-shadow: var(--shadow-card), var(--inset-top);
+  background: none;
+  box-shadow: none;
   width: max-content;
 }
 
@@ -969,12 +982,12 @@ section > .logo-light {
 .kpi {
   flex: 1 1 0;
   min-width: 250px;
-  background: linear-gradient(180deg, var(--panel-hi) 0%, var(--panel-lo) 100%);
-  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.04);
+  border: 0;
   border-left: 3px solid var(--lime);
-  border-radius: 16px;
-  padding: 18px 24px;
-  box-shadow: var(--shadow-card), var(--inset-top);
+  border-radius: 0;
+  padding: 18px 26px;
+  box-shadow: none;
 }
 
 .kpi-val {
