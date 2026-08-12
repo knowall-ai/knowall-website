@@ -25,11 +25,11 @@ export interface NostrEvent {
  * between `match`/`replace` calls.
  */
 function imageUrlRegex(): RegExp {
-  return /https?:\/\/\S+?\.(?:png|jpe?g|gif|webp|avif)(?:\?\S*)?/gi;
+  return /https?:\/\/\S+?\.(?:png|jpe?g|gif|webp|avif)(?:\?[^\s<>()[\]]*)?/gi;
 }
 
 function videoUrlRegex(): RegExp {
-  return /https?:\/\/\S+?\.(?:mp4|webm|mov|m4v)(?:\?\S*)?/gi;
+  return /https?:\/\/\S+?\.(?:mp4|webm|mov|m4v)(?:\?[^\s<>()[\]]*)?/gi;
 }
 
 /**
