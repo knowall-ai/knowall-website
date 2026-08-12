@@ -36,7 +36,7 @@ describe('Footer', () => {
     );
     expect(screen.getByRole('link', { name: 'Bitcoin Integration' })).toHaveAttribute(
       'href',
-      '/#zapp'
+      '/#zaplie'
     );
   });
 
