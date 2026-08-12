@@ -8,7 +8,7 @@ import { ContactPanelProvider } from '@/components/contact-panel';
  * Header component tests
  *
  * Requirements: primary-navigation, responsive-design, contact-us
- * (docs/requirements.yaml)
+ *
  *
  * The header depends on the Nostr auth context (Sign In button) and the
  * contact panel context (mail icon), so it is rendered inside both providers
