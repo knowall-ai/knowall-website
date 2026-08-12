@@ -68,7 +68,7 @@ export default function StoryHero() {
         </div>
 
         <div className="mt-4 flex items-center gap-2 border-t border-gray-800 pt-4 text-sm font-medium text-lime-500">
-          <BookOpen className="h-4 w-4" />
+          <BookOpen className="h-4 w-4" aria-hidden="true" />
           <span>Our Story</span>
         </div>
       </div>

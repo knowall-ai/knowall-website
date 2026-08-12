@@ -54,6 +54,12 @@ export function useNostrProfile(pubkey: string = KNOWALL_PUBKEY): ResolvedNostrP
   const [brokenAvatar, setBrokenAvatar] = useState(false);
 
   useEffect(() => {
+    // Reset when the target pubkey changes so a previous profile's data (or
+    // broken-image flags) never bleed into the new one.
+    setProfile({});
+    setBrokenBanner(false);
+    setBrokenAvatar(false);
+
     let newest = 0;
     const sockets: WebSocket[] = [];
 

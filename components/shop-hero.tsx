@@ -64,7 +64,7 @@ export default function ShopHero() {
         </div>
 
         <div className="mt-4 flex items-center gap-2 border-t border-gray-800 pt-4 text-sm font-medium text-lime-500">
-          <ShoppingBag className="h-4 w-4" />
+          <ShoppingBag className="h-4 w-4" aria-hidden="true" />
           <span>Products</span>
         </div>
       </div>

@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useContactPanel } from '@/components/contact-panel';
-import { KNOWALL_NPUB, SHOP_RELAYS } from '@/lib/nostr';
+import { SHOP_RELAYS } from '@/lib/nostr';
 import {
   CLASSIFIED_LISTING_KIND,
   formatPrice,
