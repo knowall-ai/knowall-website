@@ -6,33 +6,34 @@ export const runtime = 'nodejs';
 // Set to force-dynamic to ensure the route is always server-rendered
 export const dynamic = 'force-dynamic';
 
-// Get API key from environment variables
-// Fallback to a default key only for development
-const API_KEY =
-  process.env.ADMIN_API_KEY ||
-  'kna_9f2e8b7c1d3a5f6e0d2c4b6a8e0d2c4b6a8e0d2c4b6a8e0d2c4b6a8e0d2c4b6';
-
-// Log a warning if using the default key
-if (!process.env.ADMIN_API_KEY) {
-  console.warn(
-    'WARNING: Using default admin API key. Set ADMIN_API_KEY in your .env.local file for better security.'
-  );
-}
-
-// Verify API key from request headers
+// Verify API key from request headers. Fails closed: if ADMIN_API_KEY is not
+// configured, no request is ever authorized — there is no default key.
 function verifyApiKey(request: NextRequest): boolean {
+  const apiKey = process.env.ADMIN_API_KEY;
+  if (!apiKey) {
+    return false;
+  }
+
   const authHeader = request.headers.get('authorization');
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return false;
   }
 
   const token = authHeader.substring(7);
-  return token === API_KEY;
+  return token === apiKey;
 }
 
 // GET handler for retrieving all logs or a specific log
 export async function GET(request: NextRequest) {
   try {
+    // The endpoint is unavailable until an admin key is configured
+    if (!process.env.ADMIN_API_KEY) {
+      return NextResponse.json(
+        { error: 'Service unavailable: ADMIN_API_KEY is not configured' },
+        { status: 503 }
+      );
+    }
+
     // Verify API key
     if (!verifyApiKey(request)) {
       return NextResponse.json(
