@@ -9,7 +9,6 @@ import { ContactPanelProvider } from '@/components/contact-panel';
  *
  * Requirements: primary-navigation, responsive-design, contact-us
  *
- *
  * The header depends on the Nostr auth context (Sign In button) and the
  * contact panel context (mail icon), so it is rendered inside both providers
  * — the same nesting as app/layout.tsx.
