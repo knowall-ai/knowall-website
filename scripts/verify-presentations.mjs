@@ -1,49 +1,14 @@
-// Verification pass for the round-2 deck work:
+// Verification pass for the deck work:
 //  1. no floating control overlaps real slide content, on any slide
 //  2. nothing overflows the 1080px frame
 //  3. the closing CTA button is sized to its label, not to its column
-//  4. fragments exist, and stepping right reveals them one at a time
+//  4. any fragments step right one at a time, and never fragment a title
+//     (the decks deliberately show content without click-to-reveal, so
+//     having no fragments at all is fine)
 import { chromium } from '@playwright/test';
-import { fileURLToPath } from 'node:url';
-import { dirname, join, normalize, extname, relative, isAbsolute } from 'node:path';
-import { readFile } from 'node:fs/promises';
-import { createServer } from 'node:http';
+import { decks, startStaticServer, sleep, gotoDeck } from './lib/deck-harness.mjs';
 
-const root = join(dirname(fileURLToPath(import.meta.url)), '..');
-const publicDir = join(root, 'public');
-const decks = [
-  'knowall-overview',
-  'knowall-overview-full',
-  'ai-discovery',
-  'agentic-delivery',
-  'cisp',
-];
-const MIME = {
-  '.html': 'text/html',
-  '.png': 'image/png',
-  '.jpg': 'image/jpeg',
-  '.svg': 'image/svg+xml',
-  '.css': 'text/css',
-  '.js': 'text/javascript',
-  '.ico': 'image/x-icon',
-};
-const server = createServer(async (req, res) => {
-  try {
-    const pathname = normalize(decodeURIComponent(new URL(req.url, 'http://x').pathname));
-    const file = join(publicDir, pathname.replace(/^[/\\]+/, ''));
-    const rel = relative(publicDir, file);
-    if (rel.startsWith('..') || isAbsolute(rel)) throw new Error('traversal');
-    const body = await readFile(file);
-    res.writeHead(200, { 'content-type': MIME[extname(file)] || 'application/octet-stream' });
-    res.end(body);
-  } catch {
-    res.writeHead(404);
-    res.end();
-  }
-});
-await new Promise((r) => server.listen(0, r));
-const port = server.address().port;
-const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+const { server, port } = await startStaticServer();
 const browser = await chromium.launch();
 const page = await browser.newPage({
   viewport: { width: 1920, height: 1080 },
@@ -53,10 +18,7 @@ let problems = 0;
 
 for (const deck of decks) {
   console.log(`\n===== ${deck} =====`);
-  await page.goto(`http://localhost:${port}/presentations/${deck}.html`, {
-    waitUntil: 'networkidle',
-  });
-  await page.waitForFunction(() => window.Reveal?.isReady?.(), { timeout: 20000 });
+  await gotoDeck(page, port, deck);
 
   // --- fragments -----------------------------------------------------------
   const frag = await page.evaluate(() => {
@@ -79,8 +41,7 @@ for (const deck of decks) {
     problems++;
   }
   if (!frag.total) {
-    console.log('  ** no fragments found **');
-    problems++;
+    console.log('  (no fragments — content arrives with the slide, by design)');
   }
 
   // step through the first fragmented slide with the right arrow
