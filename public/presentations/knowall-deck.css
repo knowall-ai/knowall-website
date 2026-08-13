@@ -510,12 +510,13 @@ section > .logo-light {
 
 .stage .step {
   position: absolute;
-  top: 28px;
+  top: 16px;
   left: 2px;
   font-family: 'Playfair Display', Georgia, serif;
   font-weight: 900;
-  font-size: 44px;
-  color: rgba(157, 254, 10, 0.45);
+  font-size: 58px;
+  /* solid lime — the low-opacity version read as faded/blurred (Ben, 2026-08-11) */
+  color: var(--lime);
 }
 
 .stage .chip {
@@ -1020,6 +1021,30 @@ section > .logo-light {
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--mist);
+}
+
+/* second, sentence-case line under a KPI — day rates, small print */
+.kpi-sub {
+  margin-top: 8px;
+  font-size: 19px;
+  font-weight: 600;
+  color: var(--mist);
+}
+
+/* Hero variant: the price IS the message on this slide, so it gets
+   headline scale rather than a small grid chip (Ben, 2026-08-11:
+   "We don't do all our engagements for £2,000?!"). */
+.kpi-row.kpi-hero .kpi {
+  padding: 28px 36px 24px;
+}
+
+.kpi-row.kpi-hero .kpi-val {
+  font-size: 80px;
+}
+
+.kpi-row.kpi-hero .kpi-label {
+  margin-top: 12px;
+  font-size: 21px;
 }
 
 /* Denser content rhythm so KPI-heavy slides stay inside the frame. */
