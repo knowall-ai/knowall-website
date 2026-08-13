@@ -15,6 +15,10 @@ import {
   ListChecks,
   Users,
   Send,
+  Video,
+  Camera,
+  Server,
+  Network,
 } from 'lucide-react';
 import EmailIcon from '@/components/email-icon';
 import { Button } from '@/components/ui/button';
@@ -580,6 +584,32 @@ export default function Home() {
                 asks before anything reaches a client.
               </p>
               <ul className="space-y-2 mb-6">
+                <li className="flex items-start gap-2">
+                  <Code className="h-5 w-5 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <span>
+                    Custom skills that understand your business &mdash; including Xero and Dynamics
+                    365 Business Central
+                  </span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <Video className="h-5 w-5 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <span>Joins your internal and external calls like any teammate</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <Camera className="h-5 w-5 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <span>Appears on a virtual camera in 1-2-1 and group calls</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <Server className="h-5 w-5 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <span>Runs on her own VM, completing activities end-to-end</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <Network className="h-5 w-5 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <span>
+                    Builds a knowledge graph of people, projects, places and organisations &mdash;
+                    and how they all relate
+                  </span>
+                </li>
                 <li className="flex items-start gap-2">
                   <Zap className="h-5 w-5 text-lime-500 mt-0.5 flex-shrink-0" />
                   <span>Proposals and quotations drafted, branded and sent to clients</span>
