@@ -38,7 +38,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   // warn about Next's dev-injected script tags on every page).
   preload('/images/green-bg.png', { as: 'image' });
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en">
       <body className={inter.className}>
         <NostrAuthProvider>
           <ContactPanelProvider>{children}</ContactPanelProvider>
