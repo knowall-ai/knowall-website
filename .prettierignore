@@ -16,3 +16,9 @@ package-lock.json
 # Generated
 *.min.js
 *.min.css
+
+# Hand-written presentation decks — prettier reflow risks changing slide rendering
+public/presentations/*.html
+
+# Vendored third-party assets (reveal.js, Google Fonts mirror)
+public/presentations/vendor/

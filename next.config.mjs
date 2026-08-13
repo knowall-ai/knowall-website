@@ -29,6 +29,16 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  // /presentations is a static index.html in public/, which Next doesn't
+  // directory-resolve. Redirect (not rewrite) the clean URL onto the file so
+  // the browser lands on /presentations/index.html and the page's relative
+  // deck/asset links resolve under /presentations/ rather than the site root.
+  async redirects() {
+    return [
+      { source: '/presentations', destination: '/presentations/index.html', permanent: false },
+    ];
+  },
+
   // next/image quality values must be enumerated in Next 16 (previously any
   // value was allowed). The app uses quality 90 and 95; 75 is the default.
   images: {
