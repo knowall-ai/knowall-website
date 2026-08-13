@@ -272,6 +272,7 @@ describe('parseProfileContent', () => {
       name: 'ben',
       display_name: 'Ben Weeks',
       picture: 'https://img.example/ben.png',
+      nip05: 'ben@bengweeks.github.io',
       lud16: 'ben@knowall.ai',
       extra: 'ignored',
     });
@@ -279,6 +280,7 @@ describe('parseProfileContent', () => {
       name: 'ben',
       display_name: 'Ben Weeks',
       picture: 'https://img.example/ben.png',
+      nip05: 'ben@bengweeks.github.io',
       lud06: undefined,
       lud16: 'ben@knowall.ai',
     });
@@ -287,10 +289,11 @@ describe('parseProfileContent', () => {
   it('tolerates malformed JSON and wrong-typed fields', () => {
     expect(parseProfileContent('not json')).toEqual({});
     expect(parseProfileContent('"just a string"')).toEqual({});
-    expect(parseProfileContent(JSON.stringify({ name: 42, picture: ' ' }))).toEqual({
+    expect(parseProfileContent(JSON.stringify({ name: 42, picture: ' ', nip05: 7 }))).toEqual({
       name: undefined,
       display_name: undefined,
       picture: undefined,
+      nip05: undefined,
       lud06: undefined,
       lud16: undefined,
     });

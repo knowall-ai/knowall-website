@@ -307,14 +307,16 @@ export interface ProfileMetadata {
   name?: string;
   display_name?: string;
   picture?: string;
+  nip05?: string;
   lud06?: string;
   lud16?: string;
 }
 
 /**
  * Parse a kind-0 event's JSON content into the profile fields the story page
- * uses, tolerating malformed JSON and wrong-typed fields (both occur in the
- * wild). Returns an empty object rather than throwing.
+ * and the signed-in header chip use, tolerating malformed JSON and wrong-typed
+ * fields (both occur in the wild). Returns an empty object rather than
+ * throwing.
  */
 export function parseProfileContent(content: string): ProfileMetadata {
   let raw: unknown;
@@ -331,6 +333,7 @@ export function parseProfileContent(content: string): ProfileMetadata {
     name: str(record.name),
     display_name: str(record.display_name),
     picture: str(record.picture),
+    nip05: str(record.nip05),
     lud06: str(record.lud06),
     lud16: str(record.lud16),
   };

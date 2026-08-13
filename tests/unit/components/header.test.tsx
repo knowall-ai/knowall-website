@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, afterEach, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import Header from '@/components/header';
 import { NostrAuthProvider } from '@/components/auth/nostr-auth-provider';
@@ -70,6 +70,61 @@ describe('Header', () => {
     renderHeader();
 
     expect(screen.getByRole('button', { name: 'Sign In' })).toBeInTheDocument();
+  });
+
+  describe('signed in', () => {
+    // Restore path: a persisted pubkey + cached profile render the account
+    // chip without any relay round-trip (WebSocket is stubbed to stay silent).
+    const PUBKEY = '971615b70ad9ec896f8d5ba0f2d01652f1dfe5f9ced81ac9469ca7facefad68b';
+
+    class SilentWebSocket {
+      static CONNECTING = 0;
+      static OPEN = 1;
+      static CLOSING = 2;
+      static CLOSED = 3;
+      readyState = SilentWebSocket.OPEN;
+      onopen: (() => void) | null = null;
+      send() {}
+      close() {}
+    }
+
+    function seedSession() {
+      window.localStorage.setItem('knowall.nostr.pubkey', PUBKEY);
+      window.localStorage.setItem(
+        'knowall.nostr.profile',
+        JSON.stringify({
+          pubkey: PUBKEY,
+          profile: { display_name: 'Ben Weeks', picture: 'https://example.com/ben.jpg' },
+        })
+      );
+      vi.stubGlobal('WebSocket', SilentWebSocket);
+    }
+
+    afterEach(() => {
+      vi.unstubAllGlobals();
+      window.localStorage.clear();
+    });
+
+    it('renders the account chip with profile name and picture instead of Sign In', async () => {
+      seedSession();
+      renderHeader();
+
+      const chip = await screen.findByTestId('nostr-account-menu');
+      expect(chip).toHaveTextContent('Ben Weeks');
+      expect(chip.querySelector('img')).toHaveAttribute('src', 'https://example.com/ben.jpg');
+      expect(screen.queryByRole('button', { name: 'Sign In' })).not.toBeInTheDocument();
+    });
+
+    it('renders the account chip in the mobile menu too', async () => {
+      seedSession();
+      renderHeader();
+      await screen.findByTestId('nostr-account-menu');
+
+      fireEvent.click(screen.getByRole('button', { name: 'Toggle menu' }));
+
+      expect(screen.getAllByTestId('nostr-account-menu')).toHaveLength(2);
+      expect(screen.queryByRole('button', { name: 'Sign In' })).not.toBeInTheDocument();
+    });
   });
 
   it('renders a mobile menu toggle button', () => {
