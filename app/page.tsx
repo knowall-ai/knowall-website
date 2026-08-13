@@ -14,6 +14,18 @@ import {
   BookOpen,
   ListChecks,
   Users,
+  Send,
+  Video,
+  Camera,
+  Server,
+  Network,
+  Globe,
+  Sparkles,
+  ScreenShare,
+  FileText,
+  Brain,
+  FileSignature,
+  BarChart3,
 } from 'lucide-react';
 import EmailIcon from '@/components/email-icon';
 import { Button } from '@/components/ui/button';
@@ -28,6 +40,7 @@ import BitcoinLogo from '@/components/bitcoin-logo';
 import BackgroundImage from '@/components/background-image';
 import AutoGenLogo from '@/components/autogen-logo';
 import ZappCarousel from '@/components/zapp-carousel';
+import ZaplieShowcase from '@/components/zaplie-showcase';
 import TeamSection from '@/components/team-section';
 import AgentsSection from '@/components/agents-section';
 import TMinus15Book from '@/components/tminus15-book';
@@ -71,7 +84,7 @@ export default function Home() {
                   className="border-white text-white hover:bg-white/10"
                   asChild
                 >
-                  <a href="#zapp">Find out more about Zaplie</a>
+                  <a href="#zaplie">Find out more about Zaplie</a>
                 </Button>
               </div>
             </div>
@@ -119,7 +132,7 @@ export default function Home() {
       </section>
 
       {/* About Zaplie Section */}
-      <section id="zapp" className="py-20 px-4 bg-gray-800 text-white">
+      <section id="zaplie" className="py-20 px-4 bg-gray-800 text-white">
         <div className="container max-w-6xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center">
             Zaplie: Incentivizing teammates, copilots & customers
@@ -127,66 +140,51 @@ export default function Home() {
 
           <div className="flex flex-col lg:flex-row items-center gap-12">
             <div className="flex-1">
-              <p className="text-lg text-gray-200 mb-6">
-                Zaplie is an open-source platform that integrates Microsoft Teams with Bitcoin
-                microtransactions and AI agents (Copilots) to enhance collaboration, productivity,
-                and real-value incentives. Built on the &quot;value-for-value&quot; model, it
-                transforms the digital workspace by linking communication tools with financial
-                rewards and AI-driven support.
-              </p>
-              <p className="text-lg text-gray-200 mb-6">
-                Using seamless Bitcoin microtransactions, Zaplie incentivizes engagement across team
-                members, clients, and AI agents. This approach fosters a culture of recognition and
-                accountability, where contributions—whether human or AI—are rewarded in proportion
-                to the value they deliver.
-              </p>
               <p className="text-lg text-gray-200 mb-8">
-                With its open-source foundation, Zaplie can be tailored to meet the unique needs of
-                any organization. By aligning incentives and enabling value exchange across people
-                and intelligent systems, it supports more motivated, transparent, and effective
-                collaboration.
+                Zaplie is an open-source platform that integrates Microsoft Teams with Bitcoin
+                microtransactions and AI agents (Copilots). Built on the value-for-value model, it
+                links communication tools with financial rewards and AI-driven support to enhance
+                collaboration and productivity.
               </p>
+
+              <ul className="space-y-5 mb-10">
+                <li className="flex items-start gap-3">
+                  <div className="flex-shrink-0 mt-0.5">
+                    <BitcoinLogo size={24} />
+                  </div>
+                  <span className="text-gray-200">
+                    Instant Lightning payments reward teammates, clients, and AI agents in
+                    proportion to the value they deliver
+                  </span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <Bot className="h-6 w-6 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <span className="text-gray-200">
+                    AI Copilots participate in your Teams workspace and earn real rewards for their
+                    contributions
+                  </span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <Zap className="h-6 w-6 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <span className="text-gray-200">
+                    Value-for-value model fosters recognition and accountability — every
+                    contribution, human or AI, is incentivized
+                  </span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <Code className="h-6 w-6 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <span className="text-gray-200">
+                    Open-source foundation, adaptable to any organisation&apos;s unique needs with a
+                    transparent, community-driven approach
+                  </span>
+                </li>
+              </ul>
             </div>
 
             <div className="flex-1 w-full flex flex-col items-center">
-              <div className="relative w-full">
-                <div
-                  className="absolute -inset-4 bg-lime-500/10 blur-2xl rounded-3xl"
-                  aria-hidden="true"
-                ></div>
-                <div className="relative rounded-xl overflow-hidden border border-gray-700 bg-gray-950 shadow-2xl shadow-lime-500/20">
-                  {/* Browser chrome bar */}
-                  <div
-                    className="flex items-center gap-2 px-4 py-3 bg-gray-800 border-b border-gray-700"
-                    aria-hidden="true"
-                  >
-                    <span className="h-3 w-3 rounded-full bg-red-500/80"></span>
-                    <span className="h-3 w-3 rounded-full bg-yellow-500/80"></span>
-                    <span className="h-3 w-3 rounded-full bg-green-500/80"></span>
-                    <span className="ml-3 text-xs text-gray-400 bg-gray-900 rounded-md px-3 py-1">
-                      www.getzapl.ie
-                    </span>
-                  </div>
-                  <Image
-                    src="/images/zapp/02-feed.png"
-                    alt="Zaplie feed in Microsoft Teams showing zaps sent between teammates"
-                    width={1200}
-                    height={675}
-                    className="w-full h-auto"
-                  />
-                </div>
-              </div>
+              <ZaplieShowcase />
 
               <div className="flex flex-wrap items-center justify-center gap-4 mt-4">
-                <a
-                  href="https://www.getzapl.ie"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 bg-lime-600 hover:bg-lime-700 text-white px-4 py-2 rounded-md transition-colors font-medium"
-                >
-                  <Zap className="h-5 w-5" />
-                  <span>Visit getzapl.ie</span>
-                </a>
                 <a
                   href="https://github.com/knowall-ai/zaplie-webapp"
                   target="_blank"
@@ -559,6 +557,260 @@ export default function Home() {
                 </li>
               </ul>
             </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Sallie for Sales Section */}
+      <section id="sallie" className="py-20 px-4 bg-gray-900 text-white">
+        <div className="container max-w-6xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center">Sallie for Sales</h2>
+          <p className="text-lg text-center text-gray-300 max-w-3xl mx-auto mb-12">
+            Meet Sallie, our AI sales copilot. She lives in Microsoft Teams and looks after the
+            day-to-day of your sales desk — drafting proposals and quotations, tracking the
+            pipeline, and chasing deals — while keeping you in the loop for every judgement call.
+          </p>
+
+          <div className="flex flex-col lg:flex-row items-center gap-12">
+            <div className="flex-[1.4]">
+              <figure className="mb-6">
+                <Image
+                  src="/images/sallie-video-call.jpg"
+                  alt="Sallie on a video call — her avatar with live telemetry panels"
+                  width={1920}
+                  height={1080}
+                  className="w-full h-auto rounded-xl ring-2 ring-lime-500/50"
+                />
+                <figcaption className="text-xs text-gray-500 mt-2 text-center">
+                  Sallie on a video call &mdash; a frame from her live feed
+                </figcaption>
+              </figure>
+              <p className="text-lg text-gray-200 mb-6">
+                Sallie turns discovery notes into branded proposals, keeps every opportunity up to
+                date, and never lets a deal go quiet. When something needs your judgement — pricing,
+                scope, a client&apos;s tone — she doesn&apos;t guess; she messages you in Teams and
+                asks before anything reaches a client.
+              </p>
+              <ul className="grid sm:grid-cols-2 gap-x-6 gap-y-3 mb-6">
+                <li className="flex items-start gap-2">
+                  <Code className="h-5 w-5 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <span>
+                    Custom skills that understand your business &mdash; including Xero and Business
+                    Central
+                  </span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <Globe className="h-5 w-5 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <span>Integrates onto your website</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <Sparkles className="h-5 w-5 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <span>Uses the latest AI models &mdash; fully configurable</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <Video className="h-5 w-5 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <span>Joins your internal and external calls like any teammate</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <Camera className="h-5 w-5 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <span>Appears on a virtual camera in 1-2-1 and group calls</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <ScreenShare className="h-5 w-5 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <span>Shares her screen for demos and presentations (work in progress)</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <Server className="h-5 w-5 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <span>Runs on her own VM, completing activities end-to-end</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <Users className="h-5 w-5 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <span>Works alongside your human team members</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <FileText className="h-5 w-5 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <span>Updates documentation in SharePoint</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <Brain className="h-5 w-5 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <span>Long-term memory of your business and everyone she works with</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <Network className="h-5 w-5 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <span>
+                    Builds a knowledge graph of people, projects, places and organisations
+                  </span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <FileSignature className="h-5 w-5 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <span>Proposals and quotations drafted, branded and sent to clients</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <BarChart3 className="h-5 w-5 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <span>Pipeline and opportunities tracked in Dynamics 365 Business Central</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <RefreshCw className="h-5 w-5 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <span>
+                    Follow-ups and deal chasing, with quotes handed to Allie for invoicing
+                  </span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <ShieldCheck className="h-5 w-5 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <span>
+                    Human-in-the-loop: Sallie asks in Teams before anything reaches a client
+                  </span>
+                </li>
+              </ul>
+              <p className="text-lg text-gray-200">
+                Sallie builds on the proposal and pipeline automation we run in our own business
+                every day, packaged as a copilot your whole sales team can talk to.
+              </p>
+            </div>
+
+            <div className="flex-1 w-full lg:max-w-none max-w-md flex flex-col justify-center gap-6 self-stretch">
+              <div className="text-center">
+                <h3 className="text-lg font-semibold">Sallie in action</h3>
+                <p className="text-sm text-gray-400 mt-1">
+                  A real exchange from Microsoft Teams &mdash; proposal drafted, approved and sent
+                </p>
+              </div>
+              <p className="sr-only">
+                Illustration of a Microsoft Teams chat where Sallie asks Ben to approve a proposal
+                for Contoso, Ben approves it, and Sallie sends it and logs the opportunity.
+              </p>
+              <Card
+                aria-hidden="true"
+                className="w-full border-0 bg-gray-950 text-white shadow-lg overflow-hidden"
+              >
+                <div className="flex items-center gap-3 px-4 py-3 border-b border-gray-800">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-lime-500/20">
+                    <Bot className="h-5 w-5 text-lime-500" />
+                  </div>
+                  <span className="font-semibold whitespace-nowrap">Sallie for Sales</span>
+                  <div className="ml-auto flex items-center gap-3 text-xs text-gray-400">
+                    <span className="text-white border-b-2 border-lime-500 pb-0.5">Chat</span>
+                    <span>Pipeline</span>
+                    <span>Reports</span>
+                    <span>Profile</span>
+                  </div>
+                </div>
+                <div className="p-4 space-y-4">
+                  <div className="flex items-start gap-2">
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-lime-500/20">
+                      <Bot className="h-4 w-4 text-lime-500" />
+                    </div>
+                    <div className="flex-1 bg-gray-900 rounded-lg p-4">
+                      <div className="flex items-baseline gap-2 mb-1">
+                        <span className="text-sm font-semibold text-lime-400">
+                          Sallie for Sales
+                        </span>
+                        <span className="text-xs text-gray-500">5/12, 9:15 AM</span>
+                      </div>
+                      <p className="text-sm text-gray-200 mb-3">
+                        Hi Ben, Contoso liked the discovery workshop. I&apos;ve drafted the project
+                        proposal — would you like to review it before I send it over?
+                      </p>
+                      <div className="flex flex-wrap gap-2">
+                        <span className="text-xs border border-gray-700 rounded px-3 py-1 text-gray-300">
+                          Yes
+                        </span>
+                        <span className="text-xs border border-gray-700 rounded px-3 py-1 text-gray-300">
+                          Send as is
+                        </span>
+                        <span className="text-xs border border-gray-700 rounded px-3 py-1 text-gray-300">
+                          Remind me tomorrow
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-start justify-end gap-2">
+                    <div className="bg-gray-900 rounded-lg px-4 py-2">
+                      <div className="flex items-baseline gap-2 mb-0.5">
+                        <span className="text-sm font-semibold">Ben Weeks</span>
+                        <span className="text-xs text-gray-500">5/12, 9:16 AM</span>
+                      </div>
+                      <p className="text-sm text-gray-200">Yes</p>
+                    </div>
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-lime-900/60 text-xs font-semibold text-lime-300">
+                      BW
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-lime-500/20">
+                      <Bot className="h-4 w-4 text-lime-500" />
+                    </div>
+                    <div className="flex-1 bg-gray-900 rounded-lg p-4 border-t-2 border-lime-500">
+                      <div className="flex items-baseline gap-2 mb-3">
+                        <span className="text-sm font-semibold text-lime-400">
+                          Sallie for Sales
+                        </span>
+                        <span className="text-xs text-gray-500">5/12, 9:17 AM</span>
+                      </div>
+                      <div className="flex items-center justify-between mb-3">
+                        <span className="font-semibold">Proposal # PRO-0231</span>
+                        <span className="text-xs text-lime-400 border border-lime-500/40 rounded px-2 py-0.5">
+                          Draft ready
+                        </span>
+                      </div>
+                      <dl className="space-y-2 text-sm mb-3">
+                        <div className="flex gap-2">
+                          <dt className="text-gray-400">Client:</dt>
+                          <dd className="font-medium text-gray-200">Contoso</dd>
+                        </div>
+                        <div className="flex gap-2">
+                          <dt className="text-gray-400">Engagement:</dt>
+                          <dd className="font-medium text-gray-200">
+                            Copilot Implementation (CISP)
+                          </dd>
+                        </div>
+                        <div className="flex gap-2">
+                          <dt className="text-gray-400">Value:</dt>
+                          <dd className="font-medium text-gray-200">€18,500</dd>
+                        </div>
+                      </dl>
+                      <div className="flex gap-2">
+                        <span className="text-xs border border-gray-600 rounded px-3 py-1 text-gray-200">
+                          Open proposal
+                        </span>
+                        <span className="text-xs border border-gray-600 rounded px-3 py-1 text-gray-200">
+                          Send to client
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-lime-500/20">
+                      <Bot className="h-4 w-4 text-lime-500" />
+                    </div>
+                    <div className="flex-1 bg-gray-900 rounded-lg p-4">
+                      <div className="flex items-baseline gap-2 mb-1">
+                        <span className="text-sm font-semibold text-lime-400">
+                          Sallie for Sales
+                        </span>
+                        <span className="text-xs text-gray-500">5/12, 9:18 AM</span>
+                      </div>
+                      <p className="text-sm text-gray-200">
+                        Sent! I&apos;ve logged the opportunity in Business Central and will follow
+                        up with Contoso on Thursday if we haven&apos;t heard back.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 rounded-lg border border-gray-800 bg-gray-900 px-4 py-2.5">
+                    <span className="flex-1 text-sm text-gray-500">Type a new message</span>
+                    <Send className="h-4 w-4 text-gray-500" />
+                  </div>
+                </div>
+              </Card>
+              <div className="text-center">
+                <Button
+                  className="bg-lime-500 text-white hover:bg-lime-600 shadow-lg shadow-lime-500/30"
+                  asChild
+                >
+                  <a href="#contact">Book a Sallie demo</a>
+                </Button>
+              </div>
+            </div>
           </div>
         </div>
       </section>

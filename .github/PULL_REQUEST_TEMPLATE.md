@@ -27,7 +27,7 @@ Example:
   2. Click a primary navigation link, e.g. "Services".
   3. **Expected:** the page scrolls to the matching section.
   4. Open the chat widget and send a message.
-  5. **Expected:** Sally responds (fallback response if no OPENAI_API_KEY).
+  5. **Expected:** Sallie responds (fallback response if no OPENAI_API_KEY).
 
 For pure-refactor / docs / CI / deps PRs with no user-visible change, replace the steps with:
 

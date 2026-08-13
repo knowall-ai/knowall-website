@@ -1,19 +1,19 @@
 import { test, expect } from '@playwright/test';
 
 /**
- * Sally Chat Tests
+ * Sallie Chat Tests
  *
- * Based on requirements (sally-chat):
- * - The chat interface renders with Sally's greeting
+ * Based on requirements (sallie-chat):
+ * - The chat interface renders with Sallie's greeting
  * - Sending a message displays a response in the chat interface
- * - When the OpenAI API is unavailable (e.g. no valid API key), Sally replies
+ * - When the OpenAI API is unavailable (e.g. no valid API key), Sallie replies
  *   with a fallback response instead of an error
  *
  * The Playwright web server is started with an invalid OPENAI_API_KEY
  * (see playwright.config.ts) so these tests exercise the fallback path and
  * never require real secrets.
  */
-test.describe('Sally Chat', () => {
+test.describe('Sallie Chat', () => {
   // Hydration of the dev build can be slow on a loaded machine
   test.slow();
 
@@ -30,7 +30,9 @@ test.describe('Sally Chat', () => {
       page.getByTestId('sallie-chat').getByRole('heading', { name: 'Sallie' })
     ).toBeVisible();
     await expect(page.getByText(/I'm Sallie, but I'm not your regular bot!/)).toBeVisible();
-    await expect(page.getByText(/Our conversation will be saved with the ID/)).toBeVisible();
+    // The conversation ID is used internally (logging/lead follow-up) but is
+    // deliberately not surfaced to visitors.
+    await expect(page.getByText(/Our conversation will be saved with the ID/)).toHaveCount(0);
   });
 
   test('Chat input and send button are available', async ({ page }) => {
@@ -40,15 +42,15 @@ test.describe('Sally Chat', () => {
 
   test('Sending a message shows a fallback reply without a valid API key', async ({ page }) => {
     const input = page.getByPlaceholder('Type your message...');
-    await input.fill('Hello Sally');
+    await input.fill('Hello Sallie');
     await page.locator('button[type="submit"]').click();
 
     // The user's message appears in the conversation
-    await expect(page.getByText('Hello Sally', { exact: true })).toBeVisible();
+    await expect(page.getByText('Hello Sallie', { exact: true })).toBeVisible();
 
-    // Sally replies. Without a valid OPENAI_API_KEY the server responds with
+    // Sallie replies. Without a valid OPENAI_API_KEY the server responds with
     // its fallback message acknowledging the user's input.
-    await expect(page.getByText(/I received your message: "Hello Sally"/)).toBeVisible({
+    await expect(page.getByText(/I received your message: "Hello Sallie"/)).toBeVisible({
       timeout: 25000,
     });
     await expect(page.getByText(/technical difficulties/)).toBeVisible();

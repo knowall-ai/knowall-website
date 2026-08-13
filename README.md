@@ -118,7 +118,7 @@ npm run test:headed
 
 Tests are organized in the `tests` directory and follow the naming convention `[feature-name].spec.ts`.
 
-Each test file focuses on a specific feature or requirement from the `/docs/requirements.yaml` file.
+Each test file focuses on a specific feature of the site.
 
 ### Creating New Tests
 
