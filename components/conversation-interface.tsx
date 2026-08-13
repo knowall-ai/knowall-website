@@ -3,7 +3,7 @@
 import type React from 'react';
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { Mic, Send, MicOff, Loader2 } from 'lucide-react';
-import SallyAvatar from './sally-avatar';
+import SallieAvatar from './sallie-avatar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -46,7 +46,7 @@ export default function ConversationInterface() {
     {
       id: '1',
       role: 'assistant',
-      content: `I'm Sally, but I'm not your regular bot! My aim is to understand what you want to achieve and determine if we are a good fit to help you. If we are, I can create a brief for the team if you would like me to.
+      content: `I'm Sallie, but I'm not your regular bot! My aim is to understand what you want to achieve and determine if we are a good fit to help you. If we are, I can create a brief for the team if you would like me to.
 
 Our conversation will be saved with the ID of ${conversationId} for future reference so you won't need to repeat it.
 
@@ -340,8 +340,8 @@ We can make this a game! I'll ask you 20 questions to build you a brief and unde
       <Card className="w-full shadow-xl border-0 bg-gray-900/90 backdrop-blur-sm">
         <CardHeader className="p-4 border-b border-gray-700 bg-lime-600/90 text-white rounded-t-lg">
           <div className="flex items-center gap-2">
-            <SallyAvatar className="h-10 w-10" size={40} />
-            <h3 className="font-medium">Sally</h3>
+            <SallieAvatar className="h-10 w-10" size={40} />
+            <h3 className="font-medium">Sallie</h3>
           </div>
         </CardHeader>
         <CardContent className="p-0">
@@ -368,8 +368,8 @@ We can make this a game! I'll ask you 20 questions to build you a brief and unde
 
       <CardHeader className="p-4 border-b border-gray-700 bg-lime-600/90 text-white rounded-t-lg">
         <div className="flex items-center gap-2">
-          <SallyAvatar className="h-10 w-10" size={40} />
-          <h3 className="font-medium">Sally</h3>
+          <SallieAvatar className="h-10 w-10" size={40} />
+          <h3 className="font-medium">Sallie</h3>
         </div>
       </CardHeader>
 
