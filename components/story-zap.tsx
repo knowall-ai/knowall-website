@@ -135,7 +135,11 @@ export default function StoryZapButton({ note, totals }: { note: NostrEvent; tot
       //    is publicly attributed to them via the eventual kind-9735 receipt.
       const callbackUrl = new URL(lnurl.callback);
       callbackUrl.searchParams.set('amount', String(amountMsats));
-      if (lnurl.allowsNostr !== false) {
+      // NIP-57 zap support is opt-in: only services that advertise
+      // `allowsNostr: true` accept a `nostr` param — others may reject the
+      // request outright, so plain LNURL-pay (with a LUD-12 comment) is used
+      // for them instead.
+      if (lnurl.allowsNostr === true) {
         const signedRequest = await signEvent(
           buildZapRequestTemplate({
             recipientPubkey: note.pubkey,

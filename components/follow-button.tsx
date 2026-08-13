@@ -73,16 +73,16 @@ export default function FollowButton() {
     setError(null);
     try {
       // Re-read the freshest kind-3 at click time so follows added since page
-      // load are never clobbered. Only a successfully fetched list may be
-      // published on — a user with follows whose list we can't see would
-      // otherwise get their follows wiped.
+      // load are never clobbered. Only the click-time list may be published
+      // on — falling back to the mount-time snapshot (or publishing with no
+      // list at all) could wipe follows added in the meantime, so anything
+      // less drops to the njump deep-link instead.
       let base: NostrEvent | null = null;
       try {
         base = await fetchContactList(user.pubkey);
       } catch {
         base = null;
       }
-      base = base ?? contactList ?? null;
 
       if (!base) {
         setFallbackToNjump(true);

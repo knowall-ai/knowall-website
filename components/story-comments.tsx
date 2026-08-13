@@ -136,6 +136,9 @@ function StoryComment({
   metadata: ProfileMetadata | undefined;
 }) {
   const [expanded, setExpanded] = useState(false);
+  // Avatar URLs come from arbitrary (sometimes dead) hosts; when one fails to
+  // load, fall back to the initial-based avatar instead of an empty gap.
+  const [avatarBroken, setAvatarBroken] = useState(false);
   const npub = encodeBech32('npub', reply.pubkey);
   const name = profileDisplayName(metadata, npub);
   const needsClamp = reply.content.length > CLAMP_LENGTH;
@@ -149,7 +152,7 @@ function StoryComment({
         rel="noopener noreferrer"
         className="shrink-0"
       >
-        {metadata?.picture ? (
+        {metadata?.picture && !avatarBroken ? (
           // eslint-disable-next-line @next/next/no-img-element -- avatars come from Nostr kind-0 metadata, hosts unknown at build time
           <img
             src={metadata.picture}
@@ -158,9 +161,7 @@ function StoryComment({
             height={32}
             loading="lazy"
             referrerPolicy="no-referrer"
-            onError={(event) => {
-              event.currentTarget.style.display = 'none';
-            }}
+            onError={() => setAvatarBroken(true)}
             className="h-8 w-8 rounded-full border border-gray-800 bg-gray-800 object-cover"
           />
         ) : (
