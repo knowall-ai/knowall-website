@@ -28,7 +28,7 @@ test.describe('Sallie Chat', () => {
     await expect(page.getByText(/I'm Sallie, but I'm not your regular bot!/)).toBeVisible();
     // The conversation ID is used internally (logging/lead follow-up) but is
     // deliberately not surfaced to visitors.
-    await expect(page.getByText(/Our conversation will be saved with the ID/)).toBeHidden();
+    await expect(page.getByText(/Our conversation will be saved with the ID/)).toHaveCount(0);
   });
 
   test('Chat input and send button are available', async ({ page }) => {
