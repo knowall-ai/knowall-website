@@ -107,7 +107,7 @@ describe('POST /api/chat', () => {
     expect(body.id).toBeTruthy();
   });
 
-  it('sends the system prompt with the conversation id substituted', async () => {
+  it('sends the system prompt without surfacing the conversation id', async () => {
     vi.stubEnv('OPENAI_API_KEY', 'sk-test-key');
     createMock.mockResolvedValue({
       choices: [{ message: { content: 'Hi!' } }],
@@ -124,8 +124,11 @@ describe('POST /api/chat', () => {
     const request = createMock.mock.calls[0][0];
     expect(request.model).toBe('gpt-4o');
     expect(request.messages[0].role).toBe('system');
-    expect(request.messages[0].content).toContain('conv-456');
+    // The conversation id is used for logging only and is no longer injected
+    // into the system prompt or surfaced to visitors.
+    expect(request.messages[0].content).not.toContain('conv-456');
     expect(request.messages[0].content).not.toContain('{{CONVERSATION_ID}}');
+    expect(request.messages[0].content).toContain('sallie@knowall.ai');
     expect(request.messages[1]).toEqual({ role: 'user', content: 'Hello' });
   });
 
