@@ -32,7 +32,7 @@ npx vitest run tests/unit/lib/utils.test.ts
 **Key API routes:**
 
 - `app/api/chat/route.ts` - OpenAI GPT-4o chat endpoint with fallback responses
-- `app/api/chat/system-prompt.ts` - Sally AI assistant persona configuration
+- `app/api/chat/system-prompt.ts` - Sallie AI assistant persona configuration
 - `app/api/chat/logger.ts` - Logs conversations to `logs/` directory as JSON
 - `app/api/logs/route.ts` - Admin endpoint for viewing chat logs (requires ADMIN_API_KEY)
 
