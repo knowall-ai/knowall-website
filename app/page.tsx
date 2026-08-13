@@ -767,46 +767,6 @@ export default function Home() {
               </Card>
             </div>
           </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-16">
-            <div className="bg-gray-800 rounded-lg p-6">
-              <p className="text-sm font-semibold mb-2">Proposals sent</p>
-              <p className="text-3xl font-bold">
-                24 <span className="text-sm font-normal text-gray-400">proposals</span>
-              </p>
-              <p className="text-sm text-gray-400 mt-1">
-                in the last 30 days <span className="text-lime-400">6 ↑</span>
-              </p>
-            </div>
-            <div className="bg-gray-800 rounded-lg p-6">
-              <p className="text-sm font-semibold mb-2">Pipeline tracked</p>
-              <p className="text-3xl font-bold">€238k</p>
-              <p className="text-sm text-gray-400 mt-1">
-                across open opportunities <span className="text-lime-400">€41k ↑</span>
-              </p>
-            </div>
-            <div className="bg-gray-800 rounded-lg p-6">
-              <p className="text-sm font-semibold mb-2">Time saved</p>
-              <p className="text-3xl font-bold">
-                22 <span className="text-sm font-normal text-gray-400">hours</span>
-              </p>
-              <p className="text-sm text-gray-400 mt-1">
-                in the last 30 days <span className="text-lime-400">7 ↑</span>
-              </p>
-            </div>
-            <div className="bg-gray-800 rounded-lg p-6">
-              <p className="text-sm font-semibold mb-2">Deals chased</p>
-              <p className="text-3xl font-bold">
-                31 <span className="text-sm font-normal text-gray-400">follow-ups</span>
-              </p>
-              <p className="text-sm text-gray-400 mt-1">
-                nothing goes quiet <span className="text-lime-400">100%</span>
-              </p>
-            </div>
-          </div>
-          <p className="text-xs text-gray-500 text-center mt-4">
-            Illustrative figures from a typical Sallie deployment.
-          </p>
         </div>
       </section>
 
