@@ -540,6 +540,58 @@ section > .logo-light {
   color: var(--mist);
 }
 
+/* --- T-Minus-15 lifecycle ribbon (brand asset) --------------------------
+   The faceted lime infinity ribbon from the T-Minus-15 book artwork,
+   with the five stage descriptions stacked beside it. */
+.lifecycle-split {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 72px;
+  align-items: center;
+}
+
+.lifecycle-art {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.lifecycle-stages {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.lifecycle-stages .ls {
+  display: flex;
+  gap: 20px;
+  align-items: baseline;
+  border-left: 3px solid var(--lime);
+  padding: 4px 0 4px 24px;
+}
+
+.lifecycle-stages .number {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-weight: 900;
+  font-size: 32px;
+  line-height: 1;
+  color: var(--lime);
+  flex: none;
+}
+
+.lifecycle-stages h4 {
+  color: #ffffff;
+  font-size: 24px;
+  letter-spacing: 0.12em;
+}
+
+.lifecycle-stages p {
+  margin-top: 6px;
+  font-size: 19px;
+  line-height: 1.35;
+  color: var(--mist);
+}
+
 /* --- Check lists -------------------------------------------------------
    Open rows — the lime check mark is enough structure on its own. */
 .checks {

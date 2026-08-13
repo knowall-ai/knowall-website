@@ -35,140 +35,6 @@
         --deck-hero: url('images/close-delivery.jpg');
       }
 
-      /* --- T-Minus-15 DevOps figure-eight ---------------------------------- */
-      .lifecycle-8 {
-        position: relative;
-        height: 590px;
-        margin-top: 34px;
-      }
-
-      .lifecycle-8 svg {
-        position: absolute;
-        inset: 18px 6% 6px;
-        width: 88%;
-        height: 510px;
-        overflow: visible;
-      }
-
-      .lifecycle-8 .loop-shadow {
-        fill: none;
-        stroke: rgba(157, 254, 10, 0.13);
-        stroke-width: 44;
-        stroke-linecap: round;
-      }
-
-      .lifecycle-8 .loop-line {
-        fill: none;
-        stroke: var(--lime);
-        stroke-width: 10;
-        stroke-linecap: round;
-        stroke-linejoin: round;
-      }
-
-      .lifecycle-8 .loop-arrow {
-        fill: var(--lime);
-      }
-
-      .loop-side {
-        position: absolute;
-        top: 235px;
-        color: rgba(244, 246, 239, 0.72);
-        font-size: 20px;
-        font-weight: 800;
-        letter-spacing: 0.22em;
-        text-transform: uppercase;
-      }
-
-      .loop-side.dev {
-        left: 7%;
-      }
-
-      .loop-side.ops {
-        right: 7%;
-      }
-
-      .loop-stage {
-        position: absolute;
-        display: flex;
-        align-items: center;
-        gap: 14px;
-        width: 270px;
-        padding: 15px 18px;
-        border: 0;
-        border-left: 3px solid var(--lime);
-        border-radius: 0;
-        background: rgba(15, 18, 22, 0.88);
-        box-shadow: none;
-      }
-
-      .loop-stage .number {
-        color: var(--lime);
-        font-family: 'Playfair Display', Georgia, serif;
-        font-size: 27px;
-        font-weight: 900;
-        line-height: 1;
-      }
-
-      .loop-stage h4 {
-        color: #fff;
-        font-size: 23px;
-        letter-spacing: 0.12em;
-      }
-
-      .loop-stage p {
-        margin-top: 4px;
-        color: var(--mist);
-        font-size: 16px;
-        line-height: 1.32;
-      }
-
-      .loop-stage.prep {
-        left: 50%;
-        top: 0;
-        transform: translateX(-50%);
-      }
-
-      .loop-stage.design {
-        left: 4%;
-        top: 105px;
-      }
-
-      .loop-stage.engineer {
-        left: 5%;
-        bottom: 4px;
-      }
-
-      .loop-stage.test {
-        right: 5%;
-        bottom: 4px;
-      }
-
-      .loop-stage.operate {
-        right: 4%;
-        top: 105px;
-      }
-
-      .loop-centre {
-        position: absolute;
-        top: 245px;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        color: var(--ink);
-        background: var(--lime);
-        border-radius: 50%;
-        width: 132px;
-        height: 132px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        font-size: 17px;
-        font-weight: 900;
-        letter-spacing: 0.08em;
-        line-height: 1.15;
-        text-transform: uppercase;
-        box-shadow: 0 0 0 12px rgba(157, 254, 10, 0.15);
-      }
     </style>
   </head>
   <body>
@@ -404,96 +270,54 @@
 
         <!-- Slide 5: The T-Minus-15 lifecycle -->
         <section role="region" aria-label="Slide 5 of 7: The T-Minus-15 lifecycle">
-          <div class="dark-inner" style="padding: 108px 96px calc(52px + var(--ctl-band))">
-            <div style="display: flex; align-items: center; gap: 56px">
-              <div style="flex: 1">
-                <p class="kicker">Our methodology</p>
-                <h2>The T-Minus-15 lifecycle</h2>
-                <p class="lead">
-                  A continuous Dev &amp; Ops loop, from prep to production &mdash; five stages that
-                  take every solution from idea to operated value.
-                </p>
-              </div>
-              <img
-                src="images/tminus15-book.png"
-                alt="The T-Minus-15 methodology book"
-                style="
-                  width: 176px;
-                  height: auto;
-                  flex: none;
-                  border-radius: 8px;
-                  box-shadow: 0 22px 46px rgba(0, 0, 0, 0.6);
-                "
-              />
+          <div class="dark-inner" style="padding: 96px 96px calc(40px + var(--ctl-band)); gap: 48px">
+            <div>
+              <p class="kicker">Our methodology &middot; a continuous Dev &amp; Ops loop</p>
+              <h2>The T-Minus-15 lifecycle</h2>
             </div>
-            <div
-              class="lifecycle-8"
-              role="img"
-              aria-label="T-Minus-15 DevOps figure-eight lifecycle: Prep, Design and Engineer on the Dev loop; Test and Operate on the Ops loop; continuous value at the centre."
-            >
-              <span class="loop-side dev" aria-hidden="true">Dev</span>
-              <span class="loop-side ops" aria-hidden="true">Ops</span>
-              <svg viewBox="0 0 1000 460" aria-hidden="true">
-                <defs>
-                  <marker
-                    id="lifecycle-arrow"
-                    viewBox="0 0 10 10"
-                    markerUnits="userSpaceOnUse"
-                    markerWidth="34"
-                    markerHeight="34"
-                    refX="5"
-                    refY="5"
-                    orient="auto"
-                  >
-                    <path class="loop-arrow" d="M0,0 L10,5 L0,10 Z" />
-                  </marker>
-                </defs>
-                <path
-                  class="loop-shadow"
-                  d="M500 230 C400 60 80 65 80 230 C80 395 400 400 500 230 C600 60 920 65 920 230 C920 395 600 400 500 230"
-                />
-                <path
-                  class="loop-line"
-                  marker-mid="url(#lifecycle-arrow)"
-                  d="M500 230 C400 60 80 65 80 230 C80 395 400 400 500 230 C600 60 920 65 920 230 C920 395 600 400 500 230"
-                />
-              </svg>
-              <div class="loop-stage prep">
-                <span class="number">01</span>
-                <div>
-                  <h4>PREP</h4>
-                  <p>Business understanding and user requirements</p>
+            <div class="lifecycle-split">
+              <img
+                class="lifecycle-art"
+                src="images/tminus15-lifecycle.png"
+                alt="The T-Minus-15 DevOps lifecycle: a faceted lime infinity ribbon with a Dev loop and an Ops loop — Prep and Design on the Dev loop, Engineer across the crossover, Test and Operate on the Ops loop."
+              />
+              <div class="lifecycle-stages">
+                <div class="ls">
+                  <span class="number" aria-hidden="true">01</span>
+                  <div>
+                    <h4>PREP</h4>
+                    <p>Business understanding and user requirements</p>
+                  </div>
+                </div>
+                <div class="ls">
+                  <span class="number" aria-hidden="true">02</span>
+                  <div>
+                    <h4>DESIGN</h4>
+                    <p>Architecture, data models and UX/UI</p>
+                  </div>
+                </div>
+                <div class="ls">
+                  <span class="number" aria-hidden="true">03</span>
+                  <div>
+                    <h4>ENGINEER</h4>
+                    <p>Rapid delivery true to the Prep and Design</p>
+                  </div>
+                </div>
+                <div class="ls">
+                  <span class="number" aria-hidden="true">04</span>
+                  <div>
+                    <h4>TEST</h4>
+                    <p>Quality review against original requirements</p>
+                  </div>
+                </div>
+                <div class="ls">
+                  <span class="number" aria-hidden="true">05</span>
+                  <div>
+                    <h4>OPERATE</h4>
+                    <p>Continuous deployment and value in use</p>
+                  </div>
                 </div>
               </div>
-              <div class="loop-stage design">
-                <span class="number">02</span>
-                <div>
-                  <h4>DESIGN</h4>
-                  <p>Architecture, data models and UX/UI</p>
-                </div>
-              </div>
-              <div class="loop-stage engineer">
-                <span class="number">03</span>
-                <div>
-                  <h4>ENGINEER</h4>
-                  <p>Rapid delivery true to the Prep and Design</p>
-                </div>
-              </div>
-              <div class="loop-stage test">
-                <span class="number">04</span>
-                <div>
-                  <h4>TEST</h4>
-                  <p>Quality review against original requirements</p>
-                </div>
-              </div>
-              <div class="loop-stage operate">
-                <span class="number">05</span>
-                <div>
-                  <h4>OPERATE</h4>
-                  <p>Continuous deployment and value in use</p>
-                </div>
-              </div>
-              <div class="loop-centre">Continuous<br />value</div>
             </div>
           </div>
         </section>
@@ -507,19 +331,35 @@
             </div>
             <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
           </div>
-          <div class="content">
-            <p class="lead" style="max-width: 1560px">
-              T-Minus-15 is our open-source methodology for delivering projects, seamlessly blending
-              the best principles of Agile and DevOps. At its heart we prioritise collaboration and
-              transparency &mdash; daily stand-ups welcome our clients, ensuring swift issue
-              resolution and alignment with project objectives.
-            </p>
-            <p class="lead" style="max-width: 1560px">
-              A structured approach following Prep &gt; Design &gt; Engineer &gt; Test &gt; Operate
-              keeps delivery efficient and effective &mdash; and we take pride in delivering to
-              production at the earliest opportunity, gathering feedback from stakeholders and
-              end-users in an iterative loop that consistently exceeds expectations.
-            </p>
+          <div class="content" style="gap: 40px">
+            <div style="display: flex; align-items: center; gap: 80px">
+              <div style="flex: 1; display: flex; flex-direction: column; gap: 40px">
+                <p class="lead" style="max-width: 1560px">
+                  T-Minus-15 is our open-source methodology for delivering projects, seamlessly
+                  blending the best principles of Agile and DevOps. At its heart we prioritise
+                  collaboration and transparency &mdash; daily stand-ups welcome our clients,
+                  ensuring swift issue resolution and alignment with project objectives.
+                </p>
+                <p class="lead" style="max-width: 1560px">
+                  A structured approach following Prep &gt; Design &gt; Engineer &gt; Test &gt;
+                  Operate keeps delivery efficient and effective &mdash; and we take pride in
+                  delivering to production at the earliest opportunity, gathering feedback from
+                  stakeholders and end-users in an iterative loop that consistently exceeds
+                  expectations.
+                </p>
+              </div>
+              <img
+                src="images/tminus15-book.png"
+                alt="The T-Minus-15 methodology book"
+                style="
+                  width: 200px;
+                  height: auto;
+                  flex: none;
+                  border-radius: 8px;
+                  box-shadow: 0 22px 46px rgba(0, 0, 0, 0.6);
+                "
+              />
+            </div>
             <a
               class="github-link"
               href="https://github.com/T-Minus-15"
