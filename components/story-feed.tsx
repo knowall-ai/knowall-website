@@ -2,10 +2,19 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import type { ReactNode } from 'react';
-import { BookOpen, X } from 'lucide-react';
+import { BookOpen, MessageSquare, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
+import StoryComments from '@/components/story-comments';
+import StoryZapButton from '@/components/story-zap';
 import { KNOWALL_NPUB, KNOWALL_PUBKEY } from '@/lib/nostr';
+import { SOCIAL_RELAYS, queryRelays } from '@/lib/relay';
+import {
+  type ZapTotals,
+  aggregateZapsByNote,
+  groupRepliesByNote,
+  sortRepliesChronologically,
+} from '@/lib/story-social';
 import {
   type NostrEvent,
   encodeNoteId,
@@ -16,9 +25,10 @@ import {
   timeAgo,
 } from '@/lib/story-notes';
 
-const RELAYS = ['wss://relay.damus.io', 'wss://relay.primal.net', 'wss://nos.lol'];
+const RELAYS = SOCIAL_RELAYS;
 const MAX_NOTES = 50;
 const RELAY_TIMEOUT_MS = 8000;
+const NO_ZAPS: ZapTotals = { count: 0, sats: 0 };
 
 /* ---------------------------------------------------------------------------
  * Content linkification — web URLs, NIP-21 nostr: references and #hashtags.
@@ -93,6 +103,8 @@ export default function StoryFeed({ pubkey = KNOWALL_PUBKEY }: StoryFeedProps) {
   const [notes, setNotes] = useState<NostrEvent[]>([]);
   const [status, setStatus] = useState<'loading' | 'ready' | 'error'>('loading');
   const [activeTag, setActiveTag] = useState<string | null>(null);
+  const [repliesByNote, setRepliesByNote] = useState<Map<string, NostrEvent[]>>(new Map());
+  const [zapsByNote, setZapsByNote] = useState<Map<string, ZapTotals>>(new Map());
 
   useEffect(() => {
     let cancelled = false;
@@ -175,6 +187,23 @@ export default function StoryFeed({ pubkey = KNOWALL_PUBKEY }: StoryFeedProps) {
       }
     };
   }, [pubkey]);
+
+  // Once the timeline has settled, fetch every post's social context in one
+  // batched query — kind-1 replies (the comment threads) and kind-9735 zap
+  // receipts — rather than one round-trip per post.
+  useEffect(() => {
+    if (notes.length === 0) return;
+    let cancelled = false;
+    const noteIds = notes.map((note) => note.id);
+    void queryRelays(RELAYS, [{ kinds: [1, 9735], '#e': noteIds, limit: 1000 }]).then((events) => {
+      if (cancelled) return;
+      setRepliesByNote(groupRepliesByNote(events, noteIds));
+      setZapsByNote(aggregateZapsByNote(events, noteIds));
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [notes]);
 
   // Hashtag filter (the edenweeks.art story pattern): clicking a #tag in any
   // note narrows the timeline to notes mentioning that tag.
@@ -281,6 +310,8 @@ export default function StoryFeed({ pubkey = KNOWALL_PUBKEY }: StoryFeedProps) {
               note={note}
               isLast={index === visibleNotes.length - 1}
               onTagClick={setActiveTag}
+              replies={repliesByNote.get(note.id) ?? []}
+              zapTotals={zapsByNote.get(note.id) ?? NO_ZAPS}
             />
           ))}
         </ol>
@@ -290,20 +321,36 @@ export default function StoryFeed({ pubkey = KNOWALL_PUBKEY }: StoryFeedProps) {
 }
 
 /** One entry on the story timeline: node + spine, relative timestamp linking to
- *  the note on njump, linkified text, and any attached images/videos. */
+ *  the note on njump, linkified text, any attached images/videos, and the
+ *  social action row — comment count with an expandable thread, and a zap
+ *  button with the post's running total. */
 function StoryNote({
   note,
   isLast,
   onTagClick,
+  replies,
+  zapTotals,
 }: {
   note: NostrEvent;
   isLast: boolean;
   onTagClick: (tag: string) => void;
+  replies: NostrEvent[];
+  zapTotals: ZapTotals;
 }) {
+  const [showComments, setShowComments] = useState(false);
+  // Comments this visitor posted in this session, merged into the fetched
+  // thread so they appear immediately (relays take a moment to serve them).
+  const [localReplies, setLocalReplies] = useState<NostrEvent[]>([]);
   const images = extractImageUrls(note);
   const videos = extractVideoUrls(note);
   const text = stripMediaUrls(note.content);
   const timestamp = new Date(note.created_at * 1000);
+
+  const thread = useMemo(() => {
+    const fetchedIds = new Set(replies.map((reply) => reply.id));
+    const merged = [...replies, ...localReplies.filter((reply) => !fetchedIds.has(reply.id))];
+    return sortRepliesChronologically(merged);
+  }, [replies, localReplies]);
 
   // Content-aware alt text so screen readers get something meaningful rather
   // than the same generic label repeated; numbered generic fallback otherwise.
@@ -384,6 +431,35 @@ function StoryNote({
               <video src={src} controls preload="metadata" className="max-h-[500px] w-full" />
             </div>
           ))}
+
+          {/* Social actions: expandable comment thread + NIP-57 zaps. */}
+          <div className="flex items-center gap-5 border-t border-gray-800 pt-3">
+            <button
+              type="button"
+              onClick={() => setShowComments((value) => !value)}
+              aria-expanded={showComments}
+              data-testid="story-comments-toggle"
+              className={`flex items-center gap-1.5 text-sm transition-colors hover:text-lime-500 ${
+                showComments ? 'text-lime-500' : 'text-gray-400'
+              }`}
+            >
+              <MessageSquare className="h-4 w-4" aria-hidden="true" />
+              <span>
+                {thread.length > 0
+                  ? `${thread.length} ${thread.length === 1 ? 'comment' : 'comments'}`
+                  : 'Comment'}
+              </span>
+            </button>
+            <StoryZapButton note={note} totals={zapTotals} />
+          </div>
+
+          {showComments && (
+            <StoryComments
+              note={note}
+              replies={thread}
+              onPosted={(reply) => setLocalReplies((current) => [...current, reply])}
+            />
+          )}
         </div>
       </div>
     </li>
