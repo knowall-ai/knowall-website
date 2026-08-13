@@ -37,252 +37,6 @@
     </style>
   </head>
   <body>
-    <!-- Lucide icon sprite (lucide.dev, ISC licence) -->
-    <svg xmlns="http://www.w3.org/2000/svg" style="display: none" aria-hidden="true">
-      <defs>
-        <symbol id="i-message-square-x" viewBox="0 0 24 24">
-          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-          <path d="m14.5 7.5-5 5" />
-          <path d="m9.5 7.5 5 5" />
-        </symbol>
-        <symbol id="i-file-question" viewBox="0 0 24 24">
-          <path d="M12 17h.01" />
-          <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z" />
-          <path d="M9.1 9a3 3 0 0 1 5.82 1c0 2-3 3-3 3" />
-        </symbol>
-        <symbol id="i-timer" viewBox="0 0 24 24">
-          <line x1="10" x2="14" y1="2" y2="2" />
-          <line x1="12" x2="15" y1="14" y2="11" />
-          <circle cx="12" cy="14" r="8" />
-        </symbol>
-        <symbol id="i-coins" viewBox="0 0 24 24">
-          <circle cx="8" cy="8" r="6" />
-          <path d="M18.09 10.37A6 6 0 1 1 10.34 18" />
-          <path d="M7 6h1v4" />
-          <path d="m16.71 13.88.7.71-2.82 2.82" />
-        </symbol>
-        <symbol id="i-clipboard-list" viewBox="0 0 24 24">
-          <rect width="8" height="4" x="8" y="2" rx="1" ry="1" />
-          <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
-          <path d="M12 11h4" />
-          <path d="M12 16h4" />
-          <path d="M8 11h.01" />
-          <path d="M8 16h.01" />
-        </symbol>
-        <symbol id="i-compass" viewBox="0 0 24 24">
-          <path
-            d="m16.24 7.76-1.804 5.411a2 2 0 0 1-1.265 1.265L7.76 16.24l1.804-5.411a2 2 0 0 1 1.265-1.265z"
-          />
-          <circle cx="12" cy="12" r="10" />
-        </symbol>
-        <symbol id="i-code-xml" viewBox="0 0 24 24">
-          <path d="m18 16 4-4-4-4" />
-          <path d="m6 8-4 4 4 4" />
-          <path d="m14.5 4-5 16" />
-        </symbol>
-        <symbol id="i-flask-conical" viewBox="0 0 24 24">
-          <path
-            d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2"
-          />
-          <path d="M8.5 2h7" />
-          <path d="M7 16h10" />
-        </symbol>
-        <symbol id="i-rocket" viewBox="0 0 24 24">
-          <path
-            d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"
-          />
-          <path
-            d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"
-          />
-          <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0" />
-          <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5" />
-        </symbol>
-        <symbol id="i-shield-check" viewBox="0 0 24 24">
-          <path
-            d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"
-          />
-          <path d="m9 12 2 2 4-4" />
-        </symbol>
-        <symbol id="i-key-round" viewBox="0 0 24 24">
-          <path
-            d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z"
-          />
-          <circle cx="16.5" cy="7.5" r=".5" fill="currentColor" />
-        </symbol>
-        <symbol id="i-scroll-text" viewBox="0 0 24 24">
-          <path d="M15 12h-5" />
-          <path d="M15 8h-5" />
-          <path d="M19 17V5a2 2 0 0 0-2-2H4" />
-          <path
-            d="M8 21h12a2 2 0 0 0 2-2v-1a1 1 0 0 0-1-1H11a1 1 0 0 0-1 1v1a2 2 0 1 1-4 0V5a2 2 0 1 0-4 0v2a1 1 0 0 0 1 1h3"
-          />
-        </symbol>
-        <symbol id="i-network" viewBox="0 0 24 24">
-          <rect x="16" y="16" width="6" height="6" rx="1" />
-          <rect x="2" y="16" width="6" height="6" rx="1" />
-          <rect x="9" y="2" width="6" height="6" rx="1" />
-          <path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3" />
-          <path d="M12 12V8" />
-        </symbol>
-        <symbol id="i-check" viewBox="0 0 24 24">
-          <path d="M20 6 9 17l-5-5" />
-        </symbol>
-        <symbol id="i-search" viewBox="0 0 24 24">
-          <circle cx="11" cy="11" r="8" />
-          <path d="m21 21-4.3-4.3" />
-        </symbol>
-        <symbol id="i-file-text" viewBox="0 0 24 24">
-          <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" />
-          <path d="M14 2v4a2 2 0 0 0 2 2h4" />
-          <path d="M10 9H8" />
-          <path d="M16 13H8" />
-          <path d="M16 17H8" />
-        </symbol>
-        <symbol id="i-refresh-cw" viewBox="0 0 24 24">
-          <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
-          <path d="M21 3v5h-5" />
-          <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" />
-          <path d="M8 16H3v5" />
-        </symbol>
-        <symbol id="i-send" viewBox="0 0 24 24">
-          <path
-            d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"
-          />
-          <path d="m21.854 2.147-10.94 10.939" />
-        </symbol>
-        <symbol id="i-clock" viewBox="0 0 24 24">
-          <circle cx="12" cy="12" r="10" />
-          <polyline points="12 6 12 12 16 14" />
-        </symbol>
-        <symbol id="i-trending-up" viewBox="0 0 24 24">
-          <polyline points="22 7 13.5 15.5 8.5 10.5 2 17" />
-          <polyline points="16 7 22 7 22 13" />
-        </symbol>
-        <symbol id="i-moon" viewBox="0 0 24 24">
-          <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
-        </symbol>
-        <symbol id="i-graduation-cap" viewBox="0 0 24 24">
-          <path
-            d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"
-          />
-          <path d="M22 10v6" />
-          <path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5" />
-        </symbol>
-        <symbol id="i-git-pull-request" viewBox="0 0 24 24">
-          <circle cx="18" cy="18" r="3" />
-          <circle cx="6" cy="6" r="3" />
-          <path d="M13 6h3a2 2 0 0 1 2 2v7" />
-          <line x1="6" x2="6" y1="9" y2="21" />
-        </symbol>
-        <symbol id="i-database" viewBox="0 0 24 24">
-          <ellipse cx="12" cy="5" rx="9" ry="3" />
-          <path d="M3 5V19A9 3 0 0 0 21 19V5" />
-          <path d="M3 12A9 3 0 0 0 21 12" />
-        </symbol>
-        <symbol id="i-sprout" viewBox="0 0 24 24">
-          <path d="M7 20h10" />
-          <path d="M10 20c5.5-2.5.8-6.4 3-10" />
-          <path
-            d="M9.5 9.4c1.1.8 1.8 2.2 2.3 3.7-2 .4-3.5.4-4.8-.3-1.2-.6-2.3-1.9-3-4.2 2.8-.5 4.4 0 5.5.8z"
-          />
-          <path
-            d="M14.1 6a7 7 0 0 0-1.1 4c1.9-.1 3.3-.6 4.3-1.4 1-1 1.6-2.3 1.7-4.6-2.7.1-4 1-4.9 2z"
-          />
-        </symbol>
-        <symbol id="i-phone" viewBox="0 0 24 24">
-          <path
-            d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"
-          />
-        </symbol>
-        <symbol id="i-github" viewBox="0 0 24 24">
-          <path
-            d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"
-          />
-          <path d="M9 18c-4.51 2-5-2-7-2" />
-        </symbol>
-        <symbol id="i-zap" viewBox="0 0 24 24">
-          <path
-            d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"
-          />
-        </symbol>
-        <symbol id="i-radio-tower" viewBox="0 0 24 24">
-          <path d="M4.9 16.1C1 12.2 1 5.8 4.9 1.9" />
-          <path d="M7.8 4.7a6.14 6.14 0 0 0-.8 7.5" />
-          <circle cx="12" cy="9" r="2" />
-          <path d="M16.2 4.8c2 2 2.26 5.11.8 7.47" />
-          <path d="M19.1 1.9a9.96 9.96 0 0 1 0 14.1" />
-          <path d="M9.5 18h5" />
-          <path d="m8 22 4-11 4 11" />
-        </symbol>
-        <symbol id="i-server-cog" viewBox="0 0 24 24">
-          <circle cx="12" cy="12" r="3" />
-          <path d="M4.5 10H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-.5" />
-          <path d="M4.5 14H4a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-4a2 2 0 0 0-2-2h-.5" />
-          <path d="M6 6h.01" />
-          <path d="M6 18h.01" />
-          <path d="m15.7 13.4-.9-.3" />
-          <path d="m9.2 10.9-.9-.3" />
-          <path d="m10.6 15.7.3-.9" />
-          <path d="m13.6 15.7-.4-1" />
-          <path d="m10.8 9.3-.4-1" />
-          <path d="m8.3 13.6 1-.4" />
-          <path d="m14.7 10.8 1-.4" />
-          <path d="m13.4 8.3-.3.9" />
-        </symbol>
-        <symbol id="i-gauge" viewBox="0 0 24 24">
-          <path d="m12 14 4-4" />
-          <path d="M3.34 19a10 10 0 1 1 17.32 0" />
-        </symbol>
-        <symbol id="i-piggy-bank" viewBox="0 0 24 24">
-          <path
-            d="M19 5c-1.5 0-2.8 1.4-3 2-3.5-1.5-11-.3-11 5 0 1.8 0 3 2 4.5V20h4v-2h3v2h4v-4c1-.5 1.7-1 2-2h2v-4h-2c0-1-.5-1.5-1-2V5z"
-          />
-          <path d="M2 9v1c0 1.1.9 2 2 2h1" />
-          <path d="M16 11h.01" />
-        </symbol>
-        <symbol id="i-target" viewBox="0 0 24 24">
-          <circle cx="12" cy="12" r="10" />
-          <circle cx="12" cy="12" r="6" />
-          <circle cx="12" cy="12" r="2" />
-        </symbol>
-        <symbol id="i-infinity" viewBox="0 0 24 24">
-          <path
-            d="M12 12c-2-2.67-4-4-6-4a4 4 0 1 0 0 8c2 0 4-1.33 6-4Zm0 0c2 2.67 4 4 6 4a4 4 0 0 0 0-8c-2 0-4 1.33-6 4Z"
-          />
-        </symbol>
-        <symbol id="i-mail" viewBox="0 0 24 24">
-          <rect width="20" height="16" x="2" y="4" rx="2" />
-          <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
-        </symbol>
-        <symbol id="i-globe" viewBox="0 0 24 24">
-          <circle cx="12" cy="12" r="10" />
-          <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" />
-          <path d="M2 12h20" />
-        </symbol>
-        <symbol id="i-calendar-check" viewBox="0 0 24 24">
-          <path d="M8 2v4" />
-          <path d="M16 2v4" />
-          <rect width="18" height="18" x="3" y="4" rx="2" />
-          <path d="M3 10h18" />
-          <path d="m9 16 2 2 4-4" />
-        </symbol>
-        <symbol id="i-handshake" viewBox="0 0 24 24">
-          <path d="m11 17 2 2a1 1 0 1 0 3-3" />
-          <path
-            d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.87l.47.28a2 2 0 0 0 1.42.25L21 4"
-          />
-          <path d="m21 3 1 11h-2" />
-          <path d="M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3" />
-          <path d="M3 4h8" />
-        </symbol>
-        <symbol id="i-users" viewBox="0 0 24 24">
-          <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-          <circle cx="9" cy="7" r="4" />
-          <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
-          <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-        </symbol>
-      </defs>
-    </svg>
 
     <div class="reveal">
       <div class="slides">
@@ -327,7 +81,7 @@
             <div class="cards-3">
               <div class="card stack">
                 <div class="chip" aria-hidden="true">
-                  <svg class="ic"><use href="#i-shield-check" /></svg>
+                  <svg class="ic"><use href="icons.svg#i-shield-check" /></svg>
                 </div>
                 <div>
                   <h4>Proactive support</h4>
@@ -339,7 +93,7 @@
               </div>
               <div class="card stack">
                 <div class="chip" aria-hidden="true">
-                  <svg class="ic"><use href="#i-coins" /></svg>
+                  <svg class="ic"><use href="icons.svg#i-coins" /></svg>
                 </div>
                 <div>
                   <h4>Flexible blocks</h4>
@@ -351,7 +105,7 @@
               </div>
               <div class="card stack">
                 <div class="chip" aria-hidden="true">
-                  <svg class="ic"><use href="#i-trending-up" /></svg>
+                  <svg class="ic"><use href="icons.svg#i-trending-up" /></svg>
                 </div>
                 <div>
                   <h4>Continuous improvement</h4>
@@ -383,7 +137,7 @@
             <div class="cards-3">
               <div class="card">
                 <div class="chip" aria-hidden="true">
-                  <svg class="ic"><use href="#i-coins" /></svg>
+                  <svg class="ic"><use href="icons.svg#i-coins" /></svg>
                 </div>
                 <div>
                   <h4>Model</h4>
@@ -392,7 +146,7 @@
               </div>
               <div class="card">
                 <div class="chip" aria-hidden="true">
-                  <svg class="ic"><use href="#i-calendar-check" /></svg>
+                  <svg class="ic"><use href="icons.svg#i-calendar-check" /></svg>
                 </div>
                 <div>
                   <h4>Contract</h4>
@@ -401,7 +155,7 @@
               </div>
               <div class="card">
                 <div class="chip" aria-hidden="true">
-                  <svg class="ic"><use href="#i-compass" /></svg>
+                  <svg class="ic"><use href="icons.svg#i-compass" /></svg>
                 </div>
                 <div>
                   <h4>Scope</h4>
@@ -432,7 +186,7 @@
             <div class="cards-2">
               <div class="card">
                 <div class="chip" aria-hidden="true">
-                  <svg class="ic"><use href="#i-gauge" /></svg>
+                  <svg class="ic"><use href="icons.svg#i-gauge" /></svg>
                 </div>
                 <div>
                   <h4>Choose your tier</h4>
@@ -445,7 +199,7 @@
               </div>
               <div class="card">
                 <div class="chip" aria-hidden="true">
-                  <svg class="ic"><use href="#i-handshake" /></svg>
+                  <svg class="ic"><use href="icons.svg#i-handshake" /></svg>
                 </div>
                 <div>
                   <h4>One simple agreement</h4>
@@ -496,7 +250,7 @@
             <div class="cards-2">
               <div class="card">
                 <div class="chip" aria-hidden="true">
-                  <svg class="ic"><use href="#i-users" /></svg>
+                  <svg class="ic"><use href="icons.svg#i-users" /></svg>
                 </div>
                 <div>
                   <h4>Expertise on tap</h4>
@@ -508,7 +262,7 @@
               </div>
               <div class="card">
                 <div class="chip" aria-hidden="true">
-                  <svg class="ic"><use href="#i-refresh-cw" /></svg>
+                  <svg class="ic"><use href="icons.svg#i-refresh-cw" /></svg>
                 </div>
                 <div>
                   <h4>Always improving</h4>
@@ -520,7 +274,7 @@
               </div>
               <div class="card">
                 <div class="chip" aria-hidden="true">
-                  <svg class="ic"><use href="#i-flask-conical" /></svg>
+                  <svg class="ic"><use href="icons.svg#i-flask-conical" /></svg>
                 </div>
                 <div>
                   <h4>Innovation workshops</h4>
@@ -532,7 +286,7 @@
               </div>
               <div class="card">
                 <div class="chip" aria-hidden="true">
-                  <svg class="ic"><use href="#i-scroll-text" /></svg>
+                  <svg class="ic"><use href="icons.svg#i-scroll-text" /></svg>
                 </div>
                 <div>
                   <h4>Simple &amp; predictable</h4>
@@ -567,21 +321,21 @@
                 href="mailto:Ben.Weeks@KnowAll.ai"
                 aria-label="Email Ben Weeks about a CISP"
               >
-                <svg class="ic" aria-hidden="true"><use href="#i-send" /></svg>
+                <svg class="ic" aria-hidden="true"><use href="icons.svg#i-send" /></svg>
                 Start the conversation
               </a>
             </div>
             <div class="contact-row">
               <div class="contact-item">
-                <svg class="ic" aria-hidden="true"><use href="#i-users" /></svg>
+                <svg class="ic" aria-hidden="true"><use href="icons.svg#i-users" /></svg>
                 <span>Ben Weeks &mdash; Chief Builder</span>
               </div>
               <div class="contact-item">
-                <svg class="ic" aria-hidden="true"><use href="#i-phone" /></svg>
+                <svg class="ic" aria-hidden="true"><use href="icons.svg#i-phone" /></svg>
                 <a href="tel:+447968847178">+44 7968 847178</a>
               </div>
               <div class="contact-item">
-                <svg class="ic" aria-hidden="true"><use href="#i-mail" /></svg>
+                <svg class="ic" aria-hidden="true"><use href="icons.svg#i-mail" /></svg>
                 <a href="mailto:Ben.Weeks@KnowAll.ai">Ben.Weeks@KnowAll.ai</a>
               </div>
             </div>
@@ -591,167 +345,6 @@
     </div>
 
     <script src="vendor/reveal/reveal.js"></script>
-    <script>
-      document.head.insertAdjacentHTML(
-        'beforeend',
-        `<style>
-          .reveal .slides > section .slide-cta { position:absolute; right:204px; bottom:24px; z-index:4; display:inline-flex; align-items:center; padding:11px 22px; border:1px solid rgba(157,254,10,.72); border-radius:999px; background:var(--lime); color:var(--ink) !important; font-size:19px; font-weight:800; letter-spacing:.01em; box-shadow:0 8px 24px rgba(0,0,0,.22); }
-          .slide-cta.is-clashing, .slide-detail.is-clashing { display:none; }
-          .slide-cta:hover, .slide-cta:focus-visible { background:#b4ff3d; color:var(--ink) !important; outline:3px solid #ffffff; outline-offset:3px; }
-          .reveal .slides > section .slide-detail { position:absolute; left:96px; bottom:24px; z-index:4; padding:11px 22px; border:1px solid rgba(255,255,255,.68); border-radius:999px; background:rgba(20,22,17,.82); color:#ffffff; font:800 19px/1 Arial,sans-serif; cursor:pointer; box-shadow:0 8px 24px rgba(0,0,0,.22); } .slide-detail:hover, .slide-detail:focus-visible { background:#ffffff; color:var(--ink); outline:3px solid var(--lime); outline-offset:3px; } .deck-detail-dialog { width:min(720px,calc(100vw - 64px)); padding:54px; border:1px solid rgba(157,254,10,.8); border-radius:18px; background:#161a14; color:#fff; box-shadow:0 24px 80px rgba(0,0,0,.65); } .deck-detail-dialog::backdrop { background:rgba(0,0,0,.72); } .deck-detail-dialog h2 { margin:10px 0 18px; color:var(--lime); font-size:38px; } .deck-detail-dialog p { margin:0; font-size:22px; line-height:1.45; } .deck-detail-eyebrow { color:var(--lime); font-size:14px !important; font-weight:800; letter-spacing:.12em; } .deck-detail-close { position:absolute; top:16px; right:20px; border:0; background:transparent; color:#fff; font-size:36px; cursor:pointer; }
-          /* --- Barely-there drift on full-bleed agent imagery ---------------
-             Enough that the picture breathes under the words; not enough to
-             read as an effect. Off entirely for prefers-reduced-motion. */
-          @keyframes deckDrift { from { transform: scale(1.001); } to { transform: scale(1.055); } }
-          .reveal .slides > section.present .cover-hero,
-          .reveal .slides > section.present .cta-top::before,
-          .reveal .slides > section.present .dark-inner.with-agent::before {
-            animation: deckDrift 30s ease-out both;
-            will-change: transform;
-          }
-          @media (prefers-reduced-motion: reduce) {
-            .reveal .slides > section.present .cover-hero,
-            .reveal .slides > section.present .cta-top::before,
-            .reveal .slides > section.present .dark-inner.with-agent::before { animation: none; }
-          }
-
-        </style>`
-      );
-      const cispSlides = Array.from(document.querySelectorAll('.reveal .slides > section'));
-      cispSlides.slice(2, -1).forEach((slide) => {
-        slide.insertAdjacentHTML(
-          'beforeend',
-          '<a class="slide-cta" href="https://www.knowall.ai/#contact" aria-label="Book a working session with KnowAll AI">Book a working session</a>'
-        );
-      });
-      addOnDemandDetail(cispSlides);
-
-      function addOnDemandDetail(slides) {
-        const dialog = document.createElement('dialog');
-        dialog.className = 'deck-detail-dialog';
-        dialog.innerHTML =
-          '<button class="deck-detail-close" type="button" aria-label="Close more detail">×</button><p class="deck-detail-eyebrow">FOR MORE DETAIL</p><h2></h2><p></p>';
-        document.body.append(dialog);
-        const close = dialog.querySelector('.deck-detail-close');
-        close.addEventListener('click', () => dialog.close());
-        const detailIndexes = [...new Set([2, Math.min(5, slides.length - 2)])];
-        detailIndexes.forEach((index, detailNumber) => {
-          const slide = slides[index];
-          if (!slide) return;
-          const heading =
-            slide.querySelector('h1, h2, h3')?.textContent?.trim() || 'The practical detail';
-          const detail =
-            detailNumber === 0
-              ? 'A useful next step is to turn this theme into a focused conversation: set one measurable outcome, identify the people and information that shape it, and agree a short experiment.'
-              : 'The aim is a decision, not a generic roadmap: define the scope, name an accountable owner and agree the first practical step.';
-          const button = document.createElement('button');
-          button.className = 'slide-detail';
-          button.type = 'button';
-          button.textContent = 'More detail';
-          button.addEventListener('click', () => {
-            dialog.querySelector('h2').textContent = heading;
-            dialog.querySelector('h2 + p').textContent = detail;
-            dialog.showModal();
-            close.focus();
-          });
-          slide.append(button);
-        });
-      }
-      // --- Sequenced reveal -------------------------------------------------
-      // Cards, KPIs and bullet groups arrive one at a time so the presenter can
-      // talk to each. Titles, kickers and leads are never fragmented, and the
-      // cover and closing slides always arrive whole.
-      (function addDeckFragments() {
-        const groups = [
-          [
-            '.cards-2 > .card, .cards-3 > .card, .cards-5 > .card, .partner-grid > .card',
-            'fade-up',
-          ],
-          ['.cards-5 > .stage', 'fade-up'],
-          ['.checks > .check', 'fade-up'],
-          ['.agent-row > .agent', 'fade-up'],
-          ['.timeline > .timeline-point', 'fade-up'],
-          ['.kpi-row > .kpi', 'fade-in'],
-          ['.pill-row > .pill', 'fade-in'],
-          ['.loop-stage', 'fade-in'],
-        ];
-        const sections = Array.from(document.querySelectorAll('.reveal .slides > section'));
-        sections.forEach((section, index) => {
-          let seqIndex = 0;
-          if (index === 0 || index === sections.length - 1) return;
-          groups.forEach(([selector, effect]) => {
-            section.querySelectorAll(selector).forEach((el) => {
-              if (el.classList.contains('seq')) return;
-              // Auto-reveal, not click-to-reveal. Reveal fragments need a
-              // keypress each: content looked MISSING until clicked (the
-              // "challenge slide is empty" bug), Back consumed a hidden
-              // fragment step instead of changing slide (the "went back
-              // two slides" bug), and presenting meant remembering to
-              // click ~27 times (Ben, 2026-07-28, asked four times).
-              // A staggered CSS animation on slide entry gives the same
-              // one-at-a-time arrival with nothing to press.
-              el.classList.add('seq', effect);
-              el.style.setProperty('--seq-i', seqIndex++);
-            });
-          });
-        });
-      })();
-
-      // --- A floating control never covers slide content --------------------
-      // Every slide reserves a strip at its foot for these pills, but a few
-      // slides carry enough content to reach into it. Rather than let a pill
-      // sit on a KPI, measure on each slide change and drop the pill on the
-      // slides that need the room. Measured, not hard-coded, so it stays true
-      // if the copy changes.
-      const CONTENT_SELECTOR =
-        '.card, .check, .kpi, .pill, .stage, .agent, .timeline-point, .loop-stage,' +
-        ' h1, h2, h3, h4, p, img, svg, .quote, .quote-mark';
-      function guardFloatingControls(slide) {
-        if (!slide) return;
-        const controls = slide.querySelectorAll('.slide-cta, .slide-detail');
-        if (!controls.length) return;
-        controls.forEach((control) => control.classList.remove('is-clashing'));
-        const content = Array.from(slide.querySelectorAll(CONTENT_SELECTOR)).filter(
-          (el) =>
-            !el.closest('.slide-cta') && !el.closest('.slide-detail') && el.getClientRects().length
-        );
-        controls.forEach((control) => {
-          const box = control.getBoundingClientRect();
-          const clashes = content.some((el) => {
-            const r = el.getBoundingClientRect();
-            if (r.width < 6 || r.height < 6) return false;
-            return !(
-              r.right <= box.left ||
-              box.right <= r.left ||
-              r.bottom <= box.top ||
-              box.bottom <= r.top
-            );
-          });
-          if (clashes) control.classList.add('is-clashing');
-        });
-      }
-
-      Reveal.initialize({
-        hash: true,
-        slideNumber: 'c/t',
-        transition: 'fade',
-        backgroundTransition: 'fade',
-        controls: true,
-        progress: true,
-        center: false,
-        touch: true,
-        loop: false,
-        keyboard: true,
-        overview: true,
-        width: 1920,
-        height: 1080,
-        margin: 0,
-        minScale: 0.2,
-        maxScale: 2.0,
-      });
-      Reveal.on('ready', (event) => guardFloatingControls(event.currentSlide));
-      Reveal.on('slidechanged', (event) => guardFloatingControls(event.currentSlide));
-      Reveal.on('resize', () => guardFloatingControls(Reveal.getCurrentSlide()));
-    </script>
+    <script src="knowall-deck.js"></script>
   </body>
 </html>

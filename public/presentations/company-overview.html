@@ -1,0 +1,1435 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>KnowAll AI — Company Overview</title>
+    <meta
+      name="description"
+      content="The full KnowAll AI corporate overview: who we are, mission and vision, service offerings (Discovery Day, Proto-Sprints, Projects, Blended Squads, CISPs), case studies, the T-Minus-15 methodology, Zaplie and how we build AI agents and Microsoft Copilots."
+    />
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+    <meta property="og:title" content="KnowAll AI — Company Overview" />
+    <meta
+      property="og:description"
+      content="The full KnowAll AI corporate overview: who we are, mission and vision, service offerings (Discovery Day, Proto-Sprints, Projects, Blended Squads, CISPs), case studies, the T-Minus-15 methodology, Zaplie and how we build AI agents and Microsoft Copilots."
+    />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:url"
+      content="https://www.knowall.ai/presentations/company-overview.html"
+    />
+    <meta property="og:image" content="https://www.knowall.ai/opengraph-image.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="KnowAll AI — Company Overview" />
+    <meta
+      name="twitter:description"
+      content="The full KnowAll AI corporate overview: who we are, mission and vision, service offerings (Discovery Day, Proto-Sprints, Projects, Blended Squads, CISPs), case studies, the T-Minus-15 methodology, Zaplie and how we build AI agents and Microsoft Copilots."
+    />
+    <meta name="twitter:image" content="https://www.knowall.ai/twitter-image.png" />
+    <link rel="stylesheet" href="vendor/reveal/reset.css" />
+    <link rel="stylesheet" href="vendor/reveal/reveal.css" />
+    <link rel="stylesheet" href="vendor/fonts.css" />
+    <link rel="stylesheet" href="knowall-deck.css" />
+    <style>
+      /* Deck-specific styles — everything shared lives in knowall-deck.css */
+      :root {
+        --deck-cover: url('images/cover-overview-full.jpg');
+        --deck-hero: url('images/agent-hill-dusk.jpg');
+        --deck-agent: url('images/divider-gantry.jpg');
+      }
+
+      /* --- Recurring agent motif on statement slides ---------------------------------- */
+      .dark-inner.with-agent {
+        background: var(--charcoal);
+        overflow: hidden;
+      }
+
+      .dark-inner.with-agent::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        background:
+          linear-gradient(
+            90deg,
+            var(--charcoal) 30%,
+            rgba(15, 18, 22, 0.76) 48%,
+            rgba(15, 18, 22, 0) 78%
+          ),
+          var(--deck-agent) right 15% / cover no-repeat,
+          var(--charcoal);
+      }
+
+      .dark-inner.with-agent > * {
+        position: relative;
+        z-index: 1;
+      }
+    </style>
+  </head>
+  <body>
+
+    <div class="reveal">
+      <div class="slides">
+        <!-- Slide 1: Title -->
+        <section role="region" aria-label="Slide 1 of 22: Company overview">
+          <div
+            class="cover-hero"
+            role="img"
+            aria-label="A robot working at a laptop in a dark office at night, lit by lime-green light"
+          ></div>
+          <div class="cover-scrim" aria-hidden="true"></div>
+          <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
+          <div class="cover-copy">
+            <p class="kicker">KnowAll AI &middot; Company overview</p>
+            <h1>Intelligent solutions that<br /><em>transform businesses</em></h1>
+            <p class="lead">
+              We build intelligent solutions that transform businesses using low-code solutions and
+              custom Microsoft Copilots.
+            </p>
+          </div>
+        </section>
+
+        <!-- Slide 2: About KnowAll AI -->
+        <section role="region" aria-label="Slide 2 of 22: About KnowAll AI">
+          <div class="band">
+            <div>
+              <h2>About KnowAll AI</h2>
+              <p class="band-sub">Low-code and AI-driven, aligned with the Microsoft ecosystem</p>
+            </div>
+            <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
+          </div>
+          <div class="content">
+            <p class="lead" style="max-width: 1560px">
+              We help organisations build intelligent solutions using low-code and AI-driven
+              products aligned with Microsoft&rsquo;s ecosystem &mdash; Power Platform, Dataverse,
+              Microsoft Fabric and SharePoint &mdash; while experimenting with emerging technologies
+              like AI agents and Bitcoin micropayments. UK-based, we hire the right people for the
+              job regardless of location, with team members in the UK, Poland, India and Ukraine.
+            </p>
+            <div class="cards-3">
+              <div class="card stack">
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="icons.svg#i-network" /></svg>
+                </div>
+                <div>
+                  <h4>Custom MCP servers</h4>
+                  <p>
+                    Multiple MCP servers published on the Anthropic directory &mdash; semantic graph
+                    memory, Business Central and Office 365 &mdash; plus contributions to other
+                    open-source MCP servers.
+                  </p>
+                </div>
+              </div>
+              <div class="card stack">
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="icons.svg#i-zap" /></svg>
+                </div>
+                <div>
+                  <h4>Microsoft Copilots</h4>
+                  <p>
+                    Numerous Microsoft Copilots built for internal use and for our customers, with
+                    agents across accounts, operations and requirements analysis.
+                  </p>
+                </div>
+              </div>
+              <div class="card stack">
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="icons.svg#i-github" /></svg>
+                </div>
+                <div>
+                  <h4>Open-source first</h4>
+                  <p>
+                    We operate an open-source-first policy, giving back to the community on projects
+                    such as AI agents and Bitcoin solutions.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Slide 3: Who you are working with -->
+        <section role="region" aria-label="Slide 3 of 22: Who you are working with">
+          <div class="band">
+            <div>
+              <h2>Who you&rsquo;re working with</h2>
+              <p class="band-sub">Cambridge-based, Microsoft specialists, open-source by default</p>
+            </div>
+            <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
+          </div>
+          <div class="content content-top">
+            <div class="cards-2">
+              <div class="card">
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="icons.svg#i-target" /></svg>
+                </div>
+                <div>
+                  <h4>The company</h4>
+                  <p>
+                    Formed in 2019 and based in Cambridge, with directors who have specialised in
+                    Microsoft technologies since 2003. We operate through KnowAll AI Ltd in the UK
+                    and KnowAll AI SAS de CV in El Salvador.
+                  </p>
+                </div>
+              </div>
+              <div class="card">
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="icons.svg#i-graduation-cap" /></svg>
+                </div>
+                <div>
+                  <h4>The method, written down</h4>
+                  <p>
+                    Ben Weeks is a SAFe Agilist and the author of
+                    <em>T-Minus-15: Secrets of an Elite DevOps Team</em> &mdash; the open-source
+                    playbook this whole practice runs on, for the people and the agents alike.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="checks">
+              <p class="check">
+                <svg class="ic" aria-hidden="true"><use href="icons.svg#i-users" /></svg>
+                <span><strong>Ben Weeks</strong> &mdash; Chief Builder</span>
+              </p>
+              <p class="check">
+                <svg class="ic" aria-hidden="true"><use href="icons.svg#i-users" /></svg>
+                <span><strong>Valeriia Khudiakova</strong> &mdash; Chief Planner</span>
+              </p>
+              <p class="check">
+                <svg class="ic" aria-hidden="true"><use href="icons.svg#i-users" /></svg>
+                <span><strong>Akash Jadhav</strong> &mdash; Senior Engineer</span>
+              </p>
+              <p class="check">
+                <svg class="ic" aria-hidden="true"><use href="icons.svg#i-users" /></svg>
+                <span><strong>Edit Weeks</strong> &mdash; Chief Tester</span>
+              </p>
+            </div>
+            <div class="pill-row" role="list" aria-label="Our values">
+              <span class="pill" role="listitem">Openness</span>
+              <span class="pill" role="listitem">Freedom</span>
+              <span class="pill" role="listitem">Strength</span>
+              <span class="pill" role="listitem">Leadership</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Slide 4: Mission and vision -->
+        <section role="region" aria-label="Slide 4 of 22: Mission and vision">
+          <div class="band">
+            <div>
+              <h2>Mission &amp; vision</h2>
+              <p class="band-sub">Innovation through AI, Bitcoin and low-code</p>
+            </div>
+            <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
+          </div>
+          <div class="content">
+            <div class="cards-2">
+              <div class="card">
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="icons.svg#i-target" /></svg>
+                </div>
+                <div>
+                  <h4>Mission</h4>
+                  <p>
+                    To spearhead innovation through the fusion of artificial intelligence, Bitcoin
+                    and low-code development, delivering high-impact projects faster than
+                    traditional teams &mdash; championing incentive systems that reward
+                    collaboration and excellence across teammates, AI agents and customers.
+                  </p>
+                </div>
+              </div>
+              <div class="card">
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="icons.svg#i-globe" /></svg>
+                </div>
+                <div>
+                  <h4>Vision</h4>
+                  <p>
+                    To be globally recognised as pioneers seamlessly merging Bitcoin with AI and
+                    leading the way in incentive-driven collaboration &mdash; aligning incentives
+                    with the contributions of humans and AI agents to redefine industries.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Slide 5: Incentives -->
+        <section
+          role="region"
+          aria-label="Slide 5 of 22: Incentives — teammates, copilots, customers"
+        >
+          <div class="dark-inner with-agent">
+            <p class="kicker">What drives us</p>
+            <h2>Incentives</h2>
+            <p class="lead">
+              Value-driven collaboration, rewarded across everyone &mdash; and everything &mdash;
+              that contributes.
+            </p>
+            <div class="pill-row" role="list" aria-label="Who earns incentives">
+              <span class="pill" role="listitem">Teammates</span>
+              <span class="pill" role="listitem">Copilots</span>
+              <span class="pill" role="listitem">Customers</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Slide 6: Our customers -->
+        <section role="region" aria-label="Slide 6 of 22: Our customers">
+          <div class="band">
+            <div>
+              <h2>Our customers</h2>
+              <p class="band-sub">Industry sectors we serve</p>
+            </div>
+            <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
+          </div>
+          <div class="content">
+            <div class="cards-3">
+              <div class="card stack">
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="icons.svg#i-radio-tower" /></svg>
+                </div>
+                <div>
+                  <h4>Telecommunications</h4>
+                  <p>Networks, field operations and service delivery.</p>
+                </div>
+              </div>
+              <div class="card stack">
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="icons.svg#i-compass" /></svg>
+                </div>
+                <div>
+                  <h4>Civil engineering</h4>
+                  <p>Infrastructure, highways and site inspection.</p>
+                </div>
+              </div>
+              <div class="card stack">
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="icons.svg#i-server-cog" /></svg>
+                </div>
+                <div>
+                  <h4>Manufacturing</h4>
+                  <p>Operations, quality and process automation.</p>
+                </div>
+              </div>
+              <div class="card stack">
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="icons.svg#i-code-xml" /></svg>
+                </div>
+                <div>
+                  <h4>ICT</h4>
+                  <p>Software, platforms and managed technology.</p>
+                </div>
+              </div>
+              <div class="card stack">
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="icons.svg#i-graduation-cap" /></svg>
+                </div>
+                <div>
+                  <h4>Education</h4>
+                  <p>Institutions and learning organisations.</p>
+                </div>
+              </div>
+              <div class="card stack">
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="icons.svg#i-shield-check" /></svg>
+                </div>
+                <div>
+                  <h4>Healthcare</h4>
+                  <p>Care providers and health-sector services.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Slide 7: Service offerings -->
+        <section role="region" aria-label="Slide 7 of 22: Service offerings">
+          <div class="band">
+            <div>
+              <h2>Service offerings</h2>
+              <p class="band-sub">Engagement models for every stage of your digital journey</p>
+            </div>
+            <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
+          </div>
+          <div class="content content-top">
+            <p class="lead" style="max-width: 1560px">
+              Several engagement models tailored to different stages of your digital journey. Each
+              balances risk and value, with clear expectations around scope and timeline &mdash; you
+              choose the level of involvement that best suits your organisation.
+            </p>
+            <div class="cards-5">
+              <div class="stage">
+                <span class="step" aria-hidden="true">01</span>
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="icons.svg#i-search" /></svg>
+                </div>
+                <h4>DISCOVERY DAY</h4>
+                <p>One-day workshops to uncover how automation and AI can boost your business</p>
+              </div>
+              <div class="stage">
+                <span class="step" aria-hidden="true">02</span>
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="icons.svg#i-zap" /></svg>
+                </div>
+                <h4>PROTO-SPRINTS</h4>
+                <p>
+                  Intensive four-day workshops that build a proof-of-concept on the Power Platform
+                </p>
+              </div>
+              <div class="stage">
+                <span class="step" aria-hidden="true">03</span>
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="icons.svg#i-rocket" /></svg>
+                </div>
+                <h4>PROJECTS</h4>
+                <p>Phased delivery for well-defined initiatives, scoped to manage risk</p>
+              </div>
+              <div class="stage">
+                <span class="step" aria-hidden="true">04</span>
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="icons.svg#i-users" /></svg>
+                </div>
+                <h4>BLENDED SQUADS</h4>
+                <p>Our engineers and consultants embed in your team to accelerate delivery</p>
+              </div>
+              <div class="stage">
+                <span class="step" aria-hidden="true">05</span>
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="icons.svg#i-refresh-cw" /></svg>
+                </div>
+                <h4>CISPS</h4>
+                <p>Ongoing enhancements via pre-purchased, flexible blocks of work</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Slide 8: Service — Discovery Day -->
+        <section role="region" aria-label="Slide 8 of 22: Service — Discovery Day">
+          <div class="band">
+            <div>
+              <h2>Service &middot; Discovery Day</h2>
+              <p class="band-sub">Uncover where automation and AI can help</p>
+            </div>
+            <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
+          </div>
+          <div class="content">
+            <div class="cards-2">
+              <div class="card">
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="icons.svg#i-target" /></svg>
+                </div>
+                <div>
+                  <h4>Purpose</h4>
+                  <p>
+                    A focused, one-day engagement to uncover how automation and AI can enhance your
+                    organisation &mdash; identifying processes ripe for automation and evaluating
+                    opportunities by value, effort and complexity.
+                  </p>
+                </div>
+              </div>
+              <div>
+                <div class="card">
+                  <div class="chip" aria-hidden="true">
+                    <svg class="ic"><use href="icons.svg#i-search" /></svg>
+                  </div>
+                  <div>
+                    <h4>Delivery</h4>
+                    <p>
+                      Pre-work surveys, an on-site workshop with prioritisation exercises, 1-to-1
+                      stakeholder interviews and a value-versus-effort matrix &mdash; compiled into a
+                      summary report with prioritised recommendations.
+                    </p>
+                  </div>
+                </div>
+                <div class="checks checks-stacked">
+                  <p class="check">
+                    <svg class="ic" aria-hidden="true"><use href="icons.svg#i-clipboard-list" /></svg>
+                    <span><strong>Discovery workshop,</strong> interviews and pre-work surveys</span>
+                  </p>
+                  <p class="check">
+                    <svg class="ic" aria-hidden="true"><use href="icons.svg#i-search" /></svg>
+                    <span><strong>Categorised list</strong> of automation and AI opportunities</span>
+                  </p>
+                  <p class="check">
+                    <svg class="ic" aria-hidden="true"><use href="icons.svg#i-scroll-text" /></svg>
+                    <span
+                      ><strong>Post-workshop report</strong> with recommendations and lean business
+                      cases</span
+                    >
+                  </p>
+                  <p class="check">
+                    <svg class="ic" aria-hidden="true"><use href="icons.svg#i-gauge" /></svg>
+                    <span
+                      ><strong>Data-driven prioritisation</strong> of projects by value and effort</span
+                    >
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="kpi-row" role="list" aria-label="Discovery Day facts">
+              <div class="kpi" role="listitem">
+                <div class="kpi-val">&euro;2,000</div>
+                <div class="kpi-label">fixed price</div>
+              </div>
+              <div class="kpi" role="listitem">
+                <div class="kpi-val">1-day</div>
+                <div class="kpi-label">workshop</div>
+              </div>
+            </div>
+            <div class="pill-row" role="list" aria-label="Discovery Day facts detail">
+              <span class="pill" role="listitem">Copilot Studio</span>
+              <span class="pill" role="listitem">AI Foundry</span>
+              <span class="pill" role="listitem">Power Platform</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Slide 9: Service — Proto-Sprints -->
+        <section role="region" aria-label="Slide 9 of 22: Service — Proto-Sprints">
+          <div class="band">
+            <div>
+              <h2>Service &middot; Proto-Sprints</h2>
+              <p class="band-sub">Four days from idea to working prototype</p>
+            </div>
+            <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
+          </div>
+          <div class="content">
+            <div class="cards-2">
+              <div class="card">
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="icons.svg#i-target" /></svg>
+                </div>
+                <div>
+                  <h4>Purpose</h4>
+                  <p>
+                    Test ideas quickly and reduce the risk of a larger project &mdash; a working,
+                    non-production prototype that aligns expectations, exposes risks early and
+                    establishes a shared vision. An ideal precursor to a project.
+                  </p>
+                </div>
+              </div>
+              <div>
+                <div class="card">
+                  <div class="chip" aria-hidden="true">
+                    <svg class="ic"><use href="icons.svg#i-zap" /></svg>
+                  </div>
+                  <div>
+                    <h4>Delivery</h4>
+                    <p>
+                      An intensive 4-day journey from idea to prototype on the Microsoft Power
+                      Platform and related Copilot / AI technologies &mdash; moving rapidly through
+                      Prep &gt; Design &gt; Engineer &gt; Test with real-time collaboration.
+                    </p>
+                  </div>
+                </div>
+                <div class="checks checks-stacked">
+                  <p class="check">
+                    <svg class="ic" aria-hidden="true"><use href="icons.svg#i-compass" /></svg>
+                    <span><strong>Visual mock-ups</strong> of key functions and UI design</span>
+                  </p>
+                  <p class="check">
+                    <svg class="ic" aria-hidden="true"><use href="icons.svg#i-flask-conical" /></svg>
+                    <span><strong>Working prototype</strong> demonstrating core functionality</span>
+                  </p>
+                  <p class="check">
+                    <svg class="ic" aria-hidden="true"><use href="icons.svg#i-clipboard-list" /></svg>
+                    <span><strong>Refined backlog</strong> and supporting process documentation</span>
+                  </p>
+                  <p class="check">
+                    <svg class="ic" aria-hidden="true"><use href="icons.svg#i-trending-up" /></svg>
+                    <span><strong>Clear roadmap</strong> for the next development phases</span>
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="kpi-row" role="list" aria-label="Proto-Sprint facts">
+              <div class="kpi" role="listitem">
+                <div class="kpi-val">&euro;8,000</div>
+                <div class="kpi-label">fixed price</div>
+              </div>
+              <div class="kpi" role="listitem">
+                <div class="kpi-val">4-day</div>
+                <div class="kpi-label">workshop</div>
+              </div>
+            </div>
+            <div class="pill-row" role="list" aria-label="Proto-Sprint facts detail">
+              <span class="pill" role="listitem">Hands-on for &ldquo;Champion&rdquo; users</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Slide 10: Service — Projects -->
+        <section role="region" aria-label="Slide 10 of 22: Service — Projects">
+          <div class="band">
+            <div>
+              <h2>Service &middot; Projects</h2>
+              <p class="band-sub">Phased, production-grade delivery</p>
+            </div>
+            <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
+          </div>
+          <div class="content">
+            <div class="cards-2">
+              <div class="card">
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="icons.svg#i-target" /></svg>
+                </div>
+                <div>
+                  <h4>Purpose</h4>
+                  <p>
+                    Deliver well-defined solutions &mdash; new applications, copilots, integrations
+                    or data platforms. Each phase is scoped between &euro;25k and &euro;100k;
+                    complex initiatives run as multiple phases with their own budget, timeline and
+                    deliverables.
+                  </p>
+                </div>
+              </div>
+              <div>
+                <div class="card">
+                  <div class="chip" aria-hidden="true">
+                    <svg class="ic"><use href="icons.svg#i-rocket" /></svg>
+                  </div>
+                  <div>
+                    <h4>Delivery</h4>
+                    <p>
+                      T-Minus-15 blends the best of Agile and DevOps, taking solutions through Prep
+                      &gt; Design &gt; Engineer &gt; Test &gt; Operate &mdash; built in 2-to-3-week
+                      sprints, delivering potentially deployable assets every sprint.
+                    </p>
+                  </div>
+                </div>
+                <div class="checks checks-stacked">
+                  <p class="check">
+                    <svg class="ic" aria-hidden="true"><use href="icons.svg#i-zap" /></svg>
+                    <span><strong>Rapid value delivery</strong> using DevOps and Agile principles</span>
+                  </p>
+                  <p class="check">
+                    <svg class="ic" aria-hidden="true"><use href="icons.svg#i-refresh-cw" /></svg>
+                    <span
+                      ><strong>Iterative delivery</strong> with continuous integration and
+                      deployment</span
+                    >
+                  </p>
+                  <p class="check">
+                    <svg class="ic" aria-hidden="true"><use href="icons.svg#i-users" /></svg>
+                    <span
+                      ><strong>Close stakeholder involvement</strong> so delivery meets
+                      expectations</span
+                    >
+                  </p>
+                  <p class="check">
+                    <svg class="ic" aria-hidden="true"><use href="icons.svg#i-infinity" /></svg>
+                    <span
+                      ><strong>Post go-live support</strong> and continual improvement via our CISP
+                      offering</span
+                    >
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="kpi-row" role="list" aria-label="Project facts and day rates">
+              <div class="kpi" role="listitem">
+                <div class="kpi-val">&euro;25k&ndash;&euro;100k</div>
+                <div class="kpi-label">per phase (T&amp;M)</div>
+              </div>
+              <div class="kpi" role="listitem">
+                <div class="kpi-val">3-to-6 weeks</div>
+                <div class="kpi-label">per phase</div>
+              </div>
+              <div class="kpi" role="listitem">
+                <div class="kpi-val">&euro;1,250/day</div>
+                <div class="kpi-label">Strategic</div>
+              </div>
+              <div class="kpi" role="listitem">
+                <div class="kpi-val">&euro;850&ndash;950/day</div>
+                <div class="kpi-label">Delivery roles</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Slide 11: DevOps lifecycle -->
+        <section role="region" aria-label="Slide 11 of 22: DevOps project lifecycle">
+          <div class="dark-inner" style="padding: 108px 96px calc(52px + var(--ctl-band))">
+            <div>
+              <p class="kicker">A continuous Dev &amp; Ops loop</p>
+              <h2>DevOps project lifecycle</h2>
+            </div>
+            <div class="cards-5">
+              <div class="stage">
+                <span class="step" aria-hidden="true">01</span>
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="icons.svg#i-clipboard-list" /></svg>
+                </div>
+                <h4>PREP</h4>
+                <p>Deep understanding of the business, and a backlog of user requirements</p>
+              </div>
+              <div class="stage">
+                <span class="step" aria-hidden="true">02</span>
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="icons.svg#i-compass" /></svg>
+                </div>
+                <h4>DESIGN</h4>
+                <p>Solution design including technical architecture, data models and UX/UI</p>
+              </div>
+              <div class="stage">
+                <span class="step" aria-hidden="true">03</span>
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="icons.svg#i-code-xml" /></svg>
+                </div>
+                <h4>ENGINEER</h4>
+                <p>Rapid delivery according to the Prep and Design</p>
+              </div>
+              <div class="stage">
+                <span class="step" aria-hidden="true">04</span>
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="icons.svg#i-flask-conical" /></svg>
+                </div>
+                <h4>TEST</h4>
+                <p>Quality review to ensure the solution meets the original requirements</p>
+              </div>
+              <div class="stage">
+                <span class="step" aria-hidden="true">05</span>
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="icons.svg#i-server-cog" /></svg>
+                </div>
+                <h4>OPERATE</h4>
+                <p>Continual integration and deployment to operations, delivering value</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Slide 12: Deliverables — what, how and why -->
+        <section role="region" aria-label="Slide 12 of 22: Deliverables — what, how and why">
+          <div class="band">
+            <div>
+              <h2>Deliverables</h2>
+              <p class="band-sub">What we build, and why it matters</p>
+            </div>
+            <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
+          </div>
+          <div class="content">
+            <div class="cards-3">
+              <div class="card stack">
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="icons.svg#i-file-text" /></svg>
+                </div>
+                <div>
+                  <h4>Organise data &amp; documents</h4>
+                  <p>
+                    Cloud data and document storage across Office 365 and Azure, with a logical
+                    architecture and taxonomy connecting data, people and documents.
+                  </p>
+                </div>
+              </div>
+              <div class="card stack">
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="icons.svg#i-code-xml" /></svg>
+                </div>
+                <div>
+                  <h4>Create applications &amp; workflows</h4>
+                  <p>
+                    Custom, mobile-friendly forms and apps on Office 365 and Azure &mdash; with the
+                    business processes behind them automated end to end.
+                  </p>
+                </div>
+              </div>
+              <div class="card stack">
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="icons.svg#i-trending-up" /></svg>
+                </div>
+                <div>
+                  <h4>Deliver knowledge &amp; insights</h4>
+                  <p>
+                    Insightful BI reports and dashboards &mdash; with AI to increase adoption,
+                    reduce repetitive tasks and surface trends.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="pill-row" role="list" aria-label="Why it matters">
+              <span class="pill" role="listitem">Save time</span>
+              <span class="pill" role="listitem">Increase operational effectiveness</span>
+              <span class="pill" role="listitem">Unlock &amp; retain corporate knowledge</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Slide 13: Service — Blended Squads -->
+        <section role="region" aria-label="Slide 13 of 22: Service — Blended Squads">
+          <div class="band">
+            <div>
+              <h2>Service &middot; Blended Squads</h2>
+              <p class="band-sub">Our specialists, embedded in your team</p>
+            </div>
+            <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
+          </div>
+          <div class="content">
+            <div class="cards-2">
+              <div class="card">
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="icons.svg#i-users" /></svg>
+                </div>
+                <div>
+                  <h4>Purpose</h4>
+                  <p>
+                    Augment your existing teams with highly skilled resources &mdash; in-house and
+                    external experts with deep Microsoft knowledge and our T-Minus-15 delivery
+                    approach, extending your capability without the overhead of hiring full-time
+                    staff.
+                  </p>
+                </div>
+              </div>
+              <div>
+                <div class="card">
+                  <div class="chip" aria-hidden="true">
+                    <svg class="ic"><use href="icons.svg#i-handshake" /></svg>
+                  </div>
+                  <div>
+                    <h4>Delivery</h4>
+                    <p>
+                      Each squad blends Scrum Masters, analysts (Preppers), UX/UI designers,
+                      engineers, testers and support operators &mdash; delivering increments in short
+                      cycles and sharing knowledge so your team can support and extend the solution.
+                    </p>
+                  </div>
+                </div>
+                <div class="checks checks-stacked">
+                  <p class="check">
+                    <svg class="ic" aria-hidden="true"><use href="icons.svg#i-graduation-cap" /></svg>
+                    <span><strong>Microsoft specialists</strong> in low-code, AI and DevOps</span>
+                  </p>
+                  <p class="check">
+                    <svg class="ic" aria-hidden="true"><use href="icons.svg#i-search" /></svg>
+                    <span
+                      ><strong>Varied perspectives</strong> and deep expertise to drive innovation and
+                      quality</span
+                    >
+                  </p>
+                  <p class="check">
+                    <svg class="ic" aria-hidden="true"><use href="icons.svg#i-rocket" /></svg>
+                    <span><strong>T-Minus-15 delivery</strong> to deliver value quickly</span>
+                  </p>
+                  <p class="check">
+                    <svg class="ic" aria-hidden="true"><use href="icons.svg#i-scroll-text" /></svg>
+                    <span><strong>Simple agreement</strong> on a time-and-material basis</span>
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="pill-row" role="list" aria-label="Blended Squad facts">
+              <span class="pill" role="listitem">Cost by team size and mix (T&amp;M)</span>
+              <span class="pill" role="listitem">Multi-year agreement</span>
+              <span class="pill" role="listitem">Custom apps (incl. React)</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Slide 14: Service — Continuous Improvement Service Plans -->
+        <section
+          role="region"
+          aria-label="Slide 14 of 22: Service — Continuous Improvement Service Plans"
+        >
+          <div class="band">
+            <div>
+              <h2>Service &middot; CISPs</h2>
+              <p class="band-sub">Proactive, flexible ongoing support</p>
+            </div>
+            <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
+          </div>
+          <div class="content">
+            <div class="cards-2">
+              <div class="card">
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="icons.svg#i-target" /></svg>
+                </div>
+                <div>
+                  <h4>Purpose</h4>
+                  <p>
+                    A proactive, flexible framework for ongoing support and enhancement of your
+                    Microsoft, AI and custom-developed solutions &mdash; keeping systems effective,
+                    secure and aligned with evolving business needs.
+                  </p>
+                </div>
+              </div>
+              <div>
+                <div class="card">
+                  <div class="chip" aria-hidden="true">
+                    <svg class="ic"><use href="icons.svg#i-refresh-cw" /></svg>
+                  </div>
+                  <div>
+                    <h4>Delivery</h4>
+                    <p>
+                      Support effort grouped into flexible time-and-material &ldquo;blocks&rdquo; on a
+                      typically twelve-month contract &mdash; a predictable cadence of value that goes
+                      beyond monitoring to continuous improvement.
+                    </p>
+                  </div>
+                </div>
+                <div class="checks checks-stacked">
+                  <p class="check">
+                    <svg class="ic" aria-hidden="true"><use href="icons.svg#i-graduation-cap" /></svg>
+                    <span><strong>Domain experts</strong> across the supported technologies</span>
+                  </p>
+                  <p class="check">
+                    <svg class="ic" aria-hidden="true"><use href="icons.svg#i-refresh-cw" /></svg>
+                    <span
+                      ><strong>Continuous improvement</strong> keeps solutions aligned to your
+                      processes</span
+                    >
+                  </p>
+                  <p class="check">
+                    <svg class="ic" aria-hidden="true"><use href="icons.svg#i-flask-conical" /></svg>
+                    <span><strong>Innovation workshops</strong> to explore AI and automation</span>
+                  </p>
+                  <p class="check">
+                    <svg class="ic" aria-hidden="true"><use href="icons.svg#i-scroll-text" /></svg>
+                    <span><strong>Simple agreement</strong> on time-and-material block-hours</span>
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="pill-row" role="list" aria-label="Response targets and day rates">
+              <span class="pill" role="listitem"
+                >Gold: 4&nbsp;h response &middot; 1 day resolution</span
+              >
+              <span class="pill" role="listitem">Silver: 8&nbsp;h &middot; 2 days</span>
+              <span class="pill" role="listitem">Bronze: 16&nbsp;h &middot; 3 days</span>
+              <span class="pill" role="listitem">Strategic &euro;1,150&ndash;1,250/day</span>
+              <span class="pill" role="listitem">Delivery roles &euro;850&ndash;950/day</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Slide 15: Case study — invoice automation -->
+        <section role="region" aria-label="Slide 15 of 22: Case study — invoice automation">
+          <div class="band">
+            <div>
+              <h2>Case study &middot; Invoice automation</h2>
+              <p class="band-sub">A leading property developer, 1,600 invoices a month</p>
+            </div>
+            <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
+          </div>
+          <div class="content" style="padding: 44px 96px calc(12px + var(--ctl-band)); gap: 24px">
+            <div class="cards-2">
+              <div class="card">
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="icons.svg#i-message-square-x" /></svg>
+                </div>
+                <div>
+                  <h4>Challenge</h4>
+                  <p>
+                    The finance team manually processed around 1,600 invoices each month &mdash;
+                    sorted from a shared inbox, verified and keyed into NAV/Continia.
+                    Time-consuming, error-prone, and migration to cloud Business Central risked
+                    delays and duplicate invoices.
+                  </p>
+                </div>
+              </div>
+              <div class="card">
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="icons.svg#i-zap" /></svg>
+                </div>
+                <div>
+                  <h4>Solution</h4>
+                  <p>
+                    Power Automate and AI capture invoices via a central mailbox; flows classify and
+                    extract details with OCR, detect duplicates and route to the correct entity
+                    &mdash; connecting seamlessly with cloud Business Central, with PO validation
+                    built in.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="checks">
+              <p class="check">
+                <svg class="ic" aria-hidden="true"><use href="icons.svg#i-check" /></svg>
+                <span
+                  ><strong>Straight-through processing</strong> for the majority of invoices (target
+                  80%+)</span
+                >
+              </p>
+              <p class="check">
+                <svg class="ic" aria-hidden="true"><use href="icons.svg#i-timer" /></svg>
+                <span><strong>Faster processing</strong> with fewer errors</span>
+              </p>
+              <p class="check">
+                <svg class="ic" aria-hidden="true"><use href="icons.svg#i-shield-check" /></svg>
+                <span
+                  ><strong>Reliable, scalable integration</strong> with the cloud finance
+                  system</span
+                >
+              </p>
+              <p class="check">
+                <svg class="ic" aria-hidden="true"><use href="icons.svg#i-users" /></svg>
+                <span
+                  ><strong>Finance self-service</strong> for attachments directly within the
+                  system</span
+                >
+              </p>
+            </div>
+            <div class="kpi-row" role="list" aria-label="Engagement facts">
+              <div class="kpi" role="listitem">
+                <div class="kpi-val">&asymp;&euro;50,000</div>
+                <div class="kpi-label">indicative cost</div>
+              </div>
+              <div class="kpi" role="listitem">
+                <div class="kpi-val">8 weeks</div>
+                <div class="kpi-label">duration</div>
+              </div>
+            </div>
+            <div class="pill-row" role="list" aria-label="Engagement facts detail">
+              <span class="pill" role="listitem">Power Automate</span>
+              <span class="pill" role="listitem">Business Central</span>
+              <span class="pill" role="listitem">Microsoft AI</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Slide 16: Case study — health and safety inspection -->
+        <section
+          role="region"
+          aria-label="Slide 16 of 22: Case study — health and safety inspection"
+        >
+          <div class="band">
+            <div>
+              <h2>Case study &middot; H&amp;S inspection</h2>
+              <p class="band-sub">A nationwide engineering firm, paper-free inspections</p>
+            </div>
+            <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
+          </div>
+          <div class="content" style="padding: 44px 96px calc(12px + var(--ctl-band)); gap: 24px">
+            <div class="cards-2">
+              <div class="card">
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="icons.svg#i-message-square-x" /></svg>
+                </div>
+                <div>
+                  <h4>Challenge</h4>
+                  <p>
+                    Inspectors used paper health-and-safety forms on site. Paperwork was lost and
+                    re-entered manually, creating delays and errors &mdash; missing documentation
+                    led to regulatory fines, poor visibility and unflagged defects.
+                  </p>
+                </div>
+              </div>
+              <div class="card">
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="icons.svg#i-zap" /></svg>
+                </div>
+                <div>
+                  <h4>Solution</h4>
+                  <p>
+                    A health-and-safety inspection application on the Power Platform &mdash; digital
+                    forms on tablets with photos, comments and mapping saved to Dataverse; automated
+                    validation and real-time defect notifications; Power BI insight for proactive
+                    change.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="checks">
+              <p class="check">
+                <svg class="ic" aria-hidden="true"><use href="icons.svg#i-shield-check" /></svg>
+                <span
+                  ><strong>Improved compliance</strong> and reduced fines through built-in
+                  validation</span
+                >
+              </p>
+              <p class="check">
+                <svg class="ic" aria-hidden="true"><use href="icons.svg#i-trending-up" /></svg>
+                <span
+                  ><strong>Data insights</strong> and trend reporting for management
+                  visibility</span
+                >
+              </p>
+              <p class="check">
+                <svg class="ic" aria-hidden="true"><use href="icons.svg#i-zap" /></svg>
+                <span
+                  ><strong>Enhanced safety</strong> via real-time alerts and immediate
+                  response</span
+                >
+              </p>
+              <p class="check">
+                <svg class="ic" aria-hidden="true"><use href="icons.svg#i-check" /></svg>
+                <span
+                  ><strong>Efficiency and accuracy</strong> &mdash; no manual re-entry or paper
+                  handling</span
+                >
+              </p>
+            </div>
+            <div class="kpi-row" role="list" aria-label="Engagement facts">
+              <div class="kpi" role="listitem">
+                <div class="kpi-val">&asymp;&euro;30,000</div>
+                <div class="kpi-label">indicative cost</div>
+              </div>
+              <div class="kpi" role="listitem">
+                <div class="kpi-val">4 weeks</div>
+                <div class="kpi-label">duration</div>
+              </div>
+            </div>
+            <div class="pill-row" role="list" aria-label="Engagement facts detail">
+              <span class="pill" role="listitem">Power Apps</span>
+              <span class="pill" role="listitem">Power BI</span>
+              <span class="pill" role="listitem">Dataverse</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Slide 17: Proof -->
+        <section role="region" aria-label="Slide 17 of 22: Proof — who we have done this for">
+          <div class="band">
+            <div>
+              <h2>Proof</h2>
+              <p class="band-sub">Who we have done this for</p>
+            </div>
+            <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
+          </div>
+          <div class="content">
+            <p class="lead">
+              Public sector, utilities, education and industry &mdash; solutions we have taken all
+              the way into production.
+            </p>
+            <div class="cards-2">
+              <div class="card">
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="icons.svg#i-users" /></svg>
+                </div>
+                <div>
+                  <h4>In their words</h4>
+                  <p>
+                    &ldquo;KnowAll provided a great solution that would fit in with our current
+                    Office 365 platform&hellip; They took the time to really understand the business
+                    needs and requirements.&rdquo;<br />
+                    <strong style="color: #fff; font-weight: 700"
+                      >Louise Postill &mdash; Group Quality Assurance Manager &amp; GDPR
+                      Practitioner, John Henry Group</strong
+                    >
+                  </p>
+                </div>
+              </div>
+              <div class="card">
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="icons.svg#i-shield-check" /></svg>
+                </div>
+                <div>
+                  <h4>Live now &mdash; healthcare</h4>
+                  <p>
+                    Our pharmacy workflow solution for a major healthcare trust is live in
+                    production, with a second agentic build following it into service &mdash; our
+                    strongest current reference, and a live example of an agentic delivery running
+                    in a regulated healthcare environment.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="pill-row" role="list" aria-label="Clients">
+              <span class="pill" role="listitem">John Henry Group</span>
+              <span class="pill" role="listitem">Belfast HSC Trust</span>
+              <span class="pill" role="listitem">London Borough of Sutton</span>
+              <span class="pill" role="listitem">Scottish Water</span>
+              <span class="pill" role="listitem">Leeds Beckett University</span>
+              <span class="pill" role="listitem">Cambridgeshire County Council</span>
+              <span class="pill" role="listitem">David Lloyd</span>
+              <span class="pill" role="listitem">Octopus Energy</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Slide 18: T-Minus-15 -->
+        <section role="region" aria-label="Slide 18 of 22: The T-Minus-15 methodology">
+          <div class="dark-inner" style="padding: 108px 96px calc(52px + var(--ctl-band))">
+            <div style="display: flex; align-items: center; gap: 56px">
+              <div style="flex: 1">
+                <p class="kicker">Our methodology</p>
+                <h2>T-Minus-15</h2>
+                <p class="lead">
+                  Our open-source delivery methodology &mdash; the best of Agile and DevOps. Daily
+                  stand-ups welcome our clients, and a structured Prep &gt; Design &gt; Engineer
+                  &gt; Test &gt; Operate approach delivers to production at the earliest
+                  opportunity, gathering feedback in an iterative loop that consistently exceeds
+                  expectations.
+                </p>
+              </div>
+              <img
+                src="images/tminus15-book.png"
+                alt="The T-Minus-15 methodology book"
+                style="
+                  width: 176px;
+                  height: auto;
+                  flex: none;
+                  border-radius: 8px;
+                  box-shadow: 0 22px 46px rgba(0, 0, 0, 0.6);
+                "
+              />
+            </div>
+            <a
+              class="github-link"
+              href="https://github.com/T-Minus-15"
+              aria-label="T-Minus-15 open-source methodology on GitHub"
+            >
+              <svg class="ic" aria-hidden="true"><use href="icons.svg#i-github" /></svg>
+              github.com/T-Minus-15 &mdash; open-source methodology
+            </a>
+          </div>
+        </section>
+
+        <!-- Slide 19: Our products -->
+        <section role="region" aria-label="Slide 19 of 22: Our products and commercial agents">
+          <div class="band">
+            <div>
+              <h2>Our products</h2>
+              <p class="band-sub">Built by us, running in production today</p>
+            </div>
+            <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
+          </div>
+          <div class="content">
+            <div class="cards-5">
+              <div class="card stack">
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="icons.svg#i-zap" /></svg>
+                </div>
+                <div>
+                  <h4>Zaplie</h4>
+                  <p>
+                    Bitcoin microtransactions and AI agents inside Microsoft Teams, rewarding
+                    contributions in proportion to the value they deliver.
+                  </p>
+                </div>
+              </div>
+              <div class="card stack">
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="icons.svg#i-clipboard-list" /></svg>
+                </div>
+                <div>
+                  <h4>Zapdesk</h4>
+                  <p>
+                    Azure DevOps powered support ticketing &mdash; tickets living alongside your
+                    engineering work items, with Lightning tipping.
+                  </p>
+                </div>
+              </div>
+              <div class="card stack">
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="icons.svg#i-timer" /></svg>
+                </div>
+                <div>
+                  <h4>Thyme</h4>
+                  <p>
+                    Time tracking for Business Central, keeping Jobs and Job Journal Lines in sync
+                    automatically.
+                  </p>
+                </div>
+              </div>
+              <div class="card stack">
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="icons.svg#i-piggy-bank" /></svg>
+                </div>
+                <div>
+                  <h4>Allie for Accounts</h4>
+                  <p>
+                    An AI accounts copilot in Teams &mdash; raising quotes and invoices, chasing
+                    payments and reconciling the books.
+                  </p>
+                </div>
+              </div>
+              <div class="card stack">
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="icons.svg#i-radio-tower" /></svg>
+                </div>
+                <div>
+                  <h4>Nodie the Node Runner</h4>
+                  <p>
+                    A dependable Bitcoin infrastructure operator &mdash; monitoring nodes, checking
+                    liquidity and rebalancing channels.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="pill-row" role="list" aria-label="Product websites">
+              <span class="pill" role="listitem">zapdesk.knowall.ai</span>
+              <span class="pill" role="listitem">getthyme.ai</span>
+              <span class="pill" role="listitem">github.com/knowall-ai/zaplie-webapp</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Slide 20: Zaplie — rewards and incentives -->
+        <section role="region" aria-label="Slide 20 of 22: Zaplie — rewards and incentives">
+          <div class="band">
+            <div>
+              <h2>Zaplie &middot; Rewards &amp; incentives</h2>
+              <p class="band-sub">Value-driven collaboration inside Microsoft Teams</p>
+            </div>
+            <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
+          </div>
+          <div class="content">
+            <p class="lead" style="max-width: 1560px">
+              Zaplie integrates into Microsoft Teams and leverages Microsoft Copilot to create a
+              dynamic, value-driven ecosystem of collaboration &mdash; AI automation and Bitcoin
+              micro-transactions let users, copilots and even customers engage in meaningful
+              interactions that drive success.
+            </p>
+            <div class="cards-3">
+              <div class="card stack">
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="icons.svg#i-zap" /></svg>
+                </div>
+                <div>
+                  <h4>Send &amp; receive rewards</h4>
+                  <p>
+                    Bitcoin-based rewards (Sats) as a token of appreciation &mdash; teammate to
+                    teammate, teammate to copilot, teammate to customer, or copilot to copilot.
+                  </p>
+                </div>
+              </div>
+              <div class="card stack">
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="icons.svg#i-refresh-cw" /></svg>
+                </div>
+                <div>
+                  <h4>Reinforce good behaviours</h4>
+                  <p>
+                    Micro-transactions based on real value reinforce effective workflows &mdash;
+                    enhancing AI copilots&rsquo; learning and motivating teammates and customers.
+                  </p>
+                </div>
+              </div>
+              <div class="card stack">
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="icons.svg#i-sprout" /></svg>
+                </div>
+                <div>
+                  <h4>Fund development</h4>
+                  <p>
+                    Teammates and copilots earn and use rewards to fund their own personal and
+                    professional growth.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <a
+              class="github-link"
+              href="https://github.com/knowall-ai/zaplie-webapp"
+              aria-label="Zaplie on GitHub"
+            >
+              <svg class="ic" aria-hidden="true"><use href="icons.svg#i-github" /></svg>
+              github.com/knowall-ai/zaplie-webapp
+            </a>
+          </div>
+        </section>
+
+        <!-- Slide 21: Build — AI agents and Microsoft Copilots -->
+        <section
+          role="region"
+          aria-label="Slide 21 of 22: Build — AI agents and Microsoft Copilots"
+        >
+          <div class="band">
+            <div>
+              <h2>AI agents &amp; Copilots</h2>
+              <p class="band-sub">Tailored assistants, from single copilots to multi-agent teams</p>
+            </div>
+            <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
+          </div>
+          <div class="content">
+            <div class="cards-2">
+              <div class="card">
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="icons.svg#i-zap" /></svg>
+                </div>
+                <div>
+                  <h4>Microsoft Copilot</h4>
+                  <p>
+                    Tailored Microsoft Copilots that integrate with your existing systems and
+                    workflows &mdash; built on the Microsoft Bot Framework for robust, scalable
+                    conversational experiences across channels.
+                  </p>
+                </div>
+              </div>
+              <div class="card">
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="icons.svg#i-network" /></svg>
+                </div>
+                <div>
+                  <h4>Multi-agent teams (AutoGen)</h4>
+                  <p>
+                    Collaborative multi-agent teams built on Microsoft AutoGen &mdash; specialised
+                    agents with distinct roles, coordinated problem-solving, and human-in-the-loop
+                    oversight.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="checks">
+              <p class="check">
+                <svg class="ic" aria-hidden="true"><use href="icons.svg#i-check" /></svg>
+                <span><strong>Microsoft 365 and Teams</strong> integration out of the box</span>
+              </p>
+              <p class="check">
+                <svg class="ic" aria-hidden="true"><use href="icons.svg#i-file-text" /></svg>
+                <span><strong>Custom knowledge bases</strong> and data sources</span>
+              </p>
+              <p class="check">
+                <svg class="ic" aria-hidden="true"><use href="icons.svg#i-zap" /></svg>
+                <span
+                  ><strong>Full Power Platform automations</strong> (Apps, Automate, Pages,
+                  BI)</span
+                >
+              </p>
+              <p class="check">
+                <svg class="ic" aria-hidden="true"><use href="icons.svg#i-users" /></svg>
+                <span><strong>Human-in-the-loop</strong> collaboration and oversight</span>
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Slide 22: Contact -->
+        <section role="region" aria-label="Slide 22 of 22: Let&rsquo;s build together">
+          <div class="cta-top">
+            <h2>Let&rsquo;s build,<br />together.</h2>
+            <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
+          </div>
+          <div class="cta-bottom">
+            <div style="display: flex; flex-direction: column; gap: 30px; max-width: 1180px">
+              <p style="color: var(--mist); font-size: 27px; line-height: 1.5">
+                Any further questions &mdash; or ready to start with a
+                <strong style="color: #fff; font-weight: 800">Discovery Day</strong>? We&rsquo;d
+                love to hear from you.
+              </p>
+              <a
+                class="cta-button"
+                href="mailto:Ben.Weeks@KnowAll.ai"
+                aria-label="Email Ben Weeks at KnowAll AI"
+              >
+                <svg class="ic" aria-hidden="true"><use href="icons.svg#i-send" /></svg>
+                Get in touch
+              </a>
+            </div>
+            <div class="contact-row">
+              <div class="contact-item">
+                <svg class="ic" aria-hidden="true"><use href="icons.svg#i-users" /></svg>
+                <span>Ben Weeks &mdash; Chief Builder</span>
+              </div>
+              <div class="contact-item">
+                <svg class="ic" aria-hidden="true"><use href="icons.svg#i-phone" /></svg>
+                <a href="tel:+447968847178">+44 7968 847178</a>
+              </div>
+              <div class="contact-item">
+                <svg class="ic" aria-hidden="true"><use href="icons.svg#i-mail" /></svg>
+                <a href="mailto:Ben.Weeks@KnowAll.ai">Ben.Weeks@KnowAll.ai</a>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <script src="vendor/reveal/reveal.js"></script>
+    <script src="knowall-deck.js"></script>
+  </body>
+</html>
