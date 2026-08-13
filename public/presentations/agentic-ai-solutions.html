@@ -230,27 +230,8 @@
       }
 
 
-      /* Subtle scene behind a content slide. The scrim does the work:
-         the image should register as depth, not as a picture. */
-      /* Full-bleed: the scene covers the WHOLE slide, header included,
-         rather than starting below it (Ben, 2026-07-28). */
-      .reveal .slides > section.scene {
-        isolation: isolate;
-      }
-
-      .reveal .slides > section.scene::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        z-index: -1;
-        background-image:
-          linear-gradient(180deg, rgba(11,13,16,.80) 0%, rgba(11,13,16,.48) 50%,
-                          rgba(11,13,16,.86) 100%),
-          var(--scene);
-        background-size: cover, cover;
-        background-position: center, center;
-        opacity: 1;
-      }
+      /* The scene treatment lives in knowall-deck.css now — every deck
+         shares the same scrim + bottom lime tint. */
 
       /* Real product screenshots, not icons: these are shipping products
          and showing them is more persuasive than describing them
@@ -565,8 +546,8 @@
             </div>
             <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
           </div>
-          <div class="content content-top">
-            <p class="lead" style="margin-top: -8px; max-width: 1500px">
+          <div class="content" style="gap: 44px">
+            <p class="lead" style="max-width: 1500px">
               A full T-Minus-15 delivery team &mdash; each a specialist with its own skills.
               <strong style="color: #fff; font-weight: 700">Hover any agent</strong> to see what it
               does.
@@ -578,8 +559,8 @@
                   <span>Proposals</span><span>Quotations</span
                   ><span>Pipeline &amp; opportunities</span>
                 </div>
-                <div class="agent-av">
-                  <svg class="ic"><use href="icons.svg#i-handshake" /></svg>
+                <div class="agent-av agent-av--photo">
+                  <img src="images/agents/sallie.jpg" alt="" />
                 </div>
                 <div>
                   <div class="agent-name">Sallie</div>
@@ -592,8 +573,8 @@
                   <span>Epics &amp; roadmap</span><span>Lean business case</span
                   ><span>Sprint planning</span>
                 </div>
-                <div class="agent-av">
-                  <svg class="ic"><use href="icons.svg#i-clipboard-list" /></svg>
+                <div class="agent-av agent-av--photo">
+                  <img src="images/agents/poppie.jpg" alt="" />
                 </div>
                 <div>
                   <div class="agent-name">Poppie</div>
@@ -605,8 +586,8 @@
                   <h5>Preppie &middot; Prepper</h5>
                   <span>Requirements</span><span>User stories</span><span>Backlog prep</span>
                 </div>
-                <div class="agent-av">
-                  <svg class="ic"><use href="icons.svg#i-file-text" /></svg>
+                <div class="agent-av agent-av--photo">
+                  <img src="images/agents/preppie.jpg" alt="" />
                 </div>
                 <div>
                   <div class="agent-name">Preppie</div>
@@ -619,8 +600,8 @@
                   <span>Wireframes</span><span>UX &amp; UI design</span
                   ><span>Brand guidelines</span>
                 </div>
-                <div class="agent-av">
-                  <svg class="ic"><use href="icons.svg#i-compass" /></svg>
+                <div class="agent-av agent-av--photo">
+                  <img src="images/agents/dannie.jpg" alt="" />
                 </div>
                 <div>
                   <div class="agent-name">Dannie</div>
@@ -632,8 +613,8 @@
                   <h5>Ernie &middot; Engineer</h5>
                   <span>Build &amp; ship</span><span>Code review</span><span>Pull requests</span>
                 </div>
-                <div class="agent-av">
-                  <svg class="ic"><use href="icons.svg#i-code-xml" /></svg>
+                <div class="agent-av agent-av--photo">
+                  <img src="images/agents/ernie.jpg" alt="" />
                 </div>
                 <div>
                   <div class="agent-name">Ernie</div>
@@ -645,8 +626,8 @@
                   <h5>Teddie &middot; Tester</h5>
                   <span>E2E tests</span><span>Quality assurance</span><span>Regression</span>
                 </div>
-                <div class="agent-av">
-                  <svg class="ic"><use href="icons.svg#i-flask-conical" /></svg>
+                <div class="agent-av agent-av--photo">
+                  <img src="images/agents/teddie.jpg" alt="" />
                 </div>
                 <div>
                   <div class="agent-name">Teddie</div>
@@ -659,8 +640,8 @@
                   <span>Deploy &amp; release</span><span>Monitoring</span
                   ><span>Continuous improvement</span>
                 </div>
-                <div class="agent-av">
-                  <svg class="ic"><use href="icons.svg#i-rocket" /></svg>
+                <div class="agent-av agent-av--photo">
+                  <img src="images/agents/ollie.jpg" alt="" />
                 </div>
                 <div>
                   <div class="agent-name">Ollie</div>
@@ -672,8 +653,8 @@
                   <h5>Archie &middot; Architect</h5>
                   <span>Architecture</span><span>Technical review</span><span>Standards</span>
                 </div>
-                <div class="agent-av">
-                  <svg class="ic"><use href="icons.svg#i-network" /></svg>
+                <div class="agent-av agent-av--photo">
+                  <img src="images/agents/archie.jpg" alt="" />
                 </div>
                 <div>
                   <div class="agent-name">Archie</div>
