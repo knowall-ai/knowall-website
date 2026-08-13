@@ -19,6 +19,13 @@ import {
   Camera,
   Server,
   Network,
+  Globe,
+  Sparkles,
+  ScreenShare,
+  FileText,
+  Brain,
+  FileSignature,
+  BarChart3,
 } from 'lucide-react';
 import EmailIcon from '@/components/email-icon';
 import { Button } from '@/components/ui/button';
@@ -583,13 +590,21 @@ export default function Home() {
                 scope, a client&apos;s tone — she doesn&apos;t guess; she messages you in Teams and
                 asks before anything reaches a client.
               </p>
-              <ul className="space-y-2 mb-6">
+              <ul className="grid sm:grid-cols-2 gap-x-6 gap-y-3 mb-6">
                 <li className="flex items-start gap-2">
                   <Code className="h-5 w-5 text-lime-500 mt-0.5 flex-shrink-0" />
                   <span>
-                    Custom skills that understand your business &mdash; including Xero and Dynamics
-                    365 Business Central
+                    Custom skills that understand your business &mdash; including Xero and Business
+                    Central
                   </span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <Globe className="h-5 w-5 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <span>Integrates onto your website</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <Sparkles className="h-5 w-5 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <span>Uses the latest AI models &mdash; fully configurable</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <Video className="h-5 w-5 text-lime-500 mt-0.5 flex-shrink-0" />
@@ -600,34 +615,49 @@ export default function Home() {
                   <span>Appears on a virtual camera in 1-2-1 and group calls</span>
                 </li>
                 <li className="flex items-start gap-2">
+                  <ScreenShare className="h-5 w-5 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <span>Shares her screen for demos and presentations (work in progress)</span>
+                </li>
+                <li className="flex items-start gap-2">
                   <Server className="h-5 w-5 text-lime-500 mt-0.5 flex-shrink-0" />
                   <span>Runs on her own VM, completing activities end-to-end</span>
                 </li>
                 <li className="flex items-start gap-2">
+                  <Users className="h-5 w-5 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <span>Works alongside your human team members</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <FileText className="h-5 w-5 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <span>Updates documentation in SharePoint</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <Brain className="h-5 w-5 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <span>Long-term memory of your business and everyone she works with</span>
+                </li>
+                <li className="flex items-start gap-2">
                   <Network className="h-5 w-5 text-lime-500 mt-0.5 flex-shrink-0" />
                   <span>
-                    Builds a knowledge graph of people, projects, places and organisations &mdash;
-                    and how they all relate
+                    Builds a knowledge graph of people, projects, places and organisations
                   </span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <Zap className="h-5 w-5 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <FileSignature className="h-5 w-5 text-lime-500 mt-0.5 flex-shrink-0" />
                   <span>Proposals and quotations drafted, branded and sent to clients</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <Zap className="h-5 w-5 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <BarChart3 className="h-5 w-5 text-lime-500 mt-0.5 flex-shrink-0" />
                   <span>Pipeline and opportunities tracked in Dynamics 365 Business Central</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <Zap className="h-5 w-5 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <RefreshCw className="h-5 w-5 text-lime-500 mt-0.5 flex-shrink-0" />
                   <span>
                     Follow-ups and deal chasing, with quotes handed to Allie for invoicing
                   </span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <Zap className="h-5 w-5 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <ShieldCheck className="h-5 w-5 text-lime-500 mt-0.5 flex-shrink-0" />
                   <span>
-                    Human-in-the-loop: Sallie asks in Teams before anything goes to a client
+                    Human-in-the-loop: Sallie asks in Teams before anything reaches a client
                   </span>
                 </li>
               </ul>
