@@ -14,10 +14,10 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useNostrAuth, type NostrUser } from '@/components/auth/nostr-auth-provider';
 import { cn } from '@/lib/utils';
 
@@ -48,6 +48,9 @@ export default function SignInButton({ className }: { className?: string }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isSigningIn, setIsSigningIn] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // URL of a profile picture that failed to load — falls back to the initial
+  // avatar, and resets automatically if the profile later has a different URL.
+  const [brokenPictureSrc, setBrokenPictureSrc] = useState<string | null>(null);
 
   const handleOpenChange = (open: boolean) => {
     setIsDialogOpen(open);
@@ -69,6 +72,8 @@ export default function SignInButton({ className }: { className?: string }) {
 
   if (user) {
     const name = displayName(user);
+    const picture = user.profile?.picture;
+    const showPicture = Boolean(picture) && picture !== brokenPictureSrc;
     return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
@@ -79,17 +84,34 @@ export default function SignInButton({ className }: { className?: string }) {
               className
             )}
           >
-            <Avatar className="h-8 w-8">
-              <AvatarImage src={user.profile?.picture} alt={name} />
-              <AvatarFallback className="bg-lime-600 text-sm font-semibold text-white">
+            {showPicture ? (
+              // eslint-disable-next-line @next/next/no-img-element -- avatar URL comes from the user's Nostr profile, host unknown at build time
+              <img
+                src={picture}
+                alt=""
+                className="h-8 w-8 shrink-0 rounded-full object-cover"
+                onError={() => setBrokenPictureSrc(picture ?? null)}
+              />
+            ) : (
+              <span
+                aria-hidden="true"
+                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-lime-600 text-sm font-semibold text-white"
+              >
                 {name.charAt(0).toUpperCase()}
-              </AvatarFallback>
-            </Avatar>
+              </span>
+            )}
             <span className="max-w-[10rem] truncate text-sm font-medium">{name}</span>
             <ChevronDown className="h-4 w-4" aria-hidden="true" />
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-56">
+          <DropdownMenuLabel className="font-normal">
+            <span className="block truncate text-sm font-medium">{name}</span>
+            <span className="block truncate text-xs text-muted-foreground">
+              {user.profile?.nip05 ?? truncateNpub(user.npub)}
+            </span>
+          </DropdownMenuLabel>
+          <DropdownMenuSeparator />
           <DropdownMenuItem asChild className="cursor-pointer">
             <a href={`https://njump.me/${user.npub}`} target="_blank" rel="noopener noreferrer">
               <User className="mr-2 h-4 w-4" aria-hidden="true" />
