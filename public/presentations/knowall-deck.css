@@ -1146,3 +1146,11 @@ section > .logo-light {
     animation: none;
   }
 }
+
+/* eir business supplies a cream-on-teal lockup; give it its brand plate. */
+.logo-plate--eir {
+  background: #005c63;
+}
+.logo-plate--eir img {
+  max-height: 64px;
+}
