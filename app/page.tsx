@@ -667,7 +667,13 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="flex-1 w-full max-w-md">
+            <div className="flex-1 w-full max-w-md flex flex-col justify-center gap-6 self-stretch">
+              <div className="text-center">
+                <h3 className="text-lg font-semibold">Sallie in action</h3>
+                <p className="text-sm text-gray-400 mt-1">
+                  A real exchange from Microsoft Teams &mdash; proposal drafted, approved and sent
+                </p>
+              </div>
               <p className="sr-only">
                 Illustration of a Microsoft Teams chat where Sallie asks Ben to approve a proposal
                 for Contoso, Ben approves it, and Sallie sends it and logs the opportunity.
@@ -795,6 +801,14 @@ export default function Home() {
                   </div>
                 </div>
               </Card>
+              <div className="text-center">
+                <Button
+                  className="bg-lime-500 text-white hover:bg-lime-600 shadow-lg shadow-lime-500/30"
+                  asChild
+                >
+                  <a href="#contact">Book a Sallie demo</a>
+                </Button>
+              </div>
             </div>
           </div>
         </div>
