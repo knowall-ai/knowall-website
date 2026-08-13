@@ -4,7 +4,7 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 /**
  * Chat API route tests
  *
- * Requirements: sally-chat (docs/requirements.yaml)
+ * Requirements: sallie-chat
  * - Messages are sent to the OpenAI API and a response is returned
  * - A fallback response is returned when the OpenAI API is unavailable
  * - The route degrades gracefully when no API key is configured
@@ -86,7 +86,7 @@ describe('POST /api/chat', () => {
   it('returns the assistant response in the expected shape', async () => {
     vi.stubEnv('OPENAI_API_KEY', 'sk-test-key');
     createMock.mockResolvedValue({
-      choices: [{ message: { content: 'Hello from Sally!' } }],
+      choices: [{ message: { content: 'Hello from Sallie!' } }],
     });
 
     const response = await POST(
@@ -101,7 +101,7 @@ describe('POST /api/chat', () => {
     const body = await response.json();
     expect(body).toMatchObject({
       role: 'assistant',
-      content: 'Hello from Sally!',
+      content: 'Hello from Sallie!',
       conversationId: 'conv-123',
     });
     expect(body.id).toBeTruthy();

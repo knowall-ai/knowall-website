@@ -8,7 +8,6 @@ import { ContactPanelProvider } from '@/components/contact-panel';
  * Header component tests
  *
  * Requirements: primary-navigation, responsive-design, contact-us
- * (docs/requirements.yaml)
  *
  * The header depends on the Nostr auth context (Sign In button) and the
  * contact panel context (mail icon), so it is rendered inside both providers
@@ -43,6 +42,13 @@ describe('Header', () => {
     expect(screen.getByRole('link', { name: 'Copilots' })).toHaveAttribute('href', '/#copilots');
     // The individual products (Zaplie, Zapdesk, …) now live under a Products dropdown.
     expect(screen.getByRole('button', { name: 'Products' })).toBeInTheDocument();
+  });
+
+  it('renders Our Story and Shop route links', () => {
+    renderHeader();
+
+    expect(screen.getByRole('link', { name: 'Our Story' })).toHaveAttribute('href', '/story');
+    expect(screen.getByRole('link', { name: 'Shop' })).toHaveAttribute('href', '/shop');
   });
 
   it('renders contact mail buttons for desktop and mobile', () => {

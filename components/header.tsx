@@ -2,7 +2,7 @@
 
 import { useState, type MouseEvent } from 'react';
 import Link from 'next/link';
-import { BookOpen, ChevronDown, Mail, Menu, X } from 'lucide-react';
+import { BookOpen, ChevronDown, Mail, Menu, ShoppingBag, X } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -128,8 +128,17 @@ export default function Header() {
               <BookOpen className="h-5 w-5" aria-hidden="true" />
               <span className="text-[10px] text-gray-400">Our Story</span>
             </Link>
+            <Link
+              href="/shop"
+              aria-label="Shop"
+              title="Shop"
+              className="flex flex-col items-center gap-0.5 text-gray-300 hover:text-lime-500 transition-colors"
+            >
+              <ShoppingBag className="h-5 w-5" aria-hidden="true" />
+              <span className="text-[10px] text-gray-400">Shop</span>
+            </Link>
             <button
-              onClick={openContactPanel}
+              onClick={() => openContactPanel()}
               aria-label="Message"
               title="Message"
               className="flex flex-col items-center gap-0.5 text-gray-300 hover:text-lime-500 transition-colors"
@@ -143,7 +152,7 @@ export default function Header() {
           {/* Mobile Contact + Menu Buttons */}
           <div className="md:hidden flex items-center gap-4">
             <button
-              onClick={openContactPanel}
+              onClick={() => openContactPanel()}
               aria-label="Message"
               title="Message"
               className="flex flex-col items-center gap-0.5 text-gray-300 hover:text-lime-500 transition-colors"
@@ -215,6 +224,15 @@ export default function Header() {
               >
                 <BookOpen className="h-5 w-5" aria-hidden="true" />
                 Our Story
+              </Link>
+              <Link
+                href="/shop"
+                aria-label="Shop"
+                className="flex items-center gap-2 text-gray-300 hover:text-lime-500 transition-colors py-2"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <ShoppingBag className="h-5 w-5" aria-hidden="true" />
+                Shop
               </Link>
               <div className="pt-2">
                 <SignInButton className="w-full" />

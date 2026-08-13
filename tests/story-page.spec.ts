@@ -43,3 +43,62 @@ test.describe('Story Page', () => {
     await expect(storyLink).toBeVisible();
   });
 });
+
+/**
+ * Social actions (comments, zaps, follow) on the story feed. The feed's posts
+ * come from live public relays, so post-dependent tests first wait for a
+ * terminal feed state and skip when no posts loaded — asserting the gating UX
+ * only when there is something to gate.
+ */
+test.describe('Story Page social actions', () => {
+  /** Wait for the feed to settle; true when posts rendered, false otherwise. */
+  async function feedHasPosts(page: import('@playwright/test').Page): Promise<boolean> {
+    const terminal = page.locator(
+      '[data-testid="story-feed"], [data-testid="story-empty"], [data-testid="story-error"]'
+    );
+    await expect(terminal.first()).toBeVisible({ timeout: 20000 });
+    return page.getByTestId('story-feed').isVisible();
+  }
+
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/story');
+  });
+
+  test('Posts show comment and zap actions', async ({ page }) => {
+    test.skip(!(await feedHasPosts(page)), 'No posts loaded (relays unreachable in this run)');
+
+    await expect(page.getByTestId('story-comments-toggle').first()).toBeVisible();
+    await expect(page.getByTestId('story-zap-button').first()).toBeVisible();
+  });
+
+  test('Comment thread expands; composer is read-only with a sign-in nudge when signed out', async ({
+    page,
+  }) => {
+    test.skip(!(await feedHasPosts(page)), 'No posts loaded (relays unreachable in this run)');
+
+    await page.getByTestId('story-comments-toggle').first().click();
+    const comments = page.getByTestId('story-comments').first();
+    await expect(comments).toBeVisible();
+
+    // Signed out: the textarea is disabled and the action is a sign-in nudge.
+    const composer = comments.getByTestId('story-comment-composer');
+    await expect(composer.locator('textarea')).toBeDisabled();
+    await expect(composer.getByRole('button', { name: 'Sign in to comment' })).toBeVisible();
+  });
+
+  test('Zap dialog nudges signed-out users to sign in', async ({ page }) => {
+    test.skip(!(await feedHasPosts(page)), 'No posts loaded (relays unreachable in this run)');
+
+    await page.getByTestId('story-zap-button').first().click();
+    const dialog = page.getByTestId('story-zap-dialog');
+    await expect(dialog).toBeVisible();
+    await expect(dialog.getByRole('button', { name: 'Sign in to zap' })).toBeVisible();
+  });
+
+  test('Follow button deep-links to njump when signed out', async ({ page }) => {
+    // Relay-independent: the hero renders regardless of feed state.
+    const follow = page.getByTestId('story-follow-button');
+    await expect(follow).toBeVisible();
+    await expect(follow).toHaveAttribute('href', /njump\.me\/npub1/);
+  });
+});

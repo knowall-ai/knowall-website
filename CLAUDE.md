@@ -32,7 +32,7 @@ npx vitest run tests/unit/lib/utils.test.ts
 **Key API routes:**
 
 - `app/api/chat/route.ts` - OpenAI GPT-4o chat endpoint with fallback responses
-- `app/api/chat/system-prompt.ts` - Sally AI assistant persona configuration
+- `app/api/chat/system-prompt.ts` - Sallie AI assistant persona configuration
 - `app/api/chat/logger.ts` - Logs conversations to `logs/` directory as JSON
 - `app/api/logs/route.ts` - Admin endpoint for viewing chat logs (requires ADMIN_API_KEY)
 
@@ -72,6 +72,6 @@ See `docs/TROUBLESHOOTING.adoc` for Azure-specific issues.
 
 ## Testing
 
-End-to-end (Playwright) tests are in `tests/` following the `[feature-name].spec.ts` convention. Unit tests (Vitest + React Testing Library) are in `tests/unit/` following the `[name].test.ts(x)` convention. Tests reference requirement IDs in `docs/requirements.yaml`.
+End-to-end (Playwright) tests are in `tests/` following the `[feature-name].spec.ts` convention. Unit tests (Vitest + React Testing Library) are in `tests/unit/` following the `[name].test.ts(x)` convention.
 
 Playwright starts a production server (`npm run build && npm run start` on port 3000, see `playwright.config.ts`) and always injects a placeholder (invalid) `OPENAI_API_KEY`, so the chat tests deterministically exercise the API's fallback response path and never call OpenAI — even when a real key is present in the environment. Set `E2E_USE_REAL_OPENAI_KEY=1` to explicitly opt in to passing the real key through. `ADMIN_API_KEY` falls back to a placeholder when unset.

@@ -5,7 +5,7 @@ import Footer from '@/components/footer';
 /**
  * Footer component tests
  *
- * Requirements: contact-us (docs/requirements.yaml)
+ * Requirements: contact-us
  */
 
 describe('Footer', () => {
@@ -38,6 +38,13 @@ describe('Footer', () => {
       'href',
       '/#zaplie'
     );
+  });
+
+  it('renders Our Story and Shop route links', () => {
+    render(<Footer />);
+
+    expect(screen.getByRole('link', { name: 'Our Story' })).toHaveAttribute('href', '/story');
+    expect(screen.getByRole('link', { name: 'Shop' })).toHaveAttribute('href', '/shop');
   });
 
   it('renders the contact email address', () => {
