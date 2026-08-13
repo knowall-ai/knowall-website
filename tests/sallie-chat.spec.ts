@@ -26,7 +26,9 @@ test.describe('Sallie Chat', () => {
   test('Chat interface renders with Sallie header and greeting', async ({ page }) => {
     await expect(page.getByRole('heading', { name: 'Sallie' })).toBeVisible();
     await expect(page.getByText(/I'm Sallie, but I'm not your regular bot!/)).toBeVisible();
-    await expect(page.getByText(/Our conversation will be saved with the ID/)).toBeVisible();
+    // The conversation ID is used internally (logging/lead follow-up) but is
+    // deliberately not surfaced to visitors.
+    await expect(page.getByText(/Our conversation will be saved with the ID/)).toBeHidden();
   });
 
   test('Chat input and send button are available', async ({ page }) => {

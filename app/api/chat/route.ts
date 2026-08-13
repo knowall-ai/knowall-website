@@ -63,13 +63,11 @@ export async function POST(req: Request) {
       apiKey: apiKey,
     });
 
-    // Prepare messages for the OpenAI API and replace placeholders with actual values
-    const customizedSystemPrompt = systemPrompt.replace(/\{\{CONVERSATION_ID\}\}/g, conversationId);
-
+    // Prepare messages for the OpenAI API
     const messages: Array<{ role: 'system' | 'user' | 'assistant'; content: string }> = [
       {
         role: 'system',
-        content: customizedSystemPrompt,
+        content: systemPrompt,
       },
     ];
 

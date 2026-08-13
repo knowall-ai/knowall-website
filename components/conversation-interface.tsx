@@ -48,8 +48,6 @@ export default function ConversationInterface() {
       role: 'assistant',
       content: `I'm Sallie, but I'm not your regular bot! My aim is to understand what you want to achieve and determine if we are a good fit to help you. If we are, I can create a brief for the team if you would like me to.
 
-Our conversation will be saved with the ID of ${conversationId} for future reference so you won't need to repeat it.
-
 We can make this a game! I'll ask you 20 questions to build you a brief and understand exactly what solution you require. Would you like to play 20 questions?`,
     },
   ]);
