@@ -25,11 +25,12 @@ deckSlides.slice(2, -1).forEach((slide) => {
     ],
     ['.cards-5 > .stage', 'fade-up'],
     ['.checks > .check', 'fade-up'],
+    ['.human-row > .human', 'fade-up'],
     ['.agent-row > .agent', 'fade-up'],
     ['.timeline > .timeline-point', 'fade-up'],
     ['.kpi-row > .kpi', 'fade-in'],
     ['.pill-row > .pill', 'fade-in'],
-    ['.loop-stage', 'fade-in'],
+    ['.lifecycle-stages > .ls', 'fade-in'],
   ];
   deckSlides.forEach((section, index) => {
     let seqIndex = 0;
@@ -59,7 +60,7 @@ deckSlides.slice(2, -1).forEach((slide) => {
 // slides that need the room. Measured, not hard-coded, so it stays true
 // if the copy changes.
 const CONTENT_SELECTOR =
-  '.card, .check, .kpi, .pill, .stage, .agent, .timeline-point, .loop-stage,' +
+  '.card, .check, .kpi, .pill, .stage, .agent, .human, .timeline-point, .ls,' +
   ' h1, h2, h3, h4, p, img, svg, .quote, .quote-mark';
 function guardFloatingControls(slide) {
   if (!slide) return;
