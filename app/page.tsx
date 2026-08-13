@@ -571,7 +571,7 @@ export default function Home() {
           </p>
 
           <div className="flex flex-col lg:flex-row items-center gap-12">
-            <div className="flex-1">
+            <div className="flex-[1.4]">
               <figure className="mb-6">
                 <Image
                   src="/images/sallie-video-call.jpg"
@@ -667,7 +667,7 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="flex-1 w-full max-w-md flex flex-col justify-center gap-6 self-stretch">
+            <div className="flex-1 w-full lg:max-w-none max-w-md flex flex-col justify-center gap-6 self-stretch">
               <div className="text-center">
                 <h3 className="text-lg font-semibold">Sallie in action</h3>
                 <p className="text-sm text-gray-400 mt-1">
@@ -686,8 +686,8 @@ export default function Home() {
                   <div className="flex h-9 w-9 items-center justify-center rounded-full bg-lime-500/20">
                     <Bot className="h-5 w-5 text-lime-500" />
                   </div>
-                  <span className="font-semibold">Sallie for Sales</span>
-                  <div className="ml-auto flex items-center gap-4 text-sm text-gray-400">
+                  <span className="font-semibold whitespace-nowrap">Sallie for Sales</span>
+                  <div className="ml-auto flex items-center gap-3 text-xs text-gray-400">
                     <span className="text-white border-b-2 border-lime-500 pb-0.5">Chat</span>
                     <span>Pipeline</span>
                     <span>Reports</span>
