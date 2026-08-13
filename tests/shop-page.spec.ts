@@ -125,9 +125,9 @@ test.describe('Shop Page', () => {
     await expect(page.getByText('Agent Bootcamp')).toBeVisible();
     await expect(page.getByText('£100')).toBeVisible();
 
-    // Buy deep-links to the listing on njump (naddr).
-    const buyLinks = page.getByRole('link', { name: 'Buy' });
-    await expect(buyLinks.first()).toHaveAttribute('href', /njump\.me\/naddr1/);
+    // Cards link to the on-site product page addressed by the listing's naddr.
+    const viewLinks = page.getByRole('link', { name: 'View details' });
+    await expect(viewLinks.first()).toHaveAttribute('href', /^\/shop\/naddr1/);
 
     // Search narrows the grid.
     await page.getByRole('searchbox', { name: 'Search products' }).fill('sticker');
@@ -150,6 +150,80 @@ test.describe('Shop Page', () => {
     await expect(page.getByText('Message us')).toBeVisible();
     await expect(page.getByRole('textbox', { name: 'Message' })).toHaveValue(
       /Sticker Pack \(10,000 sats\)/
+    );
+  });
+
+  test('hero shows the live Nostr profile banner from mocked kind-0 metadata', async ({ page }) => {
+    // Serve the mocked live images — a failed load would (correctly) flip the
+    // hero back to its static fallbacks.
+    const tinyPng = Buffer.from(
+      'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==',
+      'base64'
+    );
+    await page.route('https://blossom.example/**', (route) =>
+      route.fulfill({ status: 200, contentType: 'image/png', body: tinyPng })
+    );
+
+    // Relays answer the hero's kind-0 REQ with a live profile (banner +
+    // avatar) and every other REQ with a bare EOSE.
+    await page.addInitScript((pubkey) => {
+      const profile = {
+        id: 'a'.repeat(64),
+        pubkey,
+        created_at: 1700000000,
+        kind: 0,
+        content: JSON.stringify({
+          name: 'KnowAll AI',
+          banner: 'https://blossom.example/live-banner.png',
+          picture: 'https://blossom.example/live-avatar.png',
+        }),
+        tags: [],
+      };
+
+      class MockWebSocket {
+        url: string;
+        onopen: (() => void) | null = null;
+        onmessage: ((message: { data: string }) => void) | null = null;
+        onerror: (() => void) | null = null;
+        onclose: (() => void) | null = null;
+
+        constructor(url: string) {
+          this.url = url;
+          setTimeout(() => this.onopen?.(), 0);
+        }
+
+        send(payload: string) {
+          const [, subscriptionId, filter] = JSON.parse(payload) as [
+            string,
+            string,
+            { kinds?: number[] },
+          ];
+          setTimeout(() => {
+            if (filter?.kinds?.includes(0)) {
+              this.onmessage?.({ data: JSON.stringify(['EVENT', subscriptionId, profile]) });
+            }
+            this.onmessage?.({ data: JSON.stringify(['EOSE', subscriptionId]) });
+          }, 0);
+        }
+
+        close() {
+          // No-op.
+        }
+      }
+
+      (window as unknown as { WebSocket: unknown }).WebSocket = MockWebSocket;
+    }, KNOWALL_PUBKEY);
+
+    await page.goto('/shop', { waitUntil: 'load' });
+
+    const hero = page.getByTestId('shop-hero');
+    await expect(hero.getByAltText('KnowAll AI banner')).toHaveAttribute(
+      'src',
+      'https://blossom.example/live-banner.png'
+    );
+    await expect(hero.getByAltText('KnowAll AI logo')).toHaveAttribute(
+      'src',
+      'https://blossom.example/live-avatar.png'
     );
   });
 });
