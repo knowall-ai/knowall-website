@@ -43,7 +43,14 @@ function displayName(user: NostrUser): string {
  * opens an explainer dialog with a NIP-07 extension sign-in action; signed in
  * it shows the user's avatar and name with a profile/sign-out dropdown.
  */
-export default function SignInButton({ className }: { className?: string }) {
+export default function SignInButton({
+  className,
+  label = 'Sign In',
+}: {
+  className?: string;
+  /** Signed-out button text — lets other surfaces nudge with context, e.g. "Sign in to comment". */
+  label?: string;
+}) {
   const { user, signIn, signOut } = useNostrAuth();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isSigningIn, setIsSigningIn] = useState(false);
@@ -135,7 +142,7 @@ export default function SignInButton({ className }: { className?: string }) {
         onClick={() => handleOpenChange(true)}
         className={cn('bg-lime-600 text-white hover:bg-lime-700', className)}
       >
-        Sign In
+        {label}
       </Button>
 
       <Dialog open={isDialogOpen} onOpenChange={handleOpenChange}>

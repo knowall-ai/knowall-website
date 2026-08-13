@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
+import * as nip19 from 'nostr-tools/nip19';
 import SignInButton from '@/components/auth/sign-in-button';
 import { NostrAuthProvider } from '@/components/auth/nostr-auth-provider';
 
@@ -14,12 +15,22 @@ import { NostrAuthProvider } from '@/components/auth/nostr-auth-provider';
  *   picture:  profile picture (https) → initial avatar (none/invalid/broken)
  *   name:     display_name → name → truncated npub
  *   dropdown: nip05 → truncated npub
+ *
+ * lib/nostr-profiles caches lookups (including misses) for the module's
+ * lifetime, so every test signs in with its own unique pubkey.
  */
 
-const PUBKEY = '971615b70ad9ec896f8d5ba0f2d01652f1dfe5f9ced81ac9469ca7facefad68b';
-const TRUNCATED_NPUB = 'npub1jutp…f04x';
+const PUBKEY_BASE = '971615b70ad9ec896f8d5ba0f2d01652f1dfe5f9ced81ac9469ca7facefad68b';
 
+let testIndex = 0;
+let currentPubkey = PUBKEY_BASE;
 let scriptedProfiles: Array<{ created_at: number; content: Record<string, unknown> }> = [];
+
+/** The chip's truncated form of the current test pubkey's npub. */
+function truncatedNpub(): string {
+  const npub = nip19.npubEncode(currentPubkey);
+  return `${npub.slice(0, 9)}…${npub.slice(-4)}`;
+}
 
 class FakeWebSocket {
   static CONNECTING = 0;
@@ -31,28 +42,33 @@ class FakeWebSocket {
   readyState = FakeWebSocket.OPEN;
   onopen: (() => void) | null = null;
   onmessage: ((message: { data: string }) => void) | null = null;
+  onerror: (() => void) | null = null;
+  onclose: (() => void) | null = null;
 
   constructor(url: string) {
     this.url = url;
     queueMicrotask(() => this.onopen?.());
   }
 
-  send(_data: string) {
+  send(payload: string) {
+    const subscriptionId = JSON.parse(payload)[1] as string;
     queueMicrotask(() => {
       for (const profile of scriptedProfiles) {
         this.onmessage?.({
           data: JSON.stringify([
             'EVENT',
-            'signin-profile',
+            subscriptionId,
             {
-              pubkey: PUBKEY,
+              id: `${profile.created_at}`.padStart(64, '0'),
+              pubkey: currentPubkey,
+              kind: 0,
               created_at: profile.created_at,
               content: JSON.stringify(profile.content),
             },
           ]),
         });
       }
-      this.onmessage?.({ data: JSON.stringify(['EOSE', 'signin-profile']) });
+      this.onmessage?.({ data: JSON.stringify(['EOSE', subscriptionId]) });
     });
   }
 
@@ -90,10 +106,14 @@ function openDropdown(trigger: HTMLElement) {
 
 describe('SignInButton', () => {
   beforeEach(() => {
+    // Unique pubkey per test: lib/nostr-profiles caches per-pubkey results
+    // (including misses) for the module's lifetime.
+    testIndex += 1;
+    currentPubkey = PUBKEY_BASE.slice(0, 62) + testIndex.toString(16).padStart(2, '0');
     scriptedProfiles = [];
     window.localStorage.clear();
     vi.stubGlobal('WebSocket', FakeWebSocket);
-    window.nostr = { getPublicKey: vi.fn().mockResolvedValue(PUBKEY) };
+    window.nostr = { getPublicKey: vi.fn().mockResolvedValue(currentPubkey) };
   });
 
   afterEach(() => {
@@ -121,6 +141,18 @@ describe('SignInButton', () => {
     expect(avatar).toHaveAttribute('src', 'https://example.com/ben.jpg');
   });
 
+  it('shows the newest profile when relays return multiple kind-0 events', async () => {
+    scriptedProfiles = [
+      { created_at: 200, content: { display_name: 'Ben (current)' } },
+      { created_at: 100, content: { display_name: 'Ben (stale)' } },
+    ];
+
+    await renderSignedIn();
+
+    expect(await screen.findByText('Ben (current)')).toBeInTheDocument();
+    expect(screen.queryByText('Ben (stale)')).not.toBeInTheDocument();
+  });
+
   it('falls back to name when the profile has no display_name', async () => {
     scriptedProfiles = [{ created_at: 100, content: { name: 'benweeks' } }];
 
@@ -132,7 +164,7 @@ describe('SignInButton', () => {
   it('falls back to the truncated npub and initial avatar when no profile is found', async () => {
     const chip = await renderSignedIn();
 
-    expect(await screen.findByText(TRUNCATED_NPUB)).toBeInTheDocument();
+    expect(await screen.findByText(truncatedNpub())).toBeInTheDocument();
     expect(chip.querySelector('img')).toBeNull();
     expect(chip).toHaveTextContent('N'); // initial avatar
   });
@@ -155,6 +187,7 @@ describe('SignInButton', () => {
     ];
 
     const chip = await renderSignedIn();
+    await screen.findByText('Ben');
     const avatar = chip.querySelector('img');
     expect(avatar).not.toBeNull();
 
@@ -183,10 +216,10 @@ describe('SignInButton', () => {
     await screen.findByText('Ben Weeks');
     openDropdown(chip);
 
-    expect(await screen.findByText(TRUNCATED_NPUB)).toBeInTheDocument();
+    expect(await screen.findByText(truncatedNpub())).toBeInTheDocument();
   });
 
-  it('caches the profile so a fresh mount renders it without a relay fetch', async () => {
+  it('caches the profile so a fresh mount renders it without a relay round-trip', async () => {
     scriptedProfiles = [
       {
         created_at: 100,

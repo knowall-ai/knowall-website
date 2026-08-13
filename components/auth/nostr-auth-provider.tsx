@@ -1,22 +1,19 @@
 'use client';
 
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import * as nip19 from 'nostr-tools/nip19';
-import { fetchProfileMetadata, type ProfileMetadata } from '@/lib/nostr-profile';
+import { fetchProfiles } from '@/lib/nostr-profiles';
+import type { EventTemplate, ProfileMetadata } from '@/lib/story-social';
+import type { NostrEvent } from '@/lib/story-notes';
 
-// Minimal NIP-07 surface — we only need the public key for sign-in.
+// Minimal NIP-07 surface — the public key for sign-in, plus signEvent so the
+// story page can publish replies, follows and zap requests. Raw keys never
+// touch this site: all signing happens inside the user's extension.
 declare global {
   interface Window {
     nostr?: {
       getPublicKey: () => Promise<string>;
+      signEvent?: (event: EventTemplate) => Promise<NostrEvent>;
     };
   }
 }
@@ -49,6 +46,12 @@ interface NostrAuthContextValue {
   signIn: () => Promise<void>;
   /** Sign out and forget the persisted pubkey. */
   signOut: () => void;
+  /**
+   * Sign an event template with the user's NIP-07 extension. Rejects when the
+   * extension is missing, can't sign, the user declines the signature, or the
+   * extension's active account no longer matches the signed-in session.
+   */
+  signEvent: (template: EventTemplate) => Promise<NostrEvent>;
 }
 
 const NostrAuthContext = createContext<NostrAuthContextValue | null>(null);
@@ -98,23 +101,25 @@ function readCachedProfile(pubkey: string): NostrProfile | undefined {
  * Client-side Nostr authentication context. Sign-in is NIP-07 only for now
  * (browser extension such as Alby or nos2x); the pubkey is persisted in
  * localStorage so the session survives reloads, and the user's kind-0
- * profile (name/picture/nip05) is fetched from the public relays in the
- * background — raw-WebSocket, newest event wins, same as the team section —
- * then cached alongside the pubkey so reloads render it instantly.
+ * profile (name/picture/nip05) is fetched via lib/nostr-profiles (per-author
+ * filters against the profile relays incl. purplepag.es, newest event wins,
+ * session-cached) then persisted alongside the pubkey so reloads render it
+ * instantly instead of starting from the initial-letter avatar.
  *
  * A scoped, dependency-light take on Robotechy's LoginArea/AccountSwitcher —
  * nsec and bunker:// logins are a planned follow-up.
  */
 export function NostrAuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<NostrUser | null>(null);
-  const cancelFetchRef = useRef<(() => void) | null>(null);
 
   // Fetch the profile from the relays and attach it to the user — unless the
-  // user signed out or switched identity while the lookup was in flight. The
-  // fetched metadata is cached so the next page load doesn't start from "N".
+  // user signed out or switched identity while the lookup was in flight (the
+  // functional update guards on the pubkey). The fetched metadata is persisted
+  // so the next page load doesn't start from the initial-letter avatar.
   const loadProfile = useCallback((pubkey: string) => {
-    cancelFetchRef.current?.();
-    cancelFetchRef.current = fetchProfileMetadata(pubkey, (metadata) => {
+    void fetchProfiles([pubkey]).then((profiles) => {
+      const metadata = profiles.get(pubkey);
+      if (!metadata) return;
       const profile = toProfile(metadata);
       setUser((current) =>
         current && current.pubkey === pubkey ? { ...current, profile } : current
@@ -145,9 +150,6 @@ export function NostrAuthProvider({ children }: { children: React.ReactNode }) {
     loadProfile(pubkey);
   }, [loadProfile]);
 
-  // Close any in-flight relay sockets when the provider unmounts.
-  useEffect(() => () => cancelFetchRef.current?.(), []);
-
   const signIn = useCallback(async () => {
     if (typeof window === 'undefined' || !window.nostr) {
       throw new Error(
@@ -171,8 +173,6 @@ export function NostrAuthProvider({ children }: { children: React.ReactNode }) {
   }, [loadProfile]);
 
   const signOut = useCallback(() => {
-    cancelFetchRef.current?.();
-    cancelFetchRef.current = null;
     try {
       window.localStorage.removeItem(PUBKEY_STORAGE_KEY);
       window.localStorage.removeItem(PROFILE_STORAGE_KEY);
@@ -182,7 +182,38 @@ export function NostrAuthProvider({ children }: { children: React.ReactNode }) {
     setUser(null);
   }, []);
 
-  const value = useMemo(() => ({ user, signIn, signOut }), [user, signIn, signOut]);
+  const signEvent = useCallback(
+    async (template: EventTemplate) => {
+      if (!user) {
+        throw new Error('Sign in first to publish to Nostr.');
+      }
+      if (typeof window === 'undefined' || !window.nostr?.signEvent) {
+        throw new Error(
+          'Your Nostr extension does not support signing. Update it (Alby or nos2x both work), then try again.'
+        );
+      }
+
+      const signed = await window.nostr.signEvent(template);
+      if (!signed?.id || !signed.sig) {
+        throw new Error('The extension returned an unsigned event.');
+      }
+      // The extension's active account can drift from the persisted session
+      // (e.g. the user switched profiles in Alby). Refuse rather than publish
+      // as someone the UI doesn't show.
+      if (signed.pubkey !== user.pubkey) {
+        throw new Error(
+          'Your extension is signed in to a different Nostr account. Sign out and back in, then try again.'
+        );
+      }
+      return signed;
+    },
+    [user]
+  );
+
+  const value = useMemo(
+    () => ({ user, signIn, signOut, signEvent }),
+    [user, signIn, signOut, signEvent]
+  );
 
   return <NostrAuthContext.Provider value={value}>{children}</NostrAuthContext.Provider>;
 }

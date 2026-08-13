@@ -1,7 +1,7 @@
 'use client';
 
 import { BookOpen } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import FollowButton from '@/components/follow-button';
 import { KNOWALL_NPUB } from '@/lib/nostr';
 import { useNostrProfile } from '@/hooks/use-nostr-profile';
 
@@ -55,13 +55,11 @@ export default function StoryHero() {
           </p>
         </div>
 
-        {/* Nostr identity — folded into the header instead of a separate card. */}
+        {/* Nostr identity — folded into the header instead of a separate card.
+            Signed-in visitors get a real follow (kind-3 update via their
+            signer); signed-out visitors keep the njump deep-link. */}
         <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2">
-          <Button asChild size="sm" className="bg-lime-600 hover:bg-lime-700 text-white">
-            <a href={`https://njump.me/${KNOWALL_NPUB}`} target="_blank" rel="noopener noreferrer">
-              Follow us on Nostr
-            </a>
-          </Button>
+          <FollowButton />
           <span className="font-mono text-xs text-gray-500 break-all" title={KNOWALL_NPUB}>
             {`${KNOWALL_NPUB.slice(0, 12)}…${KNOWALL_NPUB.slice(-6)}`}
           </span>
