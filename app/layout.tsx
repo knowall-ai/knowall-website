@@ -1,8 +1,8 @@
 import type React from 'react';
 import './globals.css';
+import { preload } from 'react-dom';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-import { ThemeProvider } from '@/components/theme-provider';
 import { ContactPanelProvider } from '@/components/contact-panel';
 import { NostrAuthProvider } from '@/components/auth/nostr-auth-provider';
 
@@ -34,36 +34,15 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  // Hint the hero background early without hand-writing <head> (which makes React
+  // warn about Next's dev-injected script tags on every page).
+  preload('/images/green-bg.png', { as: 'image' });
   return (
-    <html lang="en" suppressHydrationWarning>
-      <head>
-        <link rel="preload" as="image" href="/images/green-bg.png" />
-        {/* Only apply CSP in production, not in development */}
-        {process.env.NODE_ENV === 'production' && (
-          <>
-            <meta
-              httpEquiv="Content-Security-Policy"
-              content="upgrade-insecure-requests; default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https: wss:;"
-            />
-            <meta
-              httpEquiv="Strict-Transport-Security"
-              content="max-age=31536000; includeSubDomains"
-            />
-          </>
-        )}
-        <link rel="icon" href="/favicon.ico" sizes="any" />
-      </head>
+    <html lang="en">
       <body className={inter.className}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="light"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <NostrAuthProvider>
-            <ContactPanelProvider>{children}</ContactPanelProvider>
-          </NostrAuthProvider>
-        </ThemeProvider>
+        <NostrAuthProvider>
+          <ContactPanelProvider>{children}</ContactPanelProvider>
+        </NostrAuthProvider>
       </body>
     </html>
   );

@@ -1,130 +1,51 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import type { ReactNode } from 'react';
-import { BookOpen } from 'lucide-react';
+import { BookOpen, MessageSquare, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
+import StoryComments from '@/components/story-comments';
+import StoryZapButton from '@/components/story-zap';
 import { KNOWALL_NPUB, KNOWALL_PUBKEY } from '@/lib/nostr';
+import { SOCIAL_RELAYS, queryRelays } from '@/lib/relay';
+import {
+  type ZapTotals,
+  aggregateZapsByNote,
+  groupRepliesByNote,
+  sortRepliesChronologically,
+} from '@/lib/story-social';
+import {
+  type NostrEvent,
+  encodeNoteId,
+  extractImageUrls,
+  extractVideoUrls,
+  isReply,
+  stripMediaUrls,
+  timeAgo,
+} from '@/lib/story-notes';
 
-const RELAYS = ['wss://relay.damus.io', 'wss://relay.primal.net', 'wss://nos.lol'];
+const RELAYS = SOCIAL_RELAYS;
 const MAX_NOTES = 50;
 const RELAY_TIMEOUT_MS = 8000;
-
-interface NostrNote {
-  id: string;
-  pubkey: string;
-  created_at: number;
-  kind: number;
-  content: string;
-  tags: string[][];
-}
+const NO_ZAPS: ZapTotals = { count: 0, sats: 0 };
 
 /* ---------------------------------------------------------------------------
- * Minimal bech32 (BIP-173) encoder — just enough to turn a hex event id into
- * a NIP-19 `note1…` identifier for njump links, without pulling in nostr-tools.
+ * Content linkification — web URLs, NIP-21 nostr: references and #hashtags.
  * ------------------------------------------------------------------------- */
 
-const BECH32_CHARSET = 'qpzry9x8gf2tvdw0s3jn54khce6mua7l';
-const BECH32_GENERATOR = [0x3b6a57b2, 0x26508e6d, 0x1ea119fa, 0x3d4233dd, 0x2a1462b3];
-
-function bech32Polymod(values: number[]): number {
-  let chk = 1;
-  for (const value of values) {
-    const top = chk >> 25;
-    chk = ((chk & 0x1ffffff) << 5) ^ value;
-    for (let i = 0; i < 5; i++) {
-      if ((top >> i) & 1) chk ^= BECH32_GENERATOR[i];
-    }
-  }
-  return chk;
-}
-
-function bech32HrpExpand(hrp: string): number[] {
-  const expanded: number[] = [];
-  for (const c of hrp) expanded.push(c.charCodeAt(0) >> 5);
-  expanded.push(0);
-  for (const c of hrp) expanded.push(c.charCodeAt(0) & 31);
-  return expanded;
-}
-
-/** Regroup 8-bit bytes (as a hex string) into the 5-bit words bech32 encodes. */
-function hexToWords(hex: string): number[] {
-  const words: number[] = [];
-  let acc = 0;
-  let bits = 0;
-  for (let i = 0; i < hex.length; i += 2) {
-    acc = (acc << 8) | parseInt(hex.slice(i, i + 2), 16);
-    bits += 8;
-    while (bits >= 5) {
-      bits -= 5;
-      words.push((acc >> bits) & 31);
-    }
-  }
-  if (bits > 0) words.push((acc << (5 - bits)) & 31);
-  return words;
-}
-
-function bech32Encode(hrp: string, words: number[]): string {
-  const values = [...bech32HrpExpand(hrp), ...words];
-  const polymod = bech32Polymod([...values, 0, 0, 0, 0, 0, 0]) ^ 1;
-  const checksum: number[] = [];
-  for (let i = 0; i < 6; i++) checksum.push((polymod >> (5 * (5 - i))) & 31);
-  return `${hrp}1${[...words, ...checksum].map((w) => BECH32_CHARSET[w]).join('')}`;
-}
-
-/** NIP-19 `note1…` encoding of a hex event id, for njump.me links. */
-export function encodeNoteId(idHex: string): string {
-  return bech32Encode('note', hexToWords(idHex));
-}
-
-/* ---------------------------------------------------------------------------
- * Content helpers — relative timestamps, image extraction, and linkification.
- * ------------------------------------------------------------------------- */
-
-function timeAgo(unixSeconds: number): string {
-  const seconds = Math.floor(Date.now() / 1000) - unixSeconds;
-  const units: Array<[string, number]> = [
-    ['year', 31536000],
-    ['month', 2592000],
-    ['week', 604800],
-    ['day', 86400],
-    ['hour', 3600],
-    ['minute', 60],
-  ];
-  for (const [name, unitSeconds] of units) {
-    const count = Math.floor(seconds / unitSeconds);
-    if (count >= 1) return `${count} ${name}${count > 1 ? 's' : ''} ago`;
-  }
-  return 'just now';
-}
-
-const IMAGE_URL_REGEX = /https?:\/\/[^\s]+\.(?:png|jpe?g|gif|webp|avif)(?:\?[^\s]*)?/gi;
-// Web URLs, plus NIP-21 nostr: references (npub/note/nprofile/nevent/naddr),
-// which are rendered as short njump.me links rather than walls of bech32.
+// Web URLs, NIP-21 nostr: references (npub/note/nprofile/nevent/naddr) rendered
+// as short njump.me links rather than walls of bech32, and #hashtags rendered
+// as filter buttons (the edenweeks.art story pattern).
 const LINK_REGEX =
-  /(https?:\/\/[^\s]+)|(?:nostr:)?((?:npub|note|nprofile|nevent|naddr)1[02-9ac-hj-np-z]{20,})/g;
+  /(https?:\/\/[^\s]+)|(?:nostr:)?((?:npub|note|nprofile|nevent|naddr)1[02-9ac-hj-np-z]{20,})|(#\w+)/g;
 
-function extractImageUrls(content: string): string[] {
-  return [...new Set(content.match(IMAGE_URL_REGEX) ?? [])];
-}
-
-function stripImageUrls(content: string): string {
-  return content
-    .replace(IMAGE_URL_REGEX, '')
-    .replace(/\n{3,}/g, '\n\n')
-    .trim();
-}
-
-/** Renders note text with web URLs linkified and NIP-21 nostr: references
- *  shortened into njump.me links; line breaks preserved by the parent's
- *  `whitespace-pre-wrap`. */
-function linkify(text: string): ReactNode[] {
+function linkify(text: string, onTagClick: (tag: string) => void): ReactNode[] {
   const parts: ReactNode[] = [];
   let lastIndex = 0;
   let key = 0;
   for (const match of text.matchAll(LINK_REGEX)) {
-    const [fullMatch, url, nostrRef] = match;
+    const [fullMatch, url, nostrRef, hashtag] = match;
     if (match.index > lastIndex) parts.push(text.slice(lastIndex, match.index));
     if (url) {
       parts.push(
@@ -138,7 +59,7 @@ function linkify(text: string): ReactNode[] {
           {url}
         </a>
       );
-    } else {
+    } else if (nostrRef) {
       parts.push(
         <a
           key={`link-${key++}`}
@@ -150,6 +71,17 @@ function linkify(text: string): ReactNode[] {
         >
           {`@${nostrRef.slice(0, 10)}…${nostrRef.slice(-4)}`}
         </a>
+      );
+    } else {
+      parts.push(
+        <button
+          key={`link-${key++}`}
+          type="button"
+          onClick={() => onTagClick(hashtag.slice(1))}
+          className="font-medium text-lime-500 hover:underline"
+        >
+          {hashtag}
+        </button>
       );
     }
     lastIndex = match.index + fullMatch.length;
@@ -168,22 +100,25 @@ interface StoryFeedProps {
 }
 
 export default function StoryFeed({ pubkey = KNOWALL_PUBKEY }: StoryFeedProps) {
-  const [notes, setNotes] = useState<NostrNote[]>([]);
+  const [notes, setNotes] = useState<NostrEvent[]>([]);
   const [status, setStatus] = useState<'loading' | 'ready' | 'error'>('loading');
+  const [activeTag, setActiveTag] = useState<string | null>(null);
+  const [repliesByNote, setRepliesByNote] = useState<Map<string, NostrEvent[]>>(new Map());
+  const [zapsByNote, setZapsByNote] = useState<Map<string, ZapTotals>>(new Map());
 
   useEffect(() => {
     let cancelled = false;
-    const events = new Map<string, NostrNote>();
+    const events = new Map<string, NostrEvent>();
     const sockets: WebSocket[] = [];
     let settledRelays = 0;
     let successfulRelays = 0;
 
     const finish = () => {
       if (cancelled) return;
-      // Top-level notes only: replies (events referencing another event via an
-      // 'e' tag) don't belong on the story timeline.
+      // Top-level notes only: replies (NIP-10 threading, excluding mention
+      // markers) don't belong on the story timeline.
       const timeline = [...events.values()]
-        .filter((event) => !event.tags.some((tag) => tag[0] === 'e'))
+        .filter((event) => !isReply(event))
         .sort((a, b) => b.created_at - a.created_at)
         .slice(0, MAX_NOTES);
       setNotes(timeline);
@@ -229,7 +164,7 @@ export default function StoryFeed({ pubkey = KNOWALL_PUBKEY }: StoryFeedProps) {
         try {
           const data = JSON.parse(message.data as string);
           if (data[0] === 'EVENT' && data[2]?.kind === 1 && data[2]?.pubkey === pubkey) {
-            events.set(data[2].id, data[2] as NostrNote);
+            events.set(data[2].id, data[2] as NostrEvent);
           } else if (data[0] === 'EOSE') {
             complete(true);
           }
@@ -253,6 +188,31 @@ export default function StoryFeed({ pubkey = KNOWALL_PUBKEY }: StoryFeedProps) {
     };
   }, [pubkey]);
 
+  // Once the timeline has settled, fetch every post's social context in one
+  // batched query — kind-1 replies (the comment threads) and kind-9735 zap
+  // receipts — rather than one round-trip per post.
+  useEffect(() => {
+    if (notes.length === 0) return;
+    let cancelled = false;
+    const noteIds = notes.map((note) => note.id);
+    void queryRelays(RELAYS, [{ kinds: [1, 9735], '#e': noteIds, limit: 1000 }]).then((events) => {
+      if (cancelled) return;
+      setRepliesByNote(groupRepliesByNote(events, noteIds));
+      setZapsByNote(aggregateZapsByNote(events, noteIds));
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [notes]);
+
+  // Hashtag filter (the edenweeks.art story pattern): clicking a #tag in any
+  // note narrows the timeline to notes mentioning that tag.
+  const visibleNotes = useMemo(() => {
+    if (!activeTag) return notes;
+    const regex = new RegExp(`#${activeTag}\\b`, 'i');
+    return notes.filter((note) => regex.test(note.content));
+  }, [notes, activeTag]);
+
   if (status === 'loading') {
     return (
       <div className="space-y-8" data-testid="story-loading">
@@ -263,6 +223,7 @@ export default function StoryFeed({ pubkey = KNOWALL_PUBKEY }: StoryFeedProps) {
               <Skeleton className="h-3 w-24 bg-gray-800" />
               <Skeleton className="h-4 w-full bg-gray-800" />
               <Skeleton className="h-4 w-3/4 bg-gray-800" />
+              <Skeleton className="h-48 w-full rounded-lg bg-gray-800" />
             </div>
           </div>
         ))}
@@ -272,7 +233,10 @@ export default function StoryFeed({ pubkey = KNOWALL_PUBKEY }: StoryFeedProps) {
 
   if (status === 'error' && notes.length === 0) {
     return (
-      <div className="rounded-xl border border-gray-800 bg-gray-900 py-12 px-6 text-center">
+      <div
+        className="rounded-xl border border-gray-800 bg-gray-900 py-12 px-6 text-center"
+        data-testid="story-error"
+      >
         <p className="text-gray-400">
           We couldn&apos;t load the story feed right now. Please try again later, or{' '}
           <a
@@ -313,20 +277,88 @@ export default function StoryFeed({ pubkey = KNOWALL_PUBKEY }: StoryFeedProps) {
   }
 
   return (
-    <ol className="list-none" data-testid="story-feed">
-      {notes.map((note, index) => (
-        <StoryNote key={note.id} note={note} isLast={index === notes.length - 1} />
-      ))}
-    </ol>
+    <div>
+      {activeTag && (
+        <div
+          className="mb-6 flex items-center gap-2 rounded-lg border border-gray-800 bg-gray-900 p-3"
+          data-testid="story-tag-filter"
+        >
+          <span className="text-sm text-gray-400">Filtering by:</span>
+          <span className="rounded bg-lime-500/10 px-2 py-0.5 text-sm font-medium text-lime-500">
+            #{activeTag}
+          </span>
+          <button
+            type="button"
+            onClick={() => setActiveTag(null)}
+            className="ml-auto flex items-center gap-1 text-sm text-gray-400 transition-colors hover:text-white"
+          >
+            <X className="h-4 w-4" />
+            Clear
+          </button>
+        </div>
+      )}
+
+      {visibleNotes.length === 0 ? (
+        <div className="rounded-xl border border-gray-800 bg-gray-900 py-12 px-6 text-center">
+          <p className="text-gray-400">No posts mention #{activeTag} yet.</p>
+        </div>
+      ) : (
+        <ol className="list-none" data-testid="story-feed">
+          {visibleNotes.map((note, index) => (
+            <StoryNote
+              key={note.id}
+              note={note}
+              isLast={index === visibleNotes.length - 1}
+              onTagClick={setActiveTag}
+              replies={repliesByNote.get(note.id) ?? []}
+              zapTotals={zapsByNote.get(note.id) ?? NO_ZAPS}
+            />
+          ))}
+        </ol>
+      )}
+    </div>
   );
 }
 
 /** One entry on the story timeline: node + spine, relative timestamp linking to
- *  the note on njump, linkified text, and any attached images. */
-function StoryNote({ note, isLast }: { note: NostrNote; isLast: boolean }) {
-  const images = extractImageUrls(note.content);
-  const text = stripImageUrls(note.content);
+ *  the note on njump, linkified text, any attached images/videos, and the
+ *  social action row — comment count with an expandable thread, and a zap
+ *  button with the post's running total. */
+function StoryNote({
+  note,
+  isLast,
+  onTagClick,
+  replies,
+  zapTotals,
+}: {
+  note: NostrEvent;
+  isLast: boolean;
+  onTagClick: (tag: string) => void;
+  replies: NostrEvent[];
+  zapTotals: ZapTotals;
+}) {
+  const [showComments, setShowComments] = useState(false);
+  // Comments this visitor posted in this session, merged into the fetched
+  // thread so they appear immediately (relays take a moment to serve them).
+  const [localReplies, setLocalReplies] = useState<NostrEvent[]>([]);
+  const images = extractImageUrls(note);
+  const videos = extractVideoUrls(note);
+  const text = stripMediaUrls(note.content);
   const timestamp = new Date(note.created_at * 1000);
+
+  const thread = useMemo(() => {
+    const fetchedIds = new Set(replies.map((reply) => reply.id));
+    const merged = [...replies, ...localReplies.filter((reply) => !fetchedIds.has(reply.id))];
+    return sortRepliesChronologically(merged);
+  }, [replies, localReplies]);
+
+  // Content-aware alt text so screen readers get something meaningful rather
+  // than the same generic label repeated; numbered generic fallback otherwise.
+  const altBase = text.slice(0, 80);
+  const imageAlt = (index: number) => {
+    if (!altBase) return `KnowAll AI story post image ${index + 1}`;
+    return images.length > 1 ? `${altBase} (image ${index + 1})` : altBase;
+  };
 
   return (
     <li className="relative flex gap-4 sm:gap-6">
@@ -364,7 +396,7 @@ function StoryNote({ note, isLast }: { note: NostrNote; isLast: boolean }) {
 
           {text.length > 0 && (
             <div className="whitespace-pre-wrap break-words leading-relaxed text-gray-300">
-              {linkify(text)}
+              {linkify(text, onTagClick)}
             </div>
           )}
 
@@ -379,11 +411,7 @@ function StoryNote({ note, isLast }: { note: NostrNote; isLast: boolean }) {
                 <img
                   key={src}
                   src={src}
-                  alt={
-                    text
-                      ? `${text.slice(0, 80)}${images.length > 1 ? ` (image ${index + 1})` : ''}`
-                      : `KnowAll AI story post image ${index + 1}`
-                  }
+                  alt={imageAlt(index)}
                   loading="lazy"
                   decoding="async"
                   referrerPolicy="no-referrer"
@@ -396,6 +424,41 @@ function StoryNote({ note, isLast }: { note: NostrNote; isLast: boolean }) {
                 />
               ))}
             </div>
+          )}
+
+          {videos.map((src) => (
+            <div key={src} className="overflow-hidden rounded-lg border border-gray-800 bg-black">
+              <video src={src} controls preload="metadata" className="max-h-[500px] w-full" />
+            </div>
+          ))}
+
+          {/* Social actions: expandable comment thread + NIP-57 zaps. */}
+          <div className="flex items-center gap-5 border-t border-gray-800 pt-3">
+            <button
+              type="button"
+              onClick={() => setShowComments((value) => !value)}
+              aria-expanded={showComments}
+              data-testid="story-comments-toggle"
+              className={`flex items-center gap-1.5 text-sm transition-colors hover:text-lime-500 ${
+                showComments ? 'text-lime-500' : 'text-gray-400'
+              }`}
+            >
+              <MessageSquare className="h-4 w-4" aria-hidden="true" />
+              <span>
+                {thread.length > 0
+                  ? `${thread.length} ${thread.length === 1 ? 'comment' : 'comments'}`
+                  : 'Comment'}
+              </span>
+            </button>
+            <StoryZapButton note={note} totals={zapTotals} />
+          </div>
+
+          {showComments && (
+            <StoryComments
+              note={note}
+              replies={thread}
+              onPosted={(reply) => setLocalReplies((current) => [...current, reply])}
+            />
           )}
         </div>
       </div>

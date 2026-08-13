@@ -5,7 +5,7 @@ import Logo from '@/components/logo';
 /**
  * Logo component tests
  *
- * Requirements: primary-navigation (docs/requirements.yaml)
+ * Requirements: primary-navigation
  */
 
 describe('Logo', () => {

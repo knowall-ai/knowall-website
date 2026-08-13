@@ -5,7 +5,7 @@ import ServiceCard from '@/components/service-card';
 /**
  * ServiceCard component tests
  *
- * Requirements: services-section (docs/requirements.yaml)
+ * Requirements: services-section
  */
 
 const defaultProps = {

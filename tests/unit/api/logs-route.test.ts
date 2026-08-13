@@ -5,7 +5,7 @@ import { NextRequest } from 'next/server';
 /**
  * Admin logs API route tests
  *
- * Requirements: admin-logs (docs/requirements.yaml)
+ * Requirements: admin-logs
  * - Logs are only accessible with the correct API key
  * - Admins can retrieve all logs or a specific log by ID
  */

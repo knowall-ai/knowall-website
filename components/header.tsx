@@ -2,7 +2,7 @@
 
 import { useState, type MouseEvent } from 'react';
 import Link from 'next/link';
-import { BookOpen, ChevronDown, Mail, Menu, X } from 'lucide-react';
+import { BookOpen, ChevronDown, Mail, Menu, ShoppingBag, X } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -30,7 +30,7 @@ export default function Header() {
 
   // NOTE: "Allie for Accounts" (#allie) joins this dropdown once PR #7 merges.
   const productLinks = [
-    { name: 'Zaplie', href: '/#zapp' },
+    { name: 'Zaplie', href: '/#zaplie' },
     { name: 'Zapdesk', href: '/#zapdesk' },
     { name: 'Thyme', href: '/#thyme' },
     { name: 'T-Minus-15', href: '/#tminus15' },
@@ -122,17 +122,28 @@ export default function Header() {
               href="/story"
               aria-label="Our Story"
               title="Our Story"
-              className="text-gray-300 hover:text-lime-500 transition-colors"
+              className="flex flex-col items-center gap-0.5 text-gray-300 hover:text-lime-500 transition-colors"
             >
-              <BookOpen className="h-5 w-5" />
+              <BookOpen className="h-5 w-5" aria-hidden="true" />
+              <span className="text-[10px] text-gray-400">Our Story</span>
+            </Link>
+            <Link
+              href="/shop"
+              aria-label="Shop"
+              title="Shop"
+              className="flex flex-col items-center gap-0.5 text-gray-300 hover:text-lime-500 transition-colors"
+            >
+              <ShoppingBag className="h-5 w-5" aria-hidden="true" />
+              <span className="text-[10px] text-gray-400">Shop</span>
             </Link>
             <button
-              onClick={openContactPanel}
-              aria-label="Contact us"
-              title="Contact us"
-              className="text-gray-300 hover:text-lime-500 transition-colors"
+              onClick={() => openContactPanel()}
+              aria-label="Message"
+              title="Message"
+              className="flex flex-col items-center gap-0.5 text-gray-300 hover:text-lime-500 transition-colors"
             >
-              <Mail className="h-5 w-5" />
+              <Mail className="h-5 w-5" aria-hidden="true" />
+              <span className="text-[10px] text-gray-400">Message</span>
             </button>
             <SignInButton />
           </div>
@@ -140,12 +151,13 @@ export default function Header() {
           {/* Mobile Contact + Menu Buttons */}
           <div className="md:hidden flex items-center gap-4">
             <button
-              onClick={openContactPanel}
-              aria-label="Contact us"
-              title="Contact us"
-              className="text-gray-300 hover:text-lime-500 transition-colors"
+              onClick={() => openContactPanel()}
+              aria-label="Message"
+              title="Message"
+              className="flex flex-col items-center gap-0.5 text-gray-300 hover:text-lime-500 transition-colors"
             >
-              <Mail className="h-5 w-5" />
+              <Mail className="h-5 w-5" aria-hidden="true" />
+              <span className="text-[10px] text-gray-400">Message</span>
             </button>
             <button onClick={() => setIsMenuOpen(!isMenuOpen)} aria-label="Toggle menu">
               {isMenuOpen ? (
@@ -209,8 +221,17 @@ export default function Header() {
                 className="flex items-center gap-2 text-gray-300 hover:text-lime-500 transition-colors py-2"
                 onClick={() => setIsMenuOpen(false)}
               >
-                <BookOpen className="h-5 w-5" />
+                <BookOpen className="h-5 w-5" aria-hidden="true" />
                 Our Story
+              </Link>
+              <Link
+                href="/shop"
+                aria-label="Shop"
+                className="flex items-center gap-2 text-gray-300 hover:text-lime-500 transition-colors py-2"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <ShoppingBag className="h-5 w-5" aria-hidden="true" />
+                Shop
               </Link>
               <div className="pt-2">
                 <SignInButton className="w-full" />

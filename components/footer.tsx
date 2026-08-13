@@ -33,6 +33,11 @@ export default function Footer({ darkMode = false }: FooterProps) {
                   Presentations
                 </Link>
               </li>
+              <li>
+                <Link href="/shop" className="text-gray-400 hover:text-white transition-colors">
+                  Shop
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -64,7 +69,7 @@ export default function Footer({ darkMode = false }: FooterProps) {
                 </Link>
               </li>
               <li>
-                <Link href="/#zapp" className="text-gray-400 hover:text-white transition-colors">
+                <Link href="/#zaplie" className="text-gray-400 hover:text-white transition-colors">
                   Bitcoin Integration
                 </Link>
               </li>

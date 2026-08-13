@@ -13,7 +13,7 @@ export default function NostrButton({ darkMode = false }: NostrButtonProps) {
 
   return (
     <Button
-      onClick={openContactPanel}
+      onClick={() => openContactPanel()}
       className={
         darkMode
           ? 'bg-violet-600 hover:bg-violet-700 text-white'
