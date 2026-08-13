@@ -2,8 +2,24 @@ import { readFileSync } from 'node:fs';
 
 const packageJson = JSON.parse(readFileSync(new URL('./package.json', import.meta.url), 'utf8'));
 
+const securityHeaders = [
+  {
+    key: 'Content-Security-Policy',
+    value:
+      "upgrade-insecure-requests; default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https: wss:;",
+  },
+  { key: 'Strict-Transport-Security', value: 'max-age=31536000; includeSubDomains' },
+];
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // CSP/HSTS moved from meta tags in app/layout.tsx: real headers apply to every
+  // response (HSTS in a meta tag is ignored by browsers), and removing the manual
+  // <head> silences React's script-tag warning in dev.
+  async headers() {
+    if (process.env.NODE_ENV !== 'production') return [];
+    return [{ source: '/:path*', headers: securityHeaders }];
+  },
   env: {
     NEXT_PUBLIC_APP_VERSION: packageJson.version,
   },
