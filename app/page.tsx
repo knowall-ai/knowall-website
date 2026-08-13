@@ -561,6 +561,18 @@ export default function Home() {
 
           <div className="flex flex-col lg:flex-row items-center gap-12">
             <div className="flex-1">
+              <figure className="mb-6">
+                <Image
+                  src="/images/sallie-video-call.jpg"
+                  alt="Sallie on a video call — her avatar with live telemetry panels"
+                  width={1920}
+                  height={1080}
+                  className="w-full h-auto rounded-xl ring-2 ring-lime-500/50"
+                />
+                <figcaption className="text-xs text-gray-500 mt-2 text-center">
+                  Sallie on a video call &mdash; a frame from her live feed
+                </figcaption>
+              </figure>
               <p className="text-lg text-gray-200 mb-6">
                 Sallie turns discovery notes into branded proposals, keeps every opportunity up to
                 date, and never lets a deal go quiet. When something needs your judgement — pricing,
@@ -596,18 +608,6 @@ export default function Home() {
             </div>
 
             <div className="flex-1 w-full max-w-md">
-              <figure className="mb-6">
-                <Image
-                  src="/images/sallie-video-call.jpg"
-                  alt="Sallie on a video call — her avatar with live telemetry panels"
-                  width={1920}
-                  height={1080}
-                  className="w-full h-auto rounded-xl ring-2 ring-lime-500/50"
-                />
-                <figcaption className="text-xs text-gray-500 mt-2 text-center">
-                  Sallie on a video call &mdash; a frame from her live feed
-                </figcaption>
-              </figure>
               <p className="sr-only">
                 Illustration of a Microsoft Teams chat where Sallie asks Ben to approve a proposal
                 for Contoso, Ben approves it, and Sallie sends it and logs the opportunity.
