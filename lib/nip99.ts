@@ -154,6 +154,18 @@ export function dedupeListings(events: NostrEvent[]): Listing[] {
   return [...byKey.values()].sort((a, b) => b.publishedAt - a.publishedAt);
 }
 
+/**
+ * Newest usable listing for one (pubkey, d) address, or null. Guards against
+ * relays returning events outside the requested filter, so the product page
+ * can trust the result matches its address.
+ */
+export function selectListing(events: NostrEvent[], pubkey: string, dTag: string): Listing | null {
+  return (
+    dedupeListings(events).find((listing) => listing.pubkey === pubkey && listing.dTag === dTag) ??
+    null
+  );
+}
+
 /** Currency symbols matching the Robotechy/Eden formatter. */
 const CURRENCY_SYMBOLS: Record<string, string> = {
   USD: '$',

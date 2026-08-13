@@ -1,14 +1,15 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { MessageCircle, Search, ShoppingBag, Zap } from 'lucide-react';
-import * as nip19 from 'nostr-tools/nip19';
+import Link from 'next/link';
+import { ArrowRight, MessageCircle, Search, ShoppingBag } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useContactPanel } from '@/components/contact-panel';
-import { KNOWALL_NPUB, KNOWALL_PUBKEY } from '@/lib/nostr';
+import { encodeListingNaddr } from '@/lib/naddr';
+import { KNOWALL_NPUB, KNOWALL_PUBKEY, SHOP_RELAYS } from '@/lib/nostr';
 import {
   CLASSIFIED_LISTING_KIND,
   collectTags,
@@ -21,22 +22,15 @@ import {
   type NostrEvent,
 } from '@/lib/nip99';
 
-// Same relay set as the story feed.
-const RELAYS = ['wss://relay.damus.io', 'wss://nos.lol', 'wss://relay.primal.net'];
 const MAX_LISTINGS = 100;
 const RELAY_TIMEOUT_MS = 8000;
 /** REQ subscription id — relay EVENT/EOSE messages are matched against it. */
 const SUBSCRIPTION_ID = 'shop';
 
-/** NIP-19 naddr for a listing — the shareable address njump understands.
- *  At most two relay hints, matching Robotechy's share pattern. */
-function listingNaddr(listing: Listing): string {
-  return nip19.naddrEncode({
-    kind: CLASSIFIED_LISTING_KIND,
-    pubkey: listing.pubkey,
-    identifier: listing.dTag,
-    relays: RELAYS.slice(0, 2),
-  });
+/** Internal product-page path for a listing (its naddr also deep-links the
+ *  same product on njump from the detail page's Buy button). */
+function productPath(listing: Listing): string {
+  return `/shop/${encodeListingNaddr(listing.pubkey, listing.dTag, SHOP_RELAYS)}`;
 }
 
 interface ShopListingsProps {
@@ -72,10 +66,10 @@ export default function ShopListings({ pubkey = KNOWALL_PUBKEY }: ShopListingsPr
     const settle = (ok: boolean) => {
       settledRelays += 1;
       if (ok) successfulRelays += 1;
-      if (settledRelays === RELAYS.length) finish();
+      if (settledRelays === SHOP_RELAYS.length) finish();
     };
 
-    for (const url of RELAYS) {
+    for (const url of SHOP_RELAYS) {
       let socket: WebSocket;
       try {
         socket = new WebSocket(url);
@@ -308,12 +302,10 @@ function ProductCard({ listing }: { listing: Listing }) {
       className="group flex flex-col overflow-hidden rounded-xl border border-gray-800 bg-gray-900 shadow-sm transition-all hover:border-gray-700 hover:shadow-md"
     >
       {/* Product image (arbitrary remote hosts from Nostr, so plain <img>) */}
-      <a
-        href={`https://njump.me/${listingNaddr(listing)}`}
-        target="_blank"
-        rel="noopener noreferrer"
+      <Link
+        href={productPath(listing)}
         className="relative block aspect-square overflow-hidden bg-gray-800"
-        aria-label={`View ${listing.title} on Nostr`}
+        aria-label={`View ${listing.title}`}
       >
         {image && !imageFailed ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -338,11 +330,15 @@ function ProductCard({ listing }: { listing: Listing }) {
             </Badge>
           </div>
         )}
-      </a>
+      </Link>
 
       <div className="flex flex-1 flex-col gap-3 p-5">
         <div className="flex items-start justify-between gap-3">
-          <h3 className="font-semibold leading-snug text-white">{listing.title}</h3>
+          <h3 className="font-semibold leading-snug text-white">
+            <Link href={productPath(listing)} className="transition-colors hover:text-lime-500">
+              {listing.title}
+            </Link>
+          </h3>
           <span className="shrink-0 text-sm font-semibold text-lime-500">
             {formatPrice(listing.price)}
           </span>
@@ -366,21 +362,17 @@ function ProductCard({ listing }: { listing: Listing }) {
           <p className="text-xs text-gray-500">{listing.stock} available</p>
         )}
 
-        {/* Actions: zap/buy via the user's own Nostr client, or message us. */}
+        {/* Actions: open the on-site product page (where Buy lives), or message us. */}
         <div className="mt-auto flex gap-2 pt-2">
           <Button
             asChild
             size="sm"
             className="flex-1 bg-lime-600 font-semibold text-white hover:bg-lime-700"
           >
-            <a
-              href={`https://njump.me/${listingNaddr(listing)}`}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Zap className="mr-1.5 h-4 w-4" aria-hidden="true" />
-              {sold ? 'View' : 'Buy'}
-            </a>
+            <Link href={productPath(listing)}>
+              View details
+              <ArrowRight className="ml-1.5 h-4 w-4" aria-hidden="true" />
+            </Link>
           </Button>
           <Button
             size="sm"
