@@ -122,7 +122,7 @@ describe('POST /api/chat', () => {
 
     expect(createMock).toHaveBeenCalledTimes(1);
     const request = createMock.mock.calls[0][0];
-    expect(request.model).toBe('gpt-4o');
+    expect(request.model).toBe('gpt-5.6-sol');
     expect(request.messages[0].role).toBe('system');
     // The conversation id is used for logging only and is no longer injected
     // into the system prompt or surfaced to visitors.

@@ -89,7 +89,7 @@ export async function POST(req: Request) {
     try {
       // Try to get a response from the OpenAI API
       const response = await openai.chat.completions.create({
-        model: 'gpt-4o', // Using a more standard model that should be available
+        model: 'gpt-5.6-sol',
         messages: messages,
         max_tokens: 500,
       });
