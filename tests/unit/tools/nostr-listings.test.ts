@@ -113,6 +113,15 @@ describe('validateDefinition', () => {
     expect(
       validateDefinition({ ...base, price: { amount: MAX_PRICE_AMOUNT + 1, currency: 'GBP' } })
     ).toEqual([amountError]);
+    // Number('9007199254740991.1') rounds down onto the cap, so the cap check
+    // must compare the decimal text rather than the converted number
+    expect(
+      validateDefinition({ ...base, price: { amount: '9007199254740991.1', currency: 'GBP' } })
+    ).toEqual([amountError]);
+    // ...but a zero fraction at the cap is still exactly the cap
+    expect(
+      validateDefinition({ ...base, price: { amount: '9007199254740991.0', currency: 'GBP' } })
+    ).toEqual([]);
     // Number() would reinterpret these, but definitionToEvent signs the original
     // spelling into the price tag — so the tag would disagree with what we validated
     for (const amount of ['0x10', ' 10 ', '1e3', '+10', '.5', '010x']) {

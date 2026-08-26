@@ -39,6 +39,21 @@ export const MAX_PRICE_AMOUNT = Number.MAX_SAFE_INTEGER;
  */
 const DECIMAL_AMOUNT = /^\d+(\.\d+)?$/;
 
+/**
+ * Compare a plain-decimal amount against the cap without Number(), which
+ * rounds: Number('9007199254740991.1') lands exactly on MAX_SAFE_INTEGER, so a
+ * Number-based check would accept an amount that is genuinely over the cap and
+ * then sign the original over-cap spelling into the price tag.
+ */
+function withinPriceCap(text) {
+  const [whole, fraction = ''] = text.split('.');
+  const cap = BigInt(MAX_PRICE_AMOUNT);
+  const wholeValue = BigInt(whole);
+  if (wholeValue !== cap) return wholeValue < cap;
+  // exactly at the cap: any non-zero fractional digit puts it over
+  return /^0*$/.test(fraction);
+}
+
 /** Validation message for a bad price.amount (exported so tests can't drift from it). */
 export const PRICE_AMOUNT_ERROR = `"price.amount" must be a plain decimal number no greater than ${MAX_PRICE_AMOUNT} (e.g. 9.99 or 10000)`;
 
@@ -81,8 +96,7 @@ export function validateDefinition(def) {
     if (
       (typeof amount !== 'string' && typeof amount !== 'number') ||
       !DECIMAL_AMOUNT.test(String(amount)) ||
-      !Number.isFinite(Number(amount)) ||
-      Number(amount) > MAX_PRICE_AMOUNT
+      !withinPriceCap(String(amount))
     ) {
       errors.push(PRICE_AMOUNT_ERROR);
     }
