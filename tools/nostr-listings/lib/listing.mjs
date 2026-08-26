@@ -6,6 +6,23 @@ export const LISTING_KIND = 30402;
 
 export const STATUSES = ['active', 'sold', 'inactive'];
 
+const DEFINITION_KEYS = [
+  'd',
+  'title',
+  'summary',
+  'price',
+  'status',
+  'published_at',
+  'tags',
+  'images',
+  'location',
+  'content',
+];
+const PRICE_KEYS = ['amount', 'currency', 'frequency'];
+
+/** Upper bound for published_at (2100-01-01 UTC) — catches ms-instead-of-s mistakes. */
+export const MAX_PUBLISHED_AT = 4102444800;
+
 /** True when an images[] entry is already a hosted URL (kept as-is on publish). */
 export function isRemoteImage(image) {
   return /^https?:\/\//i.test(image);
@@ -20,6 +37,11 @@ export function validateDefinition(def) {
   if (!def || typeof def !== 'object' || Array.isArray(def)) {
     return ['definition must be a YAML mapping (key: value pairs)'];
   }
+  for (const key of Object.keys(def)) {
+    if (!DEFINITION_KEYS.includes(key)) {
+      errors.push(`unknown key "${key}" — allowed keys: ${DEFINITION_KEYS.join(', ')}`);
+    }
+  }
   for (const field of ['d', 'title', 'summary', 'content']) {
     if (typeof def[field] !== 'string' || def[field].trim() === '') {
       errors.push(`"${field}" is required and must be a non-empty string`);
@@ -31,13 +53,19 @@ export function validateDefinition(def) {
   if (!def.price || typeof def.price !== 'object') {
     errors.push('"price" is required, with "amount" and "currency" keys');
   } else {
+    for (const key of Object.keys(def.price)) {
+      if (!PRICE_KEYS.includes(key)) {
+        errors.push(`unknown key "price.${key}" — allowed keys: ${PRICE_KEYS.join(', ')}`);
+      }
+    }
     const amount = def.price.amount;
     if (
       (typeof amount !== 'string' && typeof amount !== 'number') ||
       String(amount).trim() === '' ||
-      Number.isNaN(Number(amount))
+      !Number.isFinite(Number(amount)) ||
+      Number(amount) < 0
     ) {
-      errors.push('"price.amount" must be a number (e.g. 9.99 or 10000)');
+      errors.push('"price.amount" must be a non-negative finite number (e.g. 9.99 or 10000)');
     }
     if (typeof def.price.currency !== 'string' || def.price.currency.trim() === '') {
       errors.push('"price.currency" must be a currency code (e.g. GBP, SATS)');
@@ -64,9 +92,13 @@ export function validateDefinition(def) {
   }
   if (
     def.published_at !== undefined &&
-    (!Number.isInteger(def.published_at) || def.published_at <= 0)
+    (!Number.isInteger(def.published_at) ||
+      def.published_at <= 0 ||
+      def.published_at > MAX_PUBLISHED_AT)
   ) {
-    errors.push('"published_at" must be a positive unix timestamp (seconds) when present');
+    errors.push(
+      '"published_at" must be a positive unix timestamp in seconds (not milliseconds) when present'
+    );
   }
   return errors;
 }
@@ -164,6 +196,16 @@ export function withStatus(event, status, opts = {}) {
     tags,
     content: event.content,
   };
+}
+
+/**
+ * created_at for a replacement of an existing addressable event. NIP-01 breaks
+ * created_at ties by keeping the lexicographically LOWER event id, so a
+ * replacement published within the same second as the current revision could
+ * lose to it — always go strictly greater than the revision being replaced.
+ */
+export function replacementCreatedAt(previousCreatedAt, now = Math.floor(Date.now() / 1000)) {
+  return Math.max(now, (previousCreatedAt ?? 0) + 1);
 }
 
 /** Format a unix-seconds timestamp as a UTC date string for tables. */

@@ -11,6 +11,7 @@ import {
   formatPrice,
   isRemoteImage,
   latestByDtag,
+  replacementCreatedAt,
   withStatus,
 } from './lib/listing.mjs';
 import { loadDefinition } from './lib/definition.mjs';
@@ -143,6 +144,10 @@ async function cmdPublish(file, flags) {
   }
 
   const keyPath = resolveKeyPath(flags.key);
+  // If a revision of this d-tag already exists, the replacement's created_at must
+  // be strictly greater than it (NIP-01 ties keep the lower event id) — check
+  // before touching the signer so relay problems surface without pinging Amber.
+  const existing = (await fetchLatestListings()).get(def.d);
   const { connectSigner } = await import('./lib/nostr.mjs');
   const { uploadImage } = await import('./lib/blossom.mjs');
   // Connect (and safety-check the key) once, before any uploads.
@@ -151,7 +156,10 @@ async function cmdPublish(file, flags) {
   for (const image of images) {
     imageUrls.push(image.remote ? image.source : await uploadImage(signer, image.path));
   }
-  const event = definitionToEvent(def, { imageUrls });
+  const event = definitionToEvent(def, {
+    imageUrls,
+    createdAt: replacementCreatedAt(existing?.created_at),
+  });
   const { signEvent, publishEvent, listingNaddr } = await import('./lib/nostr.mjs');
   const signed = await signEvent(signer, event, `listing "${def.d}"`);
   console.log('Publishing to relays...');
@@ -173,7 +181,9 @@ async function cmdSetStatus(dTag, status, flags) {
     console.log(`Listing "${dTag}" already has status "${status}" — nothing to do.`);
     return;
   }
-  const updated = withStatus(event, status);
+  const updated = withStatus(event, status, {
+    createdAt: replacementCreatedAt(event.created_at),
+  });
   console.log(`Will republish "${dTag}" (${current.title})`);
   console.log(`  status: ${current.status} -> ${status}\n`);
   if (flags['dry-run'] || !flags.yes) {

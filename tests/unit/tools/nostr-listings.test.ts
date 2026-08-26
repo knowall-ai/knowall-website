@@ -10,6 +10,7 @@ import {
   formatPrice,
   isRemoteImage,
   latestByDtag,
+  replacementCreatedAt,
   validateDefinition,
   withStatus,
   LISTING_KIND,
@@ -58,12 +59,53 @@ describe('validateDefinition', () => {
       })
     ).toEqual([
       '"d" must not contain whitespace (it is the stable listing identifier)',
-      '"price.amount" must be a number (e.g. 9.99 or 10000)',
+      '"price.amount" must be a non-negative finite number (e.g. 9.99 or 10000)',
       '"price.currency" must be a currency code (e.g. GBP, SATS)',
       '"status" must be one of: active, sold, inactive',
       '"images" must be a list of strings (local file paths or https URLs)',
       '"tags" must be a list of strings',
-      '"published_at" must be a positive unix timestamp (seconds) when present',
+      '"published_at" must be a positive unix timestamp in seconds (not milliseconds) when present',
+    ]);
+  });
+
+  it('rejects unknown top-level and price keys (typo protection before signing)', () => {
+    const errors = validateDefinition({
+      d: 'thing',
+      title: 'A thing',
+      summary: 'A thing for sale',
+      price: { amount: '10', currency: 'GBP', frequencyy: 'month' },
+      content: 'Buy the thing',
+      locaton: 'UK',
+    });
+    expect(errors).toEqual([
+      'unknown key "locaton" — allowed keys: d, title, summary, price, status, published_at, tags, images, location, content',
+      'unknown key "price.frequencyy" — allowed keys: amount, currency, frequency',
+    ]);
+  });
+
+  it('rejects non-finite and negative prices and out-of-range published_at', () => {
+    const base = {
+      d: 'thing',
+      title: 'A thing',
+      summary: 'A thing for sale',
+      content: 'Buy the thing',
+    };
+    const amountError = '"price.amount" must be a non-negative finite number (e.g. 9.99 or 10000)';
+    expect(validateDefinition({ ...base, price: { amount: 'Infinity', currency: 'GBP' } })).toEqual(
+      [amountError]
+    );
+    expect(validateDefinition({ ...base, price: { amount: -5, currency: 'GBP' } })).toEqual([
+      amountError,
+    ]);
+    // milliseconds instead of seconds (beyond year 2100) must be rejected
+    expect(
+      validateDefinition({
+        ...base,
+        price: { amount: '10', currency: 'GBP' },
+        published_at: 1786555390000,
+      })
+    ).toEqual([
+      '"published_at" must be a positive unix timestamp in seconds (not milliseconds) when present',
     ]);
   });
 });
@@ -212,6 +254,13 @@ describe('eventToListing / latestByDtag / withStatus', () => {
     expect(tag(sold, 'published_at')).toEqual(['published_at', '1600000000']);
     expect(sold.content).toBe('The widget.');
     expect(() => withStatus(event, 'archived')).toThrow(/status must be one of/);
+  });
+
+  it('replacementCreatedAt is strictly greater than the replaced revision (NIP-01 ties)', () => {
+    expect(replacementCreatedAt(100, 200)).toBe(200); // normal case: now wins
+    expect(replacementCreatedAt(200, 200)).toBe(201); // same-second republish bumps past it
+    expect(replacementCreatedAt(300, 200)).toBe(301); // clock skew: still beats the old revision
+    expect(replacementCreatedAt(undefined, 200)).toBe(200); // no prior revision
   });
 });
 

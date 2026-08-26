@@ -29,6 +29,9 @@ export const BLOSSOM_URL = 'https://blossom.primal.net';
 /** Every Amber request is approved by a human on a phone — be patient. */
 export const AMBER_TIMEOUT_MS = 8 * 60 * 1000;
 
+/** How long to wait for a Blossom image upload before aborting. */
+export const UPLOAD_TIMEOUT_MS = 120_000;
+
 /** How long to wait for relays when querying listings. */
 export const QUERY_TIMEOUT_MS = 10_000;
 

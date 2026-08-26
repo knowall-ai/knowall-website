@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { extname, basename } from 'node:path';
-import { BLOSSOM_URL } from './config.mjs';
+import { BLOSSOM_URL, UPLOAD_TIMEOUT_MS } from './config.mjs';
 import { signEvent } from './nostr.mjs';
 
 const CONTENT_TYPES = {
@@ -47,18 +47,36 @@ export async function uploadImage(signer, filePath, note) {
     },
     `Blossom upload authorization for ${basename(filePath)}`
   );
-  const res = await fetch(`${BLOSSOM_URL}/upload`, {
-    method: 'PUT',
-    headers: {
-      Authorization: 'Nostr ' + Buffer.from(JSON.stringify(auth)).toString('base64'),
-      'Content-Type': contentType,
-    },
-    body: bytes,
-  });
+  let res;
+  try {
+    res = await fetch(`${BLOSSOM_URL}/upload`, {
+      method: 'PUT',
+      headers: {
+        Authorization: 'Nostr ' + Buffer.from(JSON.stringify(auth)).toString('base64'),
+        'Content-Type': contentType,
+      },
+      body: bytes,
+      // Backstop so a stalled Blossom server can't hang the publish forever.
+      signal: AbortSignal.timeout(UPLOAD_TIMEOUT_MS),
+    });
+  } catch (err) {
+    if (err.name === 'TimeoutError' || err.name === 'AbortError') {
+      throw new Error(
+        `Blossom upload of ${filePath} timed out after ${UPLOAD_TIMEOUT_MS / 1000}s — ` +
+          `check connectivity to ${BLOSSOM_URL} and re-run`
+      );
+    }
+    throw err;
+  }
   if (!res.ok) {
     throw new Error(`Blossom upload of ${filePath} failed ${res.status}: ${await res.text()}`);
   }
   const { url } = await res.json();
+  if (typeof url !== 'string' || !/^https?:\/\//i.test(url)) {
+    throw new Error(
+      `Blossom returned an invalid upload URL for ${filePath}: ${JSON.stringify(url)}`
+    );
+  }
   console.log(`Uploaded ${basename(filePath)} -> ${url}`);
   return url;
 }
