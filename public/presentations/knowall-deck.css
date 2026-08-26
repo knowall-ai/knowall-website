@@ -93,7 +93,7 @@ body {
 .ic {
   width: 1em;
   height: 1em;
-  stroke: currentColor;
+  stroke: currentcolor;
   fill: none;
   stroke-width: 2;
   stroke-linecap: round;
@@ -1314,7 +1314,7 @@ section > .logo-light {
 /* --- Barely-there drift on full-bleed agent imagery ----------------------------
    Enough that the picture breathes under the words; not enough to read as an
    effect. Off entirely for prefers-reduced-motion. */
-@keyframes deckDrift {
+@keyframes deck-drift {
   from {
     transform: scale(1.001);
   }
@@ -1326,7 +1326,7 @@ section > .logo-light {
 .reveal .slides > section.present .cover-hero,
 .reveal .slides > section.present .cta-top::before,
 .reveal .slides > section.present .dark-inner.with-agent::before {
-  animation: deckDrift 30s ease-out both;
+  animation: deck-drift 30s ease-out both;
   will-change: transform;
 }
 

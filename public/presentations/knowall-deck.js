@@ -104,6 +104,40 @@ Reveal.initialize({
   minScale: 0.2,
   maxScale: 2.0,
 });
-Reveal.on('ready', (event) => guardFloatingControls(event.currentSlide));
-Reveal.on('slidechanged', (event) => guardFloatingControls(event.currentSlide));
-Reveal.on('resize', () => guardFloatingControls(Reveal.getCurrentSlide()));
+/**
+ * Run the clash check only once the entry sequence has settled.
+ *
+ * `.seq` items animate in from `translateY(16px)` with a delay of up to
+ * 0.16s per item, and getBoundingClientRect() reports the *transformed* rect.
+ * Measuring on `ready`/`slidechanged` therefore sees every item 16px lower
+ * than where it comes to rest — 16px closer to the pill — so slides whose
+ * content ends just above the pill were reported as clashing when the settled
+ * layout is fine, and the pill was hidden for no reason.
+ *
+ * Only `seq-in` animations are awaited. `deck-drift` runs for 30s on hero
+ * imagery, so waiting for *every* animation on the slide would delay the
+ * measurement by half a minute on those slides. Reduced-motion users have no
+ * `seq-in` animations at all, so this resolves immediately for them.
+ */
+function whenSequenceSettled(slide) {
+  if (typeof slide.getAnimations !== 'function') return Promise.resolve();
+  const entry = slide
+    .getAnimations({ subtree: true })
+    .filter((animation) => animation.animationName === 'seq-in');
+  if (!entry.length) return Promise.resolve();
+  // A cancelled animation rejects `finished` (e.g. the deck moves on mid-flight);
+  // swallow it, the current-slide check below decides whether to measure.
+  return Promise.all(entry.map((animation) => animation.finished.catch(() => {})));
+}
+
+function guardWhenSettled(slide) {
+  if (!slide) return;
+  whenSequenceSettled(slide).then(() => {
+    // The deck may have advanced while we waited — only measure what's on screen.
+    if (Reveal.getCurrentSlide() === slide) guardFloatingControls(slide);
+  });
+}
+
+Reveal.on('ready', (event) => guardWhenSettled(event.currentSlide));
+Reveal.on('slidechanged', (event) => guardWhenSettled(event.currentSlide));
+Reveal.on('resize', () => guardWhenSettled(Reveal.getCurrentSlide()));

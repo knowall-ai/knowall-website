@@ -30,7 +30,7 @@ const MIME = {
 };
 
 // Start a minimal static file server over public/ on an ephemeral port.
-// Returns { server, port }; close with `await new Promise(r => server.close(r))`.
+// Returns { server, port, close }. Always shut down via `close()` — see below.
 export async function startStaticServer() {
   const server = createServer(async (req, res) => {
     try {
@@ -47,7 +47,31 @@ export async function startStaticServer() {
     }
   });
   await new Promise((r) => server.listen(0, r));
-  return { server, port: server.address().port };
+
+  /**
+   * Stop the server within a bounded time.
+   *
+   * `server.close()` only stops it accepting new connections — it waits for
+   * existing ones to end, and Playwright holds a keep-alive socket open, so a
+   * bare `close()` can wait forever and leave the script hanging after its work
+   * is done. Drop the sockets explicitly, and never wait longer than
+   * `timeoutMs` regardless.
+   */
+  const close = async (timeoutMs = 5000) => {
+    const closed = new Promise((resolve) => server.close(resolve));
+    server.closeAllConnections();
+    let timer;
+    const bounded = new Promise((resolve) => {
+      timer = setTimeout(resolve, timeoutMs);
+    });
+    try {
+      await Promise.race([closed, bounded]);
+    } finally {
+      clearTimeout(timer);
+    }
+  };
+
+  return { server, port: server.address().port, close };
 }
 
 export const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
