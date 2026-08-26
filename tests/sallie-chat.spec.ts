@@ -27,7 +27,7 @@ test.describe('Sallie Chat', () => {
     // Scope to the chat card via its test id, so the "Sallie" heading in the
     // Meet the Agents section (Sallie the Salesperson) can't be matched instead.
     await expect(
-      page.getByTestId('sallie-chat').getByRole('heading', { name: 'Sallie' })
+      page.getByTestId('sallie-chat').getByRole('heading', { name: 'Sallie', exact: true })
     ).toBeVisible();
     await expect(page.getByText(/I'm Sallie, but I'm not your regular bot!/)).toBeVisible();
     // The conversation ID is used internally (logging/lead follow-up) but is
