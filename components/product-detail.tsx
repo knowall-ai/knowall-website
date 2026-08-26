@@ -2,11 +2,14 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { ArrowLeft, ImageIcon, MapPin, MessageCircle, PackageX, Zap } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useContactPanel } from '@/components/contact-panel';
+import { OwnerListingControls } from '@/components/admin/owner-listing-controls';
+import ProductShipping from '@/components/product-shipping';
 import { SHOP_RELAYS } from '@/lib/nostr';
 import {
   CLASSIFIED_LISTING_KIND,
@@ -38,8 +41,11 @@ interface ProductDetailProps {
  * per-image error fallbacks, and a not-found card.
  */
 export default function ProductDetail({ naddr, pubkey, identifier }: ProductDetailProps) {
+  const router = useRouter();
   const [listing, setListing] = useState<Listing | null>(null);
   const [status, setStatus] = useState<'loading' | 'ready' | 'error'>('loading');
+  // Bumped after an owner edit so the page re-queries the relays.
+  const [reloadToken, setReloadToken] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
@@ -132,11 +138,18 @@ export default function ProductDetail({ naddr, pubkey, identifier }: ProductDeta
         }
       }
     };
-  }, [pubkey, identifier]);
+  }, [pubkey, identifier, reloadToken]);
 
   if (status === 'loading') return <ProductSkeleton />;
   if (!listing) return status === 'error' ? <ProductError naddr={naddr} /> : <ProductNotFound />;
-  return <ProductView naddr={naddr} listing={listing} />;
+  return (
+    <ProductView
+      naddr={naddr}
+      listing={listing}
+      onOwnerSaved={() => setReloadToken((token) => token + 1)}
+      onOwnerDeleted={() => router.push('/shop')}
+    />
+  );
 }
 
 /** Back-to-shop link shared by every state. */
@@ -217,8 +230,17 @@ function ProductError({ naddr }: { naddr: string }) {
   );
 }
 
+interface ProductViewProps {
+  naddr: string;
+  listing: Listing;
+  /** Owner-only: called after the listing is edited/republished. */
+  onOwnerSaved: () => void;
+  /** Owner-only: called after the listing is deleted. */
+  onOwnerDeleted: () => void;
+}
+
 /** The loaded product: gallery left, purchase info right, description below. */
-function ProductView({ naddr, listing }: { naddr: string; listing: Listing }) {
+function ProductView({ naddr, listing, onOwnerSaved, onOwnerDeleted }: ProductViewProps) {
   const { openContactPanel } = useContactPanel();
   const sold = isSoldOut(listing);
 
@@ -237,6 +259,15 @@ function ProductView({ naddr, listing }: { naddr: string; listing: Listing }) {
 
         {/* Info column — robotechy's order: title, price, summary, stock, actions. */}
         <div className="flex flex-col gap-4">
+          {/* Owner-only edit/remove controls (null for everyone else). */}
+          <OwnerListingControls
+            pubkey={listing.pubkey}
+            dTag={listing.dTag}
+            title={listing.title}
+            onSaved={onOwnerSaved}
+            onDeleted={onOwnerDeleted}
+          />
+
           <h1 className="text-3xl font-bold leading-tight text-white md:text-4xl">
             {listing.title}
           </h1>
@@ -283,6 +314,9 @@ function ProductView({ naddr, listing }: { naddr: string; listing: Listing }) {
               ))}
             </div>
           )}
+
+          {/* P&P — resolved from the listing's Gamma shipping_option refs. */}
+          <ProductShipping pubkey={listing.pubkey} zoneIds={listing.shippingZoneIds} />
 
           {/* Actions: zap/buy via the user's own Nostr client, or message us. */}
           <div className="mt-2 flex flex-col gap-2 sm:flex-row">

@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import ShopListings from '@/components/shop-listings';
 import { ContactPanelProvider } from '@/components/contact-panel';
+import { NostrAuthProvider } from '@/components/auth/nostr-auth-provider';
 import { KNOWALL_PUBKEY } from '@/lib/nostr';
 import { CLASSIFIED_LISTING_KIND, type NostrEvent } from '@/lib/nip99';
 
@@ -76,9 +77,11 @@ function makeListing(overrides: {
 
 function renderShop() {
   return render(
-    <ContactPanelProvider>
-      <ShopListings />
-    </ContactPanelProvider>
+    <NostrAuthProvider>
+      <ContactPanelProvider>
+        <ShopListings />
+      </ContactPanelProvider>
+    </NostrAuthProvider>
   );
 }
 
