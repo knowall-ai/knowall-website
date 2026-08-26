@@ -1,0 +1,410 @@
+/**
+ * Nostr client for publishing events and subscribing to orders.
+ * Ported from robotechy.com's order-service.
+ */
+
+import { SimplePool, finalizeEvent, nip04, nip19, nip44, nip59 } from 'nostr-tools';
+import { getPublicKey } from 'nostr-tools/pure';
+import WebSocket from 'ws';
+
+// Set WebSocket for nostr-tools in Node.js environment
+globalThis.WebSocket = WebSocket;
+
+/**
+ * Decode the ORDER_SERVICE_KEY into secret-key bytes. Accepts either an nsec
+ * (bech32) or a 64-character hex secret key — Ben may paste whichever form the
+ * key backup is in.
+ * @param {string} key
+ * @returns {Uint8Array} 32-byte secret key
+ */
+export function decodeServiceKey(key) {
+  const trimmed = (key || '').trim();
+  if (trimmed.startsWith('nsec1')) {
+    const decoded = nip19.decode(trimmed);
+    if (decoded.type !== 'nsec') {
+      throw new Error(`Expected nsec, got ${decoded.type}`);
+    }
+    return decoded.data;
+  }
+  if (/^[0-9a-f]{64}$/i.test(trimmed)) {
+    return Uint8Array.from(Buffer.from(trimmed, 'hex'));
+  }
+  throw new Error('ORDER_SERVICE_KEY must be an nsec1... bech32 key or a 64-character hex key');
+}
+
+/**
+ * Safety stop (same pattern as the Amber signing scripts): the service must
+ * run as the intended identity. Throws unless the secret key derives to
+ * `expectedPubkey`, so a typo'd or wrong key can never silently listen on the
+ * wrong npub (where every order would go unanswered).
+ * @param {Uint8Array} secretKey
+ * @param {string} expectedPubkey - hex pubkey the key MUST derive to
+ * @returns {string} the derived (now verified) hex pubkey
+ */
+export function assertServiceKey(secretKey, expectedPubkey) {
+  const derived = getPublicKey(secretKey);
+  if (derived !== expectedPubkey) {
+    throw new Error(
+      `ORDER_SERVICE_KEY does not match the expected identity: derived pubkey ${derived} != ${expectedPubkey}. ` +
+        'Refusing to start — check that the key is the KnowAll AI company key.'
+    );
+  }
+  return derived;
+}
+
+/**
+ * Create a Nostr client instance
+ * @param {Uint8Array} secretKey - Merchant's secret key
+ * @param {string[]} fallbackRelays - Fallback relays if NIP-65 lookup fails
+ */
+export class NostrClient {
+  constructor(secretKey, fallbackRelays) {
+    this.secretKey = secretKey;
+    this.fallbackRelays = fallbackRelays;
+    this.pool = new SimplePool();
+    this.relays = [];
+    this.pubkey = '';
+  }
+
+  /**
+   * Initialize the client - derive pubkey and fetch relays
+   */
+  async init() {
+    this.pubkey = getPublicKey(this.secretKey);
+    console.log(`[Nostr] Merchant pubkey: ${this.pubkey}`);
+
+    // Try to fetch NIP-65 relay list from fallback relays
+    await this.fetchRelayList();
+
+    console.log(`[Nostr] Connected to ${this.relays.length} relays`);
+    return this;
+  }
+
+  /**
+   * Fetch NIP-65 relay list for merchant
+   */
+  async fetchRelayList() {
+    try {
+      console.log('[Nostr] Fetching NIP-65 relay list...');
+      const events = await this.pool.querySync(this.fallbackRelays, {
+        kinds: [10002],
+        authors: [this.pubkey],
+        limit: 1,
+      });
+
+      if (events.length > 0) {
+        const relayTags = events[0].tags.filter((t) => t[0] === 'r');
+        const fetchedRelays = relayTags.map((t) => t[1]).filter(Boolean);
+
+        if (fetchedRelays.length > 0) {
+          this.relays = fetchedRelays;
+          console.log(`[Nostr] Using ${fetchedRelays.length} relays from NIP-65`);
+          return;
+        }
+      }
+    } catch (error) {
+      console.warn('[Nostr] Failed to fetch NIP-65 relay list:', error.message);
+    }
+
+    // Fall back to default relays
+    this.relays = this.fallbackRelays;
+    console.log(`[Nostr] Using ${this.fallbackRelays.length} fallback relays`);
+  }
+
+  /**
+   * Fetch a user's NIP-65 relay list
+   * @param {string} pubkey - User's public key
+   * @returns {Promise<string[]>} - Array of relay URLs
+   */
+  async getUserRelays(pubkey) {
+    try {
+      const events = await this.pool.querySync(this.relays, {
+        kinds: [10002],
+        authors: [pubkey],
+        limit: 1,
+      });
+
+      if (events.length > 0) {
+        return events[0].tags
+          .filter((t) => t[0] === 'r')
+          .map((t) => t[1])
+          .filter(Boolean);
+      }
+    } catch (error) {
+      console.warn(`[Nostr] Failed to fetch relays for ${pubkey.slice(0, 8)}:`, error.message);
+    }
+    return [];
+  }
+
+  /**
+   * Get combined relay set for publishing (merchant + recipient)
+   * @param {string} recipientPubkey
+   * @returns {Promise<string[]>}
+   */
+  async getPublishRelays(recipientPubkey) {
+    const recipientRelays = await this.getUserRelays(recipientPubkey);
+    const combined = new Set([...this.relays, ...recipientRelays]);
+    return Array.from(combined);
+  }
+
+  /**
+   * Sign and publish an event
+   * @param {Partial<import('nostr-tools').Event>} eventTemplate
+   * @param {string[]} [targetRelays] - Optional specific relays to publish to
+   */
+  async publishEvent(eventTemplate, targetRelays) {
+    const event = finalizeEvent(eventTemplate, this.secretKey);
+    const relays = targetRelays || this.relays;
+
+    console.log(`[Nostr] Publishing event ${event.kind} to ${relays.length} relays`);
+
+    const results = await Promise.allSettled(
+      relays.map(async (relay) => {
+        try {
+          await this.pool.publish([relay], event);
+          return { relay, success: true };
+        } catch (err) {
+          // Ignore paid relay errors silently
+          if (err.message?.includes('restricted') || err.message?.includes('Pay on')) {
+            return { relay, success: false, paid: true };
+          }
+          throw err;
+        }
+      })
+    );
+
+    const successes = results.filter((r) => r.status === 'fulfilled' && r.value?.success).length;
+    const failures = results.filter(
+      (r) => r.status === 'rejected' || (r.status === 'fulfilled' && !r.value?.success)
+    ).length;
+
+    if (successes === 0) {
+      throw new Error(`Failed to publish event to any relay`);
+    }
+
+    console.log(
+      `[Nostr] Published to ${successes}/${relays.length} relays (${failures} failed/skipped)`
+    );
+    return event;
+  }
+
+  /**
+   * Send a NIP-04 encrypted DM.
+   *
+   * NOT used by the order flow (all commerce traffic is NIP-17 gift-wrapped) —
+   * kept so the single-invoice regression test can assert it is never called.
+   * @param {string} recipientPubkey
+   * @param {string} content
+   */
+  async sendDM(recipientPubkey, content) {
+    // Encrypt content with NIP-04
+    const encryptedContent = await nip04.encrypt(this.secretKey, recipientPubkey, content);
+
+    const eventTemplate = {
+      kind: 4,
+      content: encryptedContent,
+      tags: [['p', recipientPubkey]],
+      created_at: Math.floor(Date.now() / 1000),
+    };
+
+    // Publish to both merchant and recipient relays
+    const targetRelays = await this.getPublishRelays(recipientPubkey);
+
+    console.log(
+      `[Nostr] Sending DM to ${recipientPubkey.slice(0, 8)}... via ${targetRelays.length} relays`
+    );
+    return this.publishEvent(eventTemplate, targetRelays);
+  }
+
+  /**
+   * Unwrap a NIP-17 gift wrap (kind 1059) addressed to the merchant.
+   *
+   * Performs the standard NIP-59 double-decrypt:
+   *   1. nip44-decrypt the gift wrap content (encrypted to the merchant by the
+   *      wrap's ephemeral pubkey) -> kind 13 seal.
+   *   2. nip44-decrypt the seal content (encrypted to the merchant by the real
+   *      sender) -> inner rumor (kind 14/16/17).
+   *
+   * Authenticates the sender via the step-2 decrypt (which only succeeds when
+   * keyed to the real sender's `seal.pubkey`) plus a `seal.pubkey === rumor.pubkey`
+   * binding — NOT by verifying a seal signature (the seal is unsigned). The
+   * returned rumor is therefore an UNSIGNED inner event with no `id`/`sig`.
+   *
+   * @param {import('nostr-tools').Event} giftWrapEvent - kind 1059 event
+   * @returns {Omit<import('nostr-tools').Event, 'id'|'sig'> | null} the unsigned
+   *   inner rumor (no id/sig), or null if invalid
+   */
+  unwrapGiftWrap(giftWrapEvent) {
+    try {
+      if (giftWrapEvent.kind !== 1059) {
+        return null;
+      }
+
+      // Step 1: decrypt the wrap with the ephemeral pubkey -> seal (kind 13)
+      const sealJson = nip44.decrypt(
+        giftWrapEvent.content,
+        nip44.getConversationKey(this.secretKey, giftWrapEvent.pubkey)
+      );
+      const seal = JSON.parse(sealJson);
+
+      if (seal.kind !== 13) {
+        console.warn(
+          `[Nostr] Gift wrap ${giftWrapEvent.id?.slice(0, 8)}: invalid seal kind ${seal.kind}`
+        );
+        return null;
+      }
+
+      // Sender authentication: NIP-17 seals from our clients are intentionally
+      // unsigned (no id/sig) — only the gift wrap is signed, with an ephemeral key
+      // per NIP-59 — so we do NOT signature-verify the seal (that rejected every
+      // legitimate order). Authentication comes from step 2: the seal content is
+      // NIP-44 encrypted with the real sender's key, so it only decrypts when
+      // keyed to the genuine sender's `seal.pubkey` (a forged pubkey fails to
+      // decrypt), and the seal/rumor pubkey match below rejects any spoof.
+
+      // Step 2: decrypt the seal with the real sender's pubkey -> inner rumor
+      const rumorJson = nip44.decrypt(
+        seal.content,
+        nip44.getConversationKey(this.secretKey, seal.pubkey)
+      );
+      const rumor = JSON.parse(rumorJson);
+
+      // Bind the rumor to the seal. There is NO seal signature to verify (our
+      // seals are unsigned — see above); authentication comes from the step-2
+      // decrypt succeeding under `seal.pubkey` plus this pubkey match.
+      if (seal.pubkey !== rumor.pubkey) {
+        console.warn(
+          `[Nostr] Gift wrap ${giftWrapEvent.id?.slice(0, 8)}: sender not authenticated (seal/rumor pubkey mismatch)`
+        );
+        return null;
+      }
+
+      return rumor;
+    } catch (error) {
+      console.warn(
+        `[Nostr] Failed to unwrap gift wrap ${giftWrapEvent.id?.slice(0, 8)}:`,
+        error.message
+      );
+      return null;
+    }
+  }
+
+  /**
+   * Send a NIP-17 gift-wrapped message to a recipient.
+   *
+   * Wraps an arbitrary inner rumor (kind 14/16/17) following NIP-59: the rumor is
+   * authored by the merchant (unsigned), sealed in a kind 13 (signed by the
+   * merchant), and wrapped in a kind 1059 (signed by a fresh ephemeral key with a
+   * randomized past timestamp). Published to the merchant + recipient relay union.
+   *
+   * @param {string} recipientPubkey
+   * @param {{kind: number, content: string, tags: string[][], created_at?: number}} rumor
+   * @returns {Promise<import('nostr-tools').Event>} the published gift wrap
+   */
+  async sendGiftWrap(recipientPubkey, rumor) {
+    // nip59.wrapEvent builds rumor (pubkey = merchant, unsigned), seal (kind 13,
+    // signed by merchant, nip44-encrypted to recipient), and wrap (kind 1059,
+    // signed by a fresh ephemeral key, nip44-encrypted to recipient, single
+    // ['p', recipient] tag, randomized past created_at).
+    const giftWrap = nip59.wrapEvent(rumor, this.secretKey, recipientPubkey);
+
+    const targetRelays = await this.getPublishRelays(recipientPubkey);
+
+    console.log(
+      `[Nostr] Sending gift wrap (inner kind ${rumor.kind}) to ${recipientPubkey.slice(0, 8)}... via ${targetRelays.length} relays`
+    );
+
+    // Publish the already-signed gift wrap directly (don't re-sign with merchant key)
+    const results = await Promise.allSettled(
+      targetRelays.map(async (relay) => {
+        try {
+          await this.pool.publish([relay], giftWrap);
+          return { relay, success: true };
+        } catch (err) {
+          if (err.message?.includes('restricted') || err.message?.includes('Pay on')) {
+            return { relay, success: false, paid: true };
+          }
+          throw err;
+        }
+      })
+    );
+
+    const successes = results.filter((r) => r.status === 'fulfilled' && r.value?.success).length;
+    if (successes === 0) {
+      throw new Error('Failed to publish gift wrap to any relay');
+    }
+
+    console.log(`[Nostr] Gift wrap published to ${successes}/${targetRelays.length} relays`);
+    return giftWrap;
+  }
+
+  /**
+   * Subscribe to events with a filter using polling
+   * (Many relays have issues with subscribeMany, so we poll instead)
+   * @param {import('nostr-tools').Filter} filter - Single filter object
+   * @param {(event: import('nostr-tools').Event) => void} onEvent
+   * @param {number} [intervalMs=5000] - Polling interval
+   * @param {number} [sinceLookbackSeconds=0] - When advancing the `since` cursor,
+   *   keep this many seconds of lookback. Required for NIP-17 gift wraps, whose
+   *   `created_at` is randomized up to 2 days in the past (NIP-59), so a fresh
+   *   wrap can carry a timestamp older than the newest one already seen.
+   * @returns {() => void} - Unsubscribe function
+   */
+  subscribe(filter, onEvent, intervalMs = 5000, sinceLookbackSeconds = 0) {
+    console.log(`[Nostr] Polling for ${JSON.stringify(filter)} every ${intervalMs}ms`);
+
+    const seenEvents = new Set();
+    let isRunning = true;
+    let currentSince = filter.since || Math.floor(Date.now() / 1000);
+
+    const poll = async () => {
+      if (!isRunning) return;
+
+      try {
+        const events = await this.pool.querySync(this.relays, {
+          ...filter,
+          since: currentSince,
+        });
+
+        for (const event of events) {
+          if (!seenEvents.has(event.id)) {
+            seenEvents.add(event.id);
+            onEvent(event);
+          }
+        }
+
+        // Update since to avoid re-fetching old events, keeping a lookback buffer
+        // so randomized-timestamp gift wraps aren't missed (deduped by id below).
+        // Keep the cursor monotonic: NIP-59 randomizes created_at up to 2 days in
+        // the past, so `maxCreatedAt - lookback` is often OLDER than the current
+        // cursor; never move backwards or the query window re-expands every poll.
+        if (events.length > 0) {
+          const maxCreatedAt = Math.max(...events.map((e) => e.created_at));
+          currentSince = Math.max(currentSince, maxCreatedAt - sinceLookbackSeconds);
+        }
+      } catch (error) {
+        console.warn('[Nostr] Poll error:', error.message);
+      }
+
+      if (isRunning) {
+        setTimeout(poll, intervalMs);
+      }
+    };
+
+    // Start polling
+    poll();
+
+    return () => {
+      console.log('[Nostr] Stopping poll');
+      isRunning = false;
+    };
+  }
+
+  /**
+   * Close all connections
+   */
+  close() {
+    console.log('[Nostr] Closing all connections');
+    this.pool.close(this.relays);
+  }
+}
