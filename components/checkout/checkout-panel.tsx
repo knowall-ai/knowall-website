@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { AlertCircle, ShoppingBag } from 'lucide-react';
 import {
   Sheet,
@@ -53,6 +53,7 @@ export function CheckoutPanel({ open, onOpenChange }: CheckoutPanelProps) {
 
   const [step, setStep] = useState<CheckoutStep>('shipping');
   const [localError, setLocalError] = useState<string | null>(null);
+  const resetTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const handleShippingSubmit = async (shipping: ShippingInfo) => {
     setLocalError(null);
@@ -80,15 +81,28 @@ export function CheckoutPanel({ open, onOpenChange }: CheckoutPanelProps) {
   // reopening returns straight to the payment step.
   const handleOpenChange = (nextOpen: boolean) => {
     onOpenChange(nextOpen);
+    if (resetTimerRef.current) {
+      // A quick reopen must not let a pending close-reset fire mid-session.
+      clearTimeout(resetTimerRef.current);
+      resetTimerRef.current = null;
+    }
     if (!nextOpen && !isAwaitingPayment) {
       // Reset state after the close animation finishes.
-      setTimeout(() => {
+      resetTimerRef.current = setTimeout(() => {
+        resetTimerRef.current = null;
         setStep('shipping');
         setLocalError(null);
         resetCheckout();
       }, 300);
     }
   };
+
+  // Never reset after unmount.
+  useEffect(() => {
+    return () => {
+      if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
+    };
+  }, []);
 
   useEffect(() => {
     if (open && isAwaitingPayment) setStep('payment');

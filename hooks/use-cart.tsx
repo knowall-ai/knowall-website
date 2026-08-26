@@ -21,6 +21,7 @@ import {
   cartTotalItems,
   cartTotalPrice,
   EMPTY_CART,
+  MAX_QUANTITY,
   removeCartItem,
   updateCartQuantity,
   type CartItem,
@@ -68,9 +69,13 @@ function isValidStoredItem(item: unknown): item is CartItem {
     typeof candidate.productId === 'string' &&
     Number.isInteger(candidate.quantity) &&
     (candidate.quantity as number) > 0 &&
+    (candidate.quantity as number) <= MAX_QUANTITY &&
     typeof listing === 'object' &&
     listing !== null &&
     typeof listing.dTag === 'string' &&
+    // The productId keys the cart AND the order's item ref — a stored item
+    // whose id disagrees with its listing would order the wrong product.
+    candidate.productId === listing.dTag &&
     typeof listing.title === 'string' &&
     Array.isArray(listing.images) &&
     (listing.price === null ||

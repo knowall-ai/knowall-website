@@ -50,17 +50,25 @@ export function filterShippingOptions(
 }
 
 /**
+ * Cap on any single relay-provided shipping amount. Values above this are
+ * treated as malformed (counted as 0) — it bounds the checkout total and
+ * makes an Infinity sum from two huge-but-finite values impossible.
+ */
+export const MAX_SHIPPING_AMOUNT = 1_000_000;
+
+/**
  * Strictly parse a relay-provided price string as a non-negative decimal.
  * `parseFloat` would accept partial junk ("2.50abc") and negative values —
  * either of which would let a crafted zone event distort the checkout total —
- * so anything that isn't a plain non-negative decimal counts as 0.
+ * so anything that isn't a plain non-negative decimal within
+ * MAX_SHIPPING_AMOUNT counts as 0.
  */
 function parseNonNegativeAmount(raw: string | undefined): number {
   if (!raw) return 0;
   const trimmed = raw.trim();
   if (!/^\d+(\.\d+)?$/.test(trimmed)) return 0;
   const value = Number(trimmed);
-  return Number.isFinite(value) ? value : 0;
+  return Number.isFinite(value) && value <= MAX_SHIPPING_AMOUNT ? value : 0;
 }
 
 /**
@@ -101,10 +109,13 @@ export function collectCartShippingRefs(
         byRef.set(ref, { ref, ...(extraCost ? { extraCost } : {}) });
         continue;
       }
-      const a = existing.extraCost ? parseFloat(existing.extraCost) : 0;
-      const b = extraCost ? parseFloat(extraCost) : 0;
-      if ((Number.isFinite(b) ? b : 0) > (Number.isFinite(a) ? a : 0)) {
-        byRef.set(ref, { ref, extraCost });
+      // Compare with the same strict parser that charges the cost later —
+      // parseFloat would let partial junk ("3junk" -> 3) beat a valid value
+      // that shippingCostFor then charges as 0, undercharging shipping.
+      const a = parseNonNegativeAmount(existing.extraCost);
+      const b = parseNonNegativeAmount(extraCost);
+      if (b > a) {
+        byRef.set(ref, { ref, ...(extraCost ? { extraCost } : {}) });
       }
     }
   }

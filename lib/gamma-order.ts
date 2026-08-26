@@ -239,7 +239,11 @@ export function parsePaymentRequest(event: RumorLike): {
   return {
     orderId: orderTag[1],
     amount,
-    paymentOptions: paymentTags.map((t) => ({ type: t[1], detail: t[2] })),
+    // Only well-formed payment tags: a malformed/truncated tag would yield
+    // detail: undefined while the type claims string, tripping downstream.
+    paymentOptions: paymentTags
+      .filter((t) => typeof t[1] === 'string' && typeof t[2] === 'string')
+      .map((t) => ({ type: t[1], detail: t[2] })),
     message: event.content || undefined,
   };
 }

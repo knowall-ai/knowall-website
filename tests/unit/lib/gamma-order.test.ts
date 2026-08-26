@@ -176,6 +176,20 @@ describe('parsePaymentRequest', () => {
     ).toBeNull();
   });
 
+  it('drops malformed payment tags missing their type or detail', () => {
+    const parsed = parsePaymentRequest(
+      requestRumor([
+        ['type', ORDER_MESSAGE_TYPE.PAYMENT_REQUEST],
+        ['order', 'order-1'],
+        ['amount', '32100'],
+        ['payment', 'lightning'], // truncated: no detail
+        ['payment'], // no type at all
+        ['payment', 'lightning', 'lnbc1invoice'],
+      ])
+    );
+    expect(parsed?.paymentOptions).toEqual([{ type: 'lightning', detail: 'lnbc1invoice' }]);
+  });
+
   it('rejects a request whose amount tag is not a plain integer', () => {
     expect(
       parsePaymentRequest(

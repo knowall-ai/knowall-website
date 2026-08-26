@@ -12,6 +12,8 @@ declare var SpeechRecognition: any;
  * (enable + pay an invoice, which resolves with the payment preimage).
  */
 interface WebLNProvider {
-  enable: () => Promise<unknown>;
-  sendPayment: (invoice: string) => Promise<{ preimage: string }>;
+  /** Some providers don't implement enable() — treat it as optional. */
+  enable?: () => Promise<unknown>;
+  /** Some implementations resolve without a preimage. */
+  sendPayment: (invoice: string) => Promise<{ preimage?: string } | undefined>;
 }

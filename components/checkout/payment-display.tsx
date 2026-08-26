@@ -106,7 +106,10 @@ export function PaymentDisplay({
   };
 
   const openInWallet = () => {
-    if (invoice) window.open(`lightning:${invoice}`, '_blank');
+    if (!invoice) return;
+    // The lnurl option can already carry a lightning: URI — don't double-prefix.
+    const uri = /^lightning:/i.test(invoice) ? invoice : `lightning:${invoice}`;
+    window.open(uri, '_blank');
   };
 
   const handlePayWithWebLN = async () => {
@@ -114,11 +117,21 @@ export function PaymentDisplay({
     setIsPaying(true);
     setPayError(null);
     try {
-      // WebLN requires enable() before sendPayment.
-      await webln.enable();
-      const result = await webln.sendPayment(invoice);
-      if (result.preimage) {
+      // The WebLN spec wants enable() before sendPayment, but some providers
+      // don't implement it — treat it as optional rather than throwing.
+      if (typeof webln.enable === 'function') {
+        await webln.enable();
+      }
+      // sendPayment expects a bare BOLT11 invoice, not a lightning: URI.
+      const result = await webln.sendPayment(invoice.replace(/^lightning:/i, ''));
+      if (result?.preimage) {
         onPaymentComplete(invoice, result.preimage);
+      } else {
+        // Without a preimage we can't send the kind-17 receipt; say so
+        // instead of leaving the buyer wondering what happened.
+        setPayError(
+          'Your wallet did not return a payment preimage, so the payment could not be confirmed automatically. If it went through, the merchant will confirm your order shortly.'
+        );
       }
     } catch (error) {
       setPayError(error instanceof Error ? error.message : 'Failed to send payment');

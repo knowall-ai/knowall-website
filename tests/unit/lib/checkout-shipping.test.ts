@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import {
   collectCartShippingRefs,
   filterShippingOptions,
+  MAX_SHIPPING_AMOUNT,
   shippingCostFor,
   shippingOptionRef,
   shipsToCountry,
@@ -95,6 +96,17 @@ describe('shippingCostFor', () => {
       0
     );
     expect(shippingCostFor(buildOption({ extraCost: '-1' })).amount).toBe(2.5);
+    // Amounts above the configured cap are malformed: counted as 0, and the
+    // total can never overflow to Infinity.
+    expect(
+      shippingCostFor(buildOption({ price: { amount: '9'.repeat(320), currency: 'GBP' } })).amount
+    ).toBe(0);
+    expect(
+      shippingCostFor(buildOption({ extraCost: String(MAX_SHIPPING_AMOUNT + 1) })).amount
+    ).toBe(2.5);
+    expect(
+      Number.isFinite(shippingCostFor(buildOption({ extraCost: '5'.repeat(310) })).amount)
+    ).toBe(true);
   });
 });
 
@@ -125,5 +137,12 @@ describe('collectCartShippingRefs', () => {
   it('keeps the largest extra cost when products disagree', () => {
     const refs = collectCartShippingRefs([[ref('ship-uk', '1')], [ref('ship-uk', '3')]]);
     expect(refs).toEqual([{ ref: `30406:${MERCHANT}:ship-uk`, extraCost: '3' }]);
+  });
+
+  it('never lets junk extra costs beat valid ones (same strict parsing as charging)', () => {
+    // parseFloat would read '3junk' as 3 and override the valid 2.50 — which
+    // shippingCostFor then charges as 0, undercharging shipping.
+    const refs = collectCartShippingRefs([[ref('ship-uk', '2.50')], [ref('ship-uk', '3junk')]]);
+    expect(refs).toEqual([{ ref: `30406:${MERCHANT}:ship-uk`, extraCost: '2.50' }]);
   });
 });
