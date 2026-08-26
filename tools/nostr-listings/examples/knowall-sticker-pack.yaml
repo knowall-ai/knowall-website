@@ -1,0 +1,45 @@
+# KnowAll AI sticker pack listing (d: knowall-sticker-pack) — not yet published.
+# The image entries are local paths, resolved relative to this YAML file: the CLI
+# uploads each to Blossom automatically (one Amber approval per file) and puts the
+# hosted URLs in the event. Drop the sticker artwork into an images/ folder next to
+# this file (or point the entries wherever it lives — ideally photographs of the
+# printed sheets) before publishing.
+# Publish with:
+#   node tools/nostr-listings/cli.mjs publish tools/nostr-listings/examples/knowall-sticker-pack.yaml --yes
+d: knowall-sticker-pack
+title: KnowAll AI Sticker Pack — 6 kiss-cut sticker sheets
+summary: >-
+  Six 8.5×11" kiss-cut sticker sheets of the KnowAll AI robot: bitcoin & nostr
+  culture, mascot humour (×2), logos, presentation art and the emoji set.
+  10,000 sats + P&P.
+price:
+  amount: '10000'
+  currency: SATS
+tags:
+  - stickers
+  - merch
+  - bitcoin
+  - nostr
+images:
+  - ./images/sticker-hero.png
+  - ./images/bitcoin-nostr.png
+  - ./images/mascot-humour-1.png
+  - ./images/mascot-humour-2.png
+  - ./images/logo-centric.png
+  - ./images/presentation-art.png
+  - ./images/teams-emojis.png
+location: Ships from UK
+content: |-
+  **KnowAll AI Sticker Pack** — six 8.5×11″ (216×279mm) kiss-cut vinyl sticker sheets featuring our lime robot in all his moods:
+
+  - **Bitcoin & Nostr** — GM, zap-surfing, Proof of Work, Orange Pilled, nostrich rider and friends
+  - **Mascot Humour ×2** — It’s Friday!, Ship It, Prompt Wizard, I’ve Got Balls!, the drunk & holiday robots, India and El Salvador specials
+  - **Logos** — the KnowAll.ai lockup and bot heads in lime, charcoal and 3D
+  - **Presentation Art** — the photographic robot-and-moon covers as stickers
+  - **Emoji Set** — the Teams reaction pack in physical form
+
+  **Price: 10,000 sats** + P&P (UK £2.50 / EU £4.50 / Worldwide £7.50, paid in sats at the day’s rate)
+
+  **To order:** DM npub1kue7etfxtkxlv0s4u2xjf9epgxj7hssmlhc4x2k66tn8q8598zfqj322ar with your shipping address and we’ll send a Lightning invoice.
+
+  Fresh from the printers — shipping from late August 2026.
