@@ -109,7 +109,9 @@ export function PaymentDisplay({
     if (!invoice) return;
     // The lnurl option can already carry a lightning: URI — don't double-prefix.
     const uri = /^lightning:/i.test(invoice) ? invoice : `lightning:${invoice}`;
-    window.open(uri, '_blank');
+    // noopener severs window.opener so whatever handles the URI can't
+    // navigate this tab (tabnabbing).
+    window.open(uri, '_blank', 'noopener,noreferrer');
   };
 
   const handlePayWithWebLN = async () => {
