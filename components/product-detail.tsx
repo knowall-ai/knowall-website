@@ -12,9 +12,11 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useContactPanel } from '@/components/contact-panel';
 import { OwnerListingControls } from '@/components/admin/owner-listing-controls';
 import { CheckoutPanel } from '@/components/checkout/checkout-panel';
+import ProductFeedbackTabs from '@/components/product-feedback-tabs';
 import ProductShipping from '@/components/product-shipping';
 import { useCart } from '@/hooks/use-cart';
 import { useShopOwner } from '@/hooks/use-shop-admin';
+import { getBlocklist, isBlocked } from '@/lib/moderation';
 import { KNOWALL_PUBKEY, SHOP_RELAYS } from '@/lib/nostr';
 import {
   CLASSIFIED_LISTING_KIND,
@@ -60,12 +62,22 @@ export default function ProductDetail({ naddr, pubkey, identifier }: ProductDeta
     let settledRelays = 0;
     let successfulRelays = 0;
 
+    // The merchant pubkey comes from the visitor's URL (any naddr renders
+    // here), so listings are screened against the company's NIP-51 mute list —
+    // a muted merchant's listing shows the not-found card. The blocklist fetch
+    // starts now, in parallel with the relay queries, and is cached page-wide.
+    const blocklistPromise = getBlocklist();
+
     const finish = () => {
       if (cancelled) return;
-      const found = selectListing([...events.values()], pubkey, identifier);
-      setListing(found);
-      // Distinguish "every relay failed" from "relays answered: no such product".
-      setStatus(successfulRelays === 0 && !found ? 'error' : 'ready');
+      void blocklistPromise.then((blocklist) => {
+        if (cancelled) return;
+        const visible = [...events.values()].filter((event) => !isBlocked(event, blocklist));
+        const found = selectListing(visible, pubkey, identifier);
+        setListing(found);
+        // Distinguish "every relay failed" from "relays answered: no such product".
+        setStatus(successfulRelays === 0 && !found ? 'error' : 'ready');
+      });
     };
 
     const settle = (ok: boolean) => {
@@ -425,6 +437,11 @@ function ProductView({ naddr, listing, onOwnerSaved, onOwnerDeleted }: ProductVi
           )}
         </div>
       </div>
+
+      {/* Community feedback: kind-31555 reviews + kind-1111 comments, below
+          the description (robotechy's product-page tabs, moderated through
+          the company mute list). */}
+      <ProductFeedbackTabs merchantPubkey={listing.pubkey} dTag={listing.dTag} className="mt-12" />
     </div>
   );
 }

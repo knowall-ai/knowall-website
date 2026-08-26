@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import Footer from '@/components/footer';
+import { POLICY_LINKS } from '@/lib/policy-links';
 
 /**
  * Footer component tests
@@ -75,5 +76,12 @@ describe('Footer', () => {
     render(<Footer />);
 
     expect(screen.getByText(/KnowAll AI Ltd\. All rights reserved\./)).toBeInTheDocument();
+  });
+
+  it('renders every shop policy link with its path', () => {
+    render(<Footer />);
+    for (const link of POLICY_LINKS) {
+      expect(screen.getByRole('link', { name: link.label })).toHaveAttribute('href', link.path);
+    }
   });
 });
