@@ -110,65 +110,69 @@ function CartLine({ item }: { item: CartItem }) {
   const lineTotal = price ? { amount: price.amount * quantity, currency: price.currency } : null;
 
   return (
-    <div className="flex gap-3 border-b border-gray-800 py-3 last:border-b-0">
-      <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-md bg-gray-800">
-        {imageUrl && !imageError ? (
-          // eslint-disable-next-line @next/next/no-img-element -- image hosts come from Nostr events, unknown at build time
-          <img
-            src={imageUrl}
-            alt={listing.title}
-            className="h-full w-full object-cover"
-            onError={() => setImageError(true)}
-          />
-        ) : (
-          <div className="flex h-full w-full items-center justify-center">
-            <ImageIcon className="h-6 w-6 text-gray-600" />
-          </div>
-        )}
-      </div>
+    <div className="flex flex-col gap-2 border-b border-gray-800 py-3 last:border-b-0">
+      {/* Row 1: image | title + unit price | line total. */}
+      <div className="flex gap-3">
+        <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-md bg-gray-800">
+          {imageUrl && !imageError ? (
+            // eslint-disable-next-line @next/next/no-img-element -- image hosts come from Nostr events, unknown at build time
+            <img
+              src={imageUrl}
+              alt={listing.title}
+              className="h-full w-full object-cover"
+              onError={() => setImageError(true)}
+            />
+          ) : (
+            <div className="flex h-full w-full items-center justify-center">
+              <ImageIcon className="h-6 w-6 text-gray-600" />
+            </div>
+          )}
+        </div>
 
-      <div className="min-w-0 flex-1">
-        <h4 className="line-clamp-2 text-sm font-medium">{listing.title}</h4>
-        <p className="text-sm text-gray-400">{formatPrice(price)}</p>
+        <div className="min-w-0 flex-1">
+          <h4 className="line-clamp-2 text-sm font-medium">{listing.title}</h4>
+          <p className="text-sm text-gray-400">{formatPrice(price)}</p>
+        </div>
 
-        <div className="mt-2 flex items-center gap-2">
-          <Button
-            variant="outline"
-            size="icon"
-            className="h-7 w-7 border-gray-700 bg-transparent text-gray-300 hover:bg-gray-800 hover:text-white"
-            onClick={() => updateQuantity(item.productId, quantity - 1)}
-            disabled={quantity <= 1}
-            aria-label="Decrease quantity"
-          >
-            <Minus className="h-3 w-3" />
-          </Button>
-          <span className="w-8 text-center text-sm font-medium">{quantity}</span>
-          <Button
-            variant="outline"
-            size="icon"
-            className="h-7 w-7 border-gray-700 bg-transparent text-gray-300 hover:bg-gray-800 hover:text-white"
-            onClick={() => updateQuantity(item.productId, quantity + 1)}
-            disabled={listing.stock !== null && quantity >= listing.stock}
-            aria-label="Increase quantity"
-          >
-            <Plus className="h-3 w-3" />
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="ml-auto h-7 w-7 text-red-400 hover:bg-gray-800 hover:text-red-400"
-            onClick={() => removeItem(item.productId)}
-            aria-label={`Remove ${listing.title} from cart`}
-          >
-            <Trash2 className="h-4 w-4" />
-          </Button>
+        <div className="text-right">
+          <p className="text-sm font-medium text-lime-500">
+            {lineTotal ? formatPrice(lineTotal) : '—'}
+          </p>
         </div>
       </div>
 
-      <div className="text-right">
-        <p className="text-sm font-medium text-lime-500">
-          {lineTotal ? formatPrice(lineTotal) : '—'}
-        </p>
+      {/* Row 2: quantity steppers on the left, remove flush to the right edge. */}
+      <div className="flex w-full items-center gap-2">
+        <Button
+          variant="outline"
+          size="icon"
+          className="h-7 w-7 border-gray-700 bg-transparent text-gray-300 hover:bg-gray-800 hover:text-white"
+          onClick={() => updateQuantity(item.productId, quantity - 1)}
+          disabled={quantity <= 1}
+          aria-label="Decrease quantity"
+        >
+          <Minus className="h-3 w-3" />
+        </Button>
+        <span className="w-8 text-center text-sm font-medium">{quantity}</span>
+        <Button
+          variant="outline"
+          size="icon"
+          className="h-7 w-7 border-gray-700 bg-transparent text-gray-300 hover:bg-gray-800 hover:text-white"
+          onClick={() => updateQuantity(item.productId, quantity + 1)}
+          disabled={listing.stock !== null && quantity >= listing.stock}
+          aria-label="Increase quantity"
+        >
+          <Plus className="h-3 w-3" />
+        </Button>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="ml-auto h-7 w-7 text-red-400 hover:bg-gray-800 hover:text-red-400"
+          onClick={() => removeItem(item.productId)}
+          aria-label={`Remove ${listing.title} from cart`}
+        >
+          <Trash2 className="h-4 w-4" />
+        </Button>
       </div>
     </div>
   );
