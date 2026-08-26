@@ -24,6 +24,12 @@ const agents: Agent[] = [
     image: '/images/agents/pennie.jpg',
   },
   { name: 'Ollie', role: 'the Operator', phase: 'Operate', image: '/images/agents/ollie.jpg' },
+  {
+    name: 'Zaplie',
+    role: 'the Rewards Agent',
+    phase: 'Rewards',
+    image: '/images/agents/zaplie.jpg',
+  },
 ];
 
 export default function AgentsSection() {
