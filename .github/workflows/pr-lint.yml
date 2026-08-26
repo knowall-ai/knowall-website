@@ -16,6 +16,7 @@ jobs:
       - name: Validate PR title, body and issue reference
         env:
           GITHUB_ACTOR: ${{ github.actor }}
+          PR_AUTHOR: ${{ github.event.pull_request.user.login }}
           PR_TITLE: ${{ github.event.pull_request.title }}
           PR_BODY: ${{ github.event.pull_request.body }}
         run: |
@@ -24,8 +25,13 @@ jobs:
           # Bots open PRs without ticket refs / test plans — skip with success
           # (exit 0 inside the step, not a job-level `if:`, so the check still
           # reports "success" rather than "skipped" and can be required).
-          if [ "$GITHUB_ACTOR" = 'dependabot[bot]' ] || [ "$GITHUB_ACTOR" = 'github-actions[bot]' ]; then
-            echo "Skipping PR lint for bot actor: $GITHUB_ACTOR"
+          # Keyed off the PR AUTHOR, not just the actor: a human re-running the
+          # check (or editing the PR) becomes the actor, which used to defeat
+          # the skip and fail Dependabot PRs on their own titles. The actor
+          # check is kept as a belt-and-braces fallback.
+          if [ "$PR_AUTHOR" = 'dependabot[bot]' ] || [ "$PR_AUTHOR" = 'github-actions[bot]' ] \
+            || [ "$GITHUB_ACTOR" = 'dependabot[bot]' ] || [ "$GITHUB_ACTOR" = 'github-actions[bot]' ]; then
+            echo "Skipping PR lint for bot PR (author: $PR_AUTHOR, actor: $GITHUB_ACTOR)"
             exit 0
           fi
 

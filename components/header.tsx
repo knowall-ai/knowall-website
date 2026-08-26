@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, type MouseEvent } from 'react';
 import Link from 'next/link';
-import { BookOpen, ChevronDown, Mail, Menu, X } from 'lucide-react';
+import { BookOpen, ChevronDown, Mail, Menu, ShoppingBag, X } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -29,20 +29,47 @@ export default function Header() {
   ];
 
   const productLinks = [
-    { name: 'Zaplie', href: '/#zapp' },
+    { name: 'Zaplie', href: '/#zaplie' },
     { name: 'Zapdesk', href: '/#zapdesk' },
     { name: 'Thyme', href: '/#thyme' },
     { name: 'T-Minus-15', href: '/#tminus15' },
-    { name: 'Allie', href: '/#allie' },
+    { name: 'Sallie for Sales', href: '/#sallie' },
+    { name: 'Allie for Accounts', href: '/#allie' },
   ];
 
   const trailingNavLinks = [{ name: 'Copilots', href: '/#copilots' }];
+
+  // Next 16 no longer resets scroll to the top for the empty '/#' hash (section
+  // hashes like '/#services' still scroll to their element). Scroll to the top
+  // explicitly when a '/#' link is clicked while already on the homepage.
+  const handleTopLink = (href: string) => (e: MouseEvent<HTMLAnchorElement>) => {
+    // Only handle a plain primary-button click on a '/#' link while already on
+    // the homepage. Let the browser deal with modified/non-primary clicks
+    // (Cmd/Ctrl/Shift-click, middle-click → open in new tab, etc.).
+    if (
+      href !== '/#' ||
+      window.location.pathname !== '/' ||
+      e.button !== 0 ||
+      e.metaKey ||
+      e.ctrlKey ||
+      e.shiftKey ||
+      e.altKey
+    ) {
+      return;
+    }
+    e.preventDefault();
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
+    // Clear any stale section hash (e.g. '#services') from the URL so a
+    // refresh stays at the top rather than jumping back to the old section.
+    window.history.replaceState(null, '', '/');
+  };
 
   return (
     <header className="sticky top-0 z-50 bg-gray-950/90 backdrop-blur-sm border-b border-gray-800">
       <div className="container max-w-6xl mx-auto px-4 py-3">
         <div className="flex items-center justify-between">
-          <Link href="/#" className="flex items-center">
+          <Link href="/#" className="flex items-center" onClick={handleTopLink('/#')}>
             <Logo darkBackground={true} className="h-12" />
           </Link>
 
@@ -52,6 +79,7 @@ export default function Header() {
               <Link
                 key={link.name}
                 href={link.href}
+                onClick={handleTopLink(link.href)}
                 className="text-gray-300 hover:text-lime-500 transition-colors"
               >
                 {link.name}
@@ -95,17 +123,28 @@ export default function Header() {
               href="/story"
               aria-label="Our Story"
               title="Our Story"
-              className="text-gray-300 hover:text-lime-500 transition-colors"
+              className="flex flex-col items-center gap-0.5 text-gray-300 hover:text-lime-500 transition-colors"
             >
-              <BookOpen className="h-5 w-5" />
+              <BookOpen className="h-5 w-5" aria-hidden="true" />
+              <span className="text-[10px] text-gray-400">Our Story</span>
+            </Link>
+            <Link
+              href="/shop"
+              aria-label="Shop"
+              title="Shop"
+              className="flex flex-col items-center gap-0.5 text-gray-300 hover:text-lime-500 transition-colors"
+            >
+              <ShoppingBag className="h-5 w-5" aria-hidden="true" />
+              <span className="text-[10px] text-gray-400">Shop</span>
             </Link>
             <button
-              onClick={openContactPanel}
-              aria-label="Contact us"
-              title="Contact us"
-              className="text-gray-300 hover:text-lime-500 transition-colors"
+              onClick={() => openContactPanel()}
+              aria-label="Message"
+              title="Message"
+              className="flex flex-col items-center gap-0.5 text-gray-300 hover:text-lime-500 transition-colors"
             >
-              <Mail className="h-5 w-5" />
+              <Mail className="h-5 w-5" aria-hidden="true" />
+              <span className="text-[10px] text-gray-400">Message</span>
             </button>
             <SignInButton />
           </div>
@@ -113,12 +152,13 @@ export default function Header() {
           {/* Mobile Contact + Menu Buttons */}
           <div className="md:hidden flex items-center gap-4">
             <button
-              onClick={openContactPanel}
-              aria-label="Contact us"
-              title="Contact us"
-              className="text-gray-300 hover:text-lime-500 transition-colors"
+              onClick={() => openContactPanel()}
+              aria-label="Message"
+              title="Message"
+              className="flex flex-col items-center gap-0.5 text-gray-300 hover:text-lime-500 transition-colors"
             >
-              <Mail className="h-5 w-5" />
+              <Mail className="h-5 w-5" aria-hidden="true" />
+              <span className="text-[10px] text-gray-400">Message</span>
             </button>
             <button onClick={() => setIsMenuOpen(!isMenuOpen)} aria-label="Toggle menu">
               {isMenuOpen ? (
@@ -139,7 +179,10 @@ export default function Header() {
                   key={link.name}
                   href={link.href}
                   className="text-gray-300 hover:text-lime-500 transition-colors py-2"
-                  onClick={() => setIsMenuOpen(false)}
+                  onClick={(e) => {
+                    handleTopLink(link.href)(e);
+                    setIsMenuOpen(false);
+                  }}
                 >
                   {link.name}
                 </Link>
@@ -179,8 +222,17 @@ export default function Header() {
                 className="flex items-center gap-2 text-gray-300 hover:text-lime-500 transition-colors py-2"
                 onClick={() => setIsMenuOpen(false)}
               >
-                <BookOpen className="h-5 w-5" />
+                <BookOpen className="h-5 w-5" aria-hidden="true" />
                 Our Story
+              </Link>
+              <Link
+                href="/shop"
+                aria-label="Shop"
+                className="flex items-center gap-2 text-gray-300 hover:text-lime-500 transition-colors py-2"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <ShoppingBag className="h-5 w-5" aria-hidden="true" />
+                Shop
               </Link>
               <div className="pt-2">
                 <SignInButton className="w-full" />

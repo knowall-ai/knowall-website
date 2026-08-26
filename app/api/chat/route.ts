@@ -63,13 +63,11 @@ export async function POST(req: Request) {
       apiKey: apiKey,
     });
 
-    // Prepare messages for the OpenAI API and replace placeholders with actual values
-    const customizedSystemPrompt = systemPrompt.replace(/\{\{CONVERSATION_ID\}\}/g, conversationId);
-
+    // Prepare messages for the OpenAI API
     const messages: Array<{ role: 'system' | 'user' | 'assistant'; content: string }> = [
       {
         role: 'system',
-        content: customizedSystemPrompt,
+        content: systemPrompt,
       },
     ];
 
@@ -91,7 +89,7 @@ export async function POST(req: Request) {
     try {
       // Try to get a response from the OpenAI API
       const response = await openai.chat.completions.create({
-        model: 'gpt-4o', // Using a more standard model that should be available
+        model: 'gpt-5.6-sol',
         messages: messages,
         max_tokens: 500,
       });
