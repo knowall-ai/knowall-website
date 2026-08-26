@@ -1,0 +1,18 @@
+{
+  "names": {
+    "_": "b733ecad265d8df63e15e28d24972141a5ebc21bfdf1532adad2e6701e853892",
+    "ben.weeks": "971615b70ad9ec896f8d5ba0f2d01652f1dfe5f9ced81ac9469ca7facefad68b"
+  },
+  "relays": {
+    "b733ecad265d8df63e15e28d24972141a5ebc21bfdf1532adad2e6701e853892": [
+      "wss://relay.damus.io",
+      "wss://nos.lol",
+      "wss://relay.primal.net"
+    ],
+    "971615b70ad9ec896f8d5ba0f2d01652f1dfe5f9ced81ac9469ca7facefad68b": [
+      "wss://relay.damus.io",
+      "wss://nos.lol",
+      "wss://relay.primal.net"
+    ]
+  }
+}
