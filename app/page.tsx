@@ -3,7 +3,6 @@ import {
   Zap,
   Bot,
   Code,
-  Github,
   Ticket,
   Mail,
   ShieldCheck,
@@ -28,6 +27,7 @@ import {
   BarChart3,
 } from 'lucide-react';
 import EmailIcon from '@/components/email-icon';
+import GithubIcon from '@/components/github-icon';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import ConversationInterface from '@/components/conversation-interface';
@@ -190,7 +190,7 @@ export default function Home() {
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 bg-gray-950 hover:bg-black text-white px-4 py-2 rounded-md transition-colors"
                 >
-                  <Github className="h-5 w-5" />
+                  <GithubIcon className="h-5 w-5" />
                   <span>GitHub Repository</span>
                 </a>
                 <div className="flex items-center gap-2 text-orange-500">
@@ -431,7 +431,7 @@ export default function Home() {
                   </span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <Github className="h-6 w-6 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <GithubIcon className="h-6 w-6 text-lime-500 mt-0.5 flex-shrink-0" />
                   <span className="text-gray-200">
                     Open source under Creative Commons — the specifics teams actually need: roles,
                     estimates, meetings and work-item metadata
@@ -455,7 +455,7 @@ export default function Home() {
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 bg-gray-950 hover:bg-black text-white px-6 py-3 rounded-md transition-colors"
                 >
-                  <Github className="h-5 w-5" />
+                  <GithubIcon className="h-5 w-5" />
                   <span>T-Minus-15 on GitHub</span>
                 </a>
               </div>
