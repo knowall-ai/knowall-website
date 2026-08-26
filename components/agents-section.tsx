@@ -42,7 +42,7 @@ export default function AgentsSection() {
             >
               <Image
                 src={agent.image}
-                alt=""
+                alt={`${agent.name} ${agent.role} — robot portrait`}
                 width={128}
                 height={128}
                 className="h-32 w-32 rounded-full object-cover mb-4 ring-2 ring-lime-500/50"
