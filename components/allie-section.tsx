@@ -1,4 +1,5 @@
 import { Bot, Send, Zap } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 
 /**
@@ -19,7 +20,7 @@ export default function AllieSection() {
         </p>
 
         <div className="flex flex-col lg:flex-row items-center gap-12">
-          <div className="flex-1">
+          <div className="flex-[1.4]">
             <p className="text-lg text-gray-200 mb-6">
               Allie processes incoming invoices automatically, recognising suppliers, amounts, and
               purchase orders. When something doesn&apos;t look right, she doesn&apos;t guess — she
@@ -50,7 +51,13 @@ export default function AllieSection() {
             </p>
           </div>
 
-          <div className="flex-1 w-full max-w-md">
+          <div className="flex-1 w-full lg:max-w-none max-w-md flex flex-col justify-center gap-6 self-stretch">
+            <div className="text-center">
+              <h3 className="text-lg font-semibold">Allie in action</h3>
+              <p className="text-sm text-gray-400 mt-1">
+                A real exchange from Microsoft Teams &mdash; invoice queried, answered and logged
+              </p>
+            </div>
             <p className="sr-only">
               Illustration of a Microsoft Teams chat where Allie asks for help with an unrecognised
               Contoso invoice, Ben supplies the missing VAT number, and Allie logs the invoice to
@@ -179,6 +186,14 @@ export default function AllieSection() {
                 </div>
               </div>
             </Card>
+            <div className="text-center">
+              <Button
+                className="bg-lime-500 text-white hover:bg-lime-600 shadow-lg shadow-lime-500/30"
+                asChild
+              >
+                <a href="#contact">Book an Allie demo</a>
+              </Button>
+            </div>
           </div>
         </div>
 
