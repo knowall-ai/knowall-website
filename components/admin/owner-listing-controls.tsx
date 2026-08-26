@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Loader2, Pencil, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useShopOwner, fetchLatestOwnerEvent } from '@/hooks/use-shop-admin';
+import { KNOWALL_PUBKEY } from '@/lib/nostr';
 import { PRODUCT_KIND } from '@/lib/shop-admin';
 import { ProductFormDialog } from '@/components/admin/product-form-dialog';
 import { DeleteListingDialog } from '@/components/admin/delete-listing-dialog';
@@ -44,7 +45,9 @@ export function OwnerListingControls({
   const [loadingEdit, setLoadingEdit] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  if (!isOwner) return null;
+  // Only the KnowAll catalog is manageable: never offer controls for a listing
+  // authored by someone else (the extension couldn't replace it anyway).
+  if (!isOwner || pubkey !== KNOWALL_PUBKEY) return null;
 
   const startEdit = async () => {
     setLoadingEdit(true);

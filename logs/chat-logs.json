@@ -374,21 +374,5 @@
     "assistantResponse": "Great! To better understand your needs, may I ask which industry you're in and what specific problem are you looking to solve with the Copilot?",
     "userIp": "127.0.0.1",
     "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Windsurf/1.99.1 Chrome/132.0.6834.210 Electron/34.3.2 Safari/537.36"
-  },
-  {
-    "id": "S8DCMYSG",
-    "timestamp": "2026-08-26T12:01:46.757Z",
-    "userMessage": "Hello Sallie",
-    "assistantResponse": "I received your message: \"Hello Sallie\". However, I'm currently experiencing some technical difficulties connecting to my knowledge base. You are Sallie, the KnowAll. Please try again later or contact us directly for more information about our services.",
-    "userIp": "::1",
-    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.7922.34 Safari/537.36"
-  },
-  {
-    "id": "e2e-test-conversation",
-    "timestamp": "2026-08-26T12:01:46.864Z",
-    "userMessage": "What services do you offer?",
-    "assistantResponse": "I received your message: \"What services do you offer?\". However, I'm currently experiencing some technical difficulties connecting to my knowledge base. You are Sallie, the KnowAll. Please try again later or contact us directly for more information about our services.",
-    "userIp": "::ffff:127.0.0.1",
-    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.7922.34 Safari/537.36"
   }
 ]

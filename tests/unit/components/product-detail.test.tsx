@@ -202,6 +202,13 @@ describe('ProductDetail', () => {
     expect(screen.getByText('Product not found')).toBeInTheDocument();
   });
 
+  it('hides Gamma hidden (draft) listings from the public behind the not-found card', async () => {
+    scriptedEvents = [makeListing({ extraTags: [['visibility', 'hidden']] })];
+    renderDetail();
+    expect(await screen.findByTestId('product-not-found')).toBeInTheDocument();
+    expect(screen.queryByTestId('product-detail')).not.toBeInTheDocument();
+  });
+
   it('ignores events for other d tags or authors', async () => {
     scriptedEvents = [
       makeListing({

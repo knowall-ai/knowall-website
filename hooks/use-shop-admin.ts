@@ -89,16 +89,20 @@ export function useOwnerCatalog(kind: number): OwnerCatalog {
 
   useEffect(() => {
     let active = true;
-    queryRelays(SHOP_RELAYS, [{ kinds: [kind], authors: [KNOWALL_PUBKEY], limit: 100 }]).then(
-      (fetched) => {
+    queryRelays(SHOP_RELAYS, [{ kinds: [kind], authors: [KNOWALL_PUBKEY], limit: 100 }])
+      .then((fetched) => {
         if (!active) return;
         setEvents(
           dedupeByDTag(
             fetched.filter((event) => event.kind === kind && event.pubkey === KNOWALL_PUBKEY)
           )
         );
-      }
-    );
+      })
+      // queryRelays never rejects by design, but never leave the catalog stuck
+      // on "Loading…" if that contract ever changes.
+      .catch(() => {
+        if (active) setEvents([]);
+      });
     return () => {
       active = false;
     };

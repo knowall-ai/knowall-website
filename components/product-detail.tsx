@@ -10,6 +10,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useContactPanel } from '@/components/contact-panel';
 import { OwnerListingControls } from '@/components/admin/owner-listing-controls';
 import ProductShipping from '@/components/product-shipping';
+import { useShopOwner } from '@/hooks/use-shop-admin';
 import { SHOP_RELAYS } from '@/lib/nostr';
 import {
   CLASSIFIED_LISTING_KIND,
@@ -42,6 +43,7 @@ interface ProductDetailProps {
  */
 export default function ProductDetail({ naddr, pubkey, identifier }: ProductDetailProps) {
   const router = useRouter();
+  const isOwner = useShopOwner();
   const [listing, setListing] = useState<Listing | null>(null);
   const [status, setStatus] = useState<'loading' | 'ready' | 'error'>('loading');
   // Bumped after an owner edit so the page re-queries the relays.
@@ -142,6 +144,9 @@ export default function ProductDetail({ naddr, pubkey, identifier }: ProductDeta
 
   if (status === 'loading') return <ProductSkeleton />;
   if (!listing) return status === 'error' ? <ProductError naddr={naddr} /> : <ProductNotFound />;
+  // Hidden listings are owner-only drafts: the grid gate also applies to the
+  // detail route, so a shared naddr can't expose a draft to the public.
+  if (listing.visibility === 'hidden' && !isOwner) return <ProductNotFound />;
   return (
     <ProductView
       naddr={naddr}

@@ -504,11 +504,17 @@ export function ProductFormDialog({ open, onOpenChange, event, onSaved }: Produc
           </Button>
           <Button
             onClick={handleSubmit}
-            disabled={saving}
+            // Block publishing while an image upload is still in flight so the
+            // event can't ship without the uploaded URL.
+            disabled={saving || uploadingIndex !== null}
             className="bg-lime-600 font-semibold text-white hover:bg-lime-700"
           >
             {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            {isEdit ? 'Save changes' : 'Publish product'}
+            {uploadingIndex !== null
+              ? 'Uploading image…'
+              : isEdit
+                ? 'Save changes'
+                : 'Publish product'}
           </Button>
         </DialogFooter>
       </DialogContent>
