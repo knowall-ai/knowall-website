@@ -2,7 +2,7 @@
 
 import { useState, type MouseEvent } from 'react';
 import Link from 'next/link';
-import { BookOpen, ChevronDown, Mail, Menu, ShoppingBag, X } from 'lucide-react';
+import { BookOpen, ChevronDown, Mail, Menu, ShoppingBag, ShoppingCart, X } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,7 +11,33 @@ import {
 } from '@/components/ui/dropdown-menu';
 import Logo from '@/components/logo';
 import SignInButton from '@/components/auth/sign-in-button';
+import { CartDrawer } from '@/components/checkout/cart-drawer';
 import { useContactPanel } from '@/components/contact-panel';
+import { useCart } from '@/hooks/use-cart';
+
+/** Header cart button: opens the drawer; badge shows the item count. */
+function CartButton() {
+  const { totalItems, setIsOpen } = useCart();
+  return (
+    <button
+      onClick={() => setIsOpen(true)}
+      aria-label={`Cart${totalItems > 0 ? ` (${totalItems} items)` : ''}`}
+      title="Cart"
+      className="relative flex flex-col items-center gap-0.5 text-gray-300 hover:text-lime-500 transition-colors"
+    >
+      <ShoppingCart className="h-5 w-5" aria-hidden="true" />
+      <span className="text-[10px] text-gray-400">Cart</span>
+      {totalItems > 0 && (
+        <span
+          data-testid="cart-count"
+          className="absolute -right-2 -top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-lime-500 px-1 text-[10px] font-semibold text-black"
+        >
+          {totalItems}
+        </span>
+      )}
+    </button>
+  );
+}
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -66,7 +92,7 @@ export default function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-50 bg-gray-950/90 backdrop-blur-sm border-b border-gray-800">
+    <header className="sticky top-0 z-50 bg-gray-950/90 backdrop-blur-xs border-b border-gray-800">
       <div className="container max-w-6xl mx-auto px-4 py-3">
         <div className="flex items-center justify-between">
           <Link href="/#" className="flex items-center" onClick={handleTopLink('/#')}>
@@ -87,7 +113,7 @@ export default function Header() {
             ))}
 
             <DropdownMenu>
-              <DropdownMenuTrigger className="flex items-center gap-1 text-gray-300 hover:text-lime-500 transition-colors rounded-sm outline-none focus-visible:ring-2 focus-visible:ring-lime-500 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-950 data-[state=open]:text-lime-500">
+              <DropdownMenuTrigger className="flex items-center gap-1 text-gray-300 hover:text-lime-500 transition-colors rounded-sm outline-hidden focus-visible:ring-2 focus-visible:ring-lime-500 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-950 data-[state=open]:text-lime-500">
                 Products
                 <ChevronDown className="h-4 w-4" />
               </DropdownMenuTrigger>
@@ -137,6 +163,7 @@ export default function Header() {
               <ShoppingBag className="h-5 w-5" aria-hidden="true" />
               <span className="text-[10px] text-gray-400">Shop</span>
             </Link>
+            <CartButton />
             <button
               onClick={() => openContactPanel()}
               aria-label="Message"
@@ -149,8 +176,9 @@ export default function Header() {
             <SignInButton />
           </div>
 
-          {/* Mobile Contact + Menu Buttons */}
+          {/* Mobile Cart + Contact + Menu Buttons */}
           <div className="md:hidden flex items-center gap-4">
+            <CartButton />
             <button
               onClick={() => openContactPanel()}
               aria-label="Message"
@@ -241,6 +269,9 @@ export default function Header() {
           </div>
         )}
       </div>
+
+      {/* Global cart drawer (and its checkout dialog) — one instance per page. */}
+      <CartDrawer />
     </header>
   );
 }

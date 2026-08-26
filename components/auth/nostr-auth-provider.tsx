@@ -6,14 +6,20 @@ import { fetchProfiles } from '@/lib/nostr-profiles';
 import type { EventTemplate, ProfileMetadata } from '@/lib/story-social';
 import type { NostrEvent } from '@/lib/story-notes';
 
-// Minimal NIP-07 surface — the public key for sign-in, plus signEvent so the
-// story page can publish replies, follows and zap requests. Raw keys never
-// touch this site: all signing happens inside the user's extension.
+// Minimal NIP-07 surface — the public key for sign-in, signEvent so the
+// story page can publish replies, follows and zap requests, and (optional)
+// nip44 encryption so a signed-in buyer's checkout orders are gift-wrapped
+// under their own identity. Raw keys never touch this site: all signing and
+// encryption happens inside the user's extension.
 declare global {
   interface Window {
     nostr?: {
       getPublicKey: () => Promise<string>;
       signEvent?: (event: EventTemplate) => Promise<NostrEvent>;
+      nip44?: {
+        encrypt: (pubkey: string, plaintext: string) => Promise<string>;
+        decrypt: (pubkey: string, ciphertext: string) => Promise<string>;
+      };
     };
   }
 }

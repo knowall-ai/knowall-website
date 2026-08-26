@@ -16,4 +16,7 @@
 To prevent recurrence, enable "Always On": +
 `az webapp config set --name knowall-website --resource-group KnowAllAIRG --always-on true`
 
+| Shop order service issues (no invoices sent, key refusal at startup, dedup store)
+| See xref:ORDER-SERVICE.adoc[Order Service Operations] — the order daemon runs separately from the website deploy.
+
 |===

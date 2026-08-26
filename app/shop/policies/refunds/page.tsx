@@ -14,21 +14,21 @@ export default function RefundPolicyPage() {
         out.
       </p>
 
-      <h2 className="text-2xl font-semibold mt-8 mb-4 text-white">Damaged in transit</h2>
+      <h2 className="text-2xl font-semibold text-white">Damaged in transit</h2>
       <p>
         If your order arrives damaged, <MessageUsLink>message us</MessageUsLink> within 7 days of
         delivery with photos of the item and the packaging. We&apos;ll offer a replacement or a full
         refund.
       </p>
 
-      <h2 className="text-2xl font-semibold mt-8 mb-4 text-white">Faulty items</h2>
+      <h2 className="text-2xl font-semibold text-white">Faulty items</h2>
       <p>
         If an item is faulty, the fix is on us: we&apos;ll replace it or refund in full, including
         reasonable return postage. The change-of-mind conditions below don&apos;t apply to faulty
         goods, and your local statutory rights are unaffected.
       </p>
 
-      <h2 className="text-2xl font-semibold mt-8 mb-4 text-white">Returns</h2>
+      <h2 className="text-2xl font-semibold text-white">Returns</h2>
       <p>
         Changed your mind? Tell us within 14 days of delivery, then send the item back within a
         further 14 days in its original condition. Return postage is the buyer&apos;s
@@ -37,14 +37,14 @@ export default function RefundPolicyPage() {
         terms, the statutory rights apply.
       </p>
 
-      <h2 className="text-2xl font-semibold mt-8 mb-4 text-white">How refunds are paid</h2>
+      <h2 className="text-2xl font-semibold text-white">How refunds are paid</h2>
       <p>
         Refunds are returned the way you paid. Orders are paid by Bitcoin Lightning invoice, so
         we&apos;ll ask for a Lightning invoice or address and refund your sats at the day&apos;s
         rate.
       </p>
 
-      <h2 className="text-2xl font-semibold mt-8 mb-4 text-white">Questions</h2>
+      <h2 className="text-2xl font-semibold text-white">Questions</h2>
       <p>
         <MessageUsLink>Message us on Nostr</MessageUsLink> or email{' '}
         <a href="mailto:sallie@knowall.ai" className="underline hover:text-white">

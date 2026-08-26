@@ -20,11 +20,11 @@ export default function ZaplieShowcase() {
         aria-hidden="true"
       ></div>
 
-      <div className="relative mx-auto aspect-[3/2] max-w-xl">
+      <div className="relative mx-auto aspect-3/2 max-w-xl">
         {/* Left screen — angled behind */}
         <div
           aria-hidden="true"
-          className={`absolute left-0 top-[16%] hidden w-[62%] -rotate-[10deg] brightness-90 sm:block ${frame} shadow-black/50`}
+          className={`absolute left-0 top-[16%] hidden w-[62%] rotate-[-10deg] brightness-90 sm:block ${frame} shadow-black/50`}
         >
           <Image
             src="/images/zapp/01-bot.png"
@@ -38,7 +38,7 @@ export default function ZaplieShowcase() {
         {/* Right screen — angled behind */}
         <div
           aria-hidden="true"
-          className={`absolute right-0 top-[16%] hidden w-[62%] rotate-[10deg] brightness-95 sm:block ${frame} shadow-black/50`}
+          className={`absolute right-0 top-[16%] hidden w-[62%] rotate-10 brightness-95 sm:block ${frame} shadow-black/50`}
         >
           <Image
             src="/images/zapp/08-wallet.png"

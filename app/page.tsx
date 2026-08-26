@@ -42,6 +42,7 @@ import AutoGenLogo from '@/components/autogen-logo';
 import ZappCarousel from '@/components/zapp-carousel';
 import ZaplieShowcase from '@/components/zaplie-showcase';
 import TeamSection from '@/components/team-section';
+import AgentsSection from '@/components/agents-section';
 import AllieSection from '@/components/allie-section';
 import TMinus15Book from '@/components/tminus15-book';
 
@@ -150,7 +151,7 @@ export default function Home() {
 
               <ul className="space-y-5 mb-10">
                 <li className="flex items-start gap-3">
-                  <div className="flex-shrink-0 mt-0.5">
+                  <div className="shrink-0 mt-0.5">
                     <BitcoinLogo size={24} />
                   </div>
                   <span className="text-gray-200">
@@ -159,21 +160,21 @@ export default function Home() {
                   </span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <Bot className="h-6 w-6 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <Bot className="h-6 w-6 text-lime-500 mt-0.5 shrink-0" />
                   <span className="text-gray-200">
                     AI Copilots participate in your Teams workspace and earn real rewards for their
                     contributions
                   </span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <Zap className="h-6 w-6 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <Zap className="h-6 w-6 text-lime-500 mt-0.5 shrink-0" />
                   <span className="text-gray-200">
                     Value-for-value model fosters recognition and accountability — every
                     contribution, human or AI, is incentivized
                   </span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <Code className="h-6 w-6 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <Code className="h-6 w-6 text-lime-500 mt-0.5 shrink-0" />
                   <span className="text-gray-200">
                     Open-source foundation, adaptable to any organisation&apos;s unique needs with a
                     transparent, community-driven approach
@@ -257,20 +258,20 @@ export default function Home() {
 
               <ul className="space-y-5 mb-10">
                 <li className="flex items-start gap-3">
-                  <Ticket className="h-6 w-6 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <Ticket className="h-6 w-6 text-lime-500 mt-0.5 shrink-0" />
                   <span className="text-gray-200">
                     Azure DevOps work items tagged as &quot;ticket&quot; appear as support tickets,
                     with permission-based, multi-tenant access
                   </span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <Mail className="h-6 w-6 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <Mail className="h-6 w-6 text-lime-500 mt-0.5 shrink-0" />
                   <span className="text-gray-200">
                     Email-to-ticket creation and replies to requesters via Exchange Online
                   </span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <ShieldCheck className="h-6 w-6 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <ShieldCheck className="h-6 w-6 text-lime-500 mt-0.5 shrink-0" />
                   <span className="text-gray-200">
                     Microsoft authentication — sign in with Azure AD/Microsoft accounts
                   </span>
@@ -316,25 +317,25 @@ export default function Home() {
 
               <ul className="space-y-5 mb-10">
                 <li className="flex items-start gap-3">
-                  <Clock className="h-6 w-6 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <Clock className="h-6 w-6 text-lime-500 mt-0.5 shrink-0" />
                   <span className="text-gray-200">
                     Weekly timesheet grid with a real-time start/stop timer for accurate tracking
                   </span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <RefreshCw className="h-6 w-6 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <RefreshCw className="h-6 w-6 text-lime-500 mt-0.5 shrink-0" />
                   <span className="text-gray-200">
                     Automatic synchronization with Business Central Jobs and Job Journal Lines
                   </span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <ShieldCheck className="h-6 w-6 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <ShieldCheck className="h-6 w-6 text-lime-500 mt-0.5 shrink-0" />
                   <span className="text-gray-200">
                     Secure single sign-on via Microsoft Entra ID
                   </span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <Smartphone className="h-6 w-6 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <Smartphone className="h-6 w-6 text-lime-500 mt-0.5 shrink-0" />
                   <span className="text-gray-200">
                     Modern dark theme that works on desktop and mobile
                   </span>
@@ -411,21 +412,21 @@ export default function Home() {
 
               <ul className="space-y-5 mb-10">
                 <li className="flex items-start gap-3">
-                  <ListChecks className="h-6 w-6 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <ListChecks className="h-6 w-6 text-lime-500 mt-0.5 shrink-0" />
                   <span className="text-gray-200">
                     Fifteen practical steps covering the full delivery lifecycle: Prep, Design,
                     Engineer, Test and Operate
                   </span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <Users className="h-6 w-6 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <Users className="h-6 w-6 text-lime-500 mt-0.5 shrink-0" />
                   <span className="text-gray-200">
                     Cross-functional squad roles — Prepper, Designer, Engineer, Test Pilot and
                     Planner — with short sprints, daily 15-minute stand-ups and retrospectives
                   </span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <Bot className="h-6 w-6 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <Bot className="h-6 w-6 text-lime-500 mt-0.5 shrink-0" />
                   <span className="text-gray-200">
                     One shared playbook for human team members AND AI agents — persona configs like
                     Poppy the Planner, Pepper the Prepper and Teddy the Tester let AI co-pilots
@@ -433,7 +434,7 @@ export default function Home() {
                   </span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <GithubIcon className="h-6 w-6 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <GithubIcon className="h-6 w-6 text-lime-500 mt-0.5 shrink-0" />
                   <span className="text-gray-200">
                     Open source under Creative Commons — the specifics teams actually need: roles,
                     estimates, meetings and work-item metadata
@@ -501,15 +502,15 @@ export default function Home() {
               </p>
               <ul className="space-y-2 mb-6">
                 <li className="flex items-start gap-2">
-                  <Zap className="h-5 w-5 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <Zap className="h-5 w-5 text-lime-500 mt-0.5 shrink-0" />
                   <span>Integration with Microsoft 365 and Teams</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <Zap className="h-5 w-5 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <Zap className="h-5 w-5 text-lime-500 mt-0.5 shrink-0" />
                   <span>Custom knowledge bases and data sources</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <Zap className="h-5 w-5 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <Zap className="h-5 w-5 text-lime-500 mt-0.5 shrink-0" />
                   <span>Creating custom automations with Power Automate</span>
                 </li>
               </ul>
@@ -545,15 +546,15 @@ export default function Home() {
 
               <ul className="space-y-2 mb-6">
                 <li className="flex items-start gap-2">
-                  <Zap className="h-5 w-5 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <Zap className="h-5 w-5 text-lime-500 mt-0.5 shrink-0" />
                   <span>Specialized agents with distinct roles and capabilities</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <Zap className="h-5 w-5 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <Zap className="h-5 w-5 text-lime-500 mt-0.5 shrink-0" />
                   <span>Coordinated problem-solving and task execution</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <Zap className="h-5 w-5 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <Zap className="h-5 w-5 text-lime-500 mt-0.5 shrink-0" />
                   <span>Human-in-the-loop collaboration and oversight</span>
                 </li>
               </ul>
@@ -594,70 +595,70 @@ export default function Home() {
               </p>
               <ul className="grid sm:grid-cols-2 gap-x-6 gap-y-3 mb-6">
                 <li className="flex items-start gap-2">
-                  <Code className="h-5 w-5 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <Code className="h-5 w-5 text-lime-500 mt-0.5 shrink-0" />
                   <span>
                     Custom skills that understand your business &mdash; including Xero and Business
                     Central
                   </span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <Globe className="h-5 w-5 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <Globe className="h-5 w-5 text-lime-500 mt-0.5 shrink-0" />
                   <span>Integrates onto your website</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <Sparkles className="h-5 w-5 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <Sparkles className="h-5 w-5 text-lime-500 mt-0.5 shrink-0" />
                   <span>Uses the latest AI models &mdash; fully configurable</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <Video className="h-5 w-5 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <Video className="h-5 w-5 text-lime-500 mt-0.5 shrink-0" />
                   <span>Joins your internal and external calls like any teammate</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <Camera className="h-5 w-5 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <Camera className="h-5 w-5 text-lime-500 mt-0.5 shrink-0" />
                   <span>Appears on a virtual camera in 1-2-1 and group calls</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <ScreenShare className="h-5 w-5 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <ScreenShare className="h-5 w-5 text-lime-500 mt-0.5 shrink-0" />
                   <span>Shares her screen for demos and presentations (work in progress)</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <Server className="h-5 w-5 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <Server className="h-5 w-5 text-lime-500 mt-0.5 shrink-0" />
                   <span>Runs on her own VM, completing activities end-to-end</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <Users className="h-5 w-5 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <Users className="h-5 w-5 text-lime-500 mt-0.5 shrink-0" />
                   <span>Works alongside your human team members</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <FileText className="h-5 w-5 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <FileText className="h-5 w-5 text-lime-500 mt-0.5 shrink-0" />
                   <span>Updates documentation in SharePoint</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <Brain className="h-5 w-5 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <Brain className="h-5 w-5 text-lime-500 mt-0.5 shrink-0" />
                   <span>Long-term memory of your business and everyone she works with</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <Network className="h-5 w-5 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <Network className="h-5 w-5 text-lime-500 mt-0.5 shrink-0" />
                   <span>
                     Builds a knowledge graph of people, projects, places and organisations
                   </span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <FileSignature className="h-5 w-5 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <FileSignature className="h-5 w-5 text-lime-500 mt-0.5 shrink-0" />
                   <span>Proposals and quotations drafted, branded and sent to clients</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <BarChart3 className="h-5 w-5 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <BarChart3 className="h-5 w-5 text-lime-500 mt-0.5 shrink-0" />
                   <span>Pipeline and opportunities tracked in Dynamics 365 Business Central</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <RefreshCw className="h-5 w-5 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <RefreshCw className="h-5 w-5 text-lime-500 mt-0.5 shrink-0" />
                   <span>
                     Follow-ups and deal chasing, with quotes handed to Allie for invoicing
                   </span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <ShieldCheck className="h-5 w-5 text-lime-500 mt-0.5 flex-shrink-0" />
+                  <ShieldCheck className="h-5 w-5 text-lime-500 mt-0.5 shrink-0" />
                   <span>
                     Human-in-the-loop: Sallie asks in Teams before anything reaches a client
                   </span>
@@ -822,12 +823,15 @@ export default function Home() {
       {/* Meet the Team Section */}
       <TeamSection />
 
+      {/* Meet the Agents Section */}
+      <AgentsSection />
+
       {/* Contact Section */}
       <section id="contact">
         <BackgroundImage src="/images/green-bg.png" className="py-20 px-4 text-white">
           <div className="absolute inset-0 bg-black/30"></div>
           <div className="container max-w-6xl mx-auto relative z-10">
-            <div className="bg-gray-900/80 backdrop-blur-sm p-8 md:p-12 rounded-xl max-w-2xl mx-auto">
+            <div className="bg-gray-900/80 backdrop-blur-xs p-8 md:p-12 rounded-xl max-w-2xl mx-auto">
               <h2 className="text-3xl md:text-4xl font-bold mb-6 text-center">Get In Touch</h2>
               <p className="text-lg mb-8 text-center">
                 Ready to explore how our AI solutions can transform your business? Contact us today.

@@ -1,0 +1,71 @@
+= Order Service Operations
+:toc:
+:toclevels: 2
+
+== What it is
+
+The order service (`order-service/`) is a standalone Node daemon — ported from robotechy.com — that answers shop orders automatically: it listens on the shop relays for NIP-17 gift-wrapped Gamma Markets orders addressed to the KnowAll npub, generates exactly one Lightning invoice per order via LNURL-pay, replies with a gift-wrapped payment request (the same event the website checkout renders), and acknowledges payment receipts with a thank-you status update. See `order-service/README.md` for the full behavioural detail (one-invoice-two-surfaces invariant, dedup semantics, tests).
+
+== Deployment
+
+The order service is *not part of the Next.js site deploy* — `server.js` / the Azure App Service deployment workflow serve the website only. Run the daemon as its own long-lived process:
+
+* *Azure Container Apps* (or App Service custom container): build a small Node 22 image running `node index.js`, and mount a persistent volume (Azure Files) at `order-service/data/` so the dedup store survives container rebuilds — without it, a rebuild re-fetches up to 2 days of gift wraps and could re-invoice delivered orders.
+* *VM + systemd*: a `systemd` unit with `Restart=always` and an `EnvironmentFile` for the settings below; the dedup store then lives on the VM's disk.
+
+Whichever host is chosen must inject `ORDER_SERVICE_KEY` from a secret store (an Azure Key Vault reference in Container Apps / App Service settings) — never bake it into an image or commit it.
+
+== Configuration
+
+Environment variables only (a local `.env` is a dev convenience; it is gitignored):
+
+[cols="1,1,2", options="header"]
+|===
+| Variable | Required | Description
+
+| `ORDER_SERVICE_KEY`
+| yes
+| The KnowAll AI *company identity's* secret key, as `nsec1...` or 64-char hex. Injected from Azure Key Vault at deployment; never committed.
+
+| `LIGHTNING_ADDRESS`
+| yes
+| Lightning Address (LNURL-pay) invoices are generated from, e.g. `shop@getalby.com`. Validated at startup.
+
+| `RELAYS`
+| no
+| Comma-separated relay URLs. Defaults to the site's shop set: `wss://relay.damus.io,wss://nos.lol,wss://relay.primal.net`.
+|===
+
+== Key custody and the startup safety stop
+
+By decision, the service runs *as the KnowAll AI company npub* (`npub1kue7etfxtkxlv0s4u2xjf9epgxj7hssmlhc4x2k66tn8q8598zfqj322ar`) so orders and replies stay in one buyer conversation. At startup the service derives the public key from `ORDER_SERVICE_KEY` and *refuses to run* if it is not the company identity, exiting with:
+
+----
+[Startup] ✗ ORDER_SERVICE_KEY does not match the expected identity: derived pubkey <hex> != b733ec... Refusing to start — check that the key is the KnowAll AI company key.
+----
+
+This means the configured key is wrong (typo, wrong backup, or a test key) — a silent mismatch would leave the service listening on an npub no buyer ever messages, so every order would go unanswered. Fix the secret in Key Vault and restart.
+
+The deployment host holds the company identity key: restrict access to the host and its configuration, keep the key only in the secret store, and rotate the key if the host is ever compromised.
+
+== Troubleshooting
+
+[cols="1,2", options="header"]
+|===
+| Problem | Explanation / solution
+
+| Startup exits with "does not match the expected identity"
+| The safety stop (above): `ORDER_SERVICE_KEY` does not derive to the company npub. Correct the secret and restart; nothing was processed.
+
+| Startup hangs or exits validating the Lightning Address
+| LNURL requests carry a 10s deadline; a timeout or non-2xx here means the Lightning Address endpoint (`https://<domain>/.well-known/lnurlp/<name>`) is down or wrong. Fix `LIGHTNING_ADDRESS` and restart.
+
+| An order got no invoice after a transient LNURL/relay failure
+| Failed orders are *not* marked processed — the next re-delivery of the gift wrap (relays are polled with a 2-day lookback) retries automatically. Check the logs for `will retry on next delivery`.
+
+| Log noise like `Ignoring relay rejection: ...`
+| Expected: transient relay/network errors are classified by `order-service/lib/relayErrors.js` and swallowed so a flaky relay cannot crash order processing. Anything NOT matched there is treated as a real bug and is fatal (the process exits and the supervisor restarts it).
+
+| Duplicate invoice worries after restarts/rebuilds
+| The dedup store lives at `order-service/data/.processed.json` (override: `PROCESSED_STORE_PATH`), written atomically and pruned to the 2-day lookback window. Orders are recorded there once the payment request is delivered, so restarts never re-invoice a delivered order — provided the `data/` directory persists (see Deployment). A `CRITICAL: failed to persist dedup entry` log means durability was lost for one order — investigate the volume before the next restart.
+|===

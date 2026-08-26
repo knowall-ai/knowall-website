@@ -175,7 +175,7 @@ export default function ShopListings({
       >
         {[0, 1, 2].map((i) => (
           <div key={i} className="overflow-hidden rounded-xl border border-gray-800 bg-gray-900">
-            <Skeleton className="aspect-[4/3] w-full rounded-none bg-gray-800" />
+            <Skeleton className="aspect-4/3 w-full rounded-none bg-gray-800" />
             <div className="space-y-3 p-5">
               <Skeleton className="h-5 w-3/4 bg-gray-800" />
               <Skeleton className="h-4 w-full bg-gray-800" />
@@ -337,7 +337,7 @@ function ProductCard({ listing, onOwnerDeleted, onOwnerSaved }: ProductCardProps
   return (
     <article
       data-testid="product-card"
-      className="group flex flex-col overflow-hidden rounded-xl border border-gray-800 bg-gray-900 shadow-sm transition-all hover:border-gray-700 hover:shadow-md"
+      className="group flex flex-col overflow-hidden rounded-xl border border-gray-800 bg-gray-900 shadow-xs transition-all hover:border-gray-700 hover:shadow-md"
     >
       {/* Product image (arbitrary remote hosts from Nostr, so plain <img>) */}
       <Link

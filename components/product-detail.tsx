@@ -3,14 +3,19 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, ImageIcon, MapPin, MessageCircle, PackageX, Zap } from 'lucide-react';
+import { ArrowLeft, ImageIcon, MapPin, MessageCircle, PackageX, ShoppingCart } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useContactPanel } from '@/components/contact-panel';
 import { OwnerListingControls } from '@/components/admin/owner-listing-controls';
+import { CheckoutPanel } from '@/components/checkout/checkout-panel';
 import ProductFeedbackTabs from '@/components/product-feedback-tabs';
 import ProductShipping from '@/components/product-shipping';
+import { useCart } from '@/hooks/use-cart';
+import { MAX_QUANTITY, normalizeQuantity } from '@/lib/cart';
 import { useShopOwner } from '@/hooks/use-shop-admin';
 import { getBlocklist, isBlocked } from '@/lib/moderation';
 import { KNOWALL_PUBKEY, SHOP_RELAYS } from '@/lib/nostr';
@@ -263,12 +268,27 @@ interface ProductViewProps {
 /** The loaded product: gallery left, purchase info right, description below. */
 function ProductView({ naddr, listing, onOwnerSaved, onOwnerDeleted }: ProductViewProps) {
   const { openContactPanel } = useContactPanel();
+  const { addItem, setIsOpen: setCartOpen } = useCart();
+  const [quantity, setQuantity] = useState(1);
+  const [checkoutOpen, setCheckoutOpen] = useState(false);
   const sold = isSoldOut(listing);
 
   const handleMessage = () => {
     openContactPanel({
       message: `Hi! I'd like to buy: ${listing.title} (${formatPrice(listing.price)}). `,
     });
+  };
+
+  // Robotechy's purchase pair: Add to Cart opens the drawer; Buy It Now goes
+  // straight to checkout with the item added.
+  const handleAddToCart = () => {
+    addItem(listing, quantity);
+    setCartOpen(true);
+  };
+
+  const handleBuyNow = () => {
+    addItem(listing, quantity);
+    setCheckoutOpen(true);
   };
 
   return (
@@ -289,7 +309,7 @@ function ProductView({ naddr, listing, onOwnerSaved, onOwnerDeleted }: ProductVi
             onDeleted={onOwnerDeleted}
           />
 
-          <h1 className="text-3xl font-bold leading-tight text-white md:text-4xl">
+          <h1 className="text-3xl font-bold leading-tight text-white md:text-4xl md:leading-10">
             {listing.title}
           </h1>
 
@@ -339,30 +359,73 @@ function ProductView({ naddr, listing, onOwnerSaved, onOwnerDeleted }: ProductVi
           {/* P&P — resolved from the listing's Gamma shipping_option refs. */}
           <ProductShipping pubkey={listing.pubkey} zoneIds={listing.shippingZoneIds} />
 
-          {/* Actions: zap/buy via the user's own Nostr client, or message us. */}
-          <div className="mt-2 flex flex-col gap-2 sm:flex-row">
-            <Button
-              asChild
-              className="flex-1 bg-lime-600 font-semibold text-white hover:bg-lime-700"
-            >
-              <a href={`https://njump.me/${naddr}`} target="_blank" rel="noopener noreferrer">
-                <Zap className="mr-1.5 h-4 w-4" aria-hidden="true" />
-                {sold ? 'View on Nostr' : 'Buy'}
-              </a>
-            </Button>
-            <Button
-              variant="outline"
-              onClick={handleMessage}
-              className="flex-1 border-gray-700 bg-transparent text-gray-300 hover:border-lime-600 hover:bg-gray-800 hover:text-lime-500"
-            >
-              <MessageCircle className="mr-1.5 h-4 w-4" aria-hidden="true" />
-              Message
-            </Button>
-          </div>
+          {/* Purchase: quantity + cart/checkout (robotechy's buy pair). */}
+          {!sold && (
+            <div className="space-y-3">
+              <div className="flex items-center gap-3">
+                <Label htmlFor="quantity" className="text-gray-200">
+                  Quantity
+                </Label>
+                <Input
+                  id="quantity"
+                  type="number"
+                  min={1}
+                  max={Math.min(listing.stock ?? MAX_QUANTITY, MAX_QUANTITY)}
+                  value={quantity}
+                  onChange={(e) => {
+                    const parsed = Number.parseInt(e.target.value, 10);
+                    // The max attribute stops the spinner, not typed input, so
+                    // clamp here too. normalizeQuantity is what the cart itself
+                    // applies on add, so the number shown can never disagree
+                    // with the number added; stock caps it further when known.
+                    const wanted = normalizeQuantity(Number.isNaN(parsed) ? 1 : parsed);
+                    setQuantity(listing.stock !== null ? Math.min(wanted, listing.stock) : wanted);
+                  }}
+                  className="w-24 border-gray-700 bg-gray-800 text-white focus-visible:ring-lime-500"
+                />
+              </div>
+              <div className="flex flex-col gap-2 sm:flex-row">
+                <Button
+                  onClick={handleAddToCart}
+                  className="flex-1 bg-lime-600 font-semibold text-white hover:bg-lime-700"
+                >
+                  <ShoppingCart className="mr-1.5 h-4 w-4" aria-hidden="true" />
+                  Add to Cart
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={handleBuyNow}
+                  className="flex-1 border-lime-600 bg-transparent font-semibold text-lime-500 hover:bg-lime-600/10 hover:text-lime-400"
+                >
+                  Buy It Now
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={handleMessage}
+                  className="flex-1 border-gray-700 bg-transparent text-gray-300 hover:border-lime-600 hover:bg-gray-800 hover:text-lime-500"
+                >
+                  <MessageCircle className="mr-1.5 h-4 w-4" aria-hidden="true" />
+                  Message
+                </Button>
+              </div>
+            </div>
+          )}
           <p className="text-xs leading-relaxed text-gray-500">
-            Buy opens this listing in your Nostr client via njump — pay with Bitcoin over Lightning.
-            Not on Nostr? Send us a message instead.
+            Checkout pays with Bitcoin over Lightning — no account needed. Your order and address
+            travel as encrypted Nostr messages. Prefer your own Nostr client? View the listing on{' '}
+            <a
+              href={`https://njump.me/${naddr}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline underline-offset-2 hover:text-lime-500"
+            >
+              njump
+            </a>{' '}
+            instead.
           </p>
+
+          {/* Buy It Now jumps straight to this checkout with the item added. */}
+          <CheckoutPanel open={checkoutOpen} onOpenChange={setCheckoutOpen} />
 
           {listing.description && (
             <section className="mt-4">
@@ -371,7 +434,7 @@ function ProductView({ naddr, listing, onOwnerSaved, onOwnerDeleted }: ProductVi
                   the story feed; listing content is untrusted, so no raw HTML.
                   The one markdown-ism honoured is **bold** (our real listings
                   use it), rendered as React elements, never injected markup. */}
-              <div className="whitespace-pre-wrap break-words text-sm leading-relaxed text-gray-300">
+              <div className="whitespace-pre-wrap wrap-break-word text-sm leading-relaxed text-gray-300">
                 <DescriptionText text={listing.description} />
               </div>
             </section>

@@ -171,7 +171,7 @@ export function ShippingZonesDialog({ open, onOpenChange }: ShippingZonesDialogP
                         {zone.price.amount} {zone.price.currency} · {zone.service}
                         {zone.carrier ? ` · ${zone.carrier}` : ''}
                       </p>
-                      <p className="break-words text-xs text-gray-500" title={countriesLabel}>
+                      <p className="wrap-break-word text-xs text-gray-500" title={countriesLabel}>
                         {countriesLabel}
                       </p>
                     </div>

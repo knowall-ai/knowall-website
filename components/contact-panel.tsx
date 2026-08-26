@@ -75,7 +75,13 @@ export function ContactPanelProvider({ children }: { children: React.ReactNode }
   );
 }
 
-const contactSchema = z.object({
+/**
+ * Exported for the resolver regression test: @hookform/resolvers must stay on a
+ * release that speaks the installed Zod's error API (v5+ for Zod 4, which
+ * dropped ZodError.errors), otherwise invalid input throws instead of landing
+ * in formState.errors.
+ */
+export const contactSchema = z.object({
   name: z.string().min(2, 'Please enter your name'),
   email: z.string().email('Please enter a valid email address'),
   message: z.string().min(10, 'Please tell us a bit more about how we can help'),
