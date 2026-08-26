@@ -43,6 +43,14 @@ export default function PrivacyPolicyPage() {
         are none involved.
       </p>
 
+      <h2 className="text-2xl font-semibold mt-8 mb-4 text-white">A note on Nostr</h2>
+      <p>
+        Messages sent through this site travel as encrypted direct messages over public Nostr
+        relays. The content is end-to-end encrypted, but relays (which we don&apos;t operate) can
+        see that an encrypted message passed between two keys and when. Reviews, replies and zaps
+        are public Nostr events signed by their authors and visible network-wide.
+      </p>
+
       <h2 className="text-2xl font-semibold mt-8 mb-4 text-white">Questions</h2>
       <p>
         <MessageUsLink>Message us on Nostr</MessageUsLink> or email{' '}

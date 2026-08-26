@@ -21,11 +21,18 @@ export default function RefundPolicyPage() {
         refund.
       </p>
 
+      <h2 className="text-2xl font-semibold mt-8 mb-4 text-white">Faulty items</h2>
+      <p>
+        If an item is faulty, the fix is on us: we&apos;ll replace it or refund in full, including
+        reasonable return postage. The change-of-mind conditions below don&apos;t apply to faulty
+        goods, and your local statutory rights are unaffected.
+      </p>
+
       <h2 className="text-2xl font-semibold mt-8 mb-4 text-white">Returns</h2>
       <p>
-        Physical goods can be returned within 14 days of delivery in their original condition.
-        Return postage is the buyer&apos;s responsibility, and we recommend a tracked service — the
-        refund is issued once the item arrives back safely.
+        Changed your mind? Physical goods can be returned within 14 days of delivery in their
+        original condition. Return postage is the buyer&apos;s responsibility, and we recommend a
+        tracked service — the refund is issued once the item arrives back safely.
       </p>
 
       <h2 className="text-2xl font-semibold mt-8 mb-4 text-white">How refunds are paid</h2>
