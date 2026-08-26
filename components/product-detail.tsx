@@ -11,7 +11,7 @@ import { useContactPanel } from '@/components/contact-panel';
 import { OwnerListingControls } from '@/components/admin/owner-listing-controls';
 import ProductShipping from '@/components/product-shipping';
 import { useShopOwner } from '@/hooks/use-shop-admin';
-import { SHOP_RELAYS } from '@/lib/nostr';
+import { KNOWALL_PUBKEY, SHOP_RELAYS } from '@/lib/nostr';
 import {
   CLASSIFIED_LISTING_KIND,
   formatPrice,
@@ -145,8 +145,12 @@ export default function ProductDetail({ naddr, pubkey, identifier }: ProductDeta
   if (status === 'loading') return <ProductSkeleton />;
   if (!listing) return status === 'error' ? <ProductError naddr={naddr} /> : <ProductNotFound />;
   // Hidden listings are owner-only drafts: the grid gate also applies to the
-  // detail route, so a shared naddr can't expose a draft to the public.
-  if (listing.visibility === 'hidden' && !isOwner) return <ProductNotFound />;
+  // detail route, so a shared naddr can't expose a draft to the public. The
+  // owner check is KnowAll-specific, so a draft only shows when the listing
+  // is actually authored by the KnowAll key the owner controls.
+  if (listing.visibility === 'hidden' && !(isOwner && listing.pubkey === KNOWALL_PUBKEY)) {
+    return <ProductNotFound />;
+  }
   return (
     <ProductView
       naddr={naddr}

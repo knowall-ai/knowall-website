@@ -152,10 +152,13 @@ export default function ShopListings({
 
   // Gamma-style hidden listings are owner-only drafts — keep them off the
   // public storefront (same gate as the Robotechy/Eden shops), but show them
-  // to the signed-in owner so drafts can be managed in place.
+  // to the signed-in owner so drafts can be managed in place. The owner check
+  // is KnowAll-specific, so drafts only surface for the KnowAll catalog —
+  // never for another merchant's pubkey.
+  const showDrafts = isOwner && pubkey === KNOWALL_PUBKEY;
   const audienceListings = useMemo(
-    () => (isOwner ? listings : listings.filter(isPubliclyVisible)),
-    [listings, isOwner]
+    () => (showDrafts ? listings : listings.filter(isPubliclyVisible)),
+    [listings, showDrafts]
   );
 
   const tags = useMemo(() => collectTags(audienceListings), [audienceListings]);

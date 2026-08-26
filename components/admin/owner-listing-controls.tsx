@@ -60,6 +60,9 @@ export function OwnerListingControls({
       }
       setEditEvent(latest);
       setEditOpen(true);
+    } catch (fetchError) {
+      console.error('Failed to fetch the latest listing version:', fetchError);
+      setError('Could not load the latest version of this listing. Try again.');
     } finally {
       setLoadingEdit(false);
     }
