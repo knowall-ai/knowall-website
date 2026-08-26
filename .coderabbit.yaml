@@ -19,7 +19,7 @@ reviews:
     - '!package-lock.json'
     - '!logs/**'
   path_instructions:
-    - path: 'app/**/*.tsx'
+    - path: 'app/**/*.{ts,tsx}'
       instructions: >-
         Next.js 15 App Router with a custom server.js. Watch client/server
         component boundaries and that no secrets reach client components.
