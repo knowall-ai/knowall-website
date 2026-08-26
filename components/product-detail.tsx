@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useContactPanel } from '@/components/contact-panel';
+import { getBlocklist, isBlocked } from '@/lib/moderation';
 import { SHOP_RELAYS } from '@/lib/nostr';
 import {
   CLASSIFIED_LISTING_KIND,
@@ -48,12 +49,22 @@ export default function ProductDetail({ naddr, pubkey, identifier }: ProductDeta
     let settledRelays = 0;
     let successfulRelays = 0;
 
+    // The merchant pubkey comes from the visitor's URL (any naddr renders
+    // here), so listings are screened against the company's NIP-51 mute list —
+    // a muted merchant's listing shows the not-found card. The blocklist fetch
+    // starts now, in parallel with the relay queries, and is cached page-wide.
+    const blocklistPromise = getBlocklist();
+
     const finish = () => {
       if (cancelled) return;
-      const found = selectListing([...events.values()], pubkey, identifier);
-      setListing(found);
-      // Distinguish "every relay failed" from "relays answered: no such product".
-      setStatus(successfulRelays === 0 && !found ? 'error' : 'ready');
+      void blocklistPromise.then((blocklist) => {
+        if (cancelled) return;
+        const visible = [...events.values()].filter((event) => !isBlocked(event, blocklist));
+        const found = selectListing(visible, pubkey, identifier);
+        setListing(found);
+        // Distinguish "every relay failed" from "relays answered: no such product".
+        setStatus(successfulRelays === 0 && !found ? 'error' : 'ready');
+      });
     };
 
     const settle = (ok: boolean) => {

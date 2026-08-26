@@ -59,7 +59,14 @@ describe('StoryComments composer gating', () => {
   });
 
   it('signed out: thread is read-only with a sign-in nudge', () => {
-    render(<StoryComments note={makeNote()} replies={[makeReply()]} onPosted={vi.fn()} />);
+    render(
+      <StoryComments
+        note={makeNote()}
+        replies={[makeReply()]}
+        onPosted={vi.fn()}
+        onMuted={vi.fn()}
+      />
+    );
 
     expect(screen.getByText('A thoughtful comment')).toBeInTheDocument();
     const textarea = screen.getByPlaceholderText('Sign in to join the conversation…');
@@ -69,7 +76,7 @@ describe('StoryComments composer gating', () => {
   });
 
   it('signed out: never calls the signer', () => {
-    render(<StoryComments note={makeNote()} replies={[]} onPosted={vi.fn()} />);
+    render(<StoryComments note={makeNote()} replies={[]} onPosted={vi.fn()} onMuted={vi.fn()} />);
     fireEvent.submit(screen.getByTestId('story-comment-composer'));
     expect(mockSignEvent).not.toHaveBeenCalled();
     expect(mockPublishToRelays).not.toHaveBeenCalled();
@@ -83,7 +90,7 @@ describe('StoryComments composer gating', () => {
     const onPosted = vi.fn();
     const note = makeNote();
 
-    render(<StoryComments note={note} replies={[]} onPosted={onPosted} />);
+    render(<StoryComments note={note} replies={[]} onPosted={onPosted} onMuted={vi.fn()} />);
 
     const textarea = screen.getByPlaceholderText('Write a comment…');
     expect(textarea).toBeEnabled();
@@ -115,7 +122,7 @@ describe('StoryComments composer gating', () => {
     mockSignEvent.mockRejectedValue(new Error('User declined to sign'));
     const onPosted = vi.fn();
 
-    render(<StoryComments note={makeNote()} replies={[]} onPosted={onPosted} />);
+    render(<StoryComments note={makeNote()} replies={[]} onPosted={onPosted} onMuted={vi.fn()} />);
 
     const textarea = screen.getByPlaceholderText('Write a comment…');
     fireEvent.change(textarea, { target: { value: 'Hello!' } });
@@ -134,6 +141,7 @@ describe('StoryComments composer gating', () => {
         note={makeNote()}
         replies={[makeReply({ content: long })]}
         onPosted={vi.fn()}
+        onMuted={vi.fn()}
       />
     );
 
