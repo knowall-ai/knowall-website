@@ -108,7 +108,7 @@ export default function SignInButton({
                 {name.charAt(0).toUpperCase()}
               </span>
             )}
-            <span className="max-w-[10rem] truncate text-sm font-medium">{name}</span>
+            <span className="max-w-40 truncate text-sm font-medium">{name}</span>
             <ChevronDown className="h-4 w-4" aria-hidden="true" />
           </button>
         </DropdownMenuTrigger>

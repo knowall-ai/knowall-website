@@ -124,7 +124,7 @@ export default function ZappCarousel() {
                 onClick={() => openModal(actualIndex)}
                 onMouseEnter={() => setHoveredIndex(actualIndex)}
                 onMouseLeave={() => setHoveredIndex(null)}
-                className="relative h-24 w-36 sm:h-32 sm:w-48 md:h-40 md:w-60 flex-shrink-0 cursor-pointer transition-all transform hover:scale-105"
+                className="relative h-24 w-36 sm:h-32 sm:w-48 md:h-40 md:w-60 shrink-0 cursor-pointer transition-all transform hover:scale-105"
               >
                 <div className="absolute inset-0 z-10 pointer-events-none">
                   {hoveredIndex === actualIndex && (

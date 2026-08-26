@@ -29,13 +29,13 @@ const face = 'absolute left-1/2 top-1/2';
 
 export default function TMinus15Book() {
   return (
-    <div className="relative [perspective:1600px]">
+    <div className="relative perspective-[1600px]">
       <div
         className="absolute -inset-8 rounded-3xl bg-lime-500/10 blur-2xl"
         aria-hidden="true"
       ></div>
       <div
-        className="relative transition-transform duration-500 [transform-style:preserve-3d] [transform:rotateX(5deg)_rotateY(-25deg)] hover:[transform:rotateX(3deg)_rotateY(-12deg)]"
+        className="relative transition-transform duration-500 transform-3d transform-[rotateX(5deg)_rotateY(-25deg)] hover:transform-[rotateX(3deg)_rotateY(-12deg)]"
         style={bookVars}
       >
         {/* Back cover */}

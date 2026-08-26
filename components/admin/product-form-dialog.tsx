@@ -71,7 +71,7 @@ function ImageThumb({ url }: { url: string }) {
   const showImage = trimmed !== '' && !errored;
 
   return (
-    <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center overflow-hidden rounded-md border border-gray-700 bg-gray-800">
+    <div className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-md border border-gray-700 bg-gray-800">
       {showImage && (
         // eslint-disable-next-line @next/next/no-img-element -- arbitrary Nostr-hosted preview
         <img

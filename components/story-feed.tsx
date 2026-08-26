@@ -391,14 +391,14 @@ function StoryNote({
         />
         {!isLast && (
           <span
-            className="mt-1 w-0.5 grow bg-gradient-to-b from-lime-500/40 to-transparent"
+            className="mt-1 w-0.5 grow bg-linear-to-b from-lime-500/40 to-transparent"
             aria-hidden="true"
           />
         )}
       </div>
 
       {/* Note card */}
-      <div className="mb-8 flex-1 overflow-hidden rounded-xl border border-gray-800 bg-gray-900 shadow-sm transition-shadow hover:shadow-md">
+      <div className="mb-8 flex-1 overflow-hidden rounded-xl border border-gray-800 bg-gray-900 shadow-xs transition-shadow hover:shadow-md">
         <div className="space-y-4 p-5 sm:p-6">
           <a
             href={`https://njump.me/${encodeNoteId(note.id)}`}
@@ -416,7 +416,7 @@ function StoryNote({
           </a>
 
           {text.length > 0 && (
-            <div className="whitespace-pre-wrap break-words leading-relaxed text-gray-300">
+            <div className="whitespace-pre-wrap wrap-break-word leading-relaxed text-gray-300">
               {linkify(text, onTagClick)}
             </div>
           )}

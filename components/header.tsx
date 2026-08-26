@@ -66,7 +66,7 @@ export default function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-50 bg-gray-950/90 backdrop-blur-sm border-b border-gray-800">
+    <header className="sticky top-0 z-50 bg-gray-950/90 backdrop-blur-xs border-b border-gray-800">
       <div className="container max-w-6xl mx-auto px-4 py-3">
         <div className="flex items-center justify-between">
           <Link href="/#" className="flex items-center" onClick={handleTopLink('/#')}>
@@ -87,7 +87,7 @@ export default function Header() {
             ))}
 
             <DropdownMenu>
-              <DropdownMenuTrigger className="flex items-center gap-1 text-gray-300 hover:text-lime-500 transition-colors rounded-sm outline-none focus-visible:ring-2 focus-visible:ring-lime-500 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-950 data-[state=open]:text-lime-500">
+              <DropdownMenuTrigger className="flex items-center gap-1 text-gray-300 hover:text-lime-500 transition-colors rounded-sm outline-hidden focus-visible:ring-2 focus-visible:ring-lime-500 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-950 data-[state=open]:text-lime-500">
                 Products
                 <ChevronDown className="h-4 w-4" />
               </DropdownMenuTrigger>
