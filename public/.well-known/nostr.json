@@ -5,14 +5,17 @@
   },
   "relays": {
     "b733ecad265d8df63e15e28d24972141a5ebc21bfdf1532adad2e6701e853892": [
-      "wss://relay.damus.io",
+      "wss://relay.primal.net",
       "wss://nos.lol",
-      "wss://relay.primal.net"
+      "wss://nostr.oxtr.dev"
     ],
     "971615b70ad9ec896f8d5ba0f2d01652f1dfe5f9ced81ac9469ca7facefad68b": [
-      "wss://relay.damus.io",
+      "wss://nostr.oxtr.dev",
+      "wss://nostr.land",
+      "wss://relay.primal.net",
+      "wss://nostr.bitcoiner.social",
       "wss://nos.lol",
-      "wss://relay.primal.net"
+      "wss://eden.nostr.land"
     ]
   }
 }
