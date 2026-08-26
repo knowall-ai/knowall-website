@@ -138,3 +138,38 @@ test('drops entries with a non-numeric timestamp so prune() can bound the file',
     rmSync(dir, { recursive: true, force: true });
   }
 });
+
+test('drops zero-coercing timestamps even when pruning is disabled (maxAgeSeconds = 0)', () => {
+  // null, "", false and [] all coerce to 0, which passes Number.isFinite — and
+  // with maxAgeSeconds = 0 prune() returns immediately, so nothing else would
+  // ever remove them. This is the case a finite-only check misses.
+  const { path, dir } = tmpFile();
+  try {
+    writeFileSync(
+      path,
+      JSON.stringify({
+        orders: {
+          good: Math.floor(Date.now() / 1000),
+          nullish: null,
+          emptyString: '',
+          falsey: false,
+          emptyArray: [],
+          zero: 0,
+          numericString: '1700000000',
+        },
+        receipts: {},
+      })
+    );
+
+    // maxAgeSeconds = 0 -> prune() is a no-op, so load()'s filter is the only defence.
+    const store = new ProcessedStore(path, 0);
+
+    assert.equal(store.orders.size, 1, 'only the real numeric timestamp survives');
+    assert.ok(store.orders.has('good'));
+    for (const id of ['nullish', 'emptyString', 'falsey', 'emptyArray', 'zero', 'numericString']) {
+      assert.ok(!store.orders.has(id), `${id} should have been dropped`);
+    }
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});

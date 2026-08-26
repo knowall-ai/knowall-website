@@ -21,19 +21,27 @@ import { fileURLToPath } from 'url';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 /**
- * Build an id -> processedAt map from the persisted JSON, dropping any entry
- * whose timestamp is not a finite number.
+ * Build an id -> processedAt map from the persisted JSON, keeping only entries
+ * whose timestamp is a positive finite *number*.
  *
- * A corrupted value (`"ts": "oops"`, null, an object) coerces to NaN, and every
- * NaN comparison is false — so `NaN < cutoff` in prune() never matches and the
- * entry could never be dropped, letting the file grow without bound across
- * restarts. Dropping them here keeps prune() able to bound the file.
+ * Two ways a corrupted file defeats prune(), both of which this closes:
+ *   - `"ts": "oops"` coerces to NaN, and every NaN comparison is false, so
+ *     `NaN < cutoff` never matches.
+ *   - `null`, `""`, `false` and `[]` all coerce to 0, which *is* finite — and
+ *     when maxAgeSeconds is 0 prune() returns immediately, so a 0 entry is
+ *     never reconsidered either.
+ * Either way the entry could never be dropped and the file would grow without
+ * bound across restarts.
+ *
+ * The type check is deliberately strict rather than coercing: save() always
+ * writes numbers, so anything else in the file is corruption, not a format we
+ * need to accept.
  */
 function finiteTimestampEntries(source) {
   return new Map(
-    Object.entries(source || {})
-      .map(([id, ts]) => [id, Number(ts)])
-      .filter(([, ts]) => Number.isFinite(ts))
+    Object.entries(source || {}).filter(
+      ([, ts]) => typeof ts === 'number' && Number.isFinite(ts) && ts > 0
+    )
   );
 }
 
