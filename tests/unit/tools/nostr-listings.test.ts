@@ -102,13 +102,24 @@ describe('validateDefinition', () => {
     expect(validateDefinition({ ...base, price: { amount: -5, currency: 'GBP' } })).toEqual([
       amountError,
     ]);
-    // finite but absurd: Number('1e308') passes isFinite, so the cap has to catch it
-    expect(validateDefinition({ ...base, price: { amount: '1e308', currency: 'GBP' } })).toEqual([
-      amountError,
-    ]);
+    // finite but absurd: a plain decimal this large passes isFinite, so the cap has to catch it
+    expect(
+      validateDefinition({ ...base, price: { amount: '99999999999999999999', currency: 'GBP' } })
+    ).toEqual([amountError]);
+    // exact boundary either side of the cap
     expect(
       validateDefinition({ ...base, price: { amount: MAX_PRICE_AMOUNT, currency: 'GBP' } })
     ).toEqual([]);
+    expect(
+      validateDefinition({ ...base, price: { amount: MAX_PRICE_AMOUNT + 1, currency: 'GBP' } })
+    ).toEqual([amountError]);
+    // Number() would reinterpret these, but definitionToEvent signs the original
+    // spelling into the price tag — so the tag would disagree with what we validated
+    for (const amount of ['0x10', ' 10 ', '1e3', '+10', '.5', '010x']) {
+      expect(validateDefinition({ ...base, price: { amount, currency: 'GBP' } })).toEqual([
+        amountError,
+      ]);
+    }
     // milliseconds instead of seconds (beyond year 2100) must be rejected
     expect(
       validateDefinition({

@@ -24,15 +24,23 @@ export const PRICE_KEYS = ['amount', 'currency', 'frequency'];
 export const MAX_PUBLISHED_AT = 4102444800;
 
 /**
- * Upper bound for price.amount. Number('1e308') is finite, so without a cap an
- * absurd amount would be signed into the price tag; past MAX_SAFE_INTEGER the
- * value also stops round-tripping through Number(), so the tag could no longer
- * match what the definition asked for.
+ * Upper bound for price.amount. A plain decimal like '99999999999999999999' is
+ * still finite, so without a cap an absurd amount would be signed into the
+ * price tag; past MAX_SAFE_INTEGER the value also stops round-tripping through
+ * Number(), so the tag could no longer match what the definition asked for.
  */
 export const MAX_PRICE_AMOUNT = Number.MAX_SAFE_INTEGER;
 
+/**
+ * price.amount must be a plain decimal. Number() also accepts '0x10', '1e3'
+ * and ' 10 ', but definitionToEvent() signs the *original* spelling into the
+ * price tag — so anything Number() reinterprets would publish a tag that
+ * disagrees with the value we validated.
+ */
+const DECIMAL_AMOUNT = /^\d+(\.\d+)?$/;
+
 /** Validation message for a bad price.amount (exported so tests can't drift from it). */
-export const PRICE_AMOUNT_ERROR = `"price.amount" must be a non-negative finite number no greater than ${MAX_PRICE_AMOUNT} (e.g. 9.99 or 10000)`;
+export const PRICE_AMOUNT_ERROR = `"price.amount" must be a plain decimal number no greater than ${MAX_PRICE_AMOUNT} (e.g. 9.99 or 10000)`;
 
 /** True when an images[] entry is already a hosted URL (kept as-is on publish). */
 export function isRemoteImage(image) {
@@ -72,9 +80,8 @@ export function validateDefinition(def) {
     const amount = def.price.amount;
     if (
       (typeof amount !== 'string' && typeof amount !== 'number') ||
-      String(amount).trim() === '' ||
+      !DECIMAL_AMOUNT.test(String(amount)) ||
       !Number.isFinite(Number(amount)) ||
-      Number(amount) < 0 ||
       Number(amount) > MAX_PRICE_AMOUNT
     ) {
       errors.push(PRICE_AMOUNT_ERROR);
