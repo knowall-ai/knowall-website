@@ -8,6 +8,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useContactPanel } from '@/components/contact-panel';
+import { OwnerListingControls } from '@/components/admin/owner-listing-controls';
+import { useShopOwner } from '@/hooks/use-shop-admin';
 import { encodeListingNaddr } from '@/lib/naddr';
 import { KNOWALL_NPUB, KNOWALL_PUBKEY, SHOP_RELAYS } from '@/lib/nostr';
 import {
@@ -36,13 +38,25 @@ function productPath(listing: Listing): string {
 interface ShopListingsProps {
   /** Hex pubkey whose kind-30402 listings are shown (defaults to KnowAll AI). */
   pubkey?: string;
+  /** Bump to re-query the relays (e.g. after the owner adds a product). */
+  refreshToken?: number;
 }
 
-export default function ShopListings({ pubkey = KNOWALL_PUBKEY }: ShopListingsProps) {
+export default function ShopListings({
+  pubkey = KNOWALL_PUBKEY,
+  refreshToken = 0,
+}: ShopListingsProps) {
+  const isOwner = useShopOwner();
   const [listings, setListings] = useState<Listing[]>([]);
   const [status, setStatus] = useState<'loading' | 'ready' | 'error'>('loading');
   const [query, setQuery] = useState('');
   const [activeTag, setActiveTag] = useState<string | null>(null);
+  // Bumped after an owner edit so the grid re-queries the relays.
+  const [reloadToken, setReloadToken] = useState(0);
+
+  /** Optimistic removal after an owner deletion — no relay round-trip. */
+  const removeListing = (dTag: string) =>
+    setListings((prev) => prev.filter((listing) => listing.dTag !== dTag));
 
   // Fetch kind-30402 events by the merchant pubkey from all relays, mirroring
   // the story feed's raw-WebSocket subscription: collect until EOSE (or
@@ -56,9 +70,9 @@ export default function ShopListings({ pubkey = KNOWALL_PUBKEY }: ShopListingsPr
 
     const finish = () => {
       if (cancelled) return;
-      // Gamma-style hidden listings are owner-only drafts — keep them off the
-      // public storefront (same gate as the Robotechy/Eden shops).
-      const deduped = dedupeListings([...events.values()]).filter(isPubliclyVisible);
+      // Visibility is applied at render time (the owner sees hidden drafts),
+      // so keep every deduped listing here.
+      const deduped = dedupeListings([...events.values()]);
       setListings(deduped);
       setStatus(successfulRelays === 0 && deduped.length === 0 ? 'error' : 'ready');
     };
@@ -134,12 +148,23 @@ export default function ShopListings({ pubkey = KNOWALL_PUBKEY }: ShopListingsPr
         }
       }
     };
-  }, [pubkey]);
+  }, [pubkey, refreshToken, reloadToken]);
 
-  const tags = useMemo(() => collectTags(listings), [listings]);
+  // Gamma-style hidden listings are owner-only drafts — keep them off the
+  // public storefront (same gate as the Robotechy/Eden shops), but show them
+  // to the signed-in owner so drafts can be managed in place. The owner check
+  // is KnowAll-specific, so drafts only surface for the KnowAll catalog —
+  // never for another merchant's pubkey.
+  const showDrafts = isOwner && pubkey === KNOWALL_PUBKEY;
+  const audienceListings = useMemo(
+    () => (showDrafts ? listings : listings.filter(isPubliclyVisible)),
+    [listings, showDrafts]
+  );
+
+  const tags = useMemo(() => collectTags(audienceListings), [audienceListings]);
   const visible = useMemo(
-    () => filterListings(listings, query, activeTag),
-    [listings, query, activeTag]
+    () => filterListings(audienceListings, query, activeTag),
+    [audienceListings, query, activeTag]
   );
 
   if (status === 'loading') {
@@ -162,7 +187,7 @@ export default function ShopListings({ pubkey = KNOWALL_PUBKEY }: ShopListingsPr
     );
   }
 
-  if (status === 'error' && listings.length === 0) {
+  if (status === 'error' && audienceListings.length === 0) {
     return (
       <div className="rounded-xl border border-gray-800 bg-gray-900 py-12 px-6 text-center">
         <p className="text-gray-400">
@@ -181,7 +206,7 @@ export default function ShopListings({ pubkey = KNOWALL_PUBKEY }: ShopListingsPr
     );
   }
 
-  if (listings.length === 0) {
+  if (audienceListings.length === 0) {
     return (
       <div
         className="rounded-xl border border-gray-800 bg-gray-900 py-16 px-6 text-center"
@@ -275,7 +300,12 @@ export default function ShopListings({ pubkey = KNOWALL_PUBKEY }: ShopListingsPr
       ) : (
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {visible.map((listing) => (
-            <ProductCard key={`${listing.pubkey}:${listing.dTag}`} listing={listing} />
+            <ProductCard
+              key={`${listing.pubkey}:${listing.dTag}`}
+              listing={listing}
+              onOwnerDeleted={() => removeListing(listing.dTag)}
+              onOwnerSaved={() => setReloadToken((token) => token + 1)}
+            />
           ))}
         </div>
       )}
@@ -283,8 +313,16 @@ export default function ShopListings({ pubkey = KNOWALL_PUBKEY }: ShopListingsPr
   );
 }
 
+interface ProductCardProps {
+  listing: Listing;
+  /** Owner-only: called after this card's listing is deleted (optimistic). */
+  onOwnerDeleted: () => void;
+  /** Owner-only: called after this card's listing is edited/republished. */
+  onOwnerSaved: () => void;
+}
+
 /** One product: image, title, summary, price, tags, and buy/message actions. */
-function ProductCard({ listing }: { listing: Listing }) {
+function ProductCard({ listing, onOwnerDeleted, onOwnerSaved }: ProductCardProps) {
   const { openContactPanel } = useContactPanel();
   const [imageFailed, setImageFailed] = useState(false);
   const image = listing.images[0];
@@ -342,6 +380,23 @@ function ProductCard({ listing }: { listing: Listing }) {
           <span className="shrink-0 text-sm font-semibold text-lime-500">
             {formatPrice(listing.price)}
           </span>
+        </div>
+
+        {/* Owner-only controls: edit / remove this listing in place. */}
+        <div className="flex items-center gap-2 empty:hidden">
+          {listing.visibility === 'hidden' && (
+            <Badge variant="secondary" className="bg-gray-800 text-gray-400">
+              Hidden
+            </Badge>
+          )}
+          <OwnerListingControls
+            pubkey={listing.pubkey}
+            dTag={listing.dTag}
+            title={listing.title}
+            variant="compact"
+            onDeleted={onOwnerDeleted}
+            onSaved={onOwnerSaved}
+          />
         </div>
 
         {listing.summary && (
