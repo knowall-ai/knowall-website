@@ -93,6 +93,11 @@ export function queryRelaysDetailed(
       socket.onmessage = (message) => {
         try {
           const data = JSON.parse(message.data as string) as [string, ...unknown[]];
+          // Only honour messages addressed to our subscription id: stray or
+          // malformed EVENT/EOSE frames must not contribute events or count
+          // as an authoritative answer (respondedRelays gates mute-list
+          // creation in lib/moderation.ts).
+          if (data[1] !== subscriptionId) return;
           if (data[0] === 'EVENT' && data[2] && typeof data[2] === 'object') {
             const event = data[2] as NostrEvent;
             if (typeof event.id === 'string') events.set(event.id, event);
