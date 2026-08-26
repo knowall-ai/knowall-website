@@ -337,7 +337,7 @@ We can make this a game! I'll ask you 20 questions to build you a brief and unde
     return (
       <Card
         data-testid="sallie-chat"
-        className="w-full shadow-xl border-0 bg-gray-900/90 backdrop-blur-sm"
+        className="w-full shadow-xl border-0 bg-gray-900/90 backdrop-blur-xs"
       >
         <CardHeader className="p-4 border-b border-gray-700 bg-lime-600/90 text-white rounded-t-lg">
           <div className="flex items-center gap-2">
@@ -365,7 +365,7 @@ We can make this a game! I'll ask you 20 questions to build you a brief and unde
   return (
     <Card
       data-testid="sallie-chat"
-      className="w-full shadow-xl border-0 bg-gray-900/90 backdrop-blur-sm"
+      className="w-full shadow-xl border-0 bg-gray-900/90 backdrop-blur-xs"
     >
       {/* Include the speech recognition component */}
       {speechRecognitionElement}

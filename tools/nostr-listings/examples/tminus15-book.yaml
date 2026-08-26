@@ -1,0 +1,32 @@
+# T-Minus-15 book listing — matches the live listing (d: tminus15-book).
+# Republish with:
+#   node tools/nostr-listings/cli.mjs publish tools/nostr-listings/examples/tminus15-book.yaml --yes
+d: tminus15-book
+title: 'T-Minus-15: Secrets of an Elite DevOps Team (paperback)'
+summary: >-
+  The T-Minus-15 methodology book — how elite DevOps teams take work from idea
+  to production in 15 days. Written by the team at KnowAll AI. £9.99 + P&P.
+price:
+  amount: '9.99'
+  currency: GBP
+# First-publish timestamp of the live listing — keeps published_at stable on republish.
+published_at: 1786555390
+tags:
+  - books
+  - devops
+  - tminus15
+  - merch
+images:
+  - https://www.knowall.ai/images/products/tminus15-book.png
+location: Ships from UK
+content: |-
+  **T-Minus-15: Secrets of an Elite DevOps Team**
+
+  The methodology we run KnowAll AI on — how elite DevOps teams take work from idea to production in 15 days, with the roles, ceremonies and tooling to do it. Paperback edition.
+
+  - Price: £9.99 (pay in sats at the day’s rate)
+  - P&P arranged on order — DM us your location for a shipping quote
+
+  **To order:** DM npub1kue7etfxtkxlv0s4u2xjf9epgxj7hssmlhc4x2k66tn8q8598zfqj322ar with your shipping address and we’ll send a Lightning invoice.
+
+  More about T-Minus-15: https://www.knowall.ai/#tminus15

@@ -57,6 +57,27 @@ export interface Listing {
   publishedAt: number;
   /** Event created_at — used to pick the newest version per d tag. */
   createdAt: number;
+  /**
+   * d-tags of the kind-30406 shipping zones this listing references via Gamma
+   * `shipping_option` tags ("30406:<pubkey>:<d>"). The product page resolves
+   * these against the merchant's shipping-zone events to show P&P.
+   */
+  shippingZoneIds: string[];
+}
+
+/** Gamma Markets shipping-option kind referenced by `shipping_option` tags. */
+const SHIPPING_OPTION_KIND = '30406';
+
+/** Zone d-tags from `shipping_option` coordinate refs (other kinds ignored). */
+function parseShippingZoneIds(event: NostrEvent): string[] {
+  const ids = event.tags
+    .filter((t) => t[0] === 'shipping_option' && typeof t[1] === 'string')
+    .map((t) => t[1].split(':'))
+    // slice(2).join(':') preserves d-tags that themselves contain ':'.
+    .filter((parts) => parts.length >= 3 && parts[0] === SHIPPING_OPTION_KIND)
+    .map((parts) => parts.slice(2).join(':'))
+    .filter(Boolean);
+  return [...new Set(ids)];
 }
 
 /** First value of the first tag with the given name, or null. */
@@ -119,6 +140,7 @@ export function parseListing(event: NostrEvent): Listing | null {
     publishedAt:
       Number.isFinite(publishedAtRaw) && publishedAtRaw > 0 ? publishedAtRaw : event.created_at,
     createdAt: event.created_at,
+    shippingZoneIds: parseShippingZoneIds(event),
   };
 }
 
@@ -174,14 +196,22 @@ const CURRENCY_SYMBOLS: Record<string, string> = {
   BTC: '₿',
 };
 
-/** "10,000 sats", "₿0.001", "$25", with an optional " / month" suffix. */
+/** "10,000 sats", "₿0.001", "$25.00", with an optional " / month" suffix.
+ *  Fiat renders with exactly two decimals ("£2.50", never "£2.5") so item
+ *  prices and shipping costs read consistently. */
 export function formatPrice(price: ListingPrice | null): string {
   if (!price) return 'Contact for price';
   const { amount, currency, frequency } = price;
   const isSats = currency === 'SATS' || currency === 'SAT';
-  const formattedAmount = amount.toLocaleString('en-US', {
-    maximumFractionDigits: isSats ? 0 : 8,
-  });
+  const isBtc = currency === 'BTC';
+  const formattedAmount = amount.toLocaleString(
+    'en-US',
+    isSats
+      ? { maximumFractionDigits: 0 }
+      : isBtc
+        ? { maximumFractionDigits: 8 }
+        : { minimumFractionDigits: 2, maximumFractionDigits: 2 }
+  );
   const symbol = CURRENCY_SYMBOLS[currency];
   const base = isSats
     ? `${formattedAmount} ${formattedAmount === '1' ? 'sat' : 'sats'}`

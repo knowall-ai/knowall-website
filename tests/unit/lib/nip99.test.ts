@@ -55,7 +55,22 @@ describe('parseListing', () => {
       stock: null,
       publishedAt: 1_700_000_000,
       createdAt: 1_700_000_000,
+      shippingZoneIds: [],
     });
+  });
+
+  it('parses shipping zone ids from Gamma shipping_option refs', () => {
+    const event = makeEvent({
+      tags: [
+        ...makeEvent().tags,
+        ['shipping_option', '30406:merchant-pubkey:ship-uk'],
+        ['shipping_option', '30406:merchant-pubkey:ship-uk'], // duplicate collapses
+        ['shipping_option', '30406:merchant-pubkey:ship:world'], // d tag containing ':'
+        ['shipping_option', '30405:merchant-pubkey:not-a-zone'], // wrong kind ignored
+        ['shipping_option', 'garbage'], // malformed ignored
+      ],
+    });
+    expect(parseListing(event)?.shippingZoneIds).toEqual(['ship-uk', 'ship:world']);
   });
 
   it('rejects events of the wrong kind', () => {
@@ -269,18 +284,19 @@ describe('formatPrice', () => {
     expect(formatPrice({ amount: 1, currency: 'SAT' })).toBe('1 sat');
   });
 
-  it('formats known currencies with their symbol', () => {
-    expect(formatPrice({ amount: 25, currency: 'USD' })).toBe('$25');
-    expect(formatPrice({ amount: 19.5, currency: 'GBP' })).toBe('£19.5');
+  it('formats known currencies with their symbol and two fiat decimals', () => {
+    expect(formatPrice({ amount: 25, currency: 'USD' })).toBe('$25.00');
+    expect(formatPrice({ amount: 19.5, currency: 'GBP' })).toBe('£19.50');
+    expect(formatPrice({ amount: 2.5, currency: 'GBP' })).toBe('£2.50');
     expect(formatPrice({ amount: 0.001, currency: 'BTC' })).toBe('₿0.001');
   });
 
   it('falls back to the currency code for unknown currencies', () => {
-    expect(formatPrice({ amount: 100, currency: 'CHF' })).toBe('100 CHF');
+    expect(formatPrice({ amount: 100, currency: 'CHF' })).toBe('100.00 CHF');
   });
 
   it('appends the frequency for recurring prices', () => {
-    expect(formatPrice({ amount: 5, currency: 'USD', frequency: 'month' })).toBe('$5 / month');
+    expect(formatPrice({ amount: 5, currency: 'USD', frequency: 'month' })).toBe('$5.00 / month');
   });
 
   it('falls back when there is no price', () => {

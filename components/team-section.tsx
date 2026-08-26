@@ -36,12 +36,6 @@ const teamMembers: TeamMember[] = [
     npub: 'npub1wdzc9uy9wggfjf8sz8tvj39utkgf0vj8874x05ptqkxf28sqqlnsxw2z0e',
     pubkey: '734582f08572109924f011d6c944bc5d9097b2473faa67d02b058c951e0007e7',
   },
-  {
-    name: 'Wilmer Salazar',
-    title: 'Bitcoin & AI Engineer',
-    npub: 'npub1cplxtxuqnrm26n3g0r0lt8w2jfkurwzu848hztf05ad0ds962syqgkq7nr',
-    pubkey: 'c07e659b8098f6ad4e2878dff59dca926dc1b85c3d4f712d2fa75af6c0ba5408',
-  },
 ];
 
 // purplepag.es is a dedicated profile aggregator; the others are general-purpose relays
