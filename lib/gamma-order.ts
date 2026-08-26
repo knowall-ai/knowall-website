@@ -143,10 +143,16 @@ export function createOrderTags(
   }
 
   // Shipping/contact info — PII, safe only because the whole rumor rides
-  // encrypted inside the gift wrap.
-  tags.push(['address', formatAddress(shipping)]);
-  tags.push(['email', shipping.email]);
-
+  // encrypted inside the gift wrap. All fields are optional at checkout, so
+  // only emit tags that carry a value: empty-string PII tags are ambiguous
+  // for the merchant to parse and needlessly bloat the encrypted payload.
+  const address = formatAddress(shipping);
+  if (address) {
+    tags.push(['address', address]);
+  }
+  if (shipping.email) {
+    tags.push(['email', shipping.email]);
+  }
   if (shipping.phone) {
     tags.push(['phone', shipping.phone]);
   }

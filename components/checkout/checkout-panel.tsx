@@ -94,6 +94,12 @@ export function CheckoutPanel({ open, onOpenChange }: CheckoutPanelProps) {
     if (open && isAwaitingPayment) setStep('payment');
   }, [open, isAwaitingPayment]);
 
+  // Skip the payment step if the receipt already landed. In an effect (not
+  // during render) so React never sees a render-phase state update.
+  useEffect(() => {
+    if (isPaid && step === 'payment') setStep('confirmation');
+  }, [isPaid, step]);
+
   const titles: Record<CheckoutStep, string> = {
     shipping: 'Checkout',
     payment: 'Payment',
@@ -104,11 +110,6 @@ export function CheckoutPanel({ open, onOpenChange }: CheckoutPanelProps) {
     payment: 'Pay the Lightning invoice to complete your order.',
     confirmation: 'Your order is confirmed.',
   };
-
-  // Skip the payment step if the receipt already landed.
-  if (isPaid && step === 'payment') {
-    setStep('confirmation');
-  }
 
   return (
     <Sheet open={open} onOpenChange={handleOpenChange}>

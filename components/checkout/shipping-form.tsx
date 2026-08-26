@@ -112,7 +112,7 @@ const shippingSchema = z.object({
   postalCode: z.string().max(20, 'Postcode is too long').optional(),
   email: z
     .string()
-    .email('Valid email is required')
+    .email('Enter a valid email address')
     .max(MAX_SHORT_FIELD, 'Email is too long')
     .optional()
     .or(z.literal('')),

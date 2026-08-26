@@ -40,9 +40,25 @@ export function PaymentDisplay({
   const [payError, setPayError] = useState<string | null>(null);
   const [webln, setWebln] = useState<WebLNProvider | null>(null);
 
-  // WebLN is injected by extensions after load; read it client-side only.
+  // WebLN is injected by extensions, sometimes only after our first render —
+  // poll briefly so a late-arriving provider still surfaces the one-click
+  // button, then stop. Client-side only.
   useEffect(() => {
-    setWebln(window.webln ?? null);
+    if (window.webln) {
+      setWebln(window.webln);
+      return;
+    }
+    let attempts = 0;
+    const timer = setInterval(() => {
+      attempts += 1;
+      if (window.webln) {
+        setWebln(window.webln);
+        clearInterval(timer);
+      } else if (attempts >= 10) {
+        clearInterval(timer);
+      }
+    }, 500);
+    return () => clearInterval(timer);
   }, []);
 
   const invoice = paymentRequest?.payment_options.find(

@@ -105,6 +105,25 @@ describe('createOrderTags', () => {
     );
     expect(tags.some((t) => t[0] === 'phone')).toBe(false);
   });
+
+  it('omits address and email tags when the optional fields are blank', () => {
+    const tags = createOrderTags(
+      'order-1',
+      [buildItem()],
+      buildShipping({
+        address: '',
+        city: '',
+        state: '',
+        postalCode: '',
+        country: '',
+        email: '',
+      }),
+      MERCHANT,
+      1000
+    );
+    expect(tags.some((t) => t[0] === 'address')).toBe(false);
+    expect(tags.some((t) => t[0] === 'email')).toBe(false);
+  });
 });
 
 describe('createPaymentReceiptTemplate', () => {
