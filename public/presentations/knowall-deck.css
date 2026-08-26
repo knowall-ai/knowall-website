@@ -139,6 +139,16 @@ section > .logo-light {
   height: 132px;
 }
 
+/* Opt-in modifier, not a new default. The white logo normally sits top right,
+   which works because every cover's artwork is dark in that corner — except
+   the Agentic AI Solutions cover, where a bright full moon sits directly
+   behind it and white-on-white reads badly (Ben, 2026-08-26). Move that one
+   logo to the top left, aligned with the cover copy's 96px gutter. */
+section > .logo-light--left {
+  right: auto;
+  left: 96px;
+}
+
 /* --- Header-band slides (house template) --------------------------- */
 /* The header used to be a full-width strip with a divider and a
    drop shadow, which made every content slide look like the same
