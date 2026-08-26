@@ -13,7 +13,12 @@ import {
   replacementCreatedAt,
   validateDefinition,
   withStatus,
+  DEFINITION_KEYS,
   LISTING_KIND,
+  MAX_PRICE_AMOUNT,
+  PRICE_AMOUNT_ERROR,
+  PRICE_KEYS,
+  STATUSES,
 } from '@/tools/nostr-listings/lib/listing.mjs';
 import { loadDefinition } from '@/tools/nostr-listings/lib/definition.mjs';
 
@@ -59,9 +64,9 @@ describe('validateDefinition', () => {
       })
     ).toEqual([
       '"d" must not contain whitespace (it is the stable listing identifier)',
-      '"price.amount" must be a non-negative finite number (e.g. 9.99 or 10000)',
+      PRICE_AMOUNT_ERROR,
       '"price.currency" must be a currency code (e.g. GBP, SATS)',
-      '"status" must be one of: active, sold, inactive',
+      `"status" must be one of: ${STATUSES.join(', ')}`,
       '"images" must be a list of strings (local file paths or https URLs)',
       '"tags" must be a list of strings',
       '"published_at" must be a positive unix timestamp in seconds (not milliseconds) when present',
@@ -78,8 +83,8 @@ describe('validateDefinition', () => {
       locaton: 'UK',
     });
     expect(errors).toEqual([
-      'unknown key "locaton" — allowed keys: d, title, summary, price, status, published_at, tags, images, location, content',
-      'unknown key "price.frequencyy" — allowed keys: amount, currency, frequency',
+      `unknown key "locaton" — allowed keys: ${DEFINITION_KEYS.join(', ')}`,
+      `unknown key "price.frequencyy" — allowed keys: ${PRICE_KEYS.join(', ')}`,
     ]);
   });
 
@@ -90,13 +95,20 @@ describe('validateDefinition', () => {
       summary: 'A thing for sale',
       content: 'Buy the thing',
     };
-    const amountError = '"price.amount" must be a non-negative finite number (e.g. 9.99 or 10000)';
+    const amountError = PRICE_AMOUNT_ERROR;
     expect(validateDefinition({ ...base, price: { amount: 'Infinity', currency: 'GBP' } })).toEqual(
       [amountError]
     );
     expect(validateDefinition({ ...base, price: { amount: -5, currency: 'GBP' } })).toEqual([
       amountError,
     ]);
+    // finite but absurd: Number('1e308') passes isFinite, so the cap has to catch it
+    expect(validateDefinition({ ...base, price: { amount: '1e308', currency: 'GBP' } })).toEqual([
+      amountError,
+    ]);
+    expect(
+      validateDefinition({ ...base, price: { amount: MAX_PRICE_AMOUNT, currency: 'GBP' } })
+    ).toEqual([]);
     // milliseconds instead of seconds (beyond year 2100) must be rejected
     expect(
       validateDefinition({
@@ -243,6 +255,13 @@ describe('eventToListing / latestByDtag / withStatus', () => {
     expect(latest.size).toBe(2);
     expect(latest.get('widget')!.created_at).toBe(1700000100);
     expect(latest.get('other')!.created_at).toBe(5);
+  });
+
+  it('latestByDtag breaks created_at ties on the lower event id (NIP-01), whatever the relay order', () => {
+    const a = { ...event, id: 'aaa', tags: [...event.tags] };
+    const b = { ...event, id: 'bbb', tags: [...event.tags] };
+    expect(latestByDtag([a, b]).get('widget')!.id).toBe('aaa');
+    expect(latestByDtag([b, a]).get('widget')!.id).toBe('aaa');
   });
 
   it('withStatus replaces the status tag, keeps published_at, refreshes created_at', () => {

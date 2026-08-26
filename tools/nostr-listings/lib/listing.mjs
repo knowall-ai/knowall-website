@@ -6,7 +6,7 @@ export const LISTING_KIND = 30402;
 
 export const STATUSES = ['active', 'sold', 'inactive'];
 
-const DEFINITION_KEYS = [
+export const DEFINITION_KEYS = [
   'd',
   'title',
   'summary',
@@ -18,10 +18,21 @@ const DEFINITION_KEYS = [
   'location',
   'content',
 ];
-const PRICE_KEYS = ['amount', 'currency', 'frequency'];
+export const PRICE_KEYS = ['amount', 'currency', 'frequency'];
 
 /** Upper bound for published_at (2100-01-01 UTC) — catches ms-instead-of-s mistakes. */
 export const MAX_PUBLISHED_AT = 4102444800;
+
+/**
+ * Upper bound for price.amount. Number('1e308') is finite, so without a cap an
+ * absurd amount would be signed into the price tag; past MAX_SAFE_INTEGER the
+ * value also stops round-tripping through Number(), so the tag could no longer
+ * match what the definition asked for.
+ */
+export const MAX_PRICE_AMOUNT = Number.MAX_SAFE_INTEGER;
+
+/** Validation message for a bad price.amount (exported so tests can't drift from it). */
+export const PRICE_AMOUNT_ERROR = `"price.amount" must be a non-negative finite number no greater than ${MAX_PRICE_AMOUNT} (e.g. 9.99 or 10000)`;
 
 /** True when an images[] entry is already a hosted URL (kept as-is on publish). */
 export function isRemoteImage(image) {
@@ -63,9 +74,10 @@ export function validateDefinition(def) {
       (typeof amount !== 'string' && typeof amount !== 'number') ||
       String(amount).trim() === '' ||
       !Number.isFinite(Number(amount)) ||
-      Number(amount) < 0
+      Number(amount) < 0 ||
+      Number(amount) > MAX_PRICE_AMOUNT
     ) {
-      errors.push('"price.amount" must be a non-negative finite number (e.g. 9.99 or 10000)');
+      errors.push(PRICE_AMOUNT_ERROR);
     }
     if (typeof def.price.currency !== 'string' || def.price.currency.trim() === '') {
       errors.push('"price.currency" must be a currency code (e.g. GBP, SATS)');
@@ -174,9 +186,22 @@ export function latestByDtag(events) {
     const d = tagValue(event, 'd');
     if (d === undefined) continue;
     const current = latest.get(d);
-    if (!current || event.created_at > current.created_at) latest.set(d, event);
+    if (!current || isNewerRevision(event, current)) latest.set(d, event);
   }
   return latest;
+}
+
+/**
+ * NIP-01 revision ordering for addressable events: the newer created_at wins,
+ * and ties are broken by keeping the lexicographically LOWER event id. Relays
+ * return revisions in arbitrary order, so without the tiebreak two events
+ * sharing a created_at would resolve differently from run to run.
+ */
+function isNewerRevision(candidate, current) {
+  if (candidate.created_at !== current.created_at) {
+    return candidate.created_at > current.created_at;
+  }
+  return String(candidate.id ?? '') < String(current.id ?? '');
 }
 
 /**
