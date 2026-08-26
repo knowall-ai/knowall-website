@@ -19,7 +19,7 @@ import { Label } from '@/components/ui/label';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useContactPanel } from '@/components/contact-panel';
 import { OwnerListingControls } from '@/components/admin/owner-listing-controls';
-import { CheckoutDialog } from '@/components/checkout/checkout-dialog';
+import { CheckoutPanel } from '@/components/checkout/checkout-panel';
 import ProductShipping from '@/components/product-shipping';
 import { useCart } from '@/hooks/use-cart';
 import { useShopOwner } from '@/hooks/use-shop-admin';
@@ -418,7 +418,7 @@ function ProductView({ naddr, listing, onOwnerSaved, onOwnerDeleted }: ProductVi
           </p>
 
           {/* Buy It Now jumps straight to this checkout with the item added. */}
-          <CheckoutDialog open={checkoutOpen} onOpenChange={setCheckoutOpen} />
+          <CheckoutPanel open={checkoutOpen} onOpenChange={setCheckoutOpen} />
 
           {listing.description && (
             <section className="mt-4">

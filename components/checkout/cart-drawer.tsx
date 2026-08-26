@@ -15,7 +15,7 @@ import { Separator } from '@/components/ui/separator';
 import { useCart } from '@/hooks/use-cart';
 import type { CartItem } from '@/lib/cart';
 import { formatPrice } from '@/lib/nip99';
-import { CheckoutDialog } from './checkout-dialog';
+import { CheckoutPanel } from './checkout-panel';
 
 /**
  * Slide-out shopping cart, ported from robotechy.com's CartDrawer (+ its
@@ -28,8 +28,8 @@ export function CartDrawer() {
 
   const handleCheckout = () => {
     setIsOpen(false);
-    // Let the sheet's close animation finish before opening the dialog, so
-    // the two focus traps never overlap (robotechy's aria-hidden fix).
+    // Let the drawer's close animation finish before sliding the checkout
+    // panel in, so the two focus traps never overlap.
     setTimeout(() => setCheckoutOpen(true), 350);
   };
 
@@ -42,7 +42,7 @@ export function CartDrawer() {
         >
           <SheetHeader className="border-b border-gray-800 p-4">
             <SheetTitle className="flex items-center gap-2 text-white">
-              <ShoppingBag className="h-5 w-5" />
+              <ShoppingBag className="h-5 w-5 text-lime-500" aria-hidden="true" />
               Shopping Cart
               {totalItems > 0 && (
                 <span className="text-sm font-normal text-gray-400">
@@ -94,7 +94,7 @@ export function CartDrawer() {
         </SheetContent>
       </Sheet>
 
-      <CheckoutDialog open={checkoutOpen} onOpenChange={setCheckoutOpen} />
+      <CheckoutPanel open={checkoutOpen} onOpenChange={setCheckoutOpen} />
     </>
   );
 }
