@@ -13,22 +13,22 @@ reviews:
     drafts: false
   path_filters:
     # Generated / binary / vendored content — not worth review tokens
-    - "!docs/screenshots/**"
-    - "!public/presentations/vendor/**"
-    - "!public/images/**"
-    - "!package-lock.json"
-    - "!logs/**"
+    - '!docs/screenshots/**'
+    - '!public/presentations/vendor/**'
+    - '!public/images/**'
+    - '!package-lock.json'
+    - '!logs/**'
   path_instructions:
-    - path: "app/**/*.tsx"
+    - path: 'app/**/*.tsx'
       instructions: >-
         Next.js 15 App Router with a custom server.js. Watch client/server
         component boundaries and that no secrets reach client components.
-    - path: "components/**/*.tsx"
+    - path: 'components/**/*.tsx'
       instructions: >-
         Nostr-native site: events must be signature-verified where trust
         matters, replaceable events must merge (fetch-latest) rather than
         clobber, and relay fetches should fail open for public content.
-    - path: "tools/**"
+    - path: 'tools/**'
       instructions: >-
         Node ESM CLI tooling. Signing goes through Amber (NIP-46) with a
         human approval step — flag anything that could sign or publish
