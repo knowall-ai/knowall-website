@@ -55,7 +55,9 @@ function isAuthentic(event: NostrEvent): boolean {
  * Pick the company's current mute list out of a relay result: kind 10000 is
  * replaceable, so the newest VERIFIED event by the expected author wins
  * (stale relays may still serve older revisions; hostile ones may serve
- * forgeries, which fail signature verification and are ignored).
+ * forgeries, which fail signature verification and are ignored). Ties on
+ * created_at follow NIP-01's replaceable-event rule: the lexically lower id
+ * is the retained revision.
  */
 export function selectMuteList(
   events: NostrEvent[],
@@ -64,7 +66,10 @@ export function selectMuteList(
   let newest: NostrEvent | null = null;
   for (const event of events) {
     if (event.kind !== MUTE_LIST_KIND || event.pubkey !== author) continue;
-    if (newest && event.created_at <= newest.created_at) continue;
+    if (newest) {
+      if (event.created_at < newest.created_at) continue;
+      if (event.created_at === newest.created_at && event.id >= newest.id) continue;
+    }
     if (!isAuthentic(event)) continue;
     newest = event;
   }
@@ -115,9 +120,13 @@ export function filterBlocked<T extends Pick<NostrEvent, 'pubkey' | 'id'>>(
  * verbatim (content holds any NIP-51 private mutes; foreign tag types are
  * preserved untouched). The new `p` tag is appended only when not already
  * present. Passing `current: null` starts a fresh list.
+ *
+ * The replacement is stamped strictly later than the current revision: a
+ * same-second replacement would be tie-broken by lexical event id (NIP-01),
+ * so a rapid consecutive mute could otherwise silently lose.
  */
 export function buildMuteListTemplate(
-  current: Pick<NostrEvent, 'tags' | 'content'> | null,
+  current: Pick<NostrEvent, 'tags' | 'content' | 'created_at'> | null,
   pubkey: string,
   now: number = Math.floor(Date.now() / 1000)
 ): EventTemplate {
@@ -129,7 +138,7 @@ export function buildMuteListTemplate(
   if (!alreadyMuted) tags.push(['p', normalized]);
   return {
     kind: MUTE_LIST_KIND,
-    created_at: now,
+    created_at: Math.max(now, (current?.created_at ?? 0) + 1),
     tags,
     content: current?.content ?? '',
   };

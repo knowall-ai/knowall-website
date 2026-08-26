@@ -81,6 +81,13 @@ describe('selectMuteList', () => {
     expect(selectMuteList([wrongKind, wrongAuthor])).toBeNull();
   });
 
+  it('tie-breaks equal timestamps by the lexically lower id (NIP-01)', () => {
+    const lowerId = makeMuteList({ id: '1'.repeat(64), created_at: 100 });
+    const higherId = makeMuteList({ id: '2'.repeat(64), created_at: 100 });
+    expect(selectMuteList([lowerId, higherId])).toBe(lowerId);
+    expect(selectMuteList([higherId, lowerId])).toBe(lowerId);
+  });
+
   it('rejects a forged newer event that fails signature verification', () => {
     const genuine = makeMuteList({ id: '1'.repeat(64), created_at: 100 });
     const forgedNewer = makeMuteList({ id: '2'.repeat(64), created_at: 200, sig: 'a'.repeat(128) });
@@ -188,6 +195,14 @@ describe('buildMuteListTemplate', () => {
     const current = makeMuteList({ tags: [['p', MUTED_PUBKEY]] });
     const template = buildMuteListTemplate(current, MUTED_PUBKEY.toUpperCase(), 1234);
     expect(template.tags).toEqual([['p', MUTED_PUBKEY]]);
+  });
+
+  it('stamps the replacement strictly later than the current revision', () => {
+    // A same-second replacement would lose NIP-01's lexical-id tie-break half
+    // the time, so a rapid consecutive mute must advance created_at.
+    const current = makeMuteList({ created_at: 1234 });
+    expect(buildMuteListTemplate(current, OTHER_PUBKEY, 1234).created_at).toBe(1235);
+    expect(buildMuteListTemplate(current, OTHER_PUBKEY, 9999).created_at).toBe(9999);
   });
 
   it('starts a fresh list when there is no current mute list', () => {

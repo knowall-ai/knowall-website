@@ -49,8 +49,10 @@ export default function StoryComments({
   const [mutingPubkey, setMutingPubkey] = useState<string | null>(null);
   const [muteError, setMuteError] = useState<string | null>(null);
 
-  // The in-site mute action is for the company account only.
-  const isCompanyViewer = user?.pubkey === KNOWALL_PUBKEY;
+  // The in-site mute action is for the company account only. The NIP-07
+  // extension may return the pubkey in either case (the auth provider accepts
+  // both), so normalise before comparing.
+  const isCompanyViewer = user?.pubkey.toLowerCase() === KNOWALL_PUBKEY;
 
   const handleMute = async (pubkey: string) => {
     if (mutingPubkey) return;
@@ -127,7 +129,7 @@ export default function StoryComments({
               reply={reply}
               metadata={profiles.get(reply.pubkey)}
               onMute={
-                isCompanyViewer && reply.pubkey !== KNOWALL_PUBKEY
+                isCompanyViewer && reply.pubkey.toLowerCase() !== KNOWALL_PUBKEY
                   ? () => handleMute(reply.pubkey)
                   : undefined
               }
