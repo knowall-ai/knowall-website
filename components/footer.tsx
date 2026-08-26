@@ -2,6 +2,7 @@ import Link from 'next/link';
 import Logo from '@/components/logo';
 import NostrLogo from '@/components/nostr-logo';
 import GithubIcon from '@/components/github-icon';
+import { POLICY_LINKS } from '@/lib/policy-links';
 
 interface FooterProps {
   darkMode?: boolean;
@@ -177,6 +178,17 @@ export default function Footer({ darkMode = false }: FooterProps) {
         </div>
 
         <div className="mt-12 pt-8 border-t border-gray-800 text-center text-gray-400">
+          {/* Shop policies — same footer-links pattern as our other Nostr shops. */}
+          <p className="mb-4 text-sm">
+            {POLICY_LINKS.map((link, i) => (
+              <span key={link.path}>
+                {i > 0 && <span className="mx-2 text-gray-600">&middot;</span>}
+                <Link href={link.path} className="hover:text-white transition-colors">
+                  {link.label}
+                </Link>
+              </span>
+            ))}
+          </p>
           <p>&copy; KnowAll AI Ltd. All rights reserved.</p>
           {process.env.NEXT_PUBLIC_APP_VERSION && (
             <p className="mt-1 text-xs text-gray-500">v{process.env.NEXT_PUBLIC_APP_VERSION}</p>
