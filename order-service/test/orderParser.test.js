@@ -6,7 +6,16 @@
 
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { parsePaymentReceipt, receiptDedupKey, PAYMENT_RECEIPT_KIND } from '../lib/orderParser.js';
+import {
+  MAX_ORDER_SATS,
+  parseOrderEvent,
+  parsePaymentReceipt,
+  parseSatAmount,
+  receiptDedupKey,
+  ORDER_MESSAGE_TYPE,
+  ORDER_PROCESS_KIND,
+  PAYMENT_RECEIPT_KIND,
+} from '../lib/orderParser.js';
 
 const now = () => Math.floor(Date.now() / 1000);
 
@@ -47,4 +56,42 @@ test('receiptDedupKey differs for distinct receipts (legit receipts not skipped)
 
   const keys = new Set([receiptDedupKey(r1), receiptDedupKey(r2), receiptDedupKey(r3)]);
   assert.equal(keys.size, 3, 'distinct order or preimage must produce distinct keys');
+});
+
+function buildOrderRumor(amount, orderId = 'order-1') {
+  return {
+    kind: ORDER_PROCESS_KIND,
+    pubkey: 'b'.repeat(64),
+    content: '',
+    tags: [
+      ['type', ORDER_MESSAGE_TYPE.ORDER_CREATION],
+      ['order', orderId],
+      ['amount', amount],
+      ['item', '30402:pk:book', '1'],
+    ],
+  };
+}
+
+test('parseSatAmount accepts only plain, safe, positive integers within the cap', () => {
+  assert.equal(parseSatAmount('1000'), 1000);
+  assert.equal(parseSatAmount(String(MAX_ORDER_SATS)), MAX_ORDER_SATS);
+  assert.equal(parseSatAmount(String(MAX_ORDER_SATS + 1)), null);
+  assert.equal(parseSatAmount('0'), null);
+  assert.equal(parseSatAmount('-5'), null);
+  assert.equal(parseSatAmount('100abc'), null);
+  assert.equal(parseSatAmount('1e3'), null);
+  assert.equal(parseSatAmount('10.5'), null);
+  assert.equal(parseSatAmount(''), null);
+  assert.equal(parseSatAmount(undefined), null);
+  assert.equal(parseSatAmount('9'.repeat(320)), null);
+});
+
+test('parseOrderEvent rejects orders with malformed or oversized amounts', () => {
+  assert.ok(parseOrderEvent(buildOrderRumor('5000')), 'valid amount parses');
+  assert.equal(parseOrderEvent(buildOrderRumor('100abc')), null);
+  assert.equal(parseOrderEvent(buildOrderRumor('-1')), null);
+  assert.equal(parseOrderEvent(buildOrderRumor('0')), null);
+  assert.equal(parseOrderEvent(buildOrderRumor(String(MAX_ORDER_SATS + 1))), null);
+  // An empty order id is rejected too.
+  assert.equal(parseOrderEvent(buildOrderRumor('5000', '')), null);
 });

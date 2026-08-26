@@ -58,6 +58,13 @@ const TWO_DAYS_IN_SECONDS = 2 * 24 * 60 * 60;
 // wraps re-fetched by the lookback `since` filter.
 const processedStore = new ProcessedStore(undefined, TWO_DAYS_IN_SECONDS);
 
+// Orders currently being processed. Claimed synchronously (before the first
+// await) so two gift wraps carrying the same orderId can never both generate
+// an invoice — but NOT persisted: a transiently failed attempt must stay
+// retryable on the next re-delivery instead of being dropped for the whole
+// lookback window.
+const inFlightOrders = new Set();
+
 /**
  * Format a human-readable note to ride inside the gift-wrapped payment request
  * rumor's `content` field (structured invoice data lives in the rumor tags).
@@ -125,21 +132,28 @@ export async function handleOrder(
     return;
   }
 
-  // Skip if already processed (persisted across restarts to avoid re-invoicing)
-  if (store.hasOrder(order.orderId)) {
+  // Skip if already processed (persisted across restarts to avoid
+  // re-invoicing) or currently being processed (same-order gift wrap arriving
+  // twice within one poll window).
+  if (store.hasOrder(order.orderId) || inFlightOrders.has(order.orderId)) {
     console.log(`[Order] Skipping duplicate order ${order.orderId.slice(0, 8)}`);
     return;
   }
-  store.addOrder(order.orderId);
+  inFlightOrders.add(order.orderId);
 
+  // No PII in service logs: the buyer's address/email/note stay inside the
+  // encrypted order event — stdout may be collected and retained elsewhere,
+  // so only presence is logged.
   console.log(`[Order] New order received!`);
   console.log(`  Order ID: ${order.orderId.slice(0, 8)}`);
   console.log(`  Buyer: ${order.buyerPubkey.slice(0, 8)}...`);
   console.log(`  Amount: ${order.amount} sats`);
   console.log(`  Items: ${order.items.length}`);
-  if (order.address) console.log(`  Address: ${order.address}`);
-  if (order.email) console.log(`  Email: ${order.email}`);
-  if (order.message) console.log(`  Message: ${order.message}`);
+  console.log(
+    `  Shipping details: address ${order.address ? 'provided' : 'none'}, email ${
+      order.email ? 'provided' : 'none'
+    }, note ${order.message ? 'provided' : 'none'}`
+  );
 
   try {
     // Generate Lightning invoice
@@ -161,6 +175,22 @@ export async function handleOrder(
     console.log(`[Order] Sending gift-wrapped payment request to buyer...`);
     await nostrClient.sendGiftWrap(order.buyerPubkey, paymentRequestRumor);
 
+    // The payment request is delivered — the order is genuinely handled, so
+    // NOW persist the dedup entry (persisting earlier would let a transient
+    // invoice/publish failure drop the order for the whole lookback window;
+    // persisting later would let a failed kind-14 note re-invoice the buyer).
+    try {
+      store.addOrder(order.orderId);
+    } catch (persistError) {
+      // The invoice is already with the buyer and cannot be unsent. Losing
+      // durability here risks a duplicate payment request after a restart —
+      // shout, keep going (the in-memory entry still dedups this process).
+      console.error(
+        `[Order] CRITICAL: failed to persist dedup entry for ${order.orderId.slice(0, 8)} — a restart may re-invoice this order:`,
+        persistError.message
+      );
+    }
+
     // ALSO deliver the SAME invoice as a gift-wrapped NIP-17 kind-14 chat note.
     // Generic NIP-17 clients (0xchat, Amethyst DM view) can't render the kind-16
     // order card, so they'd never show the invoice; the kind-14 fallback makes the
@@ -177,12 +207,27 @@ export async function handleOrder(
       ],
     };
 
-    console.log(`[Order] Sending gift-wrapped kind-14 invoice note to buyer...`);
-    await nostrClient.sendGiftWrap(order.buyerPubkey, invoiceChatRumor);
+    // Best-effort: the kind-16 card above is the authoritative delivery; a
+    // failed chat-note copy must not mark the order unprocessed (that would
+    // regenerate the invoice on retry and reintroduce the divergence bug).
+    try {
+      console.log(`[Order] Sending gift-wrapped kind-14 invoice note to buyer...`);
+      await nostrClient.sendGiftWrap(order.buyerPubkey, invoiceChatRumor);
+    } catch (noteError) {
+      console.warn(`[Order] Failed to send kind-14 invoice note (non-fatal):`, noteError.message);
+    }
 
     console.log(`[Order] ✓ Order ${order.orderId.slice(0, 8)} processed - payment request sent`);
   } catch (error) {
-    console.error(`[Order] ✗ Failed to process order ${order.orderId.slice(0, 8)}:`, error.message);
+    // Not persisted as processed — the next re-delivery within the lookback
+    // window retries from scratch (a fresh invoice; the failed one was never
+    // delivered to the buyer, so no divergence).
+    console.error(
+      `[Order] ✗ Failed to process order ${order.orderId.slice(0, 8)} (will retry on next delivery):`,
+      error.message
+    );
+  } finally {
+    inFlightOrders.delete(order.orderId);
   }
 }
 
@@ -207,7 +252,12 @@ async function handlePaymentReceipt(event, nostrClient) {
     console.log(`[Payment] Skipping duplicate receipt for order ${receipt.orderId.slice(0, 8)}`);
     return;
   }
-  processedStore.addReceipt(receiptKey);
+  try {
+    processedStore.addReceipt(receiptKey);
+  } catch (persistError) {
+    // Worst case after a restart is a duplicate thank-you note — log and go on.
+    console.warn(`[Payment] Failed to persist receipt dedup entry:`, persistError.message);
+  }
 
   console.log(`[Payment] Payment received!`);
   console.log(`  Order ID: ${receipt.orderId.slice(0, 8)}`);
@@ -311,10 +361,17 @@ async function main() {
 
       const typeTag = rumor.tags?.find((t) => t[0] === 'type');
 
+      // Terminal catches: a malformed rumor throwing inside a handler must
+      // stay contained here — an unhandled rejection would take down the
+      // whole service via the global handler's process.exit(1).
       if (rumor.kind === ORDER_PROCESS_KIND && typeTag?.[1] === ORDER_MESSAGE_TYPE.ORDER_CREATION) {
-        handleOrder(rumor, nostrClient);
+        handleOrder(rumor, nostrClient).catch((error) =>
+          console.error('[Order] Unhandled error while processing order:', error)
+        );
       } else if (rumor.kind === PAYMENT_RECEIPT_KIND) {
-        handlePaymentReceipt(rumor, nostrClient);
+        handlePaymentReceipt(rumor, nostrClient).catch((error) =>
+          console.error('[Payment] Unhandled error while processing receipt:', error)
+        );
       } else {
         console.log(
           `[Nostr] Ignoring gift wrap with inner kind ${rumor.kind}${typeTag ? ` type ${typeTag[1]}` : ''}`

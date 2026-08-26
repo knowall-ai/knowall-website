@@ -14,6 +14,24 @@ export const ORDER_MESSAGE_TYPE = {
   SHIPPING_UPDATE: '4',
 };
 
+// Sanity cap on an order's sat amount (0.1 BTC). Orders are placed by
+// untrusted buyers; a plain, safe, positive integer within this cap is
+// required before any invoice is generated.
+export const MAX_ORDER_SATS = 10_000_000;
+
+/**
+ * Strictly parse an untrusted sat amount: plain digits only, safe integer,
+ * positive, within MAX_ORDER_SATS. Returns null for anything else — parseInt
+ * would accept partial junk ("100abc") and unbounded magnitudes.
+ * @param {unknown} raw
+ * @returns {number | null}
+ */
+export function parseSatAmount(raw) {
+  if (typeof raw !== 'string' || !/^\d+$/.test(raw)) return null;
+  const value = Number(raw);
+  return Number.isSafeInteger(value) && value > 0 && value <= MAX_ORDER_SATS ? value : null;
+}
+
 /**
  * Parse a Kind 16 Type 1 order event
  * @param {import('nostr-tools').Event} event
@@ -35,8 +53,16 @@ export function parseOrderEvent(event) {
   const emailTag = event.tags.find((t) => t[0] === 'email');
   const phoneTag = event.tags.find((t) => t[0] === 'phone');
 
-  if (!orderTag || !amountTag) {
+  if (!orderTag?.[1] || !amountTag) {
     console.warn('[OrderParser] Missing required order or amount tag');
+    return null;
+  }
+
+  // The amount is buyer-supplied and flows into invoice generation: require a
+  // plain, safe, positive integer within the cap or reject the whole order.
+  const amount = parseSatAmount(amountTag[1]);
+  if (amount === null) {
+    console.warn('[OrderParser] Rejecting order with invalid amount tag');
     return null;
   }
 
@@ -50,7 +76,7 @@ export function parseOrderEvent(event) {
   return {
     orderId: orderTag[1],
     buyerPubkey: event.pubkey,
-    amount: parseInt(amountTag[1], 10),
+    amount,
     items,
     address: addressTag?.[1] || '',
     email: emailTag?.[1] || '',
@@ -84,7 +110,8 @@ export function parsePaymentReceipt(event) {
     paymentType: paymentTag[1], // 'lightning' or 'bitcoin'
     invoice: paymentTag[2], // BOLT11 invoice
     preimage: paymentTag[3], // Payment preimage (proof)
-    amount: parseInt(amountTag?.[1], 10) || 0,
+    // Informational only (nothing is invoiced from it) — safe-parse to 0.
+    amount: parseSatAmount(amountTag?.[1]) ?? 0,
   };
 }
 

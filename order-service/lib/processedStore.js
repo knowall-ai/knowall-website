@@ -108,6 +108,10 @@ export class ProcessedStore {
       } catch {
         // ignore
       }
+      // Propagate: callers must not treat an add as durable when it wasn't —
+      // the in-memory entry is kept, so this process still dedups; the caller
+      // decides how loudly to react to the lost durability.
+      throw error;
     }
   }
 

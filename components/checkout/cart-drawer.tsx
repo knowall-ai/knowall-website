@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ImageIcon, Minus, Plus, ShoppingBag, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -25,13 +25,26 @@ import { CheckoutPanel } from './checkout-panel';
 export function CartDrawer() {
   const { items, isOpen, setIsOpen, totalItems, clearCart } = useCart();
   const [checkoutOpen, setCheckoutOpen] = useState(false);
+  const checkoutTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const handleCheckout = () => {
     setIsOpen(false);
     // Let the drawer's close animation finish before sliding the checkout
-    // panel in, so the two focus traps never overlap.
-    setTimeout(() => setCheckoutOpen(true), 350);
+    // panel in, so the two focus traps never overlap. Tracked in a ref so a
+    // rapid second click or an unmount can cancel the pending open.
+    if (checkoutTimerRef.current) clearTimeout(checkoutTimerRef.current);
+    checkoutTimerRef.current = setTimeout(() => {
+      checkoutTimerRef.current = null;
+      setCheckoutOpen(true);
+    }, 350);
   };
+
+  // Never open the checkout after unmount.
+  useEffect(() => {
+    return () => {
+      if (checkoutTimerRef.current) clearTimeout(checkoutTimerRef.current);
+    };
+  }, []);
 
   return (
     <>

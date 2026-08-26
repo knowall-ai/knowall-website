@@ -161,14 +161,20 @@ export class NostrClient {
     const results = await Promise.allSettled(
       relays.map(async (relay) => {
         try {
-          await this.pool.publish([relay], event);
+          // SimplePool.publish returns Promise<string>[] — awaiting the bare
+          // array would "succeed" instantly and leak rejections; Promise.any
+          // over the (single-relay) array awaits the actual relay result.
+          await Promise.any(this.pool.publish([relay], event));
           return { relay, success: true };
         } catch (err) {
+          // Promise.any rejects with an AggregateError — unwrap to the real
+          // relay error so the paid-relay check below still matches.
+          const cause = err instanceof AggregateError ? (err.errors[0] ?? err) : err;
           // Ignore paid relay errors silently
-          if (err.message?.includes('restricted') || err.message?.includes('Pay on')) {
+          if (cause.message?.includes('restricted') || cause.message?.includes('Pay on')) {
             return { relay, success: false, paid: true };
           }
-          throw err;
+          throw cause;
         }
       })
     );
@@ -318,13 +324,16 @@ export class NostrClient {
     const results = await Promise.allSettled(
       targetRelays.map(async (relay) => {
         try {
-          await this.pool.publish([relay], giftWrap);
+          // Same Promise<string>[] contract as publishEvent above.
+          await Promise.any(this.pool.publish([relay], giftWrap));
           return { relay, success: true };
         } catch (err) {
-          if (err.message?.includes('restricted') || err.message?.includes('Pay on')) {
+          // Unwrap Promise.any's AggregateError to the real relay error.
+          const cause = err instanceof AggregateError ? (err.errors[0] ?? err) : err;
+          if (cause.message?.includes('restricted') || cause.message?.includes('Pay on')) {
             return { relay, success: false, paid: true };
           }
-          throw err;
+          throw cause;
         }
       })
     );

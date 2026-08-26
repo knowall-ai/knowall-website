@@ -37,6 +37,7 @@ process.env.ORDER_SERVICE_KEY ||= 'a'.repeat(64);
 process.env.LIGHTNING_ADDRESS ||= 'shop@example.com';
 
 const { handleOrder } = await import('../index.js');
+const { ORDER_MESSAGE_TYPE } = await import('../lib/orderParser.js');
 
 // A recognisable BOLT11 the injected provider returns. The test asserts THIS
 // exact string is the one embedded in the payment-request event (the invoice the
@@ -60,7 +61,7 @@ function buildOrderRumor({ buyerPubkey = randomPubkey(), amount = 5000 } = {}) {
     pubkey: buyerPubkey,
     content: 'Please send my book order',
     tags: [
-      ['type', '1'], // ORDER_MESSAGE_TYPE.ORDER_CREATION
+      ['type', ORDER_MESSAGE_TYPE.ORDER_CREATION],
       ['order', orderId],
       ['amount', String(amount)],
       ['item', '30402:somepubkey:tminus15-book', '1'],
@@ -166,7 +167,11 @@ test('the kind-16 card and the kind-14 note both carry the IDENTICAL invoice gen
   const cards = giftWrapsOfKind(nostrClient, 16);
   assert.equal(cards.length, 1, 'exactly one kind-16 payment-request card sent');
   const card = cards[0].rumor;
-  assert.equal(tagValue(card, 'type'), '2', 'Kind 16 Type 2 = payment request');
+  assert.equal(
+    tagValue(card, 'type'),
+    ORDER_MESSAGE_TYPE.PAYMENT_REQUEST,
+    'Kind 16 Type 2 = payment request'
+  );
   const paymentTag = paymentTagOf(card);
   assert.ok(paymentTag, 'payment-request card has a payment tag');
   assert.equal(paymentTag[1], 'lightning', 'payment method is lightning');
@@ -248,4 +253,49 @@ test('a duplicate order is skipped — no second invoice and no further gift wra
     2,
     'a replayed order must not send any further gift wraps (still just the original card + note)'
   );
+});
+
+test('a transient invoice failure leaves the order retryable — nothing persisted, retry succeeds', async () => {
+  const order = buildOrderRumor();
+  const orderId = tagValue(order, 'order');
+  const failingInvoice = async () => {
+    throw new Error('LNURL 502');
+  };
+
+  await handleOrder(order, nostrClient, { generateInvoice: failingInvoice, store });
+  assert.equal(nostrClient.giftWraps.length, 0, 'nothing is sent when the invoice fails');
+  assert.equal(store.hasOrder(orderId), false, 'a failed order must NOT be marked processed');
+
+  // The next re-delivery retries from scratch and succeeds.
+  await handleOrder(order, nostrClient, { generateInvoice: generateInvoiceSpy, store });
+  assert.equal(generateInvoiceSpy.calls.length, 1, 'retry generates the (one) invoice');
+  assert.equal(nostrClient.giftWraps.length, 2, 'retry delivers card + note');
+  assert.equal(store.hasOrder(orderId), true, 'only a delivered order is marked processed');
+});
+
+test('a failed kind-14 note is non-fatal — the delivered card marks the order processed (no re-invoice)', async () => {
+  const order = buildOrderRumor();
+  const orderId = tagValue(order, 'order');
+  // Card (first sendGiftWrap) succeeds; the kind-14 note (second) fails.
+  let sends = 0;
+  const flakyClient = {
+    giftWraps: [],
+    dms: [],
+    async sendGiftWrap(recipientPubkey, rumor) {
+      sends += 1;
+      if (sends === 2) throw new Error('publish timed out');
+      this.giftWraps.push({ recipientPubkey, rumor });
+    },
+    async sendDM() {
+      throw new Error('must not be called');
+    },
+  };
+
+  await handleOrder(order, flakyClient, { generateInvoice: generateInvoiceSpy, store });
+  assert.equal(flakyClient.giftWraps.length, 1, 'the kind-16 card was delivered');
+  assert.equal(store.hasOrder(orderId), true, 'card delivery marks the order processed');
+
+  // A re-delivery must NOT regenerate the invoice (divergence protection).
+  await handleOrder(order, flakyClient, { generateInvoice: generateInvoiceSpy, store });
+  assert.equal(generateInvoiceSpy.calls.length, 1, 'no second invoice after a note-only failure');
 });

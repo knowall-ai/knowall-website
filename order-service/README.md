@@ -5,7 +5,7 @@ A standalone Node daemon (ported from robotechy.com's order-service) that answer
 1. **Kind 16 type 1 (order creation)** → generates a BOLT11 invoice via LNURL-pay from the configured Lightning Address and replies with a gift-wrapped **kind 16 type 2 payment request** (plus a kind-14 chat-note copy for generic DM clients).
 2. **Kind 17 (payment receipt)** → replies with a gift-wrapped **kind 16 type 3 thank-you** status update (plus a readable kind-14 line).
 
-All commerce traffic is NIP-17 end-to-end encrypted — customer PII never appears in plaintext events.
+All commerce traffic is NIP-17 end-to-end encrypted — customer PII never appears in plaintext events, and the service never writes buyer PII (address, email, order notes) to its logs; only presence is logged.
 
 ## One invoice, two surfaces
 
@@ -14,7 +14,7 @@ The service generates **exactly one** BOLT11 per order. That single invoice is d
 - the **kind-16 type-2 card** — the very event the website's checkout panel (`lib/gamma-order.ts` → `parsePaymentRequest`) decrypts and renders as its invoice QR, and
 - a **kind-14 chat note** carrying the same BOLT11, so generic NIP-17 clients (0xchat, Amethyst's DM view) that can't render kind-16 cards still show the invoice.
 
-The two can never diverge (one `generateInvoice` call, asserted by `test/single-invoice.test.js`), and one BOLT11 settles only once, so the copy cannot enable double payment. A persistent dedup store (`data/.processed.json`, atomic writes, pruned to the 2-day lookback) guarantees restarts never re-invoice, and relay errors are classified (`lib/relayErrors.js`) so a flaky relay can never crash order processing.
+The two can never diverge (one `generateInvoice` call, asserted by `test/single-invoice.test.js`), and one BOLT11 settles only once, so the copy cannot enable double payment. Orders are claimed in-memory while being processed (so the same order can never invoice twice concurrently) and recorded in a persistent dedup store (`data/.processed.json`, atomic writes, pruned to the 2-day lookback) **only once the payment request has been delivered** — a transient LNURL or relay failure leaves the order retryable on its next re-delivery instead of dropping it, while a delivered order is never re-invoiced across restarts. Relay errors are classified (`lib/relayErrors.js`) so a flaky relay can never crash order processing.
 
 ## Configuration (environment only)
 
@@ -37,7 +37,7 @@ By decision, the service runs **as the KnowAll AI company npub** (`npub1kue7etfx
 ```bash
 cd order-service
 npm install
-node index.js        # or: npm start / npm run dev (--watch)
+node index.js        # or: npm start, or npm run dev  # dev = watch mode
 npm test             # node --test (hermetic — no relays, no keys, no network)
 ```
 

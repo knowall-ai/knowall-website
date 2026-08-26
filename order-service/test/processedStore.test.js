@@ -86,3 +86,18 @@ test('entries older than the lookback window are pruned on load', () => {
     rmSync(dir, { recursive: true, force: true });
   }
 });
+
+test('a persistence failure propagates from addOrder (callers must not assume durability)', () => {
+  const { path, dir } = tmpFile();
+  try {
+    const store = new ProcessedStore(path, 0);
+    store.addOrder('order-1'); // create the real file first
+    // Point the store's file INSIDE an existing regular file so mkdir/rename fail.
+    store.filePath = join(path, 'impossible', '.processed.json');
+    assert.throws(() => store.addOrder('order-2'), /ENOTDIR|EEXIST|ENOENT/);
+    // The in-memory entry is still there, so this process keeps deduping.
+    assert.equal(store.hasOrder('order-2'), true);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});

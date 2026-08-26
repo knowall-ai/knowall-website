@@ -2,6 +2,13 @@
  * Lightning Address resolution and invoice generation via LNURL-pay
  */
 
+// Deadline for every LNURL HTTP request. Node's fetch has NO default timeout,
+// and a hung LNURL host would otherwise pin an order (and, at startup, block
+// main() before the relay subscription ever starts). AbortSignal.timeout
+// raises a TimeoutError whose message matches nothing in RELAY_NOISE, so a
+// genuine Lightning timeout stays a real (loud) error.
+const LNURL_TIMEOUT_MS = 10_000;
+
 /**
  * Resolve Lightning Address to LNURL endpoint metadata
  * @param {string} address - Lightning Address (e.g., "shop@knowall.ai")
@@ -16,7 +23,7 @@ export async function resolveLightningAddress(address) {
   const endpoint = `https://${domain}/.well-known/lnurlp/${name}`;
   console.log(`[Lightning] Resolving ${address} -> ${endpoint}`);
 
-  const response = await fetch(endpoint);
+  const response = await fetch(endpoint, { signal: AbortSignal.timeout(LNURL_TIMEOUT_MS) });
   if (!response.ok) {
     throw new Error(
       `Failed to resolve Lightning Address: ${response.status} ${response.statusText}`
@@ -66,7 +73,7 @@ export async function requestInvoice(callback, amountMsats, comment = '', commen
 
   console.log(`[Lightning] Requesting invoice: ${amountMsats} msats`);
 
-  const response = await fetch(url.toString());
+  const response = await fetch(url.toString(), { signal: AbortSignal.timeout(LNURL_TIMEOUT_MS) });
   if (!response.ok) {
     throw new Error(`Failed to request invoice: ${response.status} ${response.statusText}`);
   }
