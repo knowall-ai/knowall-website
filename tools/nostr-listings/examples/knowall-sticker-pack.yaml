@@ -1,7 +1,9 @@
 # KnowAll AI sticker pack listing (d: knowall-sticker-pack) — not yet published.
-# The image entries are local paths: the CLI uploads each to Blossom automatically
-# (one Amber approval per file) and puts the hosted URLs in the event. Update the
-# paths if the sticker artwork moves (or swap in photographs of the printed sheets).
+# The image entries are local paths, resolved relative to this YAML file: the CLI
+# uploads each to Blossom automatically (one Amber approval per file) and puts the
+# hosted URLs in the event. Drop the sticker artwork into an images/ folder next to
+# this file (or point the entries wherever it lives — ideally photographs of the
+# printed sheets) before publishing.
 # Publish with:
 #   node tools/nostr-listings/cli.mjs publish tools/nostr-listings/examples/knowall-sticker-pack.yaml --yes
 d: knowall-sticker-pack
@@ -19,13 +21,13 @@ tags:
   - bitcoin
   - nostr
 images:
-  - /home/benweeks/.claude/jobs/b9374369/tmp/sticker-hero.png
-  - /home/benweeks/.claude/jobs/b9374369/tmp/up-bitcoin-nostr.png
-  - /home/benweeks/.claude/jobs/b9374369/tmp/up-mascot-humour-1.png
-  - /home/benweeks/.claude/jobs/b9374369/tmp/up-mascot-humour-2.png
-  - /home/benweeks/.claude/jobs/b9374369/tmp/up-logo-centric.png
-  - /home/benweeks/.claude/jobs/b9374369/tmp/up-presentation-art.png
-  - /home/benweeks/.claude/jobs/b9374369/tmp/up-teams-emojis.png
+  - ./images/sticker-hero.png
+  - ./images/bitcoin-nostr.png
+  - ./images/mascot-humour-1.png
+  - ./images/mascot-humour-2.png
+  - ./images/logo-centric.png
+  - ./images/presentation-art.png
+  - ./images/teams-emojis.png
 location: Ships from UK
 content: |-
   **KnowAll AI Sticker Pack** — six 8.5×11″ (216×279mm) kiss-cut vinyl sticker sheets featuring our lime robot in all his moods:
