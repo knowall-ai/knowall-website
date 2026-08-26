@@ -8,6 +8,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import StoryComments from '@/components/story-comments';
 import StoryZapButton from '@/components/story-zap';
 import { KNOWALL_NPUB, KNOWALL_PUBKEY } from '@/lib/nostr';
+import { getBlocklist, isBlocked } from '@/lib/moderation';
 import { SOCIAL_RELAYS, queryRelays } from '@/lib/relay';
 import {
   type ZapTotals,
@@ -105,6 +106,10 @@ export default function StoryFeed({ pubkey = KNOWALL_PUBKEY }: StoryFeedProps) {
   const [activeTag, setActiveTag] = useState<string | null>(null);
   const [repliesByNote, setRepliesByNote] = useState<Map<string, NostrEvent[]>>(new Map());
   const [zapsByNote, setZapsByNote] = useState<Map<string, ZapTotals>>(new Map());
+  // Authors muted in THIS session via the in-site mute button (company sign-in
+  // only) — their already-fetched replies disappear immediately, without
+  // waiting for the revised mute list to round-trip through the relays.
+  const [mutedPubkeys, setMutedPubkeys] = useState<ReadonlySet<string>>(new Set());
 
   useEffect(() => {
     let cancelled = false;
@@ -190,15 +195,21 @@ export default function StoryFeed({ pubkey = KNOWALL_PUBKEY }: StoryFeedProps) {
 
   // Once the timeline has settled, fetch every post's social context in one
   // batched query — kind-1 replies (the comment threads) and kind-9735 zap
-  // receipts — rather than one round-trip per post.
+  // receipts — rather than one round-trip per post. Third-party events are
+  // screened against the company's NIP-51 mute list (fetched concurrently)
+  // before any counting or rendering.
   useEffect(() => {
     if (notes.length === 0) return;
     let cancelled = false;
     const noteIds = notes.map((note) => note.id);
-    void queryRelays(RELAYS, [{ kinds: [1, 9735], '#e': noteIds, limit: 1000 }]).then((events) => {
+    void Promise.all([
+      queryRelays(RELAYS, [{ kinds: [1, 9735], '#e': noteIds, limit: 1000 }]),
+      getBlocklist(),
+    ]).then(([events, blocklist]) => {
       if (cancelled) return;
-      setRepliesByNote(groupRepliesByNote(events, noteIds));
-      setZapsByNote(aggregateZapsByNote(events, noteIds));
+      const visible = events.filter((event) => !isBlocked(event, blocklist));
+      setRepliesByNote(groupRepliesByNote(visible, noteIds));
+      setZapsByNote(aggregateZapsByNote(visible, noteIds));
     });
     return () => {
       cancelled = true;
@@ -312,6 +323,10 @@ export default function StoryFeed({ pubkey = KNOWALL_PUBKEY }: StoryFeedProps) {
               onTagClick={setActiveTag}
               replies={repliesByNote.get(note.id) ?? []}
               zapTotals={zapsByNote.get(note.id) ?? NO_ZAPS}
+              mutedPubkeys={mutedPubkeys}
+              onMuted={(pubkey) =>
+                setMutedPubkeys((current) => new Set(current).add(pubkey.toLowerCase()))
+              }
             />
           ))}
         </ol>
@@ -330,12 +345,16 @@ function StoryNote({
   onTagClick,
   replies,
   zapTotals,
+  mutedPubkeys,
+  onMuted,
 }: {
   note: NostrEvent;
   isLast: boolean;
   onTagClick: (tag: string) => void;
   replies: NostrEvent[];
   zapTotals: ZapTotals;
+  mutedPubkeys: ReadonlySet<string>;
+  onMuted: (pubkey: string) => void;
 }) {
   const [showComments, setShowComments] = useState(false);
   // Comments this visitor posted in this session, merged into the fetched
@@ -349,8 +368,10 @@ function StoryNote({
   const thread = useMemo(() => {
     const fetchedIds = new Set(replies.map((reply) => reply.id));
     const merged = [...replies, ...localReplies.filter((reply) => !fetchedIds.has(reply.id))];
-    return sortRepliesChronologically(merged);
-  }, [replies, localReplies]);
+    return sortRepliesChronologically(
+      merged.filter((reply) => !mutedPubkeys.has(reply.pubkey.toLowerCase()))
+    );
+  }, [replies, localReplies, mutedPubkeys]);
 
   // Content-aware alt text so screen readers get something meaningful rather
   // than the same generic label repeated; numbered generic fallback otherwise.
@@ -458,6 +479,7 @@ function StoryNote({
               note={note}
               replies={thread}
               onPosted={(reply) => setLocalReplies((current) => [...current, reply])}
+              onMuted={onMuted}
             />
           )}
         </div>

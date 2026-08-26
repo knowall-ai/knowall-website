@@ -1,12 +1,13 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Send } from 'lucide-react';
+import { Send, VolumeX } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import SignInButton from '@/components/auth/sign-in-button';
 import { useNostrAuth } from '@/components/auth/nostr-auth-provider';
 import { KNOWALL_PUBKEY } from '@/lib/nostr';
+import { muteUser } from '@/lib/moderation';
 import { SOCIAL_RELAYS, publishToRelays } from '@/lib/relay';
 import { fetchProfiles } from '@/lib/nostr-profiles';
 import { buildReplyTags, profileDisplayName, type ProfileMetadata } from '@/lib/story-social';
@@ -23,23 +24,54 @@ const CLAMP_LENGTH = 320;
  * the story note as thread root; signed-out users see the thread read-only
  * with a "Sign in to comment" nudge. Mirrors StoryReplies on edenweeks.art.
  *
- * Moderation-lite: comment content renders as plain text only (no links, no
- * media) and long comments are clamped with an explicit expand.
+ * Moderation: comment content renders as plain text only (no links, no media)
+ * and long comments are clamped with an explicit expand. When the viewer is
+ * signed in AS the company account, each third-party comment additionally
+ * grows a mute button that appends the author to the company's NIP-51 mute
+ * list (lib/moderation.ts) — invisible to everyone else.
  */
 export default function StoryComments({
   note,
   replies,
   onPosted,
+  onMuted,
 }: {
   note: NostrEvent;
   replies: NostrEvent[];
   onPosted: (reply: NostrEvent) => void;
+  onMuted: (pubkey: string) => void;
 }) {
   const { user, signEvent } = useNostrAuth();
   const [profiles, setProfiles] = useState<Map<string, ProfileMetadata>>(new Map());
   const [content, setContent] = useState('');
   const [isPosting, setIsPosting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [mutingPubkey, setMutingPubkey] = useState<string | null>(null);
+  const [muteError, setMuteError] = useState<string | null>(null);
+
+  // The in-site mute action is for the company account only. The NIP-07
+  // extension may return the pubkey in either case (the auth provider accepts
+  // both), so normalise before comparing.
+  const isCompanyViewer = user?.pubkey.toLowerCase() === KNOWALL_PUBKEY;
+
+  const handleMute = async (pubkey: string) => {
+    if (mutingPubkey) return;
+    setMutingPubkey(pubkey);
+    setMuteError(null);
+    try {
+      // Merges into (never clobbers) the current kind-10000 list, signs via
+      // the NIP-07 extension, publishes, then the author's comments disappear
+      // optimistically via onMuted.
+      await muteUser(pubkey, signEvent);
+      onMuted(pubkey);
+    } catch (err) {
+      setMuteError(
+        err instanceof Error ? err.message : 'Could not mute this user. Please try again.'
+      );
+    } finally {
+      setMutingPubkey(null);
+    }
+  };
 
   // Resolve commenter names/avatars (kind-0, cached in lib/nostr-profiles).
   useEffect(() => {
@@ -84,10 +116,25 @@ export default function StoryComments({
 
   return (
     <div className="mt-4 border-t border-gray-800 pt-4" data-testid="story-comments">
+      {muteError && (
+        <p role="alert" className="mb-3 text-sm text-red-400">
+          {muteError}
+        </p>
+      )}
       {replies.length > 0 ? (
         <ul className="list-none space-y-4">
           {replies.map((reply) => (
-            <StoryComment key={reply.id} reply={reply} metadata={profiles.get(reply.pubkey)} />
+            <StoryComment
+              key={reply.id}
+              reply={reply}
+              metadata={profiles.get(reply.pubkey)}
+              onMute={
+                isCompanyViewer && reply.pubkey.toLowerCase() !== KNOWALL_PUBKEY
+                  ? () => handleMute(reply.pubkey)
+                  : undefined
+              }
+              isMuting={mutingPubkey === reply.pubkey}
+            />
           ))}
         </ul>
       ) : (
@@ -127,13 +174,18 @@ export default function StoryComments({
   );
 }
 
-/** One comment: avatar + name (kind-0 metadata), relative time, plain text. */
+/** One comment: avatar + name (kind-0 metadata), relative time, plain text —
+ *  plus, for the company account only, a discreet hover-revealed mute button. */
 function StoryComment({
   reply,
   metadata,
+  onMute,
+  isMuting,
 }: {
   reply: NostrEvent;
   metadata: ProfileMetadata | undefined;
+  onMute?: () => void;
+  isMuting?: boolean;
 }) {
   const [expanded, setExpanded] = useState(false);
   // Avatar URLs come from arbitrary (sometimes dead) hosts; when one fails to
@@ -145,7 +197,7 @@ function StoryComment({
   const text = needsClamp && !expanded ? `${reply.content.slice(0, CLAMP_LENGTH)}…` : reply.content;
 
   return (
-    <li className="flex gap-3">
+    <li className="group flex gap-3">
       <a
         href={`https://njump.me/${npub}`}
         target="_blank"
@@ -181,6 +233,19 @@ function StoryComment({
             {name}
           </a>
           <span className="text-xs text-gray-500">{timeAgo(reply.created_at)}</span>
+          {onMute && (
+            <button
+              type="button"
+              onClick={onMute}
+              disabled={isMuting}
+              title="Mute this user (adds them to the KnowAll mute list)"
+              aria-label={`Mute ${name}`}
+              data-testid="story-mute-button"
+              className="ml-auto text-gray-600 opacity-0 transition-opacity hover:text-red-400 focus-visible:opacity-100 disabled:cursor-wait disabled:opacity-100 group-hover:opacity-100"
+            >
+              <VolumeX className="h-4 w-4" aria-hidden="true" />
+            </button>
+          )}
         </div>
         {/* Plain text only — no linkification or media in comments. */}
         <p className="mt-0.5 whitespace-pre-wrap break-words text-sm leading-relaxed text-gray-300">
