@@ -15,7 +15,7 @@ const agents: Agent[] = [
   { name: 'Pennie', role: 'the Prepper', phase: 'Prep', image: '/images/agents/pennie.jpg' },
   { name: 'Dannie', role: 'the Designer', phase: 'Design', image: '/images/agents/dannie.jpg' },
   { name: 'Ernie', role: 'the Engineer', phase: 'Engineer', image: '/images/agents/ernie.jpg' },
-  { name: 'Terrie', role: 'the Tester', phase: 'Test', image: '/images/agents/terrie.jpg' },
+  { name: 'Teddie', role: 'the Tester', phase: 'Test', image: '/images/agents/teddie.jpg' },
   { name: 'Ollie', role: 'the Operator', phase: 'Operate', image: '/images/agents/ollie.jpg' },
 ];
 
