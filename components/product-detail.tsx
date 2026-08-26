@@ -367,7 +367,12 @@ function ProductView({ naddr, listing, onOwnerSaved, onOwnerDeleted }: ProductVi
                   min={1}
                   max={listing.stock ?? undefined}
                   value={quantity}
-                  onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
+                  onChange={(e) => {
+                    const parsed = Number.parseInt(e.target.value, 10);
+                    const wanted = Number.isNaN(parsed) ? 1 : Math.max(1, parsed);
+                    // The max attribute stops the spinner, not typed input.
+                    setQuantity(listing.stock !== null ? Math.min(wanted, listing.stock) : wanted);
+                  }}
                   className="w-24 border-gray-700 bg-gray-800 text-white focus-visible:ring-lime-500"
                 />
               </div>

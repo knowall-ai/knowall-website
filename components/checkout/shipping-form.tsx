@@ -96,17 +96,28 @@ const DEFAULT_SHIPPING_OPTIONS: CheckoutShippingOption[] = [
   },
 ];
 
+// Bounded lengths for everything serialised into the order event — an
+// oversized encrypted payload can be rejected by relays.
+const MAX_SHORT_FIELD = 100;
+const MAX_ADDRESS_FIELD = 200;
+const MAX_MESSAGE_FIELD = 500;
+
 const shippingSchema = z.object({
   countryCode: z.string().min(1, 'Please select your country'),
   shippingZone: z.string().min(1, 'Please select a shipping method'),
-  name: z.string().optional(),
-  address: z.string().optional(),
-  address2: z.string().optional(),
-  city: z.string().optional(),
-  postalCode: z.string().optional(),
-  email: z.string().email('Valid email is required').optional().or(z.literal('')),
-  phone: z.string().optional(),
-  message: z.string().optional(),
+  name: z.string().max(MAX_SHORT_FIELD, 'Name is too long').optional(),
+  address: z.string().max(MAX_ADDRESS_FIELD, 'Address is too long').optional(),
+  address2: z.string().max(MAX_ADDRESS_FIELD, 'Address is too long').optional(),
+  city: z.string().max(MAX_SHORT_FIELD, 'City is too long').optional(),
+  postalCode: z.string().max(20, 'Postcode is too long').optional(),
+  email: z
+    .string()
+    .email('Valid email is required')
+    .max(MAX_SHORT_FIELD, 'Email is too long')
+    .optional()
+    .or(z.literal('')),
+  phone: z.string().max(30, 'Phone number is too long').optional(),
+  message: z.string().max(MAX_MESSAGE_FIELD, 'Order note is too long').optional(),
 });
 
 type ShippingFormData = z.infer<typeof shippingSchema>;
@@ -121,6 +132,8 @@ interface ShippingFormProps {
   optionsLoading?: boolean;
   /** Cart items subtotal, for the subtotal/shipping/total summary row. */
   subtotal?: number;
+  /** Extra submit gate (e.g. exchange rates still loading). */
+  submitDisabled?: boolean;
 }
 
 /**
@@ -135,6 +148,7 @@ export function ShippingForm({
   shippingOptions,
   optionsLoading = false,
   subtotal,
+  submitDisabled = false,
 }: ShippingFormProps) {
   // Use the merchant's real options when available; legacy zones otherwise.
   const options =
@@ -407,7 +421,7 @@ export function ShippingForm({
       <Button
         type="submit"
         className="w-full bg-lime-600 font-semibold text-white hover:bg-lime-700"
-        disabled={!isValid || !selectedOption || isSubmitting || optionsLoading}
+        disabled={!isValid || !selectedOption || isSubmitting || optionsLoading || submitDisabled}
       >
         {isSubmitting ? 'Processing...' : 'Place Order'}
       </Button>

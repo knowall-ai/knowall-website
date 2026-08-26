@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AlertCircle, ShoppingBag } from 'lucide-react';
 import {
   Sheet,
@@ -41,10 +41,12 @@ export function CheckoutPanel({ open, onOpenChange }: CheckoutPanelProps) {
     useCheckoutShippingOptions(open);
   const {
     checkoutState,
+    ratesLoading,
     submitOrder,
     submitPaymentReceipt,
     resetCheckout,
     isSubmitting,
+    isAwaitingPayment,
     isPaid,
     hasError,
   } = useCheckout();
@@ -71,9 +73,14 @@ export function CheckoutPanel({ open, onOpenChange }: CheckoutPanelProps) {
     }
   };
 
+  // A placed-but-unpaid order must survive the panel closing: the kind-16
+  // order is already with the merchant and the cart is cleared, so resetting
+  // would strand the buyer with no way back to the invoice. Closing while
+  // awaiting payment keeps the checkout state (and its polling) alive, and
+  // reopening returns straight to the payment step.
   const handleOpenChange = (nextOpen: boolean) => {
     onOpenChange(nextOpen);
-    if (!nextOpen) {
+    if (!nextOpen && !isAwaitingPayment) {
       // Reset state after the close animation finishes.
       setTimeout(() => {
         setStep('shipping');
@@ -82,6 +89,10 @@ export function CheckoutPanel({ open, onOpenChange }: CheckoutPanelProps) {
       }, 300);
     }
   };
+
+  useEffect(() => {
+    if (open && isAwaitingPayment) setStep('payment');
+  }, [open, isAwaitingPayment]);
 
   const titles: Record<CheckoutStep, string> = {
     shipping: 'Checkout',
@@ -145,6 +156,7 @@ export function CheckoutPanel({ open, onOpenChange }: CheckoutPanelProps) {
                 shippingOptions={shippingOptions}
                 optionsLoading={shippingOptionsLoading}
                 subtotal={totalPrice}
+                submitDisabled={ratesLoading}
               />
             </>
           )}

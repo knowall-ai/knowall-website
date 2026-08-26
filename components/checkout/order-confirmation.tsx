@@ -17,9 +17,14 @@ export function OrderConfirmation({ orderId, onClose }: OrderConfirmationProps) 
   const [copied, setCopied] = useState(false);
 
   const handleCopyOrderId = async () => {
-    await navigator.clipboard.writeText(orderId);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    try {
+      await navigator.clipboard.writeText(orderId);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // Clipboard unavailable (insecure context / permission denied) — the
+      // full id stays selectable in the code element.
+    }
   };
 
   return (

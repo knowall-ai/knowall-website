@@ -54,13 +54,41 @@ export function useCart(): CartContextValue {
   return context;
 }
 
+/**
+ * Validate one stored cart item. Stored carts are untrusted (older releases,
+ * manual edits), and everything downstream trusts the shape — totals read
+ * `listing.price`, checkout reads `listing.shippingRefs` — so malformed
+ * entries are dropped rather than crashing the drawer.
+ */
+function isValidStoredItem(item: unknown): item is CartItem {
+  if (typeof item !== 'object' || item === null) return false;
+  const candidate = item as Partial<CartItem>;
+  const listing = candidate.listing as Partial<CartItem['listing']> | undefined;
+  return (
+    typeof candidate.productId === 'string' &&
+    Number.isInteger(candidate.quantity) &&
+    (candidate.quantity as number) > 0 &&
+    typeof listing === 'object' &&
+    listing !== null &&
+    typeof listing.dTag === 'string' &&
+    typeof listing.title === 'string' &&
+    Array.isArray(listing.images) &&
+    (listing.price === null ||
+      (typeof listing.price === 'object' &&
+        listing.price !== null &&
+        typeof listing.price.amount === 'number' &&
+        typeof listing.price.currency === 'string')) &&
+    Array.isArray(listing.shippingRefs)
+  );
+}
+
 function readStoredCart(): CartState {
   try {
     const raw = window.localStorage.getItem(CART_STORAGE_KEY);
     if (!raw) return EMPTY_CART;
     const parsed = JSON.parse(raw) as CartState;
     if (!Array.isArray(parsed.items)) return EMPTY_CART;
-    return parsed;
+    return { items: parsed.items.filter(isValidStoredItem), updatedAt: parsed.updatedAt ?? 0 };
   } catch {
     return EMPTY_CART;
   }

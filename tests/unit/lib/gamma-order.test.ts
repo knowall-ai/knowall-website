@@ -12,6 +12,7 @@ import {
   type ShippingInfo,
 } from '@/lib/gamma-order';
 import type { CartItem } from '@/lib/cart';
+import { PRODUCT_KIND } from '@/lib/shop-admin';
 import type { Listing } from '@/lib/nip99';
 
 /**
@@ -76,7 +77,7 @@ describe('createOrderTags', () => {
     expect(tags).toContainEqual(['type', ORDER_MESSAGE_TYPE.ORDER_CREATION]);
     expect(tags).toContainEqual(['order', 'order-12345678']);
     expect(tags).toContainEqual(['amount', '1000']);
-    expect(tags).toContainEqual(['item', `30402:${'a'.repeat(64)}:tminus15-book`, '2']);
+    expect(tags).toContainEqual(['item', `${PRODUCT_KIND}:${'a'.repeat(64)}:tminus15-book`, '2']);
     expect(tags).toContainEqual(['shipping', `30406:${MERCHANT}:ship-uk`]);
     expect(tags).toContainEqual(['email', 'buyer@example.com']);
     expect(tags).toContainEqual(['phone', '+447700900000']);
@@ -155,6 +156,19 @@ describe('parsePaymentRequest', () => {
       parsePaymentRequest(requestRumor([['type', ORDER_MESSAGE_TYPE.PAYMENT_REQUEST]]))
     ).toBeNull();
   });
+
+  it('rejects a request whose amount tag is not a plain integer', () => {
+    expect(
+      parsePaymentRequest(
+        requestRumor([
+          ['type', ORDER_MESSAGE_TYPE.PAYMENT_REQUEST],
+          ['order', 'order-1'],
+          ['amount', '32100.5 sats'],
+          ['payment', 'lightning', 'lnbc1invoice'],
+        ])
+      )
+    ).toBeNull();
+  });
 });
 
 describe('toGammaPaymentOptions', () => {
@@ -181,6 +195,10 @@ describe('parseCommerceAmount', () => {
     expect(parseCommerceAmount(undefined)).toBeUndefined();
     expect(parseCommerceAmount('-5')).toBeUndefined();
     expect(parseCommerceAmount('NaN')).toBeUndefined();
+    // Sats are whole numbers: decimals, exponents and hex forms are rejected.
+    expect(parseCommerceAmount('10.5')).toBeUndefined();
+    expect(parseCommerceAmount('1e3')).toBeUndefined();
+    expect(parseCommerceAmount('0x10')).toBeUndefined();
   });
 });
 

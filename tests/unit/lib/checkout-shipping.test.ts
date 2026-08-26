@@ -82,11 +82,19 @@ describe('shippingCostFor', () => {
     expect(shippingCostFor(buildOption({ extraCost: '1.25' })).amount).toBeCloseTo(3.75);
   });
 
-  it('treats unparseable numbers as zero instead of NaN', () => {
+  it('treats malformed and negative numbers as zero instead of NaN', () => {
     expect(shippingCostFor(buildOption({ price: { amount: 'x', currency: 'GBP' } })).amount).toBe(
       0
     );
     expect(shippingCostFor(buildOption({ extraCost: 'x' })).amount).toBe(2.5);
+    // parseFloat would accept these; the strict parser must not.
+    expect(
+      shippingCostFor(buildOption({ price: { amount: '2.50junk', currency: 'GBP' } })).amount
+    ).toBe(0);
+    expect(shippingCostFor(buildOption({ price: { amount: '-5', currency: 'GBP' } })).amount).toBe(
+      0
+    );
+    expect(shippingCostFor(buildOption({ extraCost: '-1' })).amount).toBe(2.5);
   });
 });
 

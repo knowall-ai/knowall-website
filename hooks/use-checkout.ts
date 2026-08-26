@@ -159,9 +159,13 @@ export function useCheckoutShippingOptions(enabled = true): {
 const PAYMENT_REQUEST_POLL_MS = 5000;
 /** NIP-59 fuzzes wrap timestamps up to 2 days back; query wide enough. */
 const WRAP_TIMESTAMP_SLACK_SECONDS = 2 * 24 * 60 * 60;
+/** Failed decrypts are retried this many times before being given up on. */
+const MAX_WRAP_DECRYPT_ATTEMPTS = 3;
 
 export interface UseCheckoutReturn {
   checkoutState: CheckoutState;
+  /** True while live BTC rates are still loading (fallback rates in effect). */
+  ratesLoading: boolean;
   /** The identity the current order was placed under (null before submit). */
   buyer: BuyerIdentity | null;
   submitOrder: (shipping: ShippingInfo) => Promise<string>;
@@ -176,7 +180,7 @@ export interface UseCheckoutReturn {
 export function useCheckout(): UseCheckoutReturn {
   const { user } = useNostrAuth();
   const { items, totalPrice, currency, clearCart } = useCart();
-  const { convertToSats } = useExchangeRate();
+  const { convertToSats, isLoading: ratesLoading } = useExchangeRate();
 
   const [checkoutState, setCheckoutState] = useState<CheckoutState>({
     orderId: null,
@@ -185,9 +189,12 @@ export function useCheckout(): UseCheckoutReturn {
   const [buyer, setBuyer] = useState<BuyerIdentity | null>(null);
   const [orderPlacedAt, setOrderPlacedAt] = useState<number | null>(null);
 
-  // Gift wraps we've already decrypted (or failed to), so polling never
-  // re-prompts an extension for the same event.
+  // Gift wraps we've successfully decrypted, so polling never re-prompts an
+  // extension for the same event; failed decrypts are retried a few times
+  // (they can be transient — locked extension, rejected prompt) before being
+  // given up on.
   const processedWrapsRef = useRef<Set<string>>(new Set());
+  const failedWrapsRef = useRef<Map<string, number>>(new Map());
 
   /**
    * Watch for the merchant's gift-wrapped payment request (kind 16 type 2)
@@ -221,10 +228,17 @@ export function useCheckout(): UseCheckoutReturn {
       for (const wrap of wraps) {
         if (cancelled) return;
         if (processedWrapsRef.current.has(wrap.id)) continue;
-        processedWrapsRef.current.add(wrap.id);
+        if ((failedWrapsRef.current.get(wrap.id) ?? 0) >= MAX_WRAP_DECRYPT_ATTEMPTS) continue;
 
         const rumor = await unwrapGiftWrap(wrap, buyer);
-        if (!rumor || rumor.kind !== ORDER_PROCESS_KIND) continue;
+        if (!rumor) {
+          // Possibly transient (locked extension, rejected prompt) — retry on
+          // later polls, up to the attempt cap, instead of skipping forever.
+          failedWrapsRef.current.set(wrap.id, (failedWrapsRef.current.get(wrap.id) ?? 0) + 1);
+          continue;
+        }
+        processedWrapsRef.current.add(wrap.id);
+        if (rumor.kind !== ORDER_PROCESS_KIND) continue;
 
         const request = parsePaymentRequest(rumor);
         if (!request || request.orderId !== orderId) continue;
@@ -389,10 +403,12 @@ export function useCheckout(): UseCheckoutReturn {
     setBuyer(null);
     setOrderPlacedAt(null);
     processedWrapsRef.current = new Set();
+    failedWrapsRef.current = new Map();
   }, []);
 
   return {
     checkoutState,
+    ratesLoading,
     buyer,
     submitOrder,
     submitPaymentReceipt,

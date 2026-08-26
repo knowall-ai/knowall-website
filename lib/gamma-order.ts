@@ -92,16 +92,17 @@ export function generateOrderId(): string {
 
 /**
  * Parse an untrusted commerce `amount` tag value (sats) into a number
- * suitable for display. Tags are untrusted input, so a missing/empty/
- * non-numeric or negative value returns `undefined` rather than `NaN` so the
- * UI can omit the amount instead of rendering "NaN sats".
+ * suitable for display. Satoshi amounts are whole numbers, and tags are
+ * untrusted input, so anything but a plain non-negative integer string
+ * (hex/exponent forms, decimals, negatives, junk) returns `undefined` rather
+ * than a truncated or `NaN` value the UI would mis-render.
  */
 export function parseCommerceAmount(raw: string | undefined): number | undefined {
-  if (raw === undefined || raw.trim() === '') {
-    return undefined;
-  }
-  const value = Number(raw);
-  return Number.isFinite(value) && value >= 0 ? value : undefined;
+  if (raw === undefined) return undefined;
+  const trimmed = raw.trim();
+  if (!/^\d+$/.test(trimmed)) return undefined;
+  const value = Number(trimmed);
+  return Number.isSafeInteger(value) ? value : undefined;
 }
 
 /** Format shipping address as a single string. */
@@ -222,9 +223,16 @@ export function parsePaymentRequest(event: RumorLike): {
     return null;
   }
 
+  // Sats amounts must be plain non-negative integers; reject the request
+  // rather than render a truncated/NaN amount from a malformed tag.
+  const amount = parseCommerceAmount(amountTag[1]);
+  if (amount === undefined) {
+    return null;
+  }
+
   return {
     orderId: orderTag[1],
-    amount: parseInt(amountTag[1], 10),
+    amount,
     paymentOptions: paymentTags.map((t) => ({ type: t[1], detail: t[2] })),
     message: event.content || undefined,
   };

@@ -50,19 +50,31 @@ export function filterShippingOptions(
 }
 
 /**
+ * Strictly parse a relay-provided price string as a non-negative decimal.
+ * `parseFloat` would accept partial junk ("2.50abc") and negative values —
+ * either of which would let a crafted zone event distort the checkout total —
+ * so anything that isn't a plain non-negative decimal counts as 0.
+ */
+function parseNonNegativeAmount(raw: string | undefined): number {
+  if (!raw) return 0;
+  const trimmed = raw.trim();
+  if (!/^\d+(\.\d+)?$/.test(trimmed)) return 0;
+  const value = Number(trimmed);
+  return Number.isFinite(value) ? value : 0;
+}
+
+/**
  * The cost of a shipping option: the 30406 base `price` plus the product's
  * per-option `extra-cost` (third element of the product's shipping_option
- * tag). Unparseable numbers count as 0 rather than poisoning the total with
- * NaN.
+ * tag). Malformed or negative values count as 0 rather than poisoning the
+ * total.
  */
 export function shippingCostFor(option: CheckoutShippingOption): {
   amount: number;
   currency: string;
 } {
-  const base = parseFloat(option.price.amount);
-  const extra = option.extraCost ? parseFloat(option.extraCost) : 0;
   return {
-    amount: (Number.isFinite(base) ? base : 0) + (Number.isFinite(extra) ? extra : 0),
+    amount: parseNonNegativeAmount(option.price.amount) + parseNonNegativeAmount(option.extraCost),
     currency: option.price.currency,
   };
 }

@@ -58,7 +58,11 @@ export function PaymentDisplay({
       setQrCodeUrl('');
       return;
     }
-    QRCode.toDataURL(invoice.toUpperCase(), {
+    // Uppercasing is a QR alphanumeric-mode optimisation that is only valid
+    // for bech32 payloads (BOLT11 invoices / bech32 lnurl); an lnurl option
+    // can also carry a case-sensitive https URL, which must be encoded as-is.
+    const qrPayload = /^(lightning:)?ln[a-z0-9]+$/i.test(invoice) ? invoice.toUpperCase() : invoice;
+    QRCode.toDataURL(qrPayload, {
       width: 512,
       margin: 2,
       color: { dark: '#000000', light: '#FFFFFF' },
@@ -74,9 +78,15 @@ export function PaymentDisplay({
 
   const handleCopy = async () => {
     if (!invoice) return;
-    await navigator.clipboard.writeText(invoice);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    try {
+      await navigator.clipboard.writeText(invoice);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // Clipboard unavailable (insecure context / permission denied) — the
+      // invoice input stays selectable for manual copy.
+      setPayError('Could not copy automatically — select the invoice text and copy it manually.');
+    }
   };
 
   const openInWallet = () => {

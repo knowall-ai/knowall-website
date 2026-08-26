@@ -4,6 +4,8 @@ import {
   cartTotalItems,
   cartTotalPrice,
   EMPTY_CART,
+  MAX_QUANTITY,
+  normalizeQuantity,
   removeCartItem,
   updateCartQuantity,
 } from '@/lib/cart';
@@ -56,6 +58,23 @@ describe('addCartItem', () => {
     const first = addCartItem(EMPTY_CART, buildListing({ title: 'Old title' }), 1);
     const second = addCartItem(first, buildListing({ title: 'New title' }), 1);
     expect(second.items[0].listing.title).toBe('New title');
+  });
+});
+
+describe('normalizeQuantity', () => {
+  it('coerces untrusted quantities to a bounded positive integer', () => {
+    expect(normalizeQuantity(2.9)).toBe(2);
+    expect(normalizeQuantity(0)).toBe(1);
+    expect(normalizeQuantity(-4)).toBe(1);
+    expect(normalizeQuantity(NaN)).toBe(1);
+    expect(normalizeQuantity(Infinity)).toBe(1);
+    expect(normalizeQuantity(MAX_QUANTITY + 100)).toBe(MAX_QUANTITY);
+  });
+
+  it('is applied by addCartItem and updateCartQuantity', () => {
+    const added = addCartItem(EMPTY_CART, buildListing(), 2.5);
+    expect(added.items[0].quantity).toBe(2);
+    expect(updateCartQuantity(added, 'tminus15-book', 1e6).items[0].quantity).toBe(MAX_QUANTITY);
   });
 });
 

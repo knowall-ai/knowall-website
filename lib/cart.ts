@@ -25,18 +25,37 @@ export interface CartState {
 
 export const EMPTY_CART: CartState = { items: [], updatedAt: 0 };
 
+/** Upper bound on a line quantity — keeps totals and order tags sane. */
+export const MAX_QUANTITY = 999;
+
+/**
+ * Normalise an untrusted quantity to a positive integer: non-finite and
+ * sub-1 values become 1, fractions are floored, and everything is capped at
+ * MAX_QUANTITY so a typo can't produce an absurd order.
+ */
+export function normalizeQuantity(quantity: number): number {
+  if (!Number.isFinite(quantity)) return 1;
+  return Math.min(MAX_QUANTITY, Math.max(1, Math.floor(quantity)));
+}
+
 /**
  * Add a listing to the cart (merging quantity when it's already there),
  * refreshing the stored listing so edits to the product propagate.
  */
 export function addCartItem(state: CartState, listing: Listing, quantity = 1): CartState {
+  const added = normalizeQuantity(quantity);
   const existingIndex = state.items.findIndex((item) => item.productId === listing.dTag);
   const items =
     existingIndex >= 0
       ? state.items.map((item, index) =>
-          index === existingIndex ? { ...item, quantity: item.quantity + quantity, listing } : item
+          index === existingIndex
+            ? { ...item, quantity: normalizeQuantity(item.quantity + added), listing }
+            : item
         )
-      : [...state.items, { productId: listing.dTag, quantity, listing, addedAt: Date.now() }];
+      : [
+          ...state.items,
+          { productId: listing.dTag, quantity: added, listing, addedAt: Date.now() },
+        ];
   return { items, updatedAt: Date.now() };
 }
 
@@ -55,8 +74,11 @@ export function updateCartQuantity(
   quantity: number
 ): CartState {
   if (quantity <= 0) return removeCartItem(state, productId);
+  const next = normalizeQuantity(quantity);
   return {
-    items: state.items.map((item) => (item.productId === productId ? { ...item, quantity } : item)),
+    items: state.items.map((item) =>
+      item.productId === productId ? { ...item, quantity: next } : item
+    ),
     updatedAt: Date.now(),
   };
 }

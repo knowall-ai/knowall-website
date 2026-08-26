@@ -184,7 +184,9 @@ function CartSummary({ onCheckout }: { onCheckout: () => void }) {
     <div className="p-4">
       <div className="space-y-2">
         <div className="flex justify-between text-sm">
-          <span className="text-gray-400">Subtotal ({totalItems} items)</span>
+          <span className="text-gray-400">
+            Subtotal ({totalItems} {totalItems === 1 ? 'item' : 'items'})
+          </span>
           <span className="font-medium">{formatPrice({ amount: totalPrice, currency })}</span>
         </div>
         <Separator className="bg-gray-800" />
