@@ -2,6 +2,13 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import ProductDetail from '@/components/product-detail';
 import { ContactPanelProvider } from '@/components/contact-panel';
+import { NostrAuthProvider } from '@/components/auth/nostr-auth-provider';
+
+// ProductDetail navigates (owner deletion) via the app router; none of these
+// tests exercise navigation, so a stub router is enough.
+vi.mock('next/navigation', () => ({
+  useRouter: () => ({ push: vi.fn(), replace: vi.fn(), refresh: vi.fn() }),
+}));
 import { encodeListingNaddr } from '@/lib/naddr';
 import { KNOWALL_PUBKEY } from '@/lib/nostr';
 import { CLASSIFIED_LISTING_KIND, type NostrEvent } from '@/lib/nip99';
@@ -82,9 +89,11 @@ function makeListing(overrides: Partial<NostrEvent> & { extraTags?: string[][] }
 
 function renderDetail() {
   return render(
-    <ContactPanelProvider>
-      <ProductDetail naddr={NADDR} pubkey={KNOWALL_PUBKEY} identifier={D_TAG} />
-    </ContactPanelProvider>
+    <NostrAuthProvider>
+      <ContactPanelProvider>
+        <ProductDetail naddr={NADDR} pubkey={KNOWALL_PUBKEY} identifier={D_TAG} />
+      </ContactPanelProvider>
+    </NostrAuthProvider>
   );
 }
 
@@ -191,6 +200,13 @@ describe('ProductDetail', () => {
     renderDetail();
     expect(await screen.findByTestId('product-not-found')).toBeInTheDocument();
     expect(screen.getByText('Product not found')).toBeInTheDocument();
+  });
+
+  it('hides Gamma hidden (draft) listings from the public behind the not-found card', async () => {
+    scriptedEvents = [makeListing({ extraTags: [['visibility', 'hidden']] })];
+    renderDetail();
+    expect(await screen.findByTestId('product-not-found')).toBeInTheDocument();
+    expect(screen.queryByTestId('product-detail')).not.toBeInTheDocument();
   });
 
   it('ignores events for other d tags or authors', async () => {
