@@ -20,6 +20,23 @@ import { fileURLToPath } from 'url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
+/**
+ * Build an id -> processedAt map from the persisted JSON, dropping any entry
+ * whose timestamp is not a finite number.
+ *
+ * A corrupted value (`"ts": "oops"`, null, an object) coerces to NaN, and every
+ * NaN comparison is false — so `NaN < cutoff` in prune() never matches and the
+ * entry could never be dropped, letting the file grow without bound across
+ * restarts. Dropping them here keeps prune() able to bound the file.
+ */
+function finiteTimestampEntries(source) {
+  return new Map(
+    Object.entries(source || {})
+      .map(([id, ts]) => [id, Number(ts)])
+      .filter(([, ts]) => Number.isFinite(ts))
+  );
+}
+
 // Default location: order-service/data/.processed.json (gitignored). The store
 // lives in a dedicated data/ directory — not next to the code — so a Docker
 // deployment can mount a volume at that directory and the dedup state survives
@@ -53,10 +70,16 @@ export class ProcessedStore {
         return;
       }
       const raw = JSON.parse(readFileSync(this.filePath, 'utf-8'));
-      this.orders = new Map(Object.entries(raw.orders || {}).map(([id, ts]) => [id, Number(ts)]));
-      this.receipts = new Map(
-        Object.entries(raw.receipts || {}).map(([id, ts]) => [id, Number(ts)])
-      );
+      const persisted =
+        Object.keys(raw.orders || {}).length + Object.keys(raw.receipts || {}).length;
+      this.orders = finiteTimestampEntries(raw.orders);
+      this.receipts = finiteTimestampEntries(raw.receipts);
+      const dropped = persisted - (this.orders.size + this.receipts.size);
+      if (dropped > 0) {
+        console.warn(
+          `[Store] Dropped ${dropped} entr(ies) with a non-numeric timestamp from ${this.filePath}`
+        );
+      }
       this.prune();
       console.log(
         `[Store] Loaded ${this.orders.size} order(s) and ${this.receipts.size} receipt(s) from ${this.filePath}`

@@ -101,3 +101,40 @@ test('a persistence failure propagates from addOrder (callers must not assume du
     rmSync(dir, { recursive: true, force: true });
   }
 });
+
+test('drops entries with a non-numeric timestamp so prune() can bound the file', () => {
+  // A corrupted timestamp coerces to NaN, and every NaN comparison is false —
+  // so `NaN < cutoff` in prune() never matches. Left in place, such an entry
+  // could never be dropped and the file would grow without bound across
+  // restarts.
+  const { path, dir } = tmpFile();
+  try {
+    writeFileSync(
+      path,
+      JSON.stringify({
+        orders: {
+          good: Math.floor(Date.now() / 1000),
+          corrupt: 'oops',
+          nullish: null,
+          nested: { not: 'a timestamp' },
+        },
+        receipts: { alsoCorrupt: 'nope' },
+      })
+    );
+
+    // maxAgeSeconds set, so load() prunes on construction.
+    const store = new ProcessedStore(path, 3600);
+
+    assert.equal(store.orders.size, 1, 'only the valid order timestamp survives');
+    assert.ok(store.orders.has('good'));
+    assert.equal(store.receipts.size, 0, 'the corrupt receipt is dropped');
+
+    // And the surviving state round-trips without reintroducing them.
+    store.save();
+    const reloaded = new ProcessedStore(path, 3600);
+    assert.equal(reloaded.orders.size, 1);
+    assert.equal(reloaded.receipts.size, 0);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});

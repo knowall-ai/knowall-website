@@ -10,7 +10,12 @@
  */
 
 import { toAlpha2 } from './countries';
+import { MAX_SHIPPING_AMOUNT, parseNonNegativeAmount } from './nip99';
 import type { ListingShippingRef } from './nip99';
+
+// Re-exported so the shipping cap stays reachable from the checkout module
+// that owns the rest of the checkout surface.
+export { MAX_SHIPPING_AMOUNT };
 import type { ShippingZone } from './shop-admin';
 
 /** A resolved shipping option the buyer can pick at checkout. */
@@ -47,28 +52,6 @@ export function filterShippingOptions(
 ): CheckoutShippingOption[] {
   if (!countryCode) return options;
   return options.filter((option) => shipsToCountry(option, countryCode));
-}
-
-/**
- * Cap on any single relay-provided shipping amount. Values above this are
- * treated as malformed (counted as 0) — it bounds the checkout total and
- * makes an Infinity sum from two huge-but-finite values impossible.
- */
-export const MAX_SHIPPING_AMOUNT = 1_000_000;
-
-/**
- * Strictly parse a relay-provided price string as a non-negative decimal.
- * `parseFloat` would accept partial junk ("2.50abc") and negative values —
- * either of which would let a crafted zone event distort the checkout total —
- * so anything that isn't a plain non-negative decimal within
- * MAX_SHIPPING_AMOUNT counts as 0.
- */
-function parseNonNegativeAmount(raw: string | undefined): number {
-  if (!raw) return 0;
-  const trimmed = raw.trim();
-  if (!/^\d+(\.\d+)?$/.test(trimmed)) return 0;
-  const value = Number(trimmed);
-  return Number.isFinite(value) && value <= MAX_SHIPPING_AMOUNT ? value : 0;
 }
 
 /**

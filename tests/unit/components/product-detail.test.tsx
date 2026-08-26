@@ -13,6 +13,7 @@ vi.mock('next/navigation', () => ({
 import { encodeListingNaddr } from '@/lib/naddr';
 import { KNOWALL_PUBKEY } from '@/lib/nostr';
 import { CLASSIFIED_LISTING_KIND, type NostrEvent } from '@/lib/nip99';
+import { MAX_QUANTITY } from '@/lib/cart';
 
 /**
  * ProductDetail component tests
@@ -234,6 +235,25 @@ describe('ProductDetail', () => {
     ];
     renderDetail();
     expect(await screen.findByTestId('product-not-found')).toBeInTheDocument();
+  });
+
+  it('clamps a typed quantity to the cart maximum when stock is untracked', async () => {
+    // Without a cap the input accepted any number while lib/cart clamps adds to
+    // MAX_QUANTITY, so the UI could read 5000 while only 999 reached the cart.
+    // No stock tag -> untracked stock, which is the case that was unbounded.
+    const untracked = makeListing();
+    scriptedEvents = [{ ...untracked, tags: untracked.tags.filter((t) => t[0] !== 'stock') }];
+    renderDetail();
+    await screen.findByTestId('product-detail');
+    const quantity = screen.getByLabelText(/quantity/i) as HTMLInputElement;
+
+    fireEvent.change(quantity, { target: { value: '5000' } });
+    expect(quantity.value).toBe(String(MAX_QUANTITY));
+    expect(quantity).toHaveAttribute('max', String(MAX_QUANTITY));
+
+    // Ordinary values are untouched.
+    fireEvent.change(quantity, { target: { value: '3' } });
+    expect(quantity.value).toBe('3');
   });
 
   it('shows the error state with an njump fallback when every relay fails', async () => {

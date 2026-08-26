@@ -15,6 +15,7 @@ import { CheckoutPanel } from '@/components/checkout/checkout-panel';
 import ProductFeedbackTabs from '@/components/product-feedback-tabs';
 import ProductShipping from '@/components/product-shipping';
 import { useCart } from '@/hooks/use-cart';
+import { MAX_QUANTITY, normalizeQuantity } from '@/lib/cart';
 import { useShopOwner } from '@/hooks/use-shop-admin';
 import { getBlocklist, isBlocked } from '@/lib/moderation';
 import { KNOWALL_PUBKEY, SHOP_RELAYS } from '@/lib/nostr';
@@ -369,12 +370,15 @@ function ProductView({ naddr, listing, onOwnerSaved, onOwnerDeleted }: ProductVi
                   id="quantity"
                   type="number"
                   min={1}
-                  max={listing.stock ?? undefined}
+                  max={Math.min(listing.stock ?? MAX_QUANTITY, MAX_QUANTITY)}
                   value={quantity}
                   onChange={(e) => {
                     const parsed = Number.parseInt(e.target.value, 10);
-                    const wanted = Number.isNaN(parsed) ? 1 : Math.max(1, parsed);
-                    // The max attribute stops the spinner, not typed input.
+                    // The max attribute stops the spinner, not typed input, so
+                    // clamp here too. normalizeQuantity is what the cart itself
+                    // applies on add, so the number shown can never disagree
+                    // with the number added; stock caps it further when known.
+                    const wanted = normalizeQuantity(Number.isNaN(parsed) ? 1 : parsed);
                     setQuantity(listing.stock !== null ? Math.min(wanted, listing.stock) : wanted);
                   }}
                   className="w-24 border-gray-700 bg-gray-800 text-white focus-visible:ring-lime-500"
