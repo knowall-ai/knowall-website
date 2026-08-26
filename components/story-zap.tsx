@@ -23,17 +23,8 @@ import type { NostrEvent } from '@/lib/story-notes';
 const PRESET_AMOUNTS = [21, 210, 2100];
 const DEFAULT_AMOUNT = 21;
 
-// Minimal WebLN surface (window.webln, injected by extensions such as Alby).
-interface WebLNProvider {
-  enable?: () => Promise<unknown>;
-  sendPayment: (invoice: string) => Promise<unknown>;
-}
-
-declare global {
-  interface Window {
-    webln?: WebLNProvider;
-  }
-}
+// window.webln (injected by extensions such as Alby) is typed globally in
+// types/global.d.ts — shared with the shop checkout's PaymentDisplay.
 
 type ZapStage = 'amount' | 'invoice' | 'paid';
 

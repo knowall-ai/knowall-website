@@ -56,6 +56,7 @@ describe('parseListing', () => {
       publishedAt: 1_700_000_000,
       createdAt: 1_700_000_000,
       shippingZoneIds: [],
+      shippingRefs: [],
     });
   });
 
@@ -71,6 +72,41 @@ describe('parseListing', () => {
       ],
     });
     expect(parseListing(event)?.shippingZoneIds).toEqual(['ship-uk', 'ship:world']);
+  });
+
+  it('keeps the largest valid extraCost when a shipping ref is duplicated', () => {
+    // Relay-provided listings can repeat a ref. Keeping the *first* extraCost
+    // meant a malformed leading value stuck, and shippingCostFor charges
+    // malformed values as 0 — silently undercharging shipping.
+    const event = makeEvent({
+      tags: [
+        ...makeEvent().tags,
+        ['shipping_option', '30406:merchant-pubkey:ship-uk', 'not-a-number'],
+        ['shipping_option', '30406:merchant-pubkey:ship-uk', '4.50'],
+        ['shipping_option', '30406:merchant-pubkey:ship-eu', '9.00'],
+        ['shipping_option', '30406:merchant-pubkey:ship-eu', '2.00'], // smaller loses
+      ],
+    });
+    const refs = parseListing(event)?.shippingRefs ?? [];
+    expect(refs).toEqual([
+      { ref: '30406:merchant-pubkey:ship-uk', extraCost: '4.50' },
+      { ref: '30406:merchant-pubkey:ship-eu', extraCost: '9.00' },
+    ]);
+  });
+
+  it('rejects a duplicate extraCost that only looks larger to parseFloat', () => {
+    // '9junk' parses to 9 with parseFloat but is charged as 0 later, so it
+    // must not beat a valid 4.50.
+    const event = makeEvent({
+      tags: [
+        ...makeEvent().tags,
+        ['shipping_option', '30406:merchant-pubkey:ship-uk', '4.50'],
+        ['shipping_option', '30406:merchant-pubkey:ship-uk', '9junk'],
+      ],
+    });
+    expect(parseListing(event)?.shippingRefs).toEqual([
+      { ref: '30406:merchant-pubkey:ship-uk', extraCost: '4.50' },
+    ]);
   });
 
   it('rejects events of the wrong kind', () => {

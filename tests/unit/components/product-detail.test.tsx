@@ -3,6 +3,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import ProductDetail from '@/components/product-detail';
 import { ContactPanelProvider } from '@/components/contact-panel';
 import { NostrAuthProvider } from '@/components/auth/nostr-auth-provider';
+import { CartProvider } from '@/hooks/use-cart';
 
 // ProductDetail navigates (owner deletion) via the app router; none of these
 // tests exercise navigation, so a stub router is enough.
@@ -12,6 +13,7 @@ vi.mock('next/navigation', () => ({
 import { encodeListingNaddr } from '@/lib/naddr';
 import { KNOWALL_PUBKEY } from '@/lib/nostr';
 import { CLASSIFIED_LISTING_KIND, type NostrEvent } from '@/lib/nip99';
+import { MAX_QUANTITY } from '@/lib/cart';
 
 /**
  * ProductDetail component tests
@@ -90,9 +92,11 @@ function makeListing(overrides: Partial<NostrEvent> & { extraTags?: string[][] }
 function renderDetail() {
   return render(
     <NostrAuthProvider>
-      <ContactPanelProvider>
-        <ProductDetail naddr={NADDR} pubkey={KNOWALL_PUBKEY} identifier={D_TAG} />
-      </ContactPanelProvider>
+      <CartProvider>
+        <ContactPanelProvider>
+          <ProductDetail naddr={NADDR} pubkey={KNOWALL_PUBKEY} identifier={D_TAG} />
+        </ContactPanelProvider>
+      </CartProvider>
     </NostrAuthProvider>
   );
 }
@@ -126,8 +130,14 @@ describe('ProductDetail', () => {
     expect(screen.getByText('#book')).toBeInTheDocument();
     // Description preserves the event content as plain text.
     expect(screen.getByText(/The T-Minus-15 methodology\./)).toBeInTheDocument();
-    // Buy deep-links this naddr on njump; back link returns to the shop.
-    expect(screen.getByRole('link', { name: /Buy/ })).toHaveAttribute(
+    // In-page purchase actions (cart checkout) for an in-stock listing:
+    // Add to Cart / Buy It Now / Message side by side.
+    expect(screen.getByRole('button', { name: /Add to Cart/ })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Buy It Now/ })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Message/ })).toBeInTheDocument();
+    // The njump deep-link lives in the fine print now (no View on Nostr button).
+    expect(screen.queryByRole('link', { name: /View on Nostr/ })).not.toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'njump' })).toHaveAttribute(
       'href',
       `https://njump.me/${NADDR}`
     );
@@ -175,13 +185,16 @@ describe('ProductDetail', () => {
     expect(screen.queryByText('£9.99')).not.toBeInTheDocument();
   });
 
-  it('marks sold-out listings and relabels the buy action', async () => {
+  it('marks sold-out listings and hides the purchase actions', async () => {
     scriptedEvents = [makeListing({ extraTags: [['status', 'sold']] })];
     renderDetail();
 
     await screen.findByTestId('product-detail');
     expect(screen.getAllByText('Sold Out').length).toBeGreaterThan(0);
-    expect(screen.getByRole('link', { name: /View on Nostr/ })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /Add to Cart/ })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /Buy It Now/ })).not.toBeInTheDocument();
+    // The njump fine-print link remains for sold-out listings.
+    expect(screen.getByRole('link', { name: 'njump' })).toBeInTheDocument();
   });
 
   it('opens the contact panel prefilled when Message is clicked', async () => {
@@ -222,6 +235,25 @@ describe('ProductDetail', () => {
     ];
     renderDetail();
     expect(await screen.findByTestId('product-not-found')).toBeInTheDocument();
+  });
+
+  it('clamps a typed quantity to the cart maximum when stock is untracked', async () => {
+    // Without a cap the input accepted any number while lib/cart clamps adds to
+    // MAX_QUANTITY, so the UI could read 5000 while only 999 reached the cart.
+    // No stock tag -> untracked stock, which is the case that was unbounded.
+    const untracked = makeListing();
+    scriptedEvents = [{ ...untracked, tags: untracked.tags.filter((t) => t[0] !== 'stock') }];
+    renderDetail();
+    await screen.findByTestId('product-detail');
+    const quantity = screen.getByLabelText(/quantity/i) as HTMLInputElement;
+
+    fireEvent.change(quantity, { target: { value: '5000' } });
+    expect(quantity.value).toBe(String(MAX_QUANTITY));
+    expect(quantity).toHaveAttribute('max', String(MAX_QUANTITY));
+
+    // Ordinary values are untouched.
+    fireEvent.change(quantity, { target: { value: '3' } });
+    expect(quantity.value).toBe('3');
   });
 
   it('shows the error state with an njump fallback when every relay fails', async () => {

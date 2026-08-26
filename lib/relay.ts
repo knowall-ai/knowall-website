@@ -20,6 +20,7 @@ export interface NostrFilter {
   ids?: string[];
   kinds?: number[];
   authors?: string[];
+  since?: number;
   limit?: number;
   [key: `#${string}`]: string[] | undefined;
 }

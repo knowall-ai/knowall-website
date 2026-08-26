@@ -3,23 +3,27 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import Header from '@/components/header';
 import { NostrAuthProvider } from '@/components/auth/nostr-auth-provider';
 import { ContactPanelProvider } from '@/components/contact-panel';
+import { CartProvider } from '@/hooks/use-cart';
 
 /**
  * Header component tests
  *
  * Requirements: primary-navigation, responsive-design, contact-us
  *
- * The header depends on the Nostr auth context (Sign In button) and the
- * contact panel context (mail icon), so it is rendered inside both providers
- * — the same nesting as app/layout.tsx.
+ * The header depends on the Nostr auth context (Sign In button), the cart
+ * context (cart button + drawer) and the contact panel context (mail icon),
+ * so it is rendered inside all three providers — the same nesting as
+ * app/layout.tsx.
  */
 
 function renderHeader() {
   return render(
     <NostrAuthProvider>
-      <ContactPanelProvider>
-        <Header />
-      </ContactPanelProvider>
+      <CartProvider>
+        <ContactPanelProvider>
+          <Header />
+        </ContactPanelProvider>
+      </CartProvider>
     </NostrAuthProvider>
   );
 }
