@@ -12,11 +12,14 @@ import { root, decks, startStaticServer, sleep, gotoDeck } from './lib/deck-harn
 
 const outDir = join(root, 'docs', 'screenshots');
 
-const { port, close: closeServer } = await startStaticServer();
-
 const pad = (n) => String(n).padStart(2, '0');
 
+// Everything that can fail without needing cleanup happens BEFORE the server
+// starts: once startStaticServer() has a socket listening, any throw before the
+// try/finally below would leak it and leave the script alive.
 await mkdir(outDir, { recursive: true });
+
+const { port, close: closeServer } = await startStaticServer();
 let browser;
 
 let total = 0;
