@@ -14,7 +14,8 @@
     "test:ui": "playwright test --ui",
     "test:headed": "playwright test --headed",
     "test:unit": "vitest run",
-    "test:unit:watch": "vitest"
+    "test:unit:watch": "vitest",
+    "listings": "node tools/nostr-listings/cli.mjs"
   },
   "engines": {
     "node": ">=22.0.0"
@@ -94,7 +95,8 @@
     "prettier": "^3.9.6",
     "tailwindcss": "^3.4.17",
     "typescript": "^5.9.3",
-    "vitest": "^4.1.10"
+    "vitest": "^4.1.10",
+    "yaml": "^2.9.0"
   },
   "overrides": {
     "eslint": "^9.37.0",
