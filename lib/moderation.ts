@@ -19,7 +19,7 @@
 
 import { verifyEvent } from 'nostr-tools/pure';
 import { KNOWALL_PUBKEY } from './nostr';
-import { SOCIAL_RELAYS, publishToRelays, queryRelays } from './relay';
+import { SOCIAL_RELAYS, publishToRelays, queryRelaysDetailed } from './relay';
 import type { EventTemplate } from './story-social';
 import type { NostrEvent } from './story-notes';
 
@@ -144,14 +144,21 @@ export function buildMuteListTemplate(
   };
 }
 
-/** Fetch the company's current mute list event from the social relays. */
-async function fetchMuteList(): Promise<NostrEvent | null> {
-  const events = await queryRelays(
+/**
+ * Fetch the company's current mute list event from the social relays, along
+ * with how many relays answered authoritatively — zero responders means the
+ * list's existence is UNKNOWN, not that no list exists.
+ */
+async function fetchMuteList(): Promise<{
+  muteList: NostrEvent | null;
+  respondedRelays: number;
+}> {
+  const { events, respondedRelays } = await queryRelaysDetailed(
     SOCIAL_RELAYS,
     [{ kinds: [MUTE_LIST_KIND], authors: [KNOWALL_PUBKEY], limit: 1 }],
     MUTE_LIST_TIMEOUT_MS
   );
-  return selectMuteList(events);
+  return { muteList: selectMuteList(events), respondedRelays };
 }
 
 /** Page-load cache so every render path shares one relay round-trip. */
@@ -164,7 +171,7 @@ let cachedBlocklist: Promise<Blocklist> | null = null;
  */
 export function getBlocklist(): Promise<Blocklist> {
   cachedBlocklist ??= fetchMuteList()
-    .then(buildBlocklist)
+    .then(({ muteList }) => buildBlocklist(muteList))
     .catch(() => EMPTY_BLOCKLIST);
   return cachedBlocklist;
 }
@@ -181,17 +188,22 @@ export function resetBlocklistCache(): void {
  * sign via the NIP-07 signer, and publish. On success the page-load cache is
  * updated in place so subsequent fetches on this page filter immediately.
  *
- * Throws when the current list cannot be queried, the signer declines, or no
- * relay accepts the event — a failure must never publish a blank replacement
- * that clobbers the real list. (An empty query result still proceeds: that is
- * how the very first mute list gets created, and in a total relay outage the
- * subsequent publish fails before anything is overwritten.)
+ * Throws when the current list cannot be determined, the signer declines, or
+ * no relay accepts the event — a failure must never publish a blank
+ * replacement that clobbers the real list. Creating a FRESH list (current not
+ * found) is allowed only when at least one relay answered authoritatively
+ * (EOSE) that it has none: in a partial outage where every relay timed out,
+ * the mute is aborted before signing rather than risking an empty replacement
+ * overwriting the real list on relays that are still writable.
  */
 export async function muteUser(
   pubkey: string,
   signEvent: (template: EventTemplate) => Promise<NostrEvent>
 ): Promise<void> {
-  const current = await fetchMuteList();
+  const { muteList: current, respondedRelays } = await fetchMuteList();
+  if (!current && respondedRelays === 0) {
+    throw new Error('Could not reach any relay to load the current mute list. Please try again.');
+  }
   const signed = await signEvent(buildMuteListTemplate(current, pubkey));
   await publishToRelays(SOCIAL_RELAYS, signed);
   cachedBlocklist = Promise.resolve(buildBlocklist(signed));

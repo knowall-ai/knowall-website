@@ -24,28 +24,42 @@ export interface NostrFilter {
   [key: `#${string}`]: string[] | undefined;
 }
 
+export interface RelayQueryResult {
+  events: NostrEvent[];
+  /**
+   * How many relays answered authoritatively (sent EOSE). Zero means every
+   * relay was unreachable, errored, or timed out — an empty `events` is then
+   * "couldn't ask", not "asked and nothing exists".
+   */
+  respondedRelays: number;
+}
+
 /**
  * Fetch events matching `filters` from every relay (one REQ per relay carrying
- * all filters), deduplicated by event id. Resolves once every relay has sent
- * EOSE, errored, or timed out — it never rejects; unreachable relays just
- * contribute nothing.
+ * all filters), deduplicated by event id, reporting how many relays completed
+ * with EOSE. Resolves once every relay has sent EOSE, errored, or timed out —
+ * it never rejects; unreachable relays just contribute nothing.
  */
-export function queryRelays(
+export function queryRelaysDetailed(
   relays: string[],
   filters: NostrFilter[],
   timeoutMs: number = DEFAULT_TIMEOUT_MS
-): Promise<NostrEvent[]> {
+): Promise<RelayQueryResult> {
   return new Promise((resolve) => {
     const events = new Map<string, NostrEvent>();
     let settled = 0;
+    let responded = 0;
 
-    const settle = () => {
+    const settle = (ok: boolean) => {
       settled += 1;
-      if (settled === relays.length) resolve([...events.values()]);
+      if (ok) responded += 1;
+      if (settled === relays.length) {
+        resolve({ events: [...events.values()], respondedRelays: responded });
+      }
     };
 
     if (relays.length === 0) {
-      resolve([]);
+      resolve({ events: [], respondedRelays: 0 });
       return;
     }
 
@@ -54,12 +68,12 @@ export function queryRelays(
       try {
         socket = new WebSocket(url);
       } catch {
-        settle();
+        settle(false);
         continue;
       }
 
       let done = false;
-      const complete = () => {
+      const complete = (ok: boolean) => {
         if (done) return;
         done = true;
         clearTimeout(timer);
@@ -68,9 +82,9 @@ export function queryRelays(
         } catch {
           // Already closed.
         }
-        settle();
+        settle(ok);
       };
-      const timer = setTimeout(complete, timeoutMs);
+      const timer = setTimeout(() => complete(false), timeoutMs);
 
       const subscriptionId = `q${Math.random().toString(36).slice(2, 10)}`;
       socket.onopen = () => {
@@ -83,16 +97,25 @@ export function queryRelays(
             const event = data[2] as NostrEvent;
             if (typeof event.id === 'string') events.set(event.id, event);
           } else if (data[0] === 'EOSE') {
-            complete();
+            complete(true);
           }
         } catch {
           // Ignore malformed relay messages.
         }
       };
-      socket.onerror = () => complete();
-      socket.onclose = () => complete();
+      socket.onerror = () => complete(false);
+      socket.onclose = () => complete(false);
     }
   });
+}
+
+/** `queryRelaysDetailed` for callers that only need the merged events. */
+export function queryRelays(
+  relays: string[],
+  filters: NostrFilter[],
+  timeoutMs: number = DEFAULT_TIMEOUT_MS
+): Promise<NostrEvent[]> {
+  return queryRelaysDetailed(relays, filters, timeoutMs).then((result) => result.events);
 }
 
 /**

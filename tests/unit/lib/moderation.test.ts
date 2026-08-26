@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 vi.mock('@/lib/relay', async (importOriginal) => {
   const actual = await importOriginal<typeof import('@/lib/relay')>();
-  return { ...actual, queryRelays: vi.fn(), publishToRelays: vi.fn() };
+  return { ...actual, queryRelaysDetailed: vi.fn(), publishToRelays: vi.fn() };
 });
 
 // Real Schnorr verification needs the company's private key to produce a
@@ -14,7 +14,7 @@ vi.mock('nostr-tools/pure', () => ({
 }));
 
 import { KNOWALL_PUBKEY } from '@/lib/nostr';
-import { publishToRelays, queryRelays } from '@/lib/relay';
+import { publishToRelays, queryRelaysDetailed } from '@/lib/relay';
 import {
   MUTE_LIST_KIND,
   buildBlocklist,
@@ -33,7 +33,7 @@ const MUTED_PUBKEY = 'a'.repeat(64);
 const OTHER_PUBKEY = 'c'.repeat(64);
 const MUTED_EVENT_ID = 'd'.repeat(64);
 
-const mockedQueryRelays = vi.mocked(queryRelays);
+const mockedQueryRelays = vi.mocked(queryRelaysDetailed);
 const mockedPublishToRelays = vi.mocked(publishToRelays);
 
 function makeEvent(partial: Partial<NostrEvent>): NostrEvent {
@@ -218,7 +218,7 @@ describe('buildMuteListTemplate', () => {
 
 describe('getBlocklist', () => {
   it('fetches the mute list once and shares the result across callers', async () => {
-    mockedQueryRelays.mockResolvedValue([makeMuteList()]);
+    mockedQueryRelays.mockResolvedValue({ events: [makeMuteList()], respondedRelays: 3 });
     const first = await getBlocklist();
     const second = await getBlocklist();
     expect(first.pubkeys.has(MUTED_PUBKEY)).toBe(true);
@@ -242,7 +242,7 @@ describe('getBlocklist', () => {
 describe('muteUser', () => {
   it('merges the current list, signs, publishes and updates the cached blocklist', async () => {
     const current = makeMuteList({ created_at: 100, tags: [['p', MUTED_PUBKEY]] });
-    mockedQueryRelays.mockResolvedValue([current]);
+    mockedQueryRelays.mockResolvedValue({ events: [current], respondedRelays: 3 });
     mockedPublishToRelays.mockResolvedValue(undefined);
     const signEvent = vi.fn((template) =>
       Promise.resolve(makeEvent({ ...template, pubkey: KNOWALL_PUBKEY, sig: 'signed' }))
@@ -265,7 +265,7 @@ describe('muteUser', () => {
   });
 
   it('propagates signer rejection without publishing', async () => {
-    mockedQueryRelays.mockResolvedValue([]);
+    mockedQueryRelays.mockResolvedValue({ events: [], respondedRelays: 3 });
     const signEvent = vi.fn(() => Promise.reject(new Error('User declined to sign.')));
     await expect(muteUser(OTHER_PUBKEY, signEvent)).rejects.toThrow('User declined to sign.');
     expect(mockedPublishToRelays).not.toHaveBeenCalled();
@@ -277,5 +277,29 @@ describe('muteUser', () => {
     await expect(muteUser(OTHER_PUBKEY, signEvent)).rejects.toThrow('relays down');
     expect(signEvent).not.toHaveBeenCalled();
     expect(mockedPublishToRelays).not.toHaveBeenCalled();
+  });
+
+  it('refuses to create a fresh list when no relay answered authoritatively', async () => {
+    // Partial/total outage: every relay timed out or errored, so "no current
+    // list" is unknowable — publishing a fresh (empty) replacement could
+    // clobber the real list on relays that are still writable.
+    mockedQueryRelays.mockResolvedValue({ events: [], respondedRelays: 0 });
+    const signEvent = vi.fn();
+    await expect(muteUser(OTHER_PUBKEY, signEvent)).rejects.toThrow(
+      'Could not reach any relay to load the current mute list. Please try again.'
+    );
+    expect(signEvent).not.toHaveBeenCalled();
+    expect(mockedPublishToRelays).not.toHaveBeenCalled();
+  });
+
+  it('still creates the very first list when a relay confirmed none exists', async () => {
+    mockedQueryRelays.mockResolvedValue({ events: [], respondedRelays: 1 });
+    mockedPublishToRelays.mockResolvedValue(undefined);
+    const signEvent = vi.fn((template) =>
+      Promise.resolve(makeEvent({ ...template, pubkey: KNOWALL_PUBKEY, sig: VALID_SIG }))
+    );
+    await muteUser(OTHER_PUBKEY, signEvent);
+    expect(signEvent.mock.calls[0][0].tags).toEqual([['p', OTHER_PUBKEY]]);
+    expect(mockedPublishToRelays).toHaveBeenCalledTimes(1);
   });
 });
