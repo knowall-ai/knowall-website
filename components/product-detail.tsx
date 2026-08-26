@@ -2,12 +2,18 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { ArrowLeft, ImageIcon, MapPin, MessageCircle, PackageX, Zap } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useContactPanel } from '@/components/contact-panel';
-import { SHOP_RELAYS } from '@/lib/nostr';
+import { OwnerListingControls } from '@/components/admin/owner-listing-controls';
+import ProductFeedbackTabs from '@/components/product-feedback-tabs';
+import ProductShipping from '@/components/product-shipping';
+import { useShopOwner } from '@/hooks/use-shop-admin';
+import { getBlocklist, isBlocked } from '@/lib/moderation';
+import { KNOWALL_PUBKEY, SHOP_RELAYS } from '@/lib/nostr';
 import {
   CLASSIFIED_LISTING_KIND,
   formatPrice,
@@ -38,8 +44,12 @@ interface ProductDetailProps {
  * per-image error fallbacks, and a not-found card.
  */
 export default function ProductDetail({ naddr, pubkey, identifier }: ProductDetailProps) {
+  const router = useRouter();
+  const isOwner = useShopOwner();
   const [listing, setListing] = useState<Listing | null>(null);
   const [status, setStatus] = useState<'loading' | 'ready' | 'error'>('loading');
+  // Bumped after an owner edit so the page re-queries the relays.
+  const [reloadToken, setReloadToken] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
@@ -48,12 +58,22 @@ export default function ProductDetail({ naddr, pubkey, identifier }: ProductDeta
     let settledRelays = 0;
     let successfulRelays = 0;
 
+    // The merchant pubkey comes from the visitor's URL (any naddr renders
+    // here), so listings are screened against the company's NIP-51 mute list —
+    // a muted merchant's listing shows the not-found card. The blocklist fetch
+    // starts now, in parallel with the relay queries, and is cached page-wide.
+    const blocklistPromise = getBlocklist();
+
     const finish = () => {
       if (cancelled) return;
-      const found = selectListing([...events.values()], pubkey, identifier);
-      setListing(found);
-      // Distinguish "every relay failed" from "relays answered: no such product".
-      setStatus(successfulRelays === 0 && !found ? 'error' : 'ready');
+      void blocklistPromise.then((blocklist) => {
+        if (cancelled) return;
+        const visible = [...events.values()].filter((event) => !isBlocked(event, blocklist));
+        const found = selectListing(visible, pubkey, identifier);
+        setListing(found);
+        // Distinguish "every relay failed" from "relays answered: no such product".
+        setStatus(successfulRelays === 0 && !found ? 'error' : 'ready');
+      });
     };
 
     const settle = (ok: boolean) => {
@@ -132,11 +152,25 @@ export default function ProductDetail({ naddr, pubkey, identifier }: ProductDeta
         }
       }
     };
-  }, [pubkey, identifier]);
+  }, [pubkey, identifier, reloadToken]);
 
   if (status === 'loading') return <ProductSkeleton />;
   if (!listing) return status === 'error' ? <ProductError naddr={naddr} /> : <ProductNotFound />;
-  return <ProductView naddr={naddr} listing={listing} />;
+  // Hidden listings are owner-only drafts: the grid gate also applies to the
+  // detail route, so a shared naddr can't expose a draft to the public. The
+  // owner check is KnowAll-specific, so a draft only shows when the listing
+  // is actually authored by the KnowAll key the owner controls.
+  if (listing.visibility === 'hidden' && !(isOwner && listing.pubkey === KNOWALL_PUBKEY)) {
+    return <ProductNotFound />;
+  }
+  return (
+    <ProductView
+      naddr={naddr}
+      listing={listing}
+      onOwnerSaved={() => setReloadToken((token) => token + 1)}
+      onOwnerDeleted={() => router.push('/shop')}
+    />
+  );
 }
 
 /** Back-to-shop link shared by every state. */
@@ -217,8 +251,17 @@ function ProductError({ naddr }: { naddr: string }) {
   );
 }
 
+interface ProductViewProps {
+  naddr: string;
+  listing: Listing;
+  /** Owner-only: called after the listing is edited/republished. */
+  onOwnerSaved: () => void;
+  /** Owner-only: called after the listing is deleted. */
+  onOwnerDeleted: () => void;
+}
+
 /** The loaded product: gallery left, purchase info right, description below. */
-function ProductView({ naddr, listing }: { naddr: string; listing: Listing }) {
+function ProductView({ naddr, listing, onOwnerSaved, onOwnerDeleted }: ProductViewProps) {
   const { openContactPanel } = useContactPanel();
   const sold = isSoldOut(listing);
 
@@ -237,7 +280,16 @@ function ProductView({ naddr, listing }: { naddr: string; listing: Listing }) {
 
         {/* Info column — robotechy's order: title, price, summary, stock, actions. */}
         <div className="flex flex-col gap-4">
-          <h1 className="text-3xl font-bold leading-tight text-white md:text-4xl">
+          {/* Owner-only edit/remove controls (null for everyone else). */}
+          <OwnerListingControls
+            pubkey={listing.pubkey}
+            dTag={listing.dTag}
+            title={listing.title}
+            onSaved={onOwnerSaved}
+            onDeleted={onOwnerDeleted}
+          />
+
+          <h1 className="text-3xl font-bold leading-tight text-white md:text-4xl md:leading-10">
             {listing.title}
           </h1>
 
@@ -284,6 +336,9 @@ function ProductView({ naddr, listing }: { naddr: string; listing: Listing }) {
             </div>
           )}
 
+          {/* P&P — resolved from the listing's Gamma shipping_option refs. */}
+          <ProductShipping pubkey={listing.pubkey} zoneIds={listing.shippingZoneIds} />
+
           {/* Actions: zap/buy via the user's own Nostr client, or message us. */}
           <div className="mt-2 flex flex-col gap-2 sm:flex-row">
             <Button
@@ -316,13 +371,18 @@ function ProductView({ naddr, listing }: { naddr: string; listing: Listing }) {
                   the story feed; listing content is untrusted, so no raw HTML.
                   The one markdown-ism honoured is **bold** (our real listings
                   use it), rendered as React elements, never injected markup. */}
-              <div className="whitespace-pre-wrap break-words text-sm leading-relaxed text-gray-300">
+              <div className="whitespace-pre-wrap wrap-break-word text-sm leading-relaxed text-gray-300">
                 <DescriptionText text={listing.description} />
               </div>
             </section>
           )}
         </div>
       </div>
+
+      {/* Community feedback: kind-31555 reviews + kind-1111 comments, below
+          the description (robotechy's product-page tabs, moderated through
+          the company mute list). */}
+      <ProductFeedbackTabs merchantPubkey={listing.pubkey} dTag={listing.dTag} className="mt-12" />
     </div>
   );
 }

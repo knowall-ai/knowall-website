@@ -24,11 +24,15 @@ test.describe('Sallie Chat', () => {
   });
 
   test('Chat interface renders with Sallie header and greeting', async ({ page }) => {
-    await expect(page.getByRole('heading', { name: 'Sallie' })).toBeVisible();
+    // Scope to the chat card via its test id, so the "Sallie" heading in the
+    // Meet the Agents section (Sallie the Salesperson) can't be matched instead.
+    await expect(
+      page.getByTestId('sallie-chat').getByRole('heading', { name: 'Sallie', exact: true })
+    ).toBeVisible();
     await expect(page.getByText(/I'm Sallie, but I'm not your regular bot!/)).toBeVisible();
     // The conversation ID is used internally (logging/lead follow-up) but is
     // deliberately not surfaced to visitors.
-    await expect(page.getByText(/Our conversation will be saved with the ID/)).toBeHidden();
+    await expect(page.getByText(/Our conversation will be saved with the ID/)).toHaveCount(0);
   });
 
   test('Chat input and send button are available', async ({ page }) => {

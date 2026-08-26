@@ -17,8 +17,15 @@ const nextConfig = {
   // response (HSTS in a meta tag is ignored by browsers), and removing the manual
   // <head> silences React's script-tag warning in dev.
   async headers() {
-    if (process.env.NODE_ENV !== 'production') return [];
-    return [{ source: '/:path*', headers: securityHeaders }];
+    // NIP-05 (https://github.com/nostr-protocol/nips/blob/master/05.md) requires
+    // /.well-known/nostr.json to be served with Access-Control-Allow-Origin: *
+    // so Nostr clients can fetch it cross-origin. Applied in dev and prod.
+    const nip05CorsHeader = {
+      source: '/.well-known/nostr.json',
+      headers: [{ key: 'Access-Control-Allow-Origin', value: '*' }],
+    };
+    if (process.env.NODE_ENV !== 'production') return [nip05CorsHeader];
+    return [{ source: '/:path*', headers: securityHeaders }, nip05CorsHeader];
   },
   env: {
     NEXT_PUBLIC_APP_VERSION: packageJson.version,

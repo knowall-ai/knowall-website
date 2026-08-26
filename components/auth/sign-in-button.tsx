@@ -20,6 +20,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { useNostrAuth, type NostrUser } from '@/components/auth/nostr-auth-provider';
 import { cn } from '@/lib/utils';
+import NostrLogo from '@/components/nostr-logo';
 
 // Recommended NIP-07 extensions, linked from the sign-in dialog for
 // visitors who don't have one installed yet.
@@ -107,7 +108,7 @@ export default function SignInButton({
                 {name.charAt(0).toUpperCase()}
               </span>
             )}
-            <span className="max-w-[10rem] truncate text-sm font-medium">{name}</span>
+            <span className="max-w-40 truncate text-sm font-medium">{name}</span>
             <ChevronDown className="h-4 w-4" aria-hidden="true" />
           </button>
         </DropdownMenuTrigger>
@@ -142,6 +143,7 @@ export default function SignInButton({
         onClick={() => handleOpenChange(true)}
         className={cn('bg-lime-600 text-white hover:bg-lime-700', className)}
       >
+        <NostrLogo className="h-4 w-4" />
         {label}
       </Button>
 

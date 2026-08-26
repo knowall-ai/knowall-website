@@ -32,3 +32,5 @@ next-env.d.ts
 # playwright
 /playwright-report/
 /test-results/
+# local listing artwork for the nostr-listings CLI (canonical copies live in Teams/BrandBuilder)
+/tools/nostr-listings/examples/images/

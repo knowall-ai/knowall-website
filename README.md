@@ -251,6 +251,17 @@ The KnowAll.ai website follows security best practices for handling API keys:
                      └─────────────┘
 ```
 
+## Moderating Community Nostr Content
+
+Third-party Nostr content (story comments, zap totals, URL-addressed shop listings) is filtered client-side against the KnowAll account's public [NIP-51](https://github.com/nostr-protocol/nips/blob/master/51.md) mute list (kind 10000): `p` tags block every event by that author, `e` tags block individual events (see `lib/moderation.ts`).
+
+To block a user, either:
+
+- **Mute them from any Nostr client** (Amethyst, Damus, …) signed in as the KnowAll npub — effective on the next page load, no deploy needed.
+- **Use the in-site mute button** that appears on each comment when signed in to the site as the KnowAll account (NIP-07 extension holding the company key).
+
+Only the mute list's public tags are honoured; private (encrypted) mutes are preserved but not applied by the site. If the mute list can't be fetched, the site fails open and renders unfiltered.
+
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
