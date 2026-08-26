@@ -17,6 +17,7 @@
  * best-effort, never an availability risk.
  */
 
+import { verifyEvent } from 'nostr-tools/pure';
 import { KNOWALL_PUBKEY } from './nostr';
 import { SOCIAL_RELAYS, publishToRelays, queryRelays } from './relay';
 import type { EventTemplate } from './story-social';
@@ -34,9 +35,27 @@ export interface Blocklist {
 const EMPTY_BLOCKLIST: Blocklist = { pubkeys: new Set(), eventIds: new Set() };
 
 /**
+ * True when an event's id and Schnorr signature verify (NIP-01). Relay
+ * responses are untrusted input: without this check a malicious relay could
+ * hand back a forged "company" mute list that censors arbitrary authors — and
+ * `muteUser` would even copy the forged tags into a genuinely signed
+ * replacement.
+ */
+function isAuthentic(event: NostrEvent): boolean {
+  const { sig } = event;
+  if (typeof sig !== 'string') return false;
+  try {
+    return verifyEvent({ ...event, sig });
+  } catch {
+    return false;
+  }
+}
+
+/**
  * Pick the company's current mute list out of a relay result: kind 10000 is
- * replaceable, so the newest event by the expected author wins (stale relays
- * may still serve older revisions).
+ * replaceable, so the newest VERIFIED event by the expected author wins
+ * (stale relays may still serve older revisions; hostile ones may serve
+ * forgeries, which fail signature verification and are ignored).
  */
 export function selectMuteList(
   events: NostrEvent[],
@@ -45,7 +64,9 @@ export function selectMuteList(
   let newest: NostrEvent | null = null;
   for (const event of events) {
     if (event.kind !== MUTE_LIST_KIND || event.pubkey !== author) continue;
-    if (!newest || event.created_at > newest.created_at) newest = event;
+    if (newest && event.created_at <= newest.created_at) continue;
+    if (!isAuthentic(event)) continue;
+    newest = event;
   }
   return newest;
 }
@@ -151,13 +172,17 @@ export function resetBlocklistCache(): void {
  * sign via the NIP-07 signer, and publish. On success the page-load cache is
  * updated in place so subsequent fetches on this page filter immediately.
  *
- * Throws when the signer declines or no relay accepts the event.
+ * Throws when the current list cannot be queried, the signer declines, or no
+ * relay accepts the event — a failure must never publish a blank replacement
+ * that clobbers the real list. (An empty query result still proceeds: that is
+ * how the very first mute list gets created, and in a total relay outage the
+ * subsequent publish fails before anything is overwritten.)
  */
 export async function muteUser(
   pubkey: string,
   signEvent: (template: EventTemplate) => Promise<NostrEvent>
 ): Promise<void> {
-  const current = await fetchMuteList().catch(() => null);
+  const current = await fetchMuteList();
   const signed = await signEvent(buildMuteListTemplate(current, pubkey));
   await publishToRelays(SOCIAL_RELAYS, signed);
   cachedBlocklist = Promise.resolve(buildBlocklist(signed));

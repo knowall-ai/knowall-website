@@ -257,7 +257,7 @@ Third-party Nostr content (story comments, zap totals, URL-addressed shop listin
 
 To block a user, either:
 
-- **Mute them from any Nostr client** (Amethyst, Damus, …) signed in as the KnowAll npub — effective on the next page load, no deploy needed; or
+- **Mute them from any Nostr client** (Amethyst, Damus, …) signed in as the KnowAll npub — effective on the next page load, no deploy needed.
 - **Use the in-site mute button** that appears on each comment when signed in to the site as the KnowAll account (NIP-07 extension holding the company key).
 
 Only the mute list's public tags are honoured; private (encrypted) mutes are preserved but not applied by the site. If the mute list can't be fetched, the site fails open and renders unfiltered.

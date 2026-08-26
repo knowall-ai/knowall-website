@@ -5,6 +5,14 @@ vi.mock('@/lib/relay', async (importOriginal) => {
   return { ...actual, queryRelays: vi.fn(), publishToRelays: vi.fn() };
 });
 
+// Real Schnorr verification needs the company's private key to produce a
+// passing event, so the crypto is mocked behind a sentinel signature: events
+// carrying VALID_SIG verify, everything else is a forgery.
+const VALID_SIG = 'f'.repeat(128);
+vi.mock('nostr-tools/pure', () => ({
+  verifyEvent: (event: { sig?: string }) => event.sig === VALID_SIG,
+}));
+
 import { KNOWALL_PUBKEY } from '@/lib/nostr';
 import { publishToRelays, queryRelays } from '@/lib/relay';
 import {
@@ -45,6 +53,7 @@ function makeMuteList(partial: Partial<NostrEvent> = {}): NostrEvent {
     kind: MUTE_LIST_KIND,
     pubkey: KNOWALL_PUBKEY,
     tags: [['p', MUTED_PUBKEY]],
+    sig: VALID_SIG,
     ...partial,
   });
 }
@@ -70,6 +79,14 @@ describe('selectMuteList', () => {
     const wrongKind = makeMuteList({ kind: 1 });
     const wrongAuthor = makeMuteList({ pubkey: OTHER_PUBKEY });
     expect(selectMuteList([wrongKind, wrongAuthor])).toBeNull();
+  });
+
+  it('rejects a forged newer event that fails signature verification', () => {
+    const genuine = makeMuteList({ id: '1'.repeat(64), created_at: 100 });
+    const forgedNewer = makeMuteList({ id: '2'.repeat(64), created_at: 200, sig: 'a'.repeat(128) });
+    const unsigned = makeMuteList({ id: '3'.repeat(64), created_at: 300, sig: undefined });
+    expect(selectMuteList([genuine, forgedNewer, unsigned])).toBe(genuine);
+    expect(selectMuteList([forgedNewer, unsigned])).toBeNull();
   });
 });
 
@@ -236,6 +253,14 @@ describe('muteUser', () => {
     mockedQueryRelays.mockResolvedValue([]);
     const signEvent = vi.fn(() => Promise.reject(new Error('User declined to sign.')));
     await expect(muteUser(OTHER_PUBKEY, signEvent)).rejects.toThrow('User declined to sign.');
+    expect(mockedPublishToRelays).not.toHaveBeenCalled();
+  });
+
+  it('aborts before signing or publishing when the mute-list query fails', async () => {
+    mockedQueryRelays.mockRejectedValue(new Error('relays down'));
+    const signEvent = vi.fn();
+    await expect(muteUser(OTHER_PUBKEY, signEvent)).rejects.toThrow('relays down');
+    expect(signEvent).not.toHaveBeenCalled();
     expect(mockedPublishToRelays).not.toHaveBeenCalled();
   });
 });
