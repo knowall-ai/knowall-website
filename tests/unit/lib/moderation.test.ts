@@ -14,7 +14,7 @@ vi.mock('nostr-tools/pure', () => ({
 }));
 
 import { KNOWALL_PUBKEY } from '@/lib/nostr';
-import { publishToRelays, queryRelaysDetailed } from '@/lib/relay';
+import { SOCIAL_RELAYS, publishToRelays, queryRelaysDetailed } from '@/lib/relay';
 import {
   MUTE_LIST_KIND,
   buildBlocklist,
@@ -279,21 +279,24 @@ describe('muteUser', () => {
     expect(mockedPublishToRelays).not.toHaveBeenCalled();
   });
 
-  it('refuses to create a fresh list when no relay answered authoritatively', async () => {
-    // Partial/total outage: every relay timed out or errored, so "no current
-    // list" is unknowable — publishing a fresh (empty) replacement could
-    // clobber the real list on relays that are still writable.
-    mockedQueryRelays.mockResolvedValue({ events: [], respondedRelays: 0 });
-    const signEvent = vi.fn();
-    await expect(muteUser(OTHER_PUBKEY, signEvent)).rejects.toThrow(
-      'Could not reach any relay to load the current mute list. Please try again.'
-    );
-    expect(signEvent).not.toHaveBeenCalled();
-    expect(mockedPublishToRelays).not.toHaveBeenCalled();
-  });
+  it.each([0, 1, SOCIAL_RELAYS.length - 1])(
+    'refuses to create a fresh list when only %i relays answered authoritatively',
+    async (respondedRelays) => {
+      // Partial/total outage: a relay that timed out might be the one holding
+      // the real list, and a blank replacement stamped newer would overwrite
+      // it everywhere — so a fresh list needs every relay to say "none here".
+      mockedQueryRelays.mockResolvedValue({ events: [], respondedRelays });
+      const signEvent = vi.fn();
+      await expect(muteUser(OTHER_PUBKEY, signEvent)).rejects.toThrow(
+        'Could not confirm with every relay that no mute list exists yet. Please try again.'
+      );
+      expect(signEvent).not.toHaveBeenCalled();
+      expect(mockedPublishToRelays).not.toHaveBeenCalled();
+    }
+  );
 
-  it('still creates the very first list when a relay confirmed none exists', async () => {
-    mockedQueryRelays.mockResolvedValue({ events: [], respondedRelays: 1 });
+  it('still creates the very first list when every relay confirmed none exists', async () => {
+    mockedQueryRelays.mockResolvedValue({ events: [], respondedRelays: SOCIAL_RELAYS.length });
     mockedPublishToRelays.mockResolvedValue(undefined);
     const signEvent = vi.fn((template) =>
       Promise.resolve(makeEvent({ ...template, pubkey: KNOWALL_PUBKEY, sig: VALID_SIG }))
@@ -301,5 +304,19 @@ describe('muteUser', () => {
     await muteUser(OTHER_PUBKEY, signEvent);
     expect(signEvent.mock.calls[0][0].tags).toEqual([['p', OTHER_PUBKEY]]);
     expect(mockedPublishToRelays).toHaveBeenCalledTimes(1);
+  });
+
+  it('merges into a found list even when only some relays responded', async () => {
+    const current = makeMuteList({ created_at: 100, tags: [['p', MUTED_PUBKEY]] });
+    mockedQueryRelays.mockResolvedValue({ events: [current], respondedRelays: 1 });
+    mockedPublishToRelays.mockResolvedValue(undefined);
+    const signEvent = vi.fn((template) =>
+      Promise.resolve(makeEvent({ ...template, pubkey: KNOWALL_PUBKEY, sig: VALID_SIG }))
+    );
+    await muteUser(OTHER_PUBKEY, signEvent);
+    expect(signEvent.mock.calls[0][0].tags).toEqual([
+      ['p', MUTED_PUBKEY],
+      ['p', OTHER_PUBKEY],
+    ]);
   });
 });

@@ -191,18 +191,22 @@ export function resetBlocklistCache(): void {
  * Throws when the current list cannot be determined, the signer declines, or
  * no relay accepts the event — a failure must never publish a blank
  * replacement that clobbers the real list. Creating a FRESH list (current not
- * found) is allowed only when at least one relay answered authoritatively
- * (EOSE) that it has none: in a partial outage where every relay timed out,
- * the mute is aborted before signing rather than risking an empty replacement
- * overwriting the real list on relays that are still writable.
+ * found) is allowed only when EVERY configured relay answered authoritatively
+ * (EOSE) that it has none: if any relay timed out it might be the one holding
+ * the real list, and a blank replacement stamped newer would overwrite it
+ * everywhere, so the mute is aborted before signing instead. Merging into a
+ * FOUND list tolerates partial responses — the tags being merged are
+ * preserved regardless.
  */
 export async function muteUser(
   pubkey: string,
   signEvent: (template: EventTemplate) => Promise<NostrEvent>
 ): Promise<void> {
   const { muteList: current, respondedRelays } = await fetchMuteList();
-  if (!current && respondedRelays === 0) {
-    throw new Error('Could not reach any relay to load the current mute list. Please try again.');
+  if (!current && respondedRelays < SOCIAL_RELAYS.length) {
+    throw new Error(
+      'Could not confirm with every relay that no mute list exists yet. Please try again.'
+    );
   }
   const signed = await signEvent(buildMuteListTemplate(current, pubkey));
   await publishToRelays(SOCIAL_RELAYS, signed);
