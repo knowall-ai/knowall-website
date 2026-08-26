@@ -11,7 +11,7 @@ interface Agent {
 // KnowAll's AI agents, mirroring the T-Minus-15 delivery lifecycle (Idea -> Production).
 const agents: Agent[] = [
   { name: 'Sallie', role: 'the Salesperson', phase: 'Idea', image: '/images/sallie-avatar.png' },
-  { name: 'Poppie', role: 'the Planner', phase: 'Prep', image: '/images/agents/poppie.jpg' },
+  { name: 'Poppie', role: 'the Planner', phase: 'Plan', image: '/images/agents/poppie.jpg' },
   { name: 'Preppie', role: 'the Prepper', phase: 'Prep', image: '/images/agents/preppie.jpg' },
   { name: 'Archie', role: 'the Architect', phase: 'Design', image: '/images/agents/archie.jpg' },
   { name: 'Dannie', role: 'the Designer', phase: 'Design', image: '/images/agents/dannie.jpg' },
