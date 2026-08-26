@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useContactPanel } from '@/components/contact-panel';
 import { OwnerListingControls } from '@/components/admin/owner-listing-controls';
+import ProductFeedbackTabs from '@/components/product-feedback-tabs';
 import ProductShipping from '@/components/product-shipping';
 import { useShopOwner } from '@/hooks/use-shop-admin';
 import { getBlocklist, isBlocked } from '@/lib/moderation';
@@ -377,6 +378,11 @@ function ProductView({ naddr, listing, onOwnerSaved, onOwnerDeleted }: ProductVi
           )}
         </div>
       </div>
+
+      {/* Community feedback: kind-31555 reviews + kind-1111 comments, below
+          the description (robotechy's product-page tabs, moderated through
+          the company mute list). */}
+      <ProductFeedbackTabs merchantPubkey={listing.pubkey} dTag={listing.dTag} className="mt-12" />
     </div>
   );
 }
