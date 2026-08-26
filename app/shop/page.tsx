@@ -3,7 +3,7 @@ import Link from 'next/link';
 import Header from '@/components/header';
 import Footer from '@/components/footer';
 import ShopHero from '@/components/shop-hero';
-import ShopListings from '@/components/shop-listings';
+import ShopCatalog from '@/components/shop-catalog';
 import { Button } from '@/components/ui/button';
 
 export const metadata: Metadata = {
@@ -20,9 +20,10 @@ export default function ShopPage() {
       {/* Profile hero — live Nostr banner/avatar, same treatment as the Story page. */}
       <ShopHero />
 
-      {/* Listings grid — live NIP-99 classifieds from our Nostr relays. */}
+      {/* Listings grid — live NIP-99 classifieds from our Nostr relays, with
+          owner tools above it for the signed-in KnowAll npub. */}
       <section className="container max-w-6xl mx-auto flex-1 px-4 sm:px-6 lg:px-8 py-12">
-        <ShopListings />
+        <ShopCatalog />
 
         {/* CTA back to services */}
         <div className="mt-14 text-center">
