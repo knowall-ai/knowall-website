@@ -248,7 +248,7 @@ function StoryComment({
           )}
         </div>
         {/* Plain text only — no linkification or media in comments. */}
-        <p className="mt-0.5 whitespace-pre-wrap break-words text-sm leading-relaxed text-gray-300">
+        <p className="mt-0.5 whitespace-pre-wrap wrap-break-word text-sm leading-relaxed text-gray-300">
           {text}
         </p>
         {needsClamp && (

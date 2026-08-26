@@ -14,7 +14,7 @@ export default function TermsOfServicePage() {
         them.
       </p>
 
-      <h2 className="text-2xl font-semibold mt-8 mb-4 text-white">Orders and payment</h2>
+      <h2 className="text-2xl font-semibold text-white">Orders and payment</h2>
       <ul className="list-disc pl-6 space-y-2">
         <li>Prices are shown on each listing in sats.</li>
         <li>
@@ -27,20 +27,20 @@ export default function TermsOfServicePage() {
         </li>
       </ul>
 
-      <h2 className="text-2xl font-semibold mt-8 mb-4 text-white">Community content</h2>
+      <h2 className="text-2xl font-semibold text-white">Community content</h2>
       <p>
         Replies, reviews and zaps are public Nostr events signed by their authors. Be kind; we may
         hide abusive content from this site&apos;s pages, though we can&apos;t remove events from
         the wider Nostr network.
       </p>
 
-      <h2 className="text-2xl font-semibold mt-8 mb-4 text-white">Liability</h2>
+      <h2 className="text-2xl font-semibold text-white">Liability</h2>
       <p>
         Nothing in these terms affects your local statutory rights. Beyond what the law requires,
         KnowAll AI&apos;s liability is limited to the amount you paid for your order.
       </p>
 
-      <h2 className="text-2xl font-semibold mt-8 mb-4 text-white">Contact</h2>
+      <h2 className="text-2xl font-semibold text-white">Contact</h2>
       <p>
         Questions about these terms? <MessageUsLink>Message us on Nostr</MessageUsLink> or email{' '}
         <a href="mailto:hello@knowall.ai" className="underline hover:text-white">

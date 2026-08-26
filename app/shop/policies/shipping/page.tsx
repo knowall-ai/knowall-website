@@ -14,7 +14,7 @@ export default function ShippingPolicyPage() {
         person-to-person over Nostr, so shipping is agreed with you before you pay.
       </p>
 
-      <h2 className="text-2xl font-semibold mt-8 mb-4 text-white">Where we ship</h2>
+      <h2 className="text-2xl font-semibold text-white">Where we ship</h2>
       <p>We ship worldwide. Standard shipping zones and costs:</p>
       <ul className="list-disc pl-6 space-y-1">
         <li>United Kingdom — £2.50</li>
@@ -28,20 +28,20 @@ export default function ShippingPolicyPage() {
         <MessageUsLink>message us</MessageUsLink> and we&apos;ll see what we can arrange.
       </p>
 
-      <h2 className="text-2xl font-semibold mt-8 mb-4 text-white">Processing time</h2>
+      <h2 className="text-2xl font-semibold text-white">Processing time</h2>
       <p>
         Orders are usually dispatched within 5 working days of payment. We&apos;ll confirm dispatch
         by direct message.
       </p>
 
-      <h2 className="text-2xl font-semibold mt-8 mb-4 text-white">Delivery times</h2>
+      <h2 className="text-2xl font-semibold text-white">Delivery times</h2>
       <p>
         Once dispatched, delivery depends on your location. UK orders typically arrive within a few
         days; international orders can take one to three weeks. Tracking details are shared by
         direct message where available.
       </p>
 
-      <h2 className="text-2xl font-semibold mt-8 mb-4 text-white">Questions</h2>
+      <h2 className="text-2xl font-semibold text-white">Questions</h2>
       <p>
         Anything unclear? <MessageUsLink>Message us on Nostr</MessageUsLink> or email{' '}
         <a href="mailto:sallie@knowall.ai" className="underline hover:text-white">

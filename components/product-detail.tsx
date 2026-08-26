@@ -289,7 +289,7 @@ function ProductView({ naddr, listing, onOwnerSaved, onOwnerDeleted }: ProductVi
             onDeleted={onOwnerDeleted}
           />
 
-          <h1 className="text-3xl font-bold leading-tight text-white md:text-4xl">
+          <h1 className="text-3xl font-bold leading-tight text-white md:text-4xl md:leading-10">
             {listing.title}
           </h1>
 
@@ -371,7 +371,7 @@ function ProductView({ naddr, listing, onOwnerSaved, onOwnerDeleted }: ProductVi
                   the story feed; listing content is untrusted, so no raw HTML.
                   The one markdown-ism honoured is **bold** (our real listings
                   use it), rendered as React elements, never injected markup. */}
-              <div className="whitespace-pre-wrap break-words text-sm leading-relaxed text-gray-300">
+              <div className="whitespace-pre-wrap wrap-break-word text-sm leading-relaxed text-gray-300">
                 <DescriptionText text={listing.description} />
               </div>
             </section>
