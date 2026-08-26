@@ -56,6 +56,7 @@ describe('parseListing', () => {
       publishedAt: 1_700_000_000,
       createdAt: 1_700_000_000,
       shippingZoneIds: [],
+      shippingRefs: [],
     });
   });
 

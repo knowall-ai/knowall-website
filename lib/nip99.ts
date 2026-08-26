@@ -63,18 +63,46 @@ export interface Listing {
    * these against the merchant's shipping-zone events to show P&P.
    */
   shippingZoneIds: string[];
+  /**
+   * The listing's raw `shipping_option` refs with their optional per-product
+   * extra cost (the tag's third element), which `shippingZoneIds` drops. The
+   * checkout charges option base price + extra cost, so it needs both.
+   */
+  shippingRefs: ListingShippingRef[];
+}
+
+/** One Gamma `shipping_option` tag: coordinate ref + optional extra cost. */
+export interface ListingShippingRef {
+  /** "30406:<pubkey>:<d-tag>" coordinate of the shipping option. */
+  ref: string;
+  /** Extra cost (in the option's currency) from the tag's third element. */
+  extraCost?: string;
 }
 
 /** Gamma Markets shipping-option kind referenced by `shipping_option` tags. */
 const SHIPPING_OPTION_KIND = '30406';
 
+/** `shipping_option` coordinate refs + extra costs (other kinds ignored). */
+function parseShippingRefs(event: NostrEvent): ListingShippingRef[] {
+  const byRef = new Map<string, ListingShippingRef>();
+  for (const tag of event.tags) {
+    if (tag[0] !== 'shipping_option' || typeof tag[1] !== 'string') continue;
+    if (tag[1].split(':').length < 3 || !tag[1].startsWith(`${SHIPPING_OPTION_KIND}:`)) continue;
+    if (!byRef.has(tag[1])) {
+      byRef.set(tag[1], {
+        ref: tag[1],
+        ...(typeof tag[2] === 'string' && tag[2] ? { extraCost: tag[2] } : {}),
+      });
+    }
+  }
+  return [...byRef.values()];
+}
+
 /** Zone d-tags from `shipping_option` coordinate refs (other kinds ignored). */
 function parseShippingZoneIds(event: NostrEvent): string[] {
-  const ids = event.tags
-    .filter((t) => t[0] === 'shipping_option' && typeof t[1] === 'string')
-    .map((t) => t[1].split(':'))
+  const ids = parseShippingRefs(event)
+    .map(({ ref }) => ref.split(':'))
     // slice(2).join(':') preserves d-tags that themselves contain ':'.
-    .filter((parts) => parts.length >= 3 && parts[0] === SHIPPING_OPTION_KIND)
     .map((parts) => parts.slice(2).join(':'))
     .filter(Boolean);
   return [...new Set(ids)];
@@ -141,6 +169,7 @@ export function parseListing(event: NostrEvent): Listing | null {
       Number.isFinite(publishedAtRaw) && publishedAtRaw > 0 ? publishedAtRaw : event.created_at,
     createdAt: event.created_at,
     shippingZoneIds: parseShippingZoneIds(event),
+    shippingRefs: parseShippingRefs(event),
   };
 }
 

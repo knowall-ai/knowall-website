@@ -3,6 +3,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import ProductDetail from '@/components/product-detail';
 import { ContactPanelProvider } from '@/components/contact-panel';
 import { NostrAuthProvider } from '@/components/auth/nostr-auth-provider';
+import { CartProvider } from '@/hooks/use-cart';
 
 // ProductDetail navigates (owner deletion) via the app router; none of these
 // tests exercise navigation, so a stub router is enough.
@@ -90,9 +91,11 @@ function makeListing(overrides: Partial<NostrEvent> & { extraTags?: string[][] }
 function renderDetail() {
   return render(
     <NostrAuthProvider>
-      <ContactPanelProvider>
-        <ProductDetail naddr={NADDR} pubkey={KNOWALL_PUBKEY} identifier={D_TAG} />
-      </ContactPanelProvider>
+      <CartProvider>
+        <ContactPanelProvider>
+          <ProductDetail naddr={NADDR} pubkey={KNOWALL_PUBKEY} identifier={D_TAG} />
+        </ContactPanelProvider>
+      </CartProvider>
     </NostrAuthProvider>
   );
 }
@@ -126,8 +129,11 @@ describe('ProductDetail', () => {
     expect(screen.getByText('#book')).toBeInTheDocument();
     // Description preserves the event content as plain text.
     expect(screen.getByText(/The T-Minus-15 methodology\./)).toBeInTheDocument();
-    // Buy deep-links this naddr on njump; back link returns to the shop.
-    expect(screen.getByRole('link', { name: /Buy/ })).toHaveAttribute(
+    // In-page purchase actions (cart checkout) for an in-stock listing.
+    expect(screen.getByRole('button', { name: /Add to Cart/ })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Buy It Now/ })).toBeInTheDocument();
+    // View on Nostr deep-links this naddr on njump; back link returns to the shop.
+    expect(screen.getByRole('link', { name: /View on Nostr/ })).toHaveAttribute(
       'href',
       `https://njump.me/${NADDR}`
     );
