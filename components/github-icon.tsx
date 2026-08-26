@@ -1,6 +1,6 @@
 /**
- * Local GitHub mark — lucide-react removed brand icons in 1.0, so we inline
- * the same path the footer already uses (single source for the brand glyph).
+ * The site's single GitHub brand glyph — lucide-react removed brand icons in
+ * 1.0, so this local component owns the mark. Used by the homepage and footer.
  */
 export default function GithubIcon({ className = '' }: { className?: string }) {
   return (

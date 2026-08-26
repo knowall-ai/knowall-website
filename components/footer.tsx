@@ -7,6 +7,7 @@ interface FooterProps {
   darkMode?: boolean;
 }
 
+/** Site-wide footer: brand blurb, service/product/nav columns, social links and policy row. */
 export default function Footer({ darkMode = false }: FooterProps) {
   return (
     <footer className="bg-gray-950 text-white py-12 px-4">
