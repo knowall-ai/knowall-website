@@ -149,6 +149,11 @@ describe('isBlocked', () => {
     expect(isBlocked(makeEvent({}), blocklist([MUTED_PUBKEY], [MUTED_EVENT_ID]))).toBe(false);
   });
 
+  it('drops malformed events (non-string fields) without throwing', () => {
+    const malformed = { pubkey: undefined, id: 42 } as unknown as NostrEvent;
+    expect(isBlocked(malformed, blocklist())).toBe(true);
+  });
+
   it('never blocks the company itself, even when self-listed', () => {
     expect(isBlocked(makeEvent({ pubkey: KNOWALL_PUBKEY }), blocklist([KNOWALL_PUBKEY]))).toBe(
       false
@@ -262,6 +267,29 @@ describe('muteUser', () => {
     const list = await getBlocklist();
     expect(list.pubkeys.has(OTHER_PUBKEY)).toBe(true);
     expect(mockedQueryRelays).toHaveBeenCalledTimes(1);
+  });
+
+  it.each(['', 'npub1kue7etfxtkxlv0s4u2xjf9epgxj7hssmlhc4x2k66tn8q8598zfqj322ar', 'xyz'])(
+    'rejects the invalid pubkey %j without querying, signing or publishing',
+    async (invalid) => {
+      const signEvent = vi.fn();
+      await expect(muteUser(invalid, signEvent)).rejects.toThrow(
+        'Expected a 64-character hexadecimal Nostr pubkey.'
+      );
+      expect(mockedQueryRelays).not.toHaveBeenCalled();
+      expect(signEvent).not.toHaveBeenCalled();
+      expect(mockedPublishToRelays).not.toHaveBeenCalled();
+    }
+  );
+
+  it('normalises an uppercase hex pubkey before muting', async () => {
+    mockedQueryRelays.mockResolvedValue({ events: [], respondedRelays: SOCIAL_RELAYS.length });
+    mockedPublishToRelays.mockResolvedValue(undefined);
+    const signEvent = vi.fn((template) =>
+      Promise.resolve(makeEvent({ ...template, pubkey: KNOWALL_PUBKEY, sig: VALID_SIG }))
+    );
+    await muteUser(OTHER_PUBKEY.toUpperCase(), signEvent);
+    expect(signEvent.mock.calls[0][0].tags).toEqual([['p', OTHER_PUBKEY]]);
   });
 
   it('propagates signer rejection without publishing', async () => {

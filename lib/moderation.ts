@@ -99,6 +99,10 @@ export function buildBlocklist(muteList: Pick<NostrEvent, 'tags'> | null): Block
  * list somehow lists them (a self-mute must not blank the site's own feed).
  */
 export function isBlocked(event: Pick<NostrEvent, 'pubkey' | 'id'>, blocklist: Blocklist): boolean {
+  // Relay events are untrusted input: a malformed event with non-string
+  // fields can't be attributed or rendered meaningfully, so drop it rather
+  // than let a TypeError break rendering mid-filter.
+  if (typeof event.pubkey !== 'string' || typeof event.id !== 'string') return true;
   const pubkey = event.pubkey.toLowerCase();
   if (pubkey === KNOWALL_PUBKEY) return false;
   return blocklist.pubkeys.has(pubkey) || blocklist.eventIds.has(event.id.toLowerCase());
@@ -202,13 +206,20 @@ export async function muteUser(
   pubkey: string,
   signEvent: (template: EventTemplate) => Promise<NostrEvent>
 ): Promise<void> {
+  // Validate caller-supplied input: only a 64-char hex pubkey can match a
+  // NIP-01 author, so anything else (empty, npub bech32, garbage) would
+  // publish a dead tag onto the company's mute list.
+  const normalizedPubkey = pubkey.toLowerCase();
+  if (!/^[0-9a-f]{64}$/.test(normalizedPubkey)) {
+    throw new Error('Expected a 64-character hexadecimal Nostr pubkey.');
+  }
   const { muteList: current, respondedRelays } = await fetchMuteList();
   if (!current && respondedRelays < SOCIAL_RELAYS.length) {
     throw new Error(
       'Could not confirm with every relay that no mute list exists yet. Please try again.'
     );
   }
-  const signed = await signEvent(buildMuteListTemplate(current, pubkey));
+  const signed = await signEvent(buildMuteListTemplate(current, normalizedPubkey));
   await publishToRelays(SOCIAL_RELAYS, signed);
   cachedBlocklist = Promise.resolve(buildBlocklist(signed));
 }

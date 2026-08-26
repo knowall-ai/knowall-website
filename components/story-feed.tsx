@@ -324,7 +324,9 @@ export default function StoryFeed({ pubkey = KNOWALL_PUBKEY }: StoryFeedProps) {
               replies={repliesByNote.get(note.id) ?? []}
               zapTotals={zapsByNote.get(note.id) ?? NO_ZAPS}
               mutedPubkeys={mutedPubkeys}
-              onMuted={(pubkey) => setMutedPubkeys((current) => new Set(current).add(pubkey))}
+              onMuted={(pubkey) =>
+                setMutedPubkeys((current) => new Set(current).add(pubkey.toLowerCase()))
+              }
             />
           ))}
         </ol>
@@ -366,7 +368,9 @@ function StoryNote({
   const thread = useMemo(() => {
     const fetchedIds = new Set(replies.map((reply) => reply.id));
     const merged = [...replies, ...localReplies.filter((reply) => !fetchedIds.has(reply.id))];
-    return sortRepliesChronologically(merged.filter((reply) => !mutedPubkeys.has(reply.pubkey)));
+    return sortRepliesChronologically(
+      merged.filter((reply) => !mutedPubkeys.has(reply.pubkey.toLowerCase()))
+    );
   }, [replies, localReplies, mutedPubkeys]);
 
   // Content-aware alt text so screen readers get something meaningful rather
