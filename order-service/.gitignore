@@ -1,0 +1,10 @@
+# Secrets — the .env holds the company identity key. NEVER commit it.
+.env
+.env.*
+!.env.example
+
+# Runtime state (dedup store)
+data/
+
+# Dependencies
+node_modules/

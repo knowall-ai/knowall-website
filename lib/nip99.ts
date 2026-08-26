@@ -63,18 +63,73 @@ export interface Listing {
    * these against the merchant's shipping-zone events to show P&P.
    */
   shippingZoneIds: string[];
+  /**
+   * The listing's raw `shipping_option` refs with their optional per-product
+   * extra cost (the tag's third element), which `shippingZoneIds` drops. The
+   * checkout charges option base price + extra cost, so it needs both.
+   */
+  shippingRefs: ListingShippingRef[];
+}
+
+/** One Gamma `shipping_option` tag: coordinate ref + optional extra cost. */
+export interface ListingShippingRef {
+  /** "30406:<pubkey>:<d-tag>" coordinate of the shipping option. */
+  ref: string;
+  /** Extra cost (in the option's currency) from the tag's third element. */
+  extraCost?: string;
+}
+
+/**
+ * Cap on any single relay-provided shipping amount. Values above this are
+ * treated as malformed (counted as 0) — it bounds the checkout total and
+ * makes an Infinity sum from two huge-but-finite values impossible.
+ */
+export const MAX_SHIPPING_AMOUNT = 1_000_000;
+
+/**
+ * Strictly parse a relay-provided price string as a non-negative decimal.
+ * `parseFloat` would accept partial junk ("2.50abc") and negative values —
+ * either of which would let a crafted zone event distort the checkout total —
+ * so anything that isn't a plain non-negative decimal within
+ * MAX_SHIPPING_AMOUNT counts as 0.
+ */
+export function parseNonNegativeAmount(raw: string | undefined): number {
+  if (!raw) return 0;
+  const trimmed = raw.trim();
+  if (!/^\d+(\.\d+)?$/.test(trimmed)) return 0;
+  const value = Number(trimmed);
+  return Number.isFinite(value) && value <= MAX_SHIPPING_AMOUNT ? value : 0;
 }
 
 /** Gamma Markets shipping-option kind referenced by `shipping_option` tags. */
 const SHIPPING_OPTION_KIND = '30406';
 
+/** `shipping_option` coordinate refs + extra costs (other kinds ignored). */
+function parseShippingRefs(event: NostrEvent): ListingShippingRef[] {
+  const byRef = new Map<string, ListingShippingRef>();
+  for (const tag of event.tags) {
+    if (tag[0] !== 'shipping_option' || typeof tag[1] !== 'string') continue;
+    if (tag[1].split(':').length < 3 || !tag[1].startsWith(`${SHIPPING_OPTION_KIND}:`)) continue;
+    const extraCost = typeof tag[2] === 'string' && tag[2] ? tag[2] : undefined;
+    const existing = byRef.get(tag[1]);
+    // Listing data is relay-provided and may repeat a ref. Keep the largest
+    // *valid* extraCost rather than the first one seen: a duplicate whose
+    // first occurrence is malformed would otherwise stick, and shippingCostFor
+    // charges malformed values as 0 — undercharging shipping. Compared with
+    // the same strict parser that charges the cost later, so the choice here
+    // and the charge there always agree.
+    if (existing && parseNonNegativeAmount(extraCost) <= parseNonNegativeAmount(existing.extraCost))
+      continue;
+    byRef.set(tag[1], { ref: tag[1], ...(extraCost ? { extraCost } : {}) });
+  }
+  return [...byRef.values()];
+}
+
 /** Zone d-tags from `shipping_option` coordinate refs (other kinds ignored). */
 function parseShippingZoneIds(event: NostrEvent): string[] {
-  const ids = event.tags
-    .filter((t) => t[0] === 'shipping_option' && typeof t[1] === 'string')
-    .map((t) => t[1].split(':'))
+  const ids = parseShippingRefs(event)
+    .map(({ ref }) => ref.split(':'))
     // slice(2).join(':') preserves d-tags that themselves contain ':'.
-    .filter((parts) => parts.length >= 3 && parts[0] === SHIPPING_OPTION_KIND)
     .map((parts) => parts.slice(2).join(':'))
     .filter(Boolean);
   return [...new Set(ids)];
@@ -141,6 +196,7 @@ export function parseListing(event: NostrEvent): Listing | null {
       Number.isFinite(publishedAtRaw) && publishedAtRaw > 0 ? publishedAtRaw : event.created_at,
     createdAt: event.created_at,
     shippingZoneIds: parseShippingZoneIds(event),
+    shippingRefs: parseShippingRefs(event),
   };
 }
 
