@@ -15,10 +15,17 @@ export default function ShippingPolicyPage() {
       </p>
 
       <h2 className="text-2xl font-semibold mt-8 mb-4 text-white">Where we ship</h2>
+      <p>We ship worldwide. Standard shipping zones and costs:</p>
+      <ul className="list-disc pl-6 space-y-1">
+        <li>United Kingdom — £2.50</li>
+        <li>Europe — £4.50</li>
+        <li>Rest of world — £7.50</li>
+      </ul>
       <p>
-        Shipping cost for your country is confirmed by direct message before we send your Lightning
-        invoice. If you&apos;re not sure we can reach you, <MessageUsLink>message us</MessageUsLink>{' '}
-        and we&apos;ll see what we can arrange.
+        Shipping is paid in sats at the day&apos;s rate as part of your Lightning invoice. The same
+        zones are published alongside each listing on Nostr, and we&apos;ll confirm the total by
+        direct message before you pay. If you&apos;re not sure we can reach you,{' '}
+        <MessageUsLink>message us</MessageUsLink> and we&apos;ll see what we can arrange.
       </p>
 
       <h2 className="text-2xl font-semibold mt-8 mb-4 text-white">Processing time</h2>

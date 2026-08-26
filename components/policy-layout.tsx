@@ -4,19 +4,7 @@ import Header from '@/components/header';
 import Footer from '@/components/footer';
 import { POLICY_LINKS } from '@/lib/policy-links';
 
-/** Inline "message us on Nostr" affordance used across the shop policy pages. */
-export function MessageUsLink({ children }: { children: ReactNode }) {
-  return (
-    <a
-      href="https://primal.net/p/nprofile1qqstwvlv45n9mr0k8c279rfyjus5rf0tcgdlmu2n9tdd9ensr6zn3ys4u7evm"
-      target="_blank"
-      rel="noopener noreferrer"
-      className="underline text-lime-500 hover:text-lime-400 transition-colors"
-    >
-      {children}
-    </a>
-  );
-}
+export { MessageUsLink } from '@/components/message-us-link';
 
 /**
  * Shared frame for the shop policy pages: Header, a titled prose column, and a
