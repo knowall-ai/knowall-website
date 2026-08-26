@@ -12,10 +12,17 @@ interface Agent {
 const agents: Agent[] = [
   { name: 'Sallie', role: 'the Salesperson', phase: 'Idea', image: '/images/sallie-avatar.png' },
   { name: 'Poppie', role: 'the Planner', phase: 'Prep', image: '/images/agents/poppie.jpg' },
-  { name: 'Pennie', role: 'the Prepper', phase: 'Prep', image: '/images/agents/pennie.jpg' },
+  { name: 'Preppie', role: 'the Prepper', phase: 'Prep', image: '/images/agents/preppie.jpg' },
+  { name: 'Archie', role: 'the Architect', phase: 'Design', image: '/images/agents/archie.jpg' },
   { name: 'Dannie', role: 'the Designer', phase: 'Design', image: '/images/agents/dannie.jpg' },
   { name: 'Ernie', role: 'the Engineer', phase: 'Engineer', image: '/images/agents/ernie.jpg' },
   { name: 'Teddie', role: 'the Tester', phase: 'Test', image: '/images/agents/teddie.jpg' },
+  {
+    name: 'Pennie',
+    role: 'the Penetration Tester',
+    phase: 'Test',
+    image: '/images/agents/pennie.jpg',
+  },
   { name: 'Ollie', role: 'the Operator', phase: 'Operate', image: '/images/agents/ollie.jpg' },
 ];
 
