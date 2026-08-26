@@ -118,8 +118,13 @@ test.describe('Product Detail Page', () => {
     await expect(page.getByText('#book')).toBeVisible();
     await expect(page.getByText(/playbook for agentic delivery/)).toBeVisible();
 
-    // Buy deep-links this exact naddr on njump (zap/pay in the user's client).
-    await expect(page.getByRole('link', { name: 'Buy' })).toHaveAttribute(
+    // Purchase actions: Add to Cart / Buy It Now / Message side by side, with
+    // a quantity input. The njump deep-link moved into the fine print.
+    await expect(page.getByRole('spinbutton', { name: 'Quantity' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Add to Cart' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Buy It Now' })).toBeVisible();
+    await expect(page.getByRole('link', { name: 'View on Nostr' })).toHaveCount(0);
+    await expect(page.getByRole('link', { name: 'njump' })).toHaveAttribute(
       'href',
       `https://njump.me/${TMINUS15_NADDR}`
     );
@@ -139,7 +144,7 @@ test.describe('Product Detail Page', () => {
     );
   });
 
-  test('sold-out listings show the overlay and a view-only action', async ({ page }) => {
+  test('sold-out listings show the overlay and hide the purchase actions', async ({ page }) => {
     await mockRelays(page, [
       bookListing({
         tags: [
@@ -154,7 +159,10 @@ test.describe('Product Detail Page', () => {
 
     await expect(page.getByTestId('product-detail')).toBeVisible();
     await expect(page.getByText('Sold Out').first()).toBeVisible();
-    await expect(page.getByRole('link', { name: 'View on Nostr' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Add to Cart' })).toHaveCount(0);
+    await expect(page.getByRole('button', { name: 'Buy It Now' })).toHaveCount(0);
+    // The njump fine-print link remains as the view-only escape hatch.
+    await expect(page.getByRole('link', { name: 'njump' })).toBeVisible();
   });
 
   test('shows the not-found card when relays have no such listing', async ({ page }) => {

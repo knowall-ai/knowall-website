@@ -3,15 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import {
-  ArrowLeft,
-  ImageIcon,
-  MapPin,
-  MessageCircle,
-  PackageX,
-  ShoppingCart,
-  Zap,
-} from 'lucide-react';
+import { ArrowLeft, ImageIcon, MapPin, MessageCircle, PackageX, ShoppingCart } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -391,35 +383,29 @@ function ProductView({ naddr, listing, onOwnerSaved, onOwnerDeleted }: ProductVi
                 >
                   Buy It Now
                 </Button>
+                <Button
+                  variant="outline"
+                  onClick={handleMessage}
+                  className="flex-1 border-gray-700 bg-transparent text-gray-300 hover:border-lime-600 hover:bg-gray-800 hover:text-lime-500"
+                >
+                  <MessageCircle className="mr-1.5 h-4 w-4" aria-hidden="true" />
+                  Message
+                </Button>
               </div>
             </div>
           )}
-
-          {/* Secondary actions: view on Nostr, or message us. */}
-          <div className="mt-2 flex flex-col gap-2 sm:flex-row">
-            <Button
-              asChild
-              variant="outline"
-              className="flex-1 border-gray-700 bg-transparent text-gray-300 hover:border-lime-600 hover:bg-gray-800 hover:text-lime-500"
-            >
-              <a href={`https://njump.me/${naddr}`} target="_blank" rel="noopener noreferrer">
-                <Zap className="mr-1.5 h-4 w-4" aria-hidden="true" />
-                View on Nostr
-              </a>
-            </Button>
-            <Button
-              variant="outline"
-              onClick={handleMessage}
-              className="flex-1 border-gray-700 bg-transparent text-gray-300 hover:border-lime-600 hover:bg-gray-800 hover:text-lime-500"
-            >
-              <MessageCircle className="mr-1.5 h-4 w-4" aria-hidden="true" />
-              Message
-            </Button>
-          </div>
           <p className="text-xs leading-relaxed text-gray-500">
             Checkout pays with Bitcoin over Lightning — no account needed. Your order and address
-            travel as encrypted Nostr messages. Prefer your own Nostr client? View the listing on
-            njump instead.
+            travel as encrypted Nostr messages. Prefer your own Nostr client? View the listing on{' '}
+            <a
+              href={`https://njump.me/${naddr}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline underline-offset-2 hover:text-lime-500"
+            >
+              njump
+            </a>{' '}
+            instead.
           </p>
 
           {/* Buy It Now jumps straight to this checkout with the item added. */}
