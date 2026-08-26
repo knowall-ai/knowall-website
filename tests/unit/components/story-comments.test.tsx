@@ -25,6 +25,11 @@ vi.mock('@/lib/relay', () => ({
   publishToRelays: (...args: unknown[]) => mockPublishToRelays(...args),
 }));
 
+const mockMuteUser = vi.fn();
+vi.mock('@/lib/moderation', () => ({
+  muteUser: (...args: unknown[]) => mockMuteUser(...args),
+}));
+
 vi.mock('@/lib/nostr-profiles', () => ({
   fetchProfiles: vi.fn().mockResolvedValue(new Map()),
 }));
@@ -56,6 +61,7 @@ describe('StoryComments composer gating', () => {
     mockUser = null;
     mockSignEvent.mockReset();
     mockPublishToRelays.mockReset();
+    mockMuteUser.mockReset();
   });
 
   it('signed out: thread is read-only with a sign-in nudge', () => {
@@ -132,6 +138,73 @@ describe('StoryComments composer gating', () => {
     expect(onPosted).not.toHaveBeenCalled();
     expect(mockPublishToRelays).not.toHaveBeenCalled();
     expect((textarea as HTMLTextAreaElement).value).toBe('Hello!'); // draft preserved
+  });
+
+  it('company viewer: shows a mute button on third-party comments only', () => {
+    mockUser = { pubkey: KNOWALL_PUBKEY, npub: 'npub1company' };
+    render(
+      <StoryComments
+        note={makeNote()}
+        replies={[
+          makeReply(), // third-party
+          makeReply({ id: '4'.repeat(64), pubkey: KNOWALL_PUBKEY, content: 'Our own reply' }),
+        ]}
+        onPosted={vi.fn()}
+        onMuted={vi.fn()}
+      />
+    );
+    // Exactly one mute affordance: the company's own comment gets none.
+    expect(screen.getAllByTestId('story-mute-button')).toHaveLength(1);
+  });
+
+  it('non-company viewer: never sees a mute button', () => {
+    mockUser = { pubkey: USER_PUBKEY, npub: 'npub1test' };
+    render(
+      <StoryComments
+        note={makeNote()}
+        replies={[makeReply()]}
+        onPosted={vi.fn()}
+        onMuted={vi.fn()}
+      />
+    );
+    expect(screen.queryByTestId('story-mute-button')).not.toBeInTheDocument();
+  });
+
+  it('company viewer: clicking mute calls muteUser then onMuted with the author', async () => {
+    mockUser = { pubkey: KNOWALL_PUBKEY, npub: 'npub1company' };
+    mockMuteUser.mockResolvedValue(undefined);
+    const onMuted = vi.fn();
+    const reply = makeReply();
+
+    render(
+      <StoryComments note={makeNote()} replies={[reply]} onPosted={vi.fn()} onMuted={onMuted} />
+    );
+    fireEvent.click(screen.getByTestId('story-mute-button'));
+
+    await waitFor(() => expect(onMuted).toHaveBeenCalledWith(reply.pubkey));
+    expect(mockMuteUser).toHaveBeenCalledTimes(1);
+    expect(mockMuteUser.mock.calls[0][0]).toBe(reply.pubkey);
+    expect(typeof mockMuteUser.mock.calls[0][1]).toBe('function'); // the signer
+  });
+
+  it('company viewer: surfaces a mute failure without hiding the comment', async () => {
+    mockUser = { pubkey: KNOWALL_PUBKEY, npub: 'npub1company' };
+    mockMuteUser.mockRejectedValue(new Error('No relay accepted the event.'));
+    const onMuted = vi.fn();
+
+    render(
+      <StoryComments
+        note={makeNote()}
+        replies={[makeReply()]}
+        onPosted={vi.fn()}
+        onMuted={onMuted}
+      />
+    );
+    fireEvent.click(screen.getByTestId('story-mute-button'));
+
+    expect(await screen.findByRole('alert')).toHaveTextContent('No relay accepted the event.');
+    expect(onMuted).not.toHaveBeenCalled();
+    expect(screen.getByText('A thoughtful comment')).toBeInTheDocument();
   });
 
   it('clamps long comments behind a Show more toggle', () => {
