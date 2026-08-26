@@ -143,7 +143,7 @@ export default function SignInButton({
         onClick={() => handleOpenChange(true)}
         className={cn('bg-lime-600 text-white hover:bg-lime-700', className)}
       >
-        <NostrLogo className="h-4 w-4" aria-hidden="true" />
+        <NostrLogo className="h-4 w-4" />
         {label}
       </Button>
 
