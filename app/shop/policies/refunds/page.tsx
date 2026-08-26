@@ -30,9 +30,11 @@ export default function RefundPolicyPage() {
 
       <h2 className="text-2xl font-semibold mt-8 mb-4 text-white">Returns</h2>
       <p>
-        Changed your mind? Physical goods can be returned within 14 days of delivery in their
-        original condition. Return postage is the buyer&apos;s responsibility, and we recommend a
-        tracked service — the refund is issued once the item arrives back safely.
+        Changed your mind? Tell us within 14 days of delivery, then send the item back within a
+        further 14 days in its original condition. Return postage is the buyer&apos;s
+        responsibility, and we recommend a tracked service — the refund is issued once the item
+        arrives back safely. Wherever your local statutory consumer rights go further than these
+        terms, the statutory rights apply.
       </p>
 
       <h2 className="text-2xl font-semibold mt-8 mb-4 text-white">How refunds are paid</h2>
