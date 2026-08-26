@@ -22,7 +22,8 @@ export default function TermsOfServicePage() {
           Lightning invoice, and an order is confirmed once its invoice is paid.
         </li>
         <li>
-          Shipping is agreed by direct message before we send the invoice (see the Shipping Policy).
+          Shipping costs are published with each listing by zone (see the Shipping Policy) and added
+          to your invoice; we&apos;ll confirm the total by direct message before you pay.
         </li>
       </ul>
 
