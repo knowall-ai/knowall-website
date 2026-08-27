@@ -24,6 +24,7 @@ const agents: Agent[] = [
     image: '/images/agents/pennie.jpg',
   },
   { name: 'Ollie', role: 'the Operator', phase: 'Operate', image: '/images/agents/ollie.jpg' },
+  { name: 'Allie', role: 'the Accountant', phase: 'Accounts', image: '/images/agents/allie.jpg' },
   {
     name: 'Zaplie',
     role: 'the Rewards Agent',
