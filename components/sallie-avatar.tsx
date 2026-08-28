@@ -12,7 +12,7 @@ export default function SallieAvatar({ className = '', size = 24 }: SallieAvatar
       style={{ width: size, height: size }}
     >
       <Image
-        src="/images/sallie-avatar.png"
+        src="/images/agents/sallie.jpg"
         alt="Sallie"
         width={size}
         height={size}
