@@ -27,7 +27,7 @@ export default function ZaplieShowcase() {
           className={`absolute left-0 top-[16%] hidden w-[62%] rotate-[-10deg] brightness-90 sm:block ${frame} shadow-black/50`}
         >
           <Image
-            src="/images/zapp/01-bot.png"
+            src="/images/zaplie/01-bot.png"
             alt=""
             width={1440}
             height={810}
@@ -41,7 +41,7 @@ export default function ZaplieShowcase() {
           className={`absolute right-0 top-[16%] hidden w-[62%] rotate-10 brightness-95 sm:block ${frame} shadow-black/50`}
         >
           <Image
-            src="/images/zapp/08-wallet.png"
+            src="/images/zaplie/08-wallet.png"
             alt=""
             width={1440}
             height={810}
@@ -54,7 +54,7 @@ export default function ZaplieShowcase() {
           className={`absolute left-1/2 top-0 w-[80%] -translate-x-1/2 ${frame} shadow-lime-500/20`}
         >
           <Image
-            src="/images/zapp/02-feed.png"
+            src="/images/zaplie/02-feed.png"
             alt="Zaplie feed showing Bitcoin zaps sent between teammates"
             width={1440}
             height={810}

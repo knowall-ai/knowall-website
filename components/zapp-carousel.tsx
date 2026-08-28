@@ -7,39 +7,39 @@ import { cn } from '@/lib/utils';
 
 const images = [
   {
-    src: '/images/zapp/01-bot.png',
+    src: '/images/zaplie/01-bot.png',
     alt: 'Zaplie Chat Bot Interface',
   },
   {
-    src: '/images/zapp/02-feed.png',
+    src: '/images/zaplie/02-feed.png',
     alt: 'Zaplie Activity Feed',
   },
   {
-    src: '/images/zapp/03-bounties.png',
+    src: '/images/zaplie/03-bounties.png',
     alt: 'Zaplie Bounties System',
   },
   {
-    src: '/images/zapp/04-raisers.png',
+    src: '/images/zaplie/04-raisers.png',
     alt: 'Zaplie Group Funding Raisers',
   },
   {
-    src: '/images/zapp/05-automations.png',
+    src: '/images/zaplie/05-automations.png',
     alt: 'Zaplie Automations Dashboard',
   },
   {
-    src: '/images/zapp/06-project.png',
+    src: '/images/zaplie/06-project.png',
     alt: 'Zaplie Project Management',
   },
   {
-    src: '/images/zapp/07-rewards.png',
+    src: '/images/zaplie/07-rewards.png',
     alt: 'Zaplie Rewards Program',
   },
   {
-    src: '/images/zapp/08-wallet.png',
+    src: '/images/zaplie/08-wallet.png',
     alt: 'Zaplie Wallet & Transactions',
   },
   {
-    src: '/images/zapp/09-sasha.png',
+    src: '/images/zaplie/09-sasha.png',
     alt: 'Zaplie User Profile',
   },
 ];
