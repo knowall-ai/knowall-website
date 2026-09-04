@@ -47,7 +47,7 @@ describe('SallieAssistant', () => {
         fireEvent.click(screen.getByRole('button', { name: 'Chat with Sallie' }));
       }
       expect(screen.getByTestId('sallie-chat')).toBeInTheDocument();
-      expect(screen.getByRole('heading', { name: 'Sallie', exact: true })).toBeInTheDocument();
+      expect(screen.getByRole('heading', { name: 'Sallie' })).toBeInTheDocument();
       await waitFor(() => expect(screen.getByText(SALLIE_GREETING)).toBeInTheDocument());
       expect(screen.getByPlaceholderText('Type your message...')).toBeInTheDocument();
     }

@@ -261,7 +261,7 @@ function ConversationPanel({
           className="h-12 w-12 shrink-0 bg-lime-500 p-0 text-gray-950 hover:bg-lime-400"
         >
           {isLoading ? (
-            <Loader2 className="h-5 w-5 animate-spin" />
+            <Loader2 className="h-5 w-5 animate-spin motion-reduce:animate-none" />
           ) : (
             <SendHorizontal className="h-5 w-5" />
           )}
@@ -432,7 +432,7 @@ function DockLayout() {
         onClick={() => setOpen((o) => !o)}
         aria-label={open ? 'Close chat with Sallie' : 'Chat with Sallie'}
         aria-expanded={open}
-        className="group relative rounded-full ring-2 ring-lime-500/60 shadow-[0_0_40px_rgba(157,254,10,0.35)] transition-transform hover:scale-105 focus:outline-none focus-visible:ring-4"
+        className="group relative rounded-full ring-2 ring-lime-500/60 shadow-[0_0_40px_rgba(157,254,10,0.35)] transition-transform hover:scale-105 focus:outline-none focus-visible:ring-4 motion-reduce:transition-none motion-reduce:hover:scale-100"
       >
         <SallieStage
           shape="circle"

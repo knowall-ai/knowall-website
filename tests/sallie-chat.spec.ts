@@ -29,6 +29,10 @@ test.describe('Sallie Chat', () => {
     await expect(
       page.getByTestId('sallie-chat').getByRole('heading', { name: 'Sallie', exact: true })
     ).toBeVisible();
+    // Her animated avatar (the robot rig) renders alongside the greeting
+    await expect(
+      page.getByTestId('sallie-chat').getByRole('img', { name: /Sallie, KnowAll's robot/ })
+    ).toBeVisible();
     // The greeting is revealed with a typewriter effect, so allow it time to finish.
     await expect(page.getByText(/welcome to KnowAll AI/)).toBeVisible({ timeout: 15000 });
     // The conversation ID is used internally (logging/lead follow-up) but is
