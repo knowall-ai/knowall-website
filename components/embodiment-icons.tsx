@@ -1,3 +1,5 @@
+import type React from 'react';
+
 // Small brand glyphs for the agent embodiment tags. Inline SVGs because
 // lucide-react dropped brand icons (see components/github-icon.tsx).
 export type Embodiment = 'claude' | 'ms-account' | 'teams-bot';
