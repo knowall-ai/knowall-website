@@ -30,7 +30,7 @@ import EmailIcon from '@/components/email-icon';
 import GithubIcon from '@/components/github-icon';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import SallieAssistant, { type SallieLayout } from '@/components/sallie-assistant';
+import SallieAssistant from '@/components/sallie-assistant';
 import Header from '@/components/header';
 import Footer from '@/components/footer';
 import ServiceCard from '@/components/service-card';
@@ -46,16 +46,12 @@ import AgentsSection from '@/components/agents-section';
 import TMinus15Book from '@/components/tminus15-book';
 
 /** Homepage: hero, services, agents, products, Sallie for Sales and contact sections. */
-// How Sallie greets visitors: a full-width band, a circular porthole, or a
-// floating dock in the corner. All three share the same conversation.
-const SALLIE_LAYOUT: SallieLayout = 'band';
-
 export default function Home() {
   return (
     <main className="flex min-h-screen flex-col bg-gray-950">
       <Header />
 
-      {/* Hero Section */}
+      {/* Hero Section with Sallie */}
       <BackgroundImage
         src="/images/green-bg.png"
         className="flex flex-col items-center justify-center px-4 py-10 md:py-16 overflow-hidden"
@@ -66,8 +62,8 @@ export default function Home() {
         ></div>
 
         <div className="container relative z-10 max-w-6xl mx-auto">
-          <div className="flex flex-col items-center text-center">
-            <div className="max-w-4xl text-white">
+          <div className="flex flex-col lg:flex-row items-center gap-12">
+            <div className="flex-1 text-white">
               <h1 className="text-4xl md:text-6xl font-bold mb-6">
                 Intelligence is <span className="text-lime-300">processing power</span>
               </h1>
@@ -77,7 +73,7 @@ export default function Home() {
                 value-for-value micro-Bitcoin transactions between people, customers, and AI agents
                 <span> using Zaplie</span>.
               </p>
-              <div className="flex flex-wrap justify-center gap-4">
+              <div className="flex flex-wrap gap-4">
                 <Button
                   className="bg-lime-500 text-white hover:bg-lime-600 shadow-lg shadow-lime-500/30"
                   asChild
@@ -93,12 +89,14 @@ export default function Home() {
                 </Button>
               </div>
             </div>
+
+            {/* Sallie welcomes visitors and answers questions about what we do */}
+            <div className="flex-1 w-full flex justify-center lg:justify-end">
+              <SallieAssistant />
+            </div>
           </div>
         </div>
       </BackgroundImage>
-
-      {/* Sallie welcomes visitors and answers questions about what we do */}
-      <SallieAssistant layout={SALLIE_LAYOUT} />
 
       {/* Services Section */}
       <section id="services" className="py-20 px-4 bg-gray-900">

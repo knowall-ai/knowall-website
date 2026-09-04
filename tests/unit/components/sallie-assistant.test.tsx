@@ -8,7 +8,8 @@ import SallieAssistant, { SALLIE_GREETING } from '@/components/sallie-assistant'
  * Requirements: sallie-chat
  * - Sallie greets visitors on load
  * - A visitor's message is sent to /api/chat and the reply is shown
- * - Sallie only talks to the public chat endpoint (no other calls)
+ * - Replies are spoken via /api/speak unless Sallie is muted
+ * - The mic only appears where the browser supports speech recognition
  */
 
 function mockReducedMotion(reduce: boolean) {
@@ -33,32 +34,39 @@ describe('SallieAssistant', () => {
     vi.stubGlobal('fetch', fetchMock);
     fetchMock.mockReset();
     Element.prototype.scrollIntoView = vi.fn();
+    window.localStorage.clear();
   });
 
   afterEach(() => {
     vi.unstubAllGlobals();
   });
 
-  it.each(['band', 'porthole', 'dock'] as const)(
-    'greets visitors in the %s layout',
-    async (layout) => {
-      render(<SallieAssistant layout={layout} />);
-      if (layout === 'dock') {
-        fireEvent.click(screen.getByRole('button', { name: 'Chat with Sallie' }));
+  function mockApis(reply = 'We build AI agents.') {
+    fetchMock.mockImplementation(async (url: string) => {
+      if (url === '/api/chat') {
+        return { ok: true, json: async () => ({ role: 'assistant', content: reply }) };
       }
-      expect(screen.getByTestId('sallie-chat')).toBeInTheDocument();
-      expect(screen.getByRole('heading', { name: 'Sallie' })).toBeInTheDocument();
-      await waitFor(() => expect(screen.getByText(SALLIE_GREETING)).toBeInTheDocument());
-      expect(screen.getByPlaceholderText('Type your message...')).toBeInTheDocument();
-    }
-  );
-
-  it('sends the visitor message to /api/chat and shows the reply', async () => {
-    fetchMock.mockResolvedValue({
-      ok: true,
-      json: async () => ({ role: 'assistant', content: 'We build AI agents.' }),
+      // /api/speak: voice not configured in tests
+      return { ok: false, status: 503, json: async () => ({}) };
     });
-    render(<SallieAssistant layout="band" />);
+  }
+
+  it('greets visitors with her avatar, name and welcome message', async () => {
+    mockApis();
+    render(<SallieAssistant />);
+    const hero = screen.getByTestId('sallie-chat');
+    expect(hero).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Sallie' })).toBeInTheDocument();
+    expect(screen.getAllByRole('img', { name: /Sallie, KnowAll's robot/ }).length).toBeGreaterThan(
+      0
+    );
+    await waitFor(() => expect(screen.getByText(SALLIE_GREETING)).toBeInTheDocument());
+    expect(screen.getByPlaceholderText('Type your message...')).toBeInTheDocument();
+  });
+
+  it('sends the visitor message to /api/chat, shows the reply and speaks it', async () => {
+    mockApis();
+    render(<SallieAssistant />);
 
     fireEvent.change(screen.getByPlaceholderText('Type your message...'), {
       target: { value: 'What does KnowAll do?' },
@@ -68,30 +76,47 @@ describe('SallieAssistant', () => {
     expect(screen.getByText('What does KnowAll do?')).toBeInTheDocument();
     await waitFor(() => expect(screen.getByText('We build AI agents.')).toBeInTheDocument());
 
-    expect(fetchMock).toHaveBeenCalledTimes(1);
-    const [url, init] = fetchMock.mock.calls[0];
-    expect(url).toBe('/api/chat');
-    const body = JSON.parse(init.body);
+    const chatCall = fetchMock.mock.calls.find(([url]) => url === '/api/chat');
+    expect(chatCall).toBeTruthy();
+    const body = JSON.parse(chatCall![1].body);
     expect(body.messages).toEqual([{ role: 'user', content: 'What does KnowAll do?' }]);
     expect(body.conversationId).toMatch(/^[A-Z0-9]{8}$/);
+
+    await waitFor(() => {
+      const speakCalls = fetchMock.mock.calls.filter(([url]) => url === '/api/speak');
+      expect(speakCalls.map(([, init]) => JSON.parse(init.body).text)).toContain(
+        'We build AI agents.'
+      );
+    });
   });
 
-  it('sends a suggestion chip as a message', async () => {
-    fetchMock.mockResolvedValue({ ok: true, json: async () => ({ content: 'Sure.' }) });
-    render(<SallieAssistant layout="porthole" />);
+  it('does not speak when muted, and remembers the choice', async () => {
+    window.localStorage.setItem('sallie-muted', '1');
+    mockApis();
+    render(<SallieAssistant />);
 
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: 'Unmute Sallie' })).toBeInTheDocument()
+    );
     fireEvent.click(screen.getByRole('button', { name: 'What is T-Minus-15?' }));
+    await waitFor(() => expect(screen.getByText('We build AI agents.')).toBeInTheDocument());
 
-    await waitFor(() => expect(screen.getByText('Sure.')).toBeInTheDocument());
-    const body = JSON.parse(fetchMock.mock.calls[0][1].body);
-    expect(body.messages[0].content).toBe('What is T-Minus-15?');
-    // Chips disappear once the conversation has started
-    expect(screen.queryByRole('button', { name: 'What does KnowAll do?' })).not.toBeInTheDocument();
+    expect(fetchMock.mock.calls.filter(([url]) => url === '/api/speak')).toHaveLength(0);
+
+    fireEvent.click(screen.getByRole('button', { name: 'Unmute Sallie' }));
+    expect(window.localStorage.getItem('sallie-muted')).toBe('0');
+    expect(screen.getByRole('button', { name: 'Mute Sallie' })).toBeInTheDocument();
+  });
+
+  it('hides the mic where speech recognition is unsupported', () => {
+    mockApis();
+    render(<SallieAssistant />);
+    expect(screen.queryByRole('button', { name: 'Speak to Sallie' })).not.toBeInTheDocument();
   });
 
   it('shows a friendly error when the chat API fails', async () => {
     fetchMock.mockResolvedValue({ ok: false, status: 500, json: async () => ({}) });
-    render(<SallieAssistant layout="band" />);
+    render(<SallieAssistant />);
 
     fireEvent.change(screen.getByPlaceholderText('Type your message...'), {
       target: { value: 'Hello' },

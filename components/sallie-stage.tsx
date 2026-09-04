@@ -1,12 +1,17 @@
+'use client';
+
 import Image from 'next/image';
+import { useEffect, useRef } from 'react';
 import { cn } from '@/lib/utils';
+import { subscribeMouth } from '@/components/sallie-voice';
 
 /**
- * Sallie's animated avatar, in the house style for KnowAll agents: a static
- * robot rig over a backdrop that carries all the motion. Stars twinkle and
- * drift very slowly, and a lime aura behind her "breathes" — faster while she
- * is thinking. Nothing on the rig itself moves (no lip-sync, no blinking), and
- * every animation is switched off under `prefers-reduced-motion`.
+ * Sallie's animated avatar. The robot rig is Sallie's approved call-bot
+ * plate; the backdrop carries the ambient motion (twinkling, drifting stars
+ * and a lime aura that breathes faster while she's thinking). Her mouth is a
+ * five-bar speaker slot driven by the live level of her own voice — the same
+ * audio-driven treatment her live-call rig uses — and sits still when she is
+ * silent. Ambient animation is switched off under `prefers-reduced-motion`.
  */
 
 // Deterministic starfield so server and client render the same sky.
@@ -69,6 +74,11 @@ export function Starfield({ className }: { className?: string }) {
   );
 }
 
+// Mouth slot geometry as fractions of the rig image, from the call-bot's
+// plate table (robot_avatar.py, "classic" plate) remapped to our 1514px crop.
+const MOUTH = { cx: 0.5, cy: 0.545, w: 0.105, h: 0.058 };
+const BAR_GAIN = [0.55, 0.85, 1, 0.85, 0.55];
+
 interface SallieRigProps {
   /** Faster, brighter aura while Sallie is composing a reply. */
   busy?: boolean;
@@ -76,8 +86,16 @@ interface SallieRigProps {
   priority?: boolean;
 }
 
-/** The robot rig with its breathing aura. Bottom-anchored; size via className. */
+/** The robot rig with its breathing aura and voice-driven mouth. Bottom-anchored; size via className. */
 export function SallieRig({ busy = false, className, priority = false }: SallieRigProps) {
+  const mouthRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    return subscribeMouth((level) => {
+      mouthRef.current?.style.setProperty('--sallie-mouth', level.toFixed(3));
+    });
+  }, []);
+
   return (
     <div className={cn('relative flex items-end justify-center', className)}>
       <div
@@ -87,14 +105,38 @@ export function SallieRig({ busy = false, className, priority = false }: SallieR
           busy ? 'animate-sallie-aura-busy' : 'animate-sallie-aura'
         )}
       />
-      <Image
-        src="/images/sallie-rig.webp"
-        alt="Sallie, KnowAll's robot sales agent"
-        width={900}
-        height={683}
-        priority={priority}
-        className="relative h-full w-auto max-w-none select-none object-contain object-bottom drop-shadow-[0_0_24px_rgba(157,254,10,0.25)]"
-      />
+      <div className="relative h-full">
+        <Image
+          src="/images/sallie-rig.webp"
+          alt="Sallie, KnowAll's robot sales agent"
+          width={900}
+          height={609}
+          priority={priority}
+          className="h-full w-auto max-w-none select-none object-contain object-bottom drop-shadow-[0_0_24px_rgba(157,254,10,0.25)]"
+        />
+        <div
+          ref={mouthRef}
+          aria-hidden="true"
+          className="pointer-events-none absolute flex items-center justify-center gap-[6%] rounded-[30%] bg-[#0b100d] shadow-[inset_0_1px_2px_rgba(0,0,0,0.8)] [--sallie-mouth:0]"
+          style={{
+            left: `${(MOUTH.cx - MOUTH.w / 2) * 100}%`,
+            top: `${(MOUTH.cy - MOUTH.h / 2) * 100}%`,
+            width: `${MOUTH.w * 100}%`,
+            height: `${MOUTH.h * 100}%`,
+          }}
+        >
+          {BAR_GAIN.map((gain, i) => (
+            <span
+              key={i}
+              className="h-[72%] w-[9%] origin-center rounded-full bg-lime-400 shadow-[0_0_6px_rgba(157,254,10,0.9)] transition-transform duration-75 ease-out"
+              style={{
+                transform: `scaleY(calc(0.12 + var(--sallie-mouth) * ${gain} * 0.88))`,
+                opacity: `calc(0.12 + var(--sallie-mouth) * 0.88)`,
+              }}
+            />
+          ))}
+        </div>
+      </div>
     </div>
   );
 }

@@ -7,16 +7,26 @@ import {
   useState,
   type FormEvent,
   type KeyboardEvent,
+  type PointerEvent,
 } from 'react';
+import { createPortal } from 'react-dom';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { Loader2, MessageCircle, SendHorizontal, X } from 'lucide-react';
+import {
+  Loader2,
+  MessageCircle,
+  Mic,
+  MicOff,
+  SendHorizontal,
+  Volume2,
+  VolumeX,
+  X,
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
-import SallieStage, { SallieRig, Starfield } from '@/components/sallie-stage';
-
-export type SallieLayout = 'band' | 'porthole' | 'dock';
+import SallieStage, { Starfield } from '@/components/sallie-stage';
+import { useSallieVoice, useSpeechInput } from '@/components/sallie-voice';
 
 interface Message {
   id: string;
@@ -43,13 +53,10 @@ function generateId(length = 8) {
 }
 
 /** Reveal the greeting a few characters at a time, unless motion is reduced. */
-function useTypewriter(text: string, enabled: boolean) {
+function useTypewriter(text: string) {
   const [shown, setShown] = useState('');
   useEffect(() => {
-    if (!enabled) return;
-    const reduce =
-      typeof window !== 'undefined' &&
-      window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
     if (reduce) {
       setShown(text);
       return;
@@ -61,7 +68,7 @@ function useTypewriter(text: string, enabled: boolean) {
       if (i >= text.length) clearInterval(timer);
     }, 24);
     return () => clearInterval(timer);
-  }, [text, enabled]);
+  }, [text]);
   return shown;
 }
 
@@ -71,10 +78,11 @@ function useSallieConversation() {
   const [error, setError] = useState<string | null>(null);
   const [conversationId] = useState(() => generateId());
 
+  /** Send a message; resolves to Sallie's reply, or null if it failed. */
   const send = useCallback(
-    async (text: string) => {
+    async (text: string): Promise<string | null> => {
       const content = text.trim();
-      if (!content || isLoading) return;
+      if (!content || isLoading) return null;
       setError(null);
       const userMessage: Message = { id: generateId(), role: 'user', content };
       const history = [...messages, userMessage];
@@ -93,11 +101,13 @@ function useSallieConversation() {
         const data = await res.json();
         const reply: string = data.content || "Sorry, I couldn't process that. Please try again.";
         setMessages((prev) => [...prev, { id: generateId(), role: 'assistant', content: reply }]);
+        return reply;
       } catch (err) {
         console.error('Sallie chat error', err);
         setError(
           "Sorry, I couldn't reach my knowledge base just now. Please try again in a moment."
         );
+        return null;
       } finally {
         setIsLoading(false);
       }
@@ -106,6 +116,21 @@ function useSallieConversation() {
   );
 
   return { messages, isLoading, error, send };
+}
+
+/** Track whether an element is on screen; stays "visible" where IntersectionObserver is missing. */
+function useOnScreen<T extends Element>(ref: React.RefObject<T | null>) {
+  const [onScreen, setOnScreen] = useState(true);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || typeof IntersectionObserver === 'undefined') return;
+    const observer = new IntersectionObserver(([entry]) => setOnScreen(entry.isIntersecting), {
+      threshold: 0.15,
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [ref]);
+  return onScreen;
 }
 
 function MessageBubble({ message }: { message: Message }) {
@@ -143,23 +168,63 @@ function MessageBubble({ message }: { message: Message }) {
   );
 }
 
+interface Voice {
+  muted: boolean;
+  setMuted: (value: boolean) => void;
+  speaking: boolean;
+  blocked: boolean;
+  micSupported: boolean;
+  listening: boolean;
+  startListening: () => void;
+  stopListening: () => void;
+}
+
+function VoiceToggle({ voice, className }: { voice: Voice; className?: string }) {
+  return (
+    <button
+      type="button"
+      onClick={() => voice.setMuted(!voice.muted)}
+      aria-pressed={voice.muted}
+      aria-label={voice.muted ? 'Unmute Sallie' : 'Mute Sallie'}
+      title={voice.muted ? 'Unmute Sallie' : 'Mute Sallie'}
+      className={cn(
+        'inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium transition-colors',
+        voice.muted
+          ? 'border-gray-600 text-gray-400 hover:border-gray-500 hover:text-gray-200'
+          : 'border-lime-500/50 bg-lime-500/10 text-lime-300 hover:bg-lime-500/20',
+        className
+      )}
+    >
+      {voice.muted ? <VolumeX className="h-3.5 w-3.5" /> : <Volume2 className="h-3.5 w-3.5" />}
+      {voice.muted ? 'Muted' : 'Voice on'}
+    </button>
+  );
+}
+
 interface ConversationPanelProps {
   conversation: ReturnType<typeof useSallieConversation>;
+  ask: (text: string) => void;
+  voice: Voice;
+  input: string;
+  setInput: (value: string) => void;
   /** Show the greeting inside the message list (used where there is no speech bubble). */
   greetingInline?: boolean;
   className?: string;
   listClassName?: string;
 }
 
-/** Messages, suggestion chips and the composer. Shared by every layout. */
+/** Messages, suggestion chips and the composer (with mic). Shared by hero and dock. */
 function ConversationPanel({
   conversation,
+  ask,
+  voice,
+  input,
+  setInput,
   greetingInline = false,
   className,
   listClassName,
 }: ConversationPanelProps) {
-  const { messages, isLoading, error, send } = conversation;
-  const [input, setInput] = useState('');
+  const { messages, isLoading, error } = conversation;
   const endRef = useRef<HTMLDivElement>(null);
   const started = messages.length > 0;
 
@@ -171,7 +236,7 @@ function ConversationPanel({
     e?.preventDefault();
     const text = input;
     setInput('');
-    void send(text);
+    ask(text);
   };
 
   const onKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
@@ -187,7 +252,7 @@ function ConversationPanel({
         <button
           key={s}
           type="button"
-          onClick={() => void send(s)}
+          onClick={() => ask(s)}
           disabled={isLoading}
           className="rounded-full border border-lime-500/40 bg-lime-500/10 px-3 py-1.5 text-xs font-medium text-lime-300 transition-colors hover:bg-lime-500/20 hover:text-lime-200 disabled:opacity-50"
         >
@@ -243,12 +308,29 @@ function ConversationPanel({
 
       {!started && !greetingInline && suggestions}
 
-      <form onSubmit={submit} className="mt-4 flex items-end gap-2">
+      <form onSubmit={submit} className="mt-3 flex items-end gap-2">
+        {voice.micSupported && (
+          <Button
+            type="button"
+            variant="outline"
+            aria-label={voice.listening ? 'Stop listening' : 'Speak to Sallie'}
+            aria-pressed={voice.listening}
+            onClick={voice.listening ? voice.stopListening : voice.startListening}
+            disabled={isLoading}
+            className={cn(
+              'h-12 w-12 shrink-0 border-gray-700 bg-gray-800/90 p-0 text-gray-200 hover:bg-gray-700 hover:text-white',
+              voice.listening &&
+                'border-lime-400 bg-lime-500/20 text-lime-300 shadow-[0_0_18px_rgba(157,254,10,0.45)] animate-pulse motion-reduce:animate-none'
+            )}
+          >
+            {voice.listening ? <MicOff className="h-5 w-5" /> : <Mic className="h-5 w-5" />}
+          </Button>
+        )}
         <Textarea
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={onKeyDown}
-          placeholder="Type your message..."
+          placeholder={voice.listening ? 'Listening…' : 'Type your message...'}
           aria-label="Message Sallie"
           rows={1}
           className="min-h-[48px] max-h-32 flex-1 resize-none border-gray-700 bg-gray-800/90 text-gray-100 placeholder:text-gray-500 focus-visible:ring-lime-500"
@@ -273,11 +355,11 @@ function ConversationPanel({
 
 function SpeechBubble({
   text,
-  tail = 'left',
+  tail = 'top',
   className,
 }: {
   text: string;
-  tail?: 'left' | 'bottom' | 'right' | 'top';
+  tail?: 'top' | 'right';
   className?: string;
 }) {
   return (
@@ -291,13 +373,11 @@ function SpeechBubble({
         aria-hidden="true"
         className={cn(
           'absolute h-4 w-4 rotate-45 border-lime-500/30 bg-gray-900/85',
-          tail === 'left' && 'left-[-9px] top-7 border-b border-l',
-          tail === 'right' && 'right-[-9px] top-7 border-r border-t',
-          tail === 'bottom' && 'bottom-[-9px] left-1/2 -ml-2 border-b border-r',
-          tail === 'top' && 'top-[-9px] left-1/2 -ml-2 border-l border-t'
+          tail === 'top' && 'left-1/2 top-[-9px] -ml-2 border-l border-t',
+          tail === 'right' && 'right-[-9px] top-7 border-r border-t'
         )}
       />
-      <p className="text-base leading-relaxed md:text-lg">
+      <p className="text-base leading-relaxed">
         {text}
         <span className="ml-0.5 inline-block h-[1em] w-0.5 translate-y-[2px] bg-lime-400 align-middle animate-sallie-blink motion-reduce:hidden" />
       </p>
@@ -305,85 +385,87 @@ function SpeechBubble({
   );
 }
 
-function BandLayout() {
+/**
+ * Sallie welcomes visitors from the hero and answers questions about what
+ * KnowAll does. When her hero spot scrolls out of view she docks in the
+ * corner with the same conversation. She talks only to the public
+ * `/api/chat` and `/api/speak` endpoints — no internal systems are wired in.
+ */
+export default function SallieAssistant() {
   const conversation = useSallieConversation();
-  const greeting = useTypewriter(SALLIE_GREETING, true);
-  return (
-    <section
-      id="sallie-welcome"
-      data-testid="sallie-chat"
-      className="relative w-full overflow-hidden text-white"
-    >
-      <Starfield />
-      <div className="container relative z-10 mx-auto grid max-w-6xl gap-8 px-4 pt-10 md:pt-14 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-12">
-        <div className="relative order-2 mx-auto h-[300px] w-full max-w-[420px] sm:h-[380px] lg:order-1 lg:h-full lg:min-h-[460px] lg:max-w-none">
-          <SallieRig
-            busy={conversation.isLoading}
-            priority
-            className="absolute inset-x-0 bottom-0 h-full"
-          />
-        </div>
-        <div className="relative z-10 order-1 flex flex-col gap-6 pb-10 md:pb-14 lg:order-2">
-          <div>
-            <p className="mb-1 text-xs font-semibold uppercase tracking-[0.2em] text-lime-400">
-              Your AI guide
-            </p>
-            <h3 className="text-2xl font-bold md:text-3xl">Sallie</h3>
-          </div>
-          <SpeechBubble text={greeting} tail="left" />
-          <ConversationPanel conversation={conversation} listClassName="max-h-[320px]" />
-        </div>
-      </div>
-    </section>
+  const tts = useSallieVoice();
+  const [input, setInput] = useState('');
+  const greeting = useTypewriter(SALLIE_GREETING);
+  const heroRef = useRef<HTMLDivElement>(null);
+  const heroOnScreen = useOnScreen(heroRef);
+  const [dockOpen, setDockOpen] = useState(false);
+  const [dockBubbleDismissed, setDockBubbleDismissed] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
+  const { speak, stop, unlock } = tts;
+
+  const ask = useCallback(
+    (text: string) => {
+      if (!text.trim()) return;
+      stop();
+      void conversation.send(text).then((reply) => {
+        if (reply) void speak(reply);
+      });
+    },
+    [conversation, speak, stop]
   );
-}
 
-function PortholeLayout() {
-  const conversation = useSallieConversation();
-  const greeting = useTypewriter(SALLIE_GREETING, true);
-  return (
-    <section
-      id="sallie-welcome"
-      data-testid="sallie-chat"
-      className="w-full bg-gray-950 px-4 py-16 text-white md:py-20"
-    >
-      <div className="container mx-auto flex max-w-3xl flex-col items-center gap-8">
-        <SallieStage
-          shape="circle"
-          busy={conversation.isLoading}
-          priority
-          className="w-56 shrink-0 ring-4 ring-lime-500/40 shadow-[0_0_90px_rgba(157,254,10,0.18)] md:w-72"
-        />
-        <div className="text-center">
-          <p className="mb-1 text-xs font-semibold uppercase tracking-[0.2em] text-lime-400">
-            Your AI guide
-          </p>
-          <h3 className="text-2xl font-bold md:text-3xl">Sallie</h3>
-        </div>
-        <SpeechBubble text={greeting} tail="top" className="w-full max-w-2xl" />
-        <ConversationPanel
-          conversation={conversation}
-          className="w-full max-w-2xl"
-          listClassName="max-h-[360px]"
-        />
-      </div>
-    </section>
-  );
-}
+  const speech = useSpeechInput({
+    onInterim: setInput,
+    onFinal: (text) => {
+      setInput('');
+      ask(text);
+    },
+  });
 
-function DockLayout() {
-  const conversation = useSallieConversation();
-  const [open, setOpen] = useState(false);
-  const [dismissed, setDismissed] = useState(false);
-  const greeting = useTypewriter(SALLIE_GREETING, !open);
-  const showBubble = !open && !dismissed;
+  const voice: Voice = {
+    muted: tts.muted,
+    setMuted: tts.setMuted,
+    speaking: tts.speaking,
+    blocked: tts.blocked,
+    micSupported: speech.supported,
+    listening: speech.listening,
+    startListening: () => {
+      stop();
+      speech.startListening();
+    },
+    stopListening: speech.stopListening,
+  };
 
-  return (
+  // Say hello once she is on screen (browsers may hold this until the first
+  // interaction; `unlock` releases it).
+  useEffect(() => {
+    const timer = setTimeout(() => void speak(SALLIE_GREETING), 600);
+    return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const onInteract = (e: PointerEvent | KeyboardEvent) => {
+    if (e.type === 'keydown' && (e as KeyboardEvent).key === 'Tab') return;
+    unlock();
+  };
+
+  const docked = mounted && !heroOnScreen;
+  const showDockBubble = docked && !dockOpen && !dockBubbleDismissed;
+
+  const dock = (
     <div
-      className="fixed bottom-5 right-5 z-50 flex flex-col items-end gap-3"
-      data-testid="sallie-chat"
+      className={cn(
+        'fixed bottom-5 right-5 z-50 flex flex-col items-end gap-3 transition-all duration-300',
+        docked ? 'translate-y-0 opacity-100' : 'pointer-events-none translate-y-6 opacity-0'
+      )}
+      data-testid="sallie-dock"
+      aria-hidden={!docked}
+      onPointerDownCapture={onInteract}
+      onKeyDownCapture={onInteract}
     >
-      {open && (
+      {dockOpen && (
         <div className="flex h-[min(600px,calc(100vh-7rem))] w-[min(400px,calc(100vw-2.5rem))] flex-col overflow-hidden rounded-2xl border border-lime-500/30 bg-gray-950/95 text-white shadow-2xl shadow-black/60 backdrop-blur-md animate-sallie-pop motion-reduce:animate-none">
           <div className="relative flex items-center gap-3 overflow-hidden px-4 py-3">
             <Starfield />
@@ -393,32 +475,43 @@ function DockLayout() {
               className="relative z-10 w-12 shrink-0 ring-2 ring-lime-500/50"
             />
             <div className="relative z-10">
-              <h3 className="font-semibold leading-tight">Sallie</h3>
+              <p className="font-semibold leading-tight">Sallie</p>
               <p className="text-xs text-lime-400">KnowAll AI guide</p>
             </div>
+            <VoiceToggle voice={voice} className="relative z-10 ml-auto" />
             <button
               type="button"
-              onClick={() => setOpen(false)}
+              onClick={() => setDockOpen(false)}
               aria-label="Close chat"
-              className="relative z-10 ml-auto rounded-full p-1.5 text-gray-400 hover:bg-white/10 hover:text-white"
+              className="relative z-10 rounded-full p-1.5 text-gray-400 hover:bg-white/10 hover:text-white"
             >
               <X className="h-4 w-4" />
             </button>
           </div>
           <ConversationPanel
             conversation={conversation}
+            ask={ask}
+            voice={voice}
+            input={input}
+            setInput={setInput}
             greetingInline
             className="min-h-0 flex-1 px-4 pb-4 pt-3"
           />
         </div>
       )}
 
-      {showBubble && (
+      {showDockBubble && (
         <div className="relative max-w-[300px]">
-          <SpeechBubble text={greeting} tail="right" className="px-4 py-3 [&_p]:text-sm" />
+          <SpeechBubble
+            text={
+              conversation.messages.length ? 'Still here if you have more questions.' : greeting
+            }
+            tail="right"
+            className="px-4 py-3 [&_p]:text-sm"
+          />
           <button
             type="button"
-            onClick={() => setDismissed(true)}
+            onClick={() => setDockBubbleDismissed(true)}
             aria-label="Dismiss greeting"
             className="absolute -left-2 -top-2 rounded-full bg-gray-800 p-1 text-gray-400 shadow hover:text-white"
           >
@@ -429,36 +522,57 @@ function DockLayout() {
 
       <button
         type="button"
-        onClick={() => setOpen((o) => !o)}
-        aria-label={open ? 'Close chat with Sallie' : 'Chat with Sallie'}
-        aria-expanded={open}
+        onClick={() => setDockOpen((o) => !o)}
+        aria-label={dockOpen ? 'Close chat with Sallie' : 'Chat with Sallie'}
+        aria-expanded={dockOpen}
+        tabIndex={docked ? 0 : -1}
         className="group relative rounded-full ring-2 ring-lime-500/60 shadow-[0_0_40px_rgba(157,254,10,0.35)] transition-transform hover:scale-105 focus:outline-none focus-visible:ring-4 motion-reduce:transition-none motion-reduce:hover:scale-100"
+      >
+        <SallieStage shape="circle" busy={conversation.isLoading} className="w-16 md:w-20" />
+        <span className="absolute -bottom-1 -right-1 flex h-7 w-7 items-center justify-center rounded-full bg-lime-500 text-gray-950 shadow">
+          {dockOpen ? <X className="h-4 w-4" /> : <MessageCircle className="h-4 w-4" />}
+        </span>
+      </button>
+    </div>
+  );
+
+  return (
+    <>
+      <div
+        ref={heroRef}
+        data-testid="sallie-chat"
+        className="flex w-full max-w-lg flex-col items-center gap-4 text-white"
+        onPointerDownCapture={onInteract}
+        onKeyDownCapture={onInteract}
       >
         <SallieStage
           shape="circle"
           busy={conversation.isLoading}
           priority
-          className="w-16 md:w-20"
+          className="w-44 shrink-0 ring-4 ring-lime-400/60 shadow-[0_0_80px_rgba(157,254,10,0.35)] md:w-56"
         />
-        <span className="absolute -bottom-1 -right-1 flex h-7 w-7 items-center justify-center rounded-full bg-lime-500 text-gray-950 shadow">
-          {open ? <X className="h-4 w-4" /> : <MessageCircle className="h-4 w-4" />}
-        </span>
-      </button>
-    </div>
+        <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
+          <h3 className="text-2xl font-bold">Sallie</h3>
+          <span className="text-xs font-semibold uppercase tracking-[0.2em] text-lime-300">
+            Your AI guide
+          </span>
+          <VoiceToggle voice={voice} />
+        </div>
+        {voice.blocked && !voice.muted && (
+          <p className="-mt-2 text-xs text-lime-200/80">Click or tap here to hear Sallie</p>
+        )}
+        <SpeechBubble text={greeting} tail="top" className="w-full" />
+        <ConversationPanel
+          conversation={conversation}
+          ask={ask}
+          voice={voice}
+          input={input}
+          setInput={setInput}
+          className="w-full"
+          listClassName="max-h-[260px]"
+        />
+      </div>
+      {mounted && createPortal(dock, document.body)}
+    </>
   );
-}
-
-interface SallieAssistantProps {
-  layout?: SallieLayout;
-}
-
-/**
- * Sallie welcomes visitors and answers questions about KnowAll's offerings.
- * She talks only to the public `/api/chat` endpoint (same persona and
- * knowledge as before) — no internal systems are wired in.
- */
-export default function SallieAssistant({ layout = 'band' }: SallieAssistantProps) {
-  if (layout === 'porthole') return <PortholeLayout />;
-  if (layout === 'dock') return <DockLayout />;
-  return <BandLayout />;
 }
