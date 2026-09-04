@@ -55,7 +55,7 @@ export function EmbodimentIcon({
 }: {
   embodiment: Embodiment;
   className?: string;
-}) {
+}): React.JSX.Element {
   switch (embodiment) {
     case 'claude':
       return <ClaudeIcon className={className} />;
@@ -63,5 +63,10 @@ export function EmbodimentIcon({
       return <MicrosoftIcon className={className} />;
     case 'teams-bot':
       return <TeamsIcon className={className} />;
+    default: {
+      // Compile-time guard: adding an Embodiment without a case here is a type error.
+      const unhandled: never = embodiment;
+      throw new Error(`Unhandled embodiment: ${String(unhandled)}`);
+    }
   }
 }

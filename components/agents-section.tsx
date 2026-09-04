@@ -130,7 +130,7 @@ export default function AgentsSection() {
               </span>
               <span
                 className="mt-3 flex items-center gap-2"
-                data-testid={`${agent.name}-embodiments`}
+                data-testid={`${agent.name.toLowerCase()}-embodiments`}
               >
                 {agent.embodiments.map((e) => (
                   <span key={e} title={EMBODIMENT_LABELS[e]} className="inline-flex">
@@ -146,7 +146,9 @@ export default function AgentsSection() {
         <div className="mt-10 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-sm text-gray-400">
           {legend.map((e) => (
             <span key={e} className="inline-flex items-center gap-2">
-              <EmbodimentIcon embodiment={e} className="h-4 w-4" />
+              <span title={EMBODIMENT_LABELS[e]} className="inline-flex">
+                <EmbodimentIcon embodiment={e} className="h-4 w-4" />
+              </span>
               {EMBODIMENT_LABELS[e]}
             </span>
           ))}
