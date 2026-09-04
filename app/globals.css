@@ -168,6 +168,64 @@
       height: 0;
     }
   }
+
+  /* Sallie's animated avatar. House style: the robot rig itself never moves —
+     only the backdrop (twinkling stars, a breathing aura) animates. Every use
+     of these pairs with `motion-reduce:animate-none`. */
+  --animate-sallie-twinkle: sallie-twinkle 5s ease-in-out infinite;
+  --animate-sallie-drift: sallie-drift 90s ease-in-out infinite alternate;
+  --animate-sallie-aura: sallie-aura 6s ease-in-out infinite;
+  --animate-sallie-aura-busy: sallie-aura 1.6s ease-in-out infinite;
+  --animate-sallie-pop: sallie-pop 0.45s cubic-bezier(0.2, 0.9, 0.3, 1.15) both;
+  --animate-sallie-blink: sallie-blink 1.2s ease-in-out infinite;
+
+  @keyframes sallie-twinkle {
+    0%,
+    100% {
+      opacity: 0.25;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+  @keyframes sallie-drift {
+    from {
+      transform: translate3d(0, 0, 0);
+    }
+    to {
+      transform: translate3d(-2.5%, 1.5%, 0);
+    }
+  }
+  @keyframes sallie-aura {
+    0%,
+    100% {
+      opacity: 0.4;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.85;
+      transform: scale(1.08);
+    }
+  }
+  @keyframes sallie-pop {
+    from {
+      opacity: 0;
+      transform: translateY(10px) scale(0.96);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+  @keyframes sallie-blink {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0;
+    }
+  }
 }
 
 /*

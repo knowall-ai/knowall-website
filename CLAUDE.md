@@ -38,7 +38,7 @@ npx vitest run tests/unit/lib/utils.test.ts
 
 **Chat flow:** Browser → `/api/chat` (POST) → OpenAI API → Response logged → JSON response returned (not streaming)
 
-**Components:** `components/conversation-interface.tsx` handles the chat UI with speech recognition. UI components in `components/ui/` are shadcn/ui.
+**Components:** `components/sallie-assistant.tsx` is Sallie's welcome + chat (band, porthole or dock layouts, chosen in `app/page.tsx`); `components/sallie-stage.tsx` is her animated avatar (static robot rig, animated starfield backdrop). UI components in `components/ui/` are shadcn/ui.
 
 ## Environment Variables
 
@@ -75,3 +75,13 @@ See `docs/TROUBLESHOOTING.adoc` for Azure-specific issues.
 End-to-end (Playwright) tests are in `tests/` following the `[feature-name].spec.ts` convention. Unit tests (Vitest + React Testing Library) are in `tests/unit/` following the `[name].test.ts(x)` convention.
 
 Playwright starts a production server (`npm run build && npm run start` on port 3000, see `playwright.config.ts`) and always injects a placeholder (invalid) `OPENAI_API_KEY`, so the chat tests deterministically exercise the API's fallback response path and never call OpenAI — even when a real key is present in the environment. Set `E2E_USE_REAL_OPENAI_KEY=1` to explicitly opt in to passing the real key through. `ADMIN_API_KEY` falls back to a placeholder when unset.
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+# This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->

@@ -4,7 +4,7 @@ import { test, expect } from '@playwright/test';
  * Sallie Chat Tests
  *
  * Based on requirements (sallie-chat):
- * - The chat interface renders with Sallie's greeting
+ * - Sallie's animated avatar renders with her welcome greeting
  * - Sending a message displays a response in the chat interface
  * - When the OpenAI API is unavailable (e.g. no valid API key), Sallie replies
  *   with a fallback response instead of an error
@@ -29,7 +29,8 @@ test.describe('Sallie Chat', () => {
     await expect(
       page.getByTestId('sallie-chat').getByRole('heading', { name: 'Sallie', exact: true })
     ).toBeVisible();
-    await expect(page.getByText(/I'm Sallie, but I'm not your regular bot!/)).toBeVisible();
+    // The greeting is revealed with a typewriter effect, so allow it time to finish.
+    await expect(page.getByText(/welcome to KnowAll AI/)).toBeVisible({ timeout: 15000 });
     // The conversation ID is used internally (logging/lead follow-up) but is
     // deliberately not surfaced to visitors.
     await expect(page.getByText(/Our conversation will be saved with the ID/)).toHaveCount(0);
@@ -37,13 +38,13 @@ test.describe('Sallie Chat', () => {
 
   test('Chat input and send button are available', async ({ page }) => {
     await expect(page.getByPlaceholder('Type your message...')).toBeVisible();
-    await expect(page.locator('button[type="submit"]')).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Send message' })).toBeVisible();
   });
 
   test('Sending a message shows a fallback reply without a valid API key', async ({ page }) => {
     const input = page.getByPlaceholder('Type your message...');
     await input.fill('Hello Sallie');
-    await page.locator('button[type="submit"]').click();
+    await page.getByRole('button', { name: 'Send message' }).click();
 
     // The user's message appears in the conversation
     await expect(page.getByText('Hello Sallie', { exact: true })).toBeVisible();
