@@ -1,37 +1,99 @@
 import Image from 'next/image';
 import { Card } from '@/components/ui/card';
+import { EmbodimentIcon, EMBODIMENT_LABELS, type Embodiment } from '@/components/embodiment-icons';
 
 interface Agent {
   name: string;
   role: string;
   phase: string;
   image: string;
+  embodiments: Embodiment[];
 }
 
 // KnowAll's AI agents, mirroring the T-Minus-15 delivery lifecycle (Idea -> Production).
+// Embodiments: how each agent runs — every agent is a Claude Code agent except Zaplie
+// (a Microsoft Teams bot); Sallie also has her own Microsoft account.
 const agents: Agent[] = [
-  { name: 'Sallie', role: 'the Salesperson', phase: 'Idea', image: '/images/agents/sallie.jpg' },
-  { name: 'Poppie', role: 'the Planner', phase: 'Plan', image: '/images/agents/poppie.jpg' },
-  { name: 'Preppie', role: 'the Prepper', phase: 'Prep', image: '/images/agents/preppie.jpg' },
-  { name: 'Archie', role: 'the Architect', phase: 'Design', image: '/images/agents/archie.jpg' },
-  { name: 'Dannie', role: 'the Designer', phase: 'Design', image: '/images/agents/dannie.jpg' },
-  { name: 'Ernie', role: 'the Engineer', phase: 'Engineer', image: '/images/agents/ernie.jpg' },
-  { name: 'Teddie', role: 'the Tester', phase: 'Test', image: '/images/agents/teddie.jpg' },
+  {
+    name: 'Sallie',
+    role: 'the Salesperson',
+    phase: 'Idea',
+    image: '/images/agents/sallie.jpg',
+    embodiments: ['claude', 'ms-account'],
+  },
+  {
+    name: 'Poppie',
+    role: 'the Planner',
+    phase: 'Plan',
+    image: '/images/agents/poppie.jpg',
+    embodiments: ['claude'],
+  },
+  {
+    name: 'Preppie',
+    role: 'the Prepper',
+    phase: 'Prep',
+    image: '/images/agents/preppie.jpg',
+    embodiments: ['claude'],
+  },
+  {
+    name: 'Archie',
+    role: 'the Architect',
+    phase: 'Design',
+    image: '/images/agents/archie.jpg',
+    embodiments: ['claude'],
+  },
+  {
+    name: 'Dannie',
+    role: 'the Designer',
+    phase: 'Design',
+    image: '/images/agents/dannie.jpg',
+    embodiments: ['claude'],
+  },
+  {
+    name: 'Ernie',
+    role: 'the Engineer',
+    phase: 'Engineer',
+    image: '/images/agents/ernie.jpg',
+    embodiments: ['claude'],
+  },
+  {
+    name: 'Teddie',
+    role: 'the Tester',
+    phase: 'Test',
+    image: '/images/agents/teddie.jpg',
+    embodiments: ['claude'],
+  },
   {
     name: 'Pennie',
     role: 'the Penetration Tester',
     phase: 'Test',
     image: '/images/agents/pennie.jpg',
+    embodiments: ['claude'],
   },
-  { name: 'Ollie', role: 'the Operator', phase: 'Operate', image: '/images/agents/ollie.jpg' },
-  { name: 'Allie', role: 'the Accountant', phase: 'Accounts', image: '/images/agents/allie.jpg' },
+  {
+    name: 'Ollie',
+    role: 'the Operator',
+    phase: 'Operate',
+    image: '/images/agents/ollie.jpg',
+    embodiments: ['claude'],
+  },
+  {
+    name: 'Allie',
+    role: 'the Accountant',
+    phase: 'Accounts',
+    image: '/images/agents/allie.jpg',
+    embodiments: ['claude'],
+  },
   {
     name: 'Zaplie',
     role: 'the Rewards Agent',
     phase: 'Rewards',
     image: '/images/agents/zaplie.jpg',
+    embodiments: ['teams-bot'],
   },
 ];
+
+const legend: Embodiment[] = ['claude', 'ms-account', 'teams-bot'];
 
 export default function AgentsSection() {
   return (
@@ -66,7 +128,29 @@ export default function AgentsSection() {
               <span className="mt-3 inline-block rounded-full bg-lime-500/10 px-3 py-1 text-xs font-medium uppercase tracking-wide text-lime-400">
                 {agent.phase}
               </span>
+              <span
+                className="mt-3 flex items-center gap-2"
+                data-testid={`${agent.name.toLowerCase()}-embodiments`}
+              >
+                {agent.embodiments.map((e) => (
+                  <span key={e} title={EMBODIMENT_LABELS[e]} className="inline-flex">
+                    <EmbodimentIcon embodiment={e} className="h-4 w-4" />
+                    <span className="sr-only">{EMBODIMENT_LABELS[e]}</span>
+                  </span>
+                ))}
+              </span>
             </Card>
+          ))}
+        </div>
+
+        <div className="mt-10 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-sm text-gray-400">
+          {legend.map((e) => (
+            <span key={e} className="inline-flex items-center gap-2">
+              <span title={EMBODIMENT_LABELS[e]} className="inline-flex">
+                <EmbodimentIcon embodiment={e} className="h-4 w-4" />
+              </span>
+              {EMBODIMENT_LABELS[e]}
+            </span>
           ))}
         </div>
       </div>
