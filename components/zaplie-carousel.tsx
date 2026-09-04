@@ -44,7 +44,7 @@ const images = [
   },
 ];
 
-export default function ZappCarousel() {
+export default function ZaplieCarousel() {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [modalImage, setModalImage] = useState(0);
