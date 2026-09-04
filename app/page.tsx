@@ -39,7 +39,7 @@ import NostrButton from '@/components/nostr-button';
 import BitcoinLogo from '@/components/bitcoin-logo';
 import BackgroundImage from '@/components/background-image';
 import AutoGenLogo from '@/components/autogen-logo';
-import ZappCarousel from '@/components/zapp-carousel';
+import ZaplieCarousel from '@/components/zaplie-carousel';
 import ZaplieShowcase from '@/components/zaplie-showcase';
 import TeamSection from '@/components/team-section';
 import AgentsSection from '@/components/agents-section';
@@ -204,7 +204,7 @@ export default function Home() {
           </div>
 
           {/* Zaplie Screenshots Carousel */}
-          <ZappCarousel />
+          <ZaplieCarousel />
         </div>
       </section>
 
