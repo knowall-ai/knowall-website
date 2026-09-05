@@ -38,8 +38,16 @@ const teamMembers: TeamMember[] = [
   },
 ];
 
-// purplepag.es is a dedicated profile aggregator; the others are general-purpose relays
-const PROFILE_RELAYS = ['wss://relay.damus.io', 'wss://nos.lol', 'wss://purplepag.es'];
+// purplepag.es is a dedicated profile aggregator; the others are general-purpose
+// relays. primal and oxtr are the relay hints in our NIP-05 file — some team
+// profiles (Akash's) live only there.
+const PROFILE_RELAYS = [
+  'wss://relay.damus.io',
+  'wss://nos.lol',
+  'wss://purplepag.es',
+  'wss://relay.primal.net',
+  'wss://nostr.oxtr.dev',
+];
 
 export default function TeamSection() {
   const [pictures, setPictures] = useState<Record<string, string>>({});
@@ -140,11 +148,14 @@ export default function TeamSection() {
           The people behind our AI systems. Connect with us on Nostr.
         </p>
 
-        <div className="flex flex-wrap justify-center gap-8">
+        <div
+          className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4"
+          data-testid="team-grid"
+        >
           {teamMembers.map((member) => (
             <Card
               key={member.npub}
-              className="p-6 shadow-md border-0 bg-gray-900 text-white flex flex-col items-center text-center w-full max-w-xs sm:w-64"
+              className="p-6 shadow-md border-0 bg-gray-900 text-white flex flex-col items-center text-center"
             >
               {pictures[member.pubkey] && !broken[member.pubkey] ? (
                 // eslint-disable-next-line @next/next/no-img-element -- avatar URLs come from Nostr profiles, hosts unknown at build time
