@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { clientIp, consume, isSameOrigin, resetRateLimits } from '@/lib/rate-limit';
+import { clientIp, consume, isSameOrigin, resetRateLimits, trackedKeys } from '@/lib/rate-limit';
 
 /**
  * Rate-limit tests
@@ -41,6 +41,16 @@ describe('rate limits', () => {
     // Chat has its own budget
     expect(consume('chat', 'c', t0).ok).toBe(true);
     expect(consume('speak', 'c', Date.parse('2026-09-06T00:00:01Z')).ok).toBe(true);
+  });
+
+  it('keeps the tracked-key map bounded under a flood of distinct IPs', () => {
+    vi.stubEnv('SALLIE_BUDGET_CHAT_PER_DAY', '100000');
+    const t0 = Date.parse('2026-09-05T10:00:00Z');
+    for (let i = 0; i < 5200; i++)
+      consume('chat', `10.0.${Math.floor(i / 256)}.${i % 256}`, t0 + i);
+    // Still answers, and the earliest keys have been evicted rather than the map growing forever.
+    expect(consume('chat', '10.0.0.0', t0 + 6000).ok).toBe(true);
+    expect(trackedKeys()).toBeLessThanOrEqual(5001);
   });
 
   it('reads the client IP from x-forwarded-for', () => {

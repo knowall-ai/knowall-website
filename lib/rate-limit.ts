@@ -16,6 +16,7 @@ interface Window {
   hits: number[];
 }
 
+const MAX_TRACKED_KEYS = 5000;
 const windows = new Map<string, Window>();
 const daily = new Map<string, { day: string; used: number }>();
 
@@ -85,10 +86,17 @@ export function consume(route: Route, ip: string, now = Date.now()): LimitResult
   w.hits.push(now);
   windows.set(key, w);
   daily.set(route, { day, used: used + 1 });
-  // Keep the map from growing without bound.
-  if (windows.size > 5000) {
+  // Keep the map bounded: drop aged-out entries, then hard-cap by evicting
+  // the least recently active keys if a flood of distinct IPs is still live.
+  if (windows.size > MAX_TRACKED_KEYS) {
     for (const [k, v] of windows) {
       if (v.hits.every((t) => now - t >= windowMs)) windows.delete(k);
+    }
+    if (windows.size > MAX_TRACKED_KEYS) {
+      const byLastHit = [...windows.entries()].sort(
+        (a, b) => (a[1].hits.at(-1) ?? 0) - (b[1].hits.at(-1) ?? 0)
+      );
+      for (const [k] of byLastHit.slice(0, windows.size - MAX_TRACKED_KEYS)) windows.delete(k);
     }
   }
   return { ok: true };
@@ -105,6 +113,11 @@ export function isSameOrigin(req: Request): boolean {
   } catch {
     return false;
   }
+}
+
+/** For tests. */
+export function trackedKeys() {
+  return windows.size;
 }
 
 /** For tests. */

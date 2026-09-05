@@ -163,7 +163,7 @@ describe('POST /api/chat', () => {
       'A helpful answer',
       'conv-log',
       expect.anything(),
-      undefined
+      { greetingId: undefined }
     );
   });
 
@@ -177,13 +177,9 @@ describe('POST /api/chat', () => {
         messages: [{ role: 'user', content: 'Hi' }],
       })
     );
-    expect(logChatMock).toHaveBeenLastCalledWith(
-      'Hi',
-      'Sure',
-      'conv-greet',
-      expect.anything(),
-      'three-questions'
-    );
+    expect(logChatMock).toHaveBeenLastCalledWith('Hi', 'Sure', 'conv-greet', expect.anything(), {
+      greetingId: 'three-questions',
+    });
   });
 
   it('returns a fallback response when the OpenAI API call fails', async () => {
@@ -285,6 +281,14 @@ describe('POST /api/chat cost guards', () => {
       'mailto:sallie@knowall.ai?subject=Continuing%20our%20chat%20(ref%20CAP12345)'
     );
     expect(body.content).toContain('this conversation is saved');
+    // Logged with the reason, so Sallie's lead sweep can follow these up
+    expect(logChatMock).toHaveBeenLastCalledWith(
+      'three',
+      expect.stringContaining('sallie@knowall.ai'),
+      'CAP12345',
+      expect.anything(),
+      { greetingId: undefined, endedReason: 'conversation' }
+    );
   });
 
   it('signs off when a visitor exceeds their allowance, with a Retry-After', async () => {

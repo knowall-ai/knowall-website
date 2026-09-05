@@ -65,7 +65,8 @@ export async function POST(req: Request) {
     if (!limit.ok || visitorTurns > LIMITS.messagesPerConversation()) {
       const lastUser = [...history].reverse().find((m) => m.role === 'user')?.content ?? '';
       const content = signOffMessage(conversationId);
-      await logChat(String(lastUser), content, conversationId, req, greetingId);
+      const endedReason = limit.ok ? 'conversation' : (limit.reason ?? 'ip');
+      await logChat(String(lastUser), content, conversationId, req, { greetingId, endedReason });
       return new Response(
         JSON.stringify({
           id: Date.now().toString(),
@@ -73,7 +74,7 @@ export async function POST(req: Request) {
           content,
           conversationId,
           ended: true,
-          reason: limit.ok ? 'conversation' : limit.reason,
+          reason: endedReason,
         }),
         {
           status: 200,
@@ -143,7 +144,7 @@ export async function POST(req: Request) {
       }
 
       // Log the successful conversation
-      await logChat(userMessage, responseContent, conversationId, req, greetingId);
+      await logChat(userMessage, responseContent, conversationId, req, { greetingId });
     } catch (apiError) {
       console.error('OpenAI API error:', apiError);
 
@@ -164,7 +165,7 @@ export async function POST(req: Request) {
       responseContent = `I received your message: "${userMessage}". However, I'm currently experiencing some technical difficulties connecting to my knowledge base. ${firstSentence} Please try again later or contact us directly for more information about our services.`;
 
       // Log the fallback conversation
-      await logChat(userMessage, responseContent, conversationId, req, greetingId);
+      await logChat(userMessage, responseContent, conversationId, req, { greetingId });
     }
 
     // Create a response in the format expected by our custom implementation

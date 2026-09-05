@@ -422,6 +422,7 @@ export function useSpeechInput({ onInterim, onFinal, onSilent }: SpeechInputOpti
         setListening(false);
         const blob = new Blob(chunks, { type: recorder.mimeType || 'audio/webm' });
         if (blob.size > 0) void transcribe(blob);
+        else callbacks.current.onSilent?.(); // nothing captured counts as a silent turn
       };
       recorderRef.current = recorder;
       recorder.start();

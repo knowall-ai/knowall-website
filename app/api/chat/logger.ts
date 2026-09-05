@@ -13,6 +13,9 @@ interface ChatLogEntry {
   assistantResponse: string;
   /** Which opening line the conversation started with (for learning what works). */
   greetingId?: string;
+  /** Set when Sallie signed off because a limit was hit; the visitor was invited to email. */
+  ended?: true;
+  endedReason?: 'conversation' | 'ip' | 'day';
   userIp?: string;
   userAgent?: string;
 }
@@ -34,13 +37,18 @@ function initializeLogFile() {
   }
 }
 
+export interface ChatLogMeta {
+  greetingId?: string;
+  endedReason?: 'conversation' | 'ip' | 'day';
+}
+
 // Log a chat conversation
 export async function logChat(
   userMessage: string,
   assistantResponse: string,
   conversationId: string,
   request?: Request,
-  greetingId?: string
+  meta: ChatLogMeta = {}
 ): Promise<boolean> {
   try {
     // Initialize log file if it doesn't exist
@@ -56,7 +64,8 @@ export async function logChat(
       timestamp: new Date().toISOString(),
       userMessage,
       assistantResponse,
-      ...(greetingId ? { greetingId } : {}),
+      ...(meta.greetingId ? { greetingId: meta.greetingId } : {}),
+      ...(meta.endedReason ? { ended: true as const, endedReason: meta.endedReason } : {}),
     };
 
     // Add request metadata if available
