@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import { useEffect, useRef } from 'react';
 import { cn } from '@/lib/utils';
-import { subscribeMouth } from '@/components/sallie-voice';
+import { subscribeAudio, type AudioFrame } from '@/components/sallie-voice';
 
 /**
  * Sallie's animated avatar. The robot rig is Sallie's approved call-bot
@@ -77,7 +77,23 @@ export function Starfield({ className }: { className?: string }) {
 // Mouth slot geometry as fractions of the rig image, from the call-bot's
 // plate table (robot_avatar.py, plate "b" — the one she uses on calls), checked against the pixels.
 const MOUTH = { cx: 0.5, cy: 0.59, w: 0.085, h: 0.045 };
-const BAR_GAIN = [0.55, 0.85, 1, 0.85, 0.55];
+// Waveform in the slot, same recipe as her Teams call rig: a sine wave riding
+// the live level, windowed so it pins flat at both ends of the slot.
+const WAVE_N = 22;
+const WAVE_VIEW_W = 100;
+const WAVE_VIEW_H = 40;
+
+function wavePoints(level: number, t: number): string {
+  const pts: string[] = [];
+  const inset = 4;
+  for (let k = 0; k <= WAVE_N; k++) {
+    const x = inset + (k * (WAVE_VIEW_W - inset * 2)) / WAVE_N;
+    const win = Math.sin((Math.PI * k) / WAVE_N);
+    const y = WAVE_VIEW_H / 2 + Math.sin(t * 14 + k * 0.7) * level * WAVE_VIEW_H * 0.42 * win;
+    pts.push(`${x.toFixed(1)},${y.toFixed(1)}`);
+  }
+  return pts.join(' ');
+}
 
 interface SallieRigProps {
   /** Faster, brighter aura while Sallie is composing a reply. */
@@ -88,11 +104,14 @@ interface SallieRigProps {
 
 /** The robot rig with its breathing aura and voice-driven mouth. Size and anchoring via className. */
 export function SallieRig({ busy = false, className, priority = false }: SallieRigProps) {
-  const mouthRef = useRef<HTMLDivElement>(null);
+  const waveRef = useRef<SVGPolylineElement>(null);
 
   useEffect(() => {
-    return subscribeMouth((level) => {
-      mouthRef.current?.style.setProperty('--sallie-mouth', level.toFixed(3));
+    return subscribeAudio(({ level }) => {
+      const el = waveRef.current;
+      if (!el) return;
+      el.setAttribute('points', wavePoints(level, performance.now() / 1000));
+      el.style.opacity = (0.35 + level * 0.65).toFixed(2);
     });
   }, []);
 
@@ -114,10 +133,11 @@ export function SallieRig({ busy = false, className, priority = false }: SallieR
           priority={priority}
           className="h-full w-auto max-w-none select-none object-contain object-bottom drop-shadow-[0_0_24px_rgba(157,254,10,0.25)]"
         />
-        <div
-          ref={mouthRef}
+        <svg
           aria-hidden="true"
-          className="pointer-events-none absolute flex items-center justify-center gap-[6%] rounded-[30%] bg-[#0b100d] shadow-[inset_0_1px_2px_rgba(0,0,0,0.8)] [--sallie-mouth:0]"
+          viewBox={`0 0 ${WAVE_VIEW_W} ${WAVE_VIEW_H}`}
+          preserveAspectRatio="none"
+          className="pointer-events-none absolute overflow-visible"
           style={{
             left: `${(MOUTH.cx - MOUTH.w / 2) * 100}%`,
             top: `${(MOUTH.cy - MOUTH.h / 2) * 100}%`,
@@ -125,27 +145,121 @@ export function SallieRig({ busy = false, className, priority = false }: SallieR
             height: `${MOUTH.h * 100}%`,
           }}
         >
-          {BAR_GAIN.map((gain, i) => (
-            <span
-              key={i}
-              className="h-[72%] w-[9%] origin-center rounded-full bg-lime-400 shadow-[0_0_6px_rgba(157,254,10,0.9)] transition-transform duration-75 ease-out"
-              style={{
-                transform: `scaleY(calc(0.12 + var(--sallie-mouth) * ${gain} * 0.88))`,
-                opacity: `calc(0.12 + var(--sallie-mouth) * 0.88)`,
-              }}
-            />
-          ))}
-        </div>
+          <rect
+            x="0"
+            y="0"
+            width={WAVE_VIEW_W}
+            height={WAVE_VIEW_H}
+            rx={WAVE_VIEW_H / 2}
+            fill="rgba(8,12,10,0.92)"
+          />
+          <polyline
+            ref={waveRef}
+            points={wavePoints(0, 0)}
+            fill="none"
+            stroke="#9DFE0A"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            vectorEffect="non-scaling-stroke"
+            style={{ opacity: 0.35, filter: 'drop-shadow(0 0 1px rgba(157,254,10,0.8))' }}
+          />
+        </svg>
       </div>
     </div>
+  );
+}
+
+/**
+ * Circular waveform around a stage, after Nod.ie's voice orb: each frame the
+ * spectrum is walked around the circle and the radius bulges with each bin,
+ * with a slow rotation so it never sits still while she talks. Fades out
+ * when she is silent.
+ */
+function WaveformRing({ className }: { className?: string }) {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const ctx = canvas?.getContext('2d');
+    if (!canvas || !ctx) return;
+    let alpha = 0;
+    let lastFrame: AudioFrame | null = null;
+    let raf = 0;
+
+    const draw = () => {
+      raf = 0;
+      const dpr = window.devicePixelRatio || 1;
+      const size = canvas.clientWidth;
+      if (canvas.width !== size * dpr) {
+        canvas.width = size * dpr;
+        canvas.height = size * dpr;
+      }
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, size, size);
+      const frame = lastFrame ?? { level: 0, bins: new Uint8Array(64) };
+      // Ease the ring in and out so it doesn't pop.
+      alpha += ((frame.level > 0.02 ? 1 : 0) - alpha) * 0.15;
+      if (alpha < 0.01) return;
+
+      const c = size / 2;
+      const base = size * 0.39; // just outside the circle's rim (circle is 78% of this canvas)
+      const reach = size * 0.09;
+      const rotation = ((performance.now() % 10000) / 10000) * Math.PI * 2;
+      const n = frame.bins.length;
+      ctx.beginPath();
+      for (let i = 0; i <= 120; i++) {
+        const angle = (i / 120) * Math.PI * 2 + rotation;
+        // Walk the spectrum up and down four times around the loop so it
+        // stays symmetric (bass lobes at 0° and 180°) and closes smoothly.
+        const seg = Math.floor(i / 30) % 4;
+        const pos = (i % 30) / 30;
+        const idx = Math.floor((seg % 2 === 0 ? pos : 1 - pos) * (n - 1));
+        const amp = frame.bins[idx] / 255;
+        const r = base + amp * reach * (0.4 + 0.6 * frame.level);
+        const x = c + r * Math.cos(angle);
+        const y = c + r * Math.sin(angle);
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.closePath();
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = `rgba(157, 254, 10, ${(0.85 * alpha).toFixed(3)})`;
+      ctx.shadowColor = 'rgba(157, 254, 10, 0.9)';
+      ctx.shadowBlur = 10;
+      ctx.stroke();
+      if (alpha < 0.99 || frame.level > 0) raf = requestAnimationFrame(draw);
+    };
+
+    const unsubscribe = subscribeAudio((frame) => {
+      lastFrame = frame;
+      if (!raf) raf = requestAnimationFrame(draw);
+    });
+    return () => {
+      unsubscribe();
+      cancelAnimationFrame(raf);
+    };
+  }, []);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      aria-hidden="true"
+      className={cn('pointer-events-none absolute -inset-[14%] h-[128%] w-[128%]', className)}
+    />
   );
 }
 
 interface SallieStageProps {
   shape?: 'circle' | 'wide';
   busy?: boolean;
+  /** Sizing and positioning of the whole stage. */
   className?: string;
+  /** Ring / shadow classes for the clipped frame itself. */
+  frameClassName?: string;
   priority?: boolean;
+  /** Draw the voice waveform around a circular stage. */
+  waveform?: boolean;
 }
 
 /** Starfield + rig composed into one framed stage. */
@@ -153,14 +267,17 @@ export default function SallieStage({
   shape = 'circle',
   busy = false,
   className,
+  frameClassName,
   priority = false,
+  waveform = false,
 }: SallieStageProps) {
-  return (
+  const frame = (
     <div
       className={cn(
         'relative overflow-hidden',
-        shape === 'circle' && 'aspect-square rounded-full',
-        className
+        shape === 'circle' ? 'aspect-square rounded-full' : 'h-full w-full',
+        shape === 'circle' && waveform ? '' : className,
+        frameClassName
       )}
     >
       <Starfield />
@@ -173,6 +290,13 @@ export default function SallieStage({
           shape === 'circle' ? 'top-[-1%] h-[118%] items-start' : 'bottom-0 h-[96%]'
         )}
       />
+    </div>
+  );
+  if (shape !== 'circle' || !waveform) return frame;
+  return (
+    <div className={cn('relative', className)}>
+      {frame}
+      <WaveformRing />
     </div>
   );
 }

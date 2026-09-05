@@ -472,7 +472,8 @@ export default function SallieAssistant() {
             <SallieStage
               shape="circle"
               busy={conversation.isLoading}
-              className="relative z-10 w-12 shrink-0 ring-2 ring-lime-500/50"
+              className="relative z-10 w-12 shrink-0"
+              frameClassName="ring-2 ring-lime-500/50"
             />
             <div className="relative z-10">
               <p className="font-semibold leading-tight">Sallie</p>
@@ -528,7 +529,12 @@ export default function SallieAssistant() {
         tabIndex={docked ? 0 : -1}
         className="group relative rounded-full ring-2 ring-lime-500/60 shadow-[0_0_40px_rgba(157,254,10,0.35)] transition-transform hover:scale-105 focus:outline-none focus-visible:ring-4 motion-reduce:transition-none motion-reduce:hover:scale-100"
       >
-        <SallieStage shape="circle" busy={conversation.isLoading} className="w-16 md:w-20" />
+        <SallieStage
+          shape="circle"
+          busy={conversation.isLoading}
+          waveform
+          className="w-16 md:w-20"
+        />
         <span className="absolute -bottom-1 -right-1 flex h-7 w-7 items-center justify-center rounded-full bg-lime-500 text-gray-950 shadow">
           {dockOpen ? <X className="h-4 w-4" /> : <MessageCircle className="h-4 w-4" />}
         </span>
@@ -549,7 +555,9 @@ export default function SallieAssistant() {
           shape="circle"
           busy={conversation.isLoading}
           priority
-          className="w-44 shrink-0 ring-4 ring-lime-400/60 shadow-[0_0_80px_rgba(157,254,10,0.35)] md:w-56"
+          waveform
+          className="w-44 shrink-0 md:w-56"
+          frameClassName="ring-4 ring-lime-400/60 shadow-[0_0_80px_rgba(157,254,10,0.35)]"
         />
         <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
           <h3 className="text-2xl font-bold">Sallie</h3>

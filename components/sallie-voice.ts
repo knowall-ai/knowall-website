@@ -13,19 +13,46 @@ import { useCallback, useEffect, useRef, useState } from 'react';
  * the final transcript, which goes to /api/chat exactly like a typed message.
  */
 
-type MouthListener = (level: number) => void;
-const mouthListeners = new Set<MouthListener>();
+/** One frame of Sallie's voice: overall level (0..1) and a coarse spectrum (0..255 per bin). */
+export interface AudioFrame {
+  level: number;
+  bins: Uint8Array;
+}
+type AudioListener = (frame: AudioFrame) => void;
+const audioListeners = new Set<AudioListener>();
+const SILENT_BINS = new Uint8Array(64);
+const SILENCE: AudioFrame = { level: 0, bins: SILENT_BINS };
 
-/** Subscribe to Sallie's mouth level (0..1). Returns an unsubscribe. */
-export function subscribeMouth(listener: MouthListener) {
-  mouthListeners.add(listener);
+/** Subscribe to Sallie's voice frames (mouth level + spectrum). Returns an unsubscribe. */
+export function subscribeAudio(listener: AudioListener) {
+  audioListeners.add(listener);
   return () => {
-    mouthListeners.delete(listener);
+    audioListeners.delete(listener);
   };
 }
 
+/** Subscribe to just the mouth level (0..1). Returns an unsubscribe. */
+export function subscribeMouth(listener: (level: number) => void) {
+  return subscribeAudio((f) => listener(f.level));
+}
+
+function publishAudio(frame: AudioFrame) {
+  audioListeners.forEach((l) => l(frame));
+}
+
 function publishMouth(level: number) {
-  mouthListeners.forEach((l) => l(level));
+  publishAudio(level === 0 ? SILENCE : { level, bins: SILENT_BINS });
+}
+
+/** Fake spectrum for the browser-synth fallback so the ring still moves. */
+function syntheticBins(level: number, t: number): Uint8Array {
+  const bins = new Uint8Array(64);
+  for (let i = 0; i < bins.length; i++) {
+    const shape = Math.max(0, 1 - i / bins.length);
+    const wobble = 0.6 + 0.4 * Math.sin(t * 0.9 + i * 0.5);
+    bins[i] = Math.round(255 * level * shape * wobble);
+  }
+  return bins;
 }
 
 const MUTED_KEY = 'sallie-muted';
@@ -92,7 +119,8 @@ export function useSallieVoice() {
       const tick = () => {
         t += 1;
         // A gentle pseudo-random mouth so she visibly talks even without audio analysis.
-        publishMouth(0.35 + 0.45 * Math.abs(Math.sin(t * 0.35) * Math.cos(t * 0.11)));
+        const level = 0.35 + 0.45 * Math.abs(Math.sin(t * 0.35) * Math.cos(t * 0.11));
+        publishAudio({ level, bins: syntheticBins(level, t) });
         rafRef.current = requestAnimationFrame(tick);
       };
       utterance.onstart = () => {
@@ -143,9 +171,11 @@ export function useSallieVoice() {
       source.connect(analyser);
       analyser.connect(ctx.destination);
       const data = new Uint8Array(analyser.fftSize);
+      const freq = new Uint8Array(analyser.frequencyBinCount);
       let smoothed = 0;
       const tick = () => {
         analyser.getByteTimeDomainData(data);
+        analyser.getByteFrequencyData(freq);
         let sum = 0;
         for (let i = 0; i < data.length; i++) {
           const v = (data[i] - 128) / 128;
@@ -155,7 +185,8 @@ export function useSallieVoice() {
         // Speech RMS sits around 0.02–0.12; lift it into a useful 0..1 range.
         const target = Math.min(1, Math.sqrt(rms * 6));
         smoothed = smoothed + (target - smoothed) * (target > smoothed ? 0.5 : 0.25);
-        publishMouth(smoothed);
+        // Speech lives in the low bins; keep the first quarter for the ring.
+        publishAudio({ level: smoothed, bins: freq.subarray(0, 64) });
         rafRef.current = requestAnimationFrame(tick);
       };
       source.onended = () => {
