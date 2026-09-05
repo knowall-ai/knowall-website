@@ -247,7 +247,8 @@ function ConversationPanel({
   const started = messages.length > 0;
 
   useEffect(() => {
-    if (started) endRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    // Optional call: jsdom has no scrollIntoView, and a late re-render must not throw.
+    if (started) endRef.current?.scrollIntoView?.({ behavior: 'smooth', block: 'nearest' });
   }, [messages, isLoading, started]);
 
   const submit = (e?: FormEvent) => {
