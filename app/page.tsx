@@ -30,7 +30,7 @@ import EmailIcon from '@/components/email-icon';
 import GithubIcon from '@/components/github-icon';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import ConversationInterface from '@/components/conversation-interface';
+import SallieAssistant from '@/components/sallie-assistant';
 import Header from '@/components/header';
 import Footer from '@/components/footer';
 import ServiceCard from '@/components/service-card';
@@ -51,7 +51,7 @@ export default function Home() {
     <main className="flex min-h-screen flex-col bg-gray-950">
       <Header />
 
-      {/* Hero Section with AI Conversation Interface */}
+      {/* Hero Section with Sallie */}
       <BackgroundImage
         src="/images/green-bg.png"
         className="flex flex-col items-center justify-center px-4 py-10 md:py-16 overflow-hidden"
@@ -90,8 +90,9 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="flex-1 w-full max-w-md">
-              <ConversationInterface />
+            {/* Sallie welcomes visitors and answers questions about what we do */}
+            <div className="flex-1 w-full flex justify-center lg:justify-end">
+              <SallieAssistant />
             </div>
           </div>
         </div>

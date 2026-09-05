@@ -1,6 +1,8 @@
 import { OpenAI } from 'openai';
 import { systemPrompt } from './system-prompt';
 import { logChat } from './logger';
+import { clientIp, consume, LIMITS } from '@/lib/rate-limit';
+import { signOffMessage } from '@/lib/sallie-signoff';
 
 // Set to force-dynamic to ensure the route is always server-rendered
 export const dynamic = 'force-dynamic';
@@ -48,6 +50,47 @@ export async function POST(req: Request) {
     // Parse the request body to get the messages and conversation ID
     const body = await req.json();
     const conversationId = body.conversationId || Date.now().toString();
+    // Which opening line this visit started with — logged so we can learn what works.
+    const greetingId =
+      typeof body.greetingId === 'string' ? body.greetingId.slice(0, 40) : undefined;
+
+    // Cost guards: a visitor's allowance, the day's budget, and the length of
+    // one conversation. When any is hit Sallie signs off gracefully instead
+    // of erroring, and the exchange is still logged so email can continue it.
+    const history: Array<{ role?: string; content?: string }> = Array.isArray(body.messages)
+      ? body.messages
+      : [];
+    const visitorTurns = history.filter((m) => m.role === 'user').length;
+    // Check the conversation cap first so over-cap requests don't spend the day's budget.
+    const overCap = visitorTurns > LIMITS.messagesPerConversation();
+    const limit = overCap
+      ? { ok: false as const, reason: undefined }
+      : consume('chat', clientIp(req));
+    if (overCap || !limit.ok) {
+      const lastUser = [...history].reverse().find((m) => m.role === 'user')?.content ?? '';
+      const content = signOffMessage(conversationId);
+      const endedReason = overCap ? 'conversation' : (limit.reason ?? 'ip');
+      await logChat(String(lastUser), content, conversationId, req, { greetingId, endedReason });
+      return new Response(
+        JSON.stringify({
+          id: Date.now().toString(),
+          role: 'assistant',
+          content,
+          conversationId,
+          ended: true,
+          reason: endedReason,
+        }),
+        {
+          status: 200,
+          headers: {
+            'Content-Type': 'application/json',
+            ...('retryAfter' in limit && limit.retryAfter
+              ? { 'Retry-After': String(limit.retryAfter) }
+              : {}),
+          },
+        }
+      );
+    }
 
     // Validate the API key is available
     const apiKey = process.env.OPENAI_API_KEY;
@@ -107,7 +150,7 @@ export async function POST(req: Request) {
       }
 
       // Log the successful conversation
-      await logChat(userMessage, responseContent, conversationId, req);
+      await logChat(userMessage, responseContent, conversationId, req, { greetingId });
     } catch (apiError) {
       console.error('OpenAI API error:', apiError);
 
@@ -128,7 +171,7 @@ export async function POST(req: Request) {
       responseContent = `I received your message: "${userMessage}". However, I'm currently experiencing some technical difficulties connecting to my knowledge base. ${firstSentence} Please try again later or contact us directly for more information about our services.`;
 
       // Log the fallback conversation
-      await logChat(userMessage, responseContent, conversationId, req);
+      await logChat(userMessage, responseContent, conversationId, req, { greetingId });
     }
 
     // Create a response in the format expected by our custom implementation

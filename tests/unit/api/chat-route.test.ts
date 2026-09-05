@@ -162,8 +162,24 @@ describe('POST /api/chat', () => {
       'What do you do?',
       'A helpful answer',
       'conv-log',
-      expect.anything()
+      expect.anything(),
+      { greetingId: undefined }
     );
+  });
+
+  it('logs which opening line the conversation started with', async () => {
+    vi.stubEnv('OPENAI_API_KEY', 'sk-test-key');
+    createMock.mockResolvedValue({ choices: [{ message: { content: 'Sure' } }] });
+    await POST(
+      postRequest({
+        conversationId: 'conv-greet',
+        greetingId: 'three-questions',
+        messages: [{ role: 'user', content: 'Hi' }],
+      })
+    );
+    expect(logChatMock).toHaveBeenLastCalledWith('Hi', 'Sure', 'conv-greet', expect.anything(), {
+      greetingId: 'three-questions',
+    });
   });
 
   it('returns a fallback response when the OpenAI API call fails', async () => {
@@ -230,5 +246,64 @@ describe('POST /api/chat', () => {
     expect(response.status).toBe(500);
     const body = await response.json();
     expect(body.error).toBeTruthy();
+  });
+});
+
+describe('POST /api/chat cost guards', () => {
+  beforeEach(async () => {
+    const { resetRateLimits } = await import('@/lib/rate-limit');
+    resetRateLimits();
+    vi.stubEnv('OPENAI_API_KEY', 'sk-test');
+  });
+
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
+  it('signs off nicely once a conversation reaches its message cap', async () => {
+    vi.stubEnv('SALLIE_LIMIT_MESSAGES_PER_CONVERSATION', '2');
+    const { POST } = await import('@/app/api/chat/route');
+    const messages = [
+      { role: 'assistant', content: 'Hi' },
+      { role: 'user', content: 'one' },
+      { role: 'assistant', content: 'ok' },
+      { role: 'user', content: 'two' },
+      { role: 'assistant', content: 'ok' },
+      { role: 'user', content: 'three' },
+    ];
+    const res = await POST(postRequest({ conversationId: 'CAP12345', messages }));
+    expect(res.status).toBe(200);
+    const body = await res.json();
+    expect(body.ended).toBe(true);
+    expect(body.reason).toBe('conversation');
+    expect(body.content).toContain('Thank you for chatting');
+    expect(body.content).toContain(
+      'mailto:sallie@knowall.ai?subject=Continuing%20our%20chat%20(ref%20CAP12345)'
+    );
+    expect(body.content).toContain('this conversation is saved');
+    // Over-cap requests don't spend the day's budget
+    const { consume } = await import('@/lib/rate-limit');
+    expect(consume('chat', 'someone-else').ok).toBe(true);
+    // Logged with the reason, so Sallie's lead sweep can follow these up
+    expect(logChatMock).toHaveBeenLastCalledWith(
+      'three',
+      expect.stringContaining('sallie@knowall.ai'),
+      'CAP12345',
+      expect.anything(),
+      { greetingId: undefined, endedReason: 'conversation' }
+    );
+  });
+
+  it('signs off when a visitor exceeds their allowance, with a Retry-After', async () => {
+    vi.stubEnv('SALLIE_LIMIT_CHAT_PER_IP', '1');
+    const { POST } = await import('@/app/api/chat/route');
+    const messages = [{ role: 'user', content: 'hello' }];
+    await POST(postRequest({ conversationId: 'IP123456', messages }));
+    const res = await POST(postRequest({ conversationId: 'IP123456', messages }));
+    expect(res.status).toBe(200);
+    expect(res.headers.get('retry-after')).toBeTruthy();
+    const body = await res.json();
+    expect(body.ended).toBe(true);
+    expect(body.reason).toBe('ip');
   });
 });
