@@ -46,10 +46,9 @@ export async function POST(req: Request) {
       voice: 'marin',
       input: text,
       response_format: 'mp3',
-      // Mirrors her call persona (sallie-openclaw voice_persona.md): warm,
-      // professional, confident, British English — and the same "marin" voice.
-      instructions:
-        "You are Sallie, KnowAll AI's sales agent. Warm, professional and confident, in British English. Speak naturally at a relaxed conversational pace, as if talking to a visitor who has just arrived.",
+      // Same "marin" voice as her Teams call bot. No style instructions: with
+      // them the model re-interprets the delivery on every call, which reads
+      // as her voice changing between replies.
     });
     const audio = await speech.arrayBuffer();
     return new NextResponse(audio, {
