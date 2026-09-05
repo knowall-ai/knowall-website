@@ -61,11 +61,15 @@ export async function POST(req: Request) {
       ? body.messages
       : [];
     const visitorTurns = history.filter((m) => m.role === 'user').length;
-    const limit = consume('chat', clientIp(req));
-    if (!limit.ok || visitorTurns > LIMITS.messagesPerConversation()) {
+    // Check the conversation cap first so over-cap requests don't spend the day's budget.
+    const overCap = visitorTurns > LIMITS.messagesPerConversation();
+    const limit = overCap
+      ? { ok: false as const, reason: undefined }
+      : consume('chat', clientIp(req));
+    if (overCap || !limit.ok) {
       const lastUser = [...history].reverse().find((m) => m.role === 'user')?.content ?? '';
       const content = signOffMessage(conversationId);
-      const endedReason = limit.ok ? 'conversation' : (limit.reason ?? 'ip');
+      const endedReason = overCap ? 'conversation' : (limit.reason ?? 'ip');
       await logChat(String(lastUser), content, conversationId, req, { greetingId, endedReason });
       return new Response(
         JSON.stringify({
@@ -80,7 +84,9 @@ export async function POST(req: Request) {
           status: 200,
           headers: {
             'Content-Type': 'application/json',
-            ...(limit.retryAfter ? { 'Retry-After': String(limit.retryAfter) } : {}),
+            ...('retryAfter' in limit && limit.retryAfter
+              ? { 'Retry-After': String(limit.retryAfter) }
+              : {}),
           },
         }
       );

@@ -104,8 +104,12 @@ export function consume(route: Route, ip: string, now = Date.now()): LimitResult
 
 /** True when the request's Origin (or Referer) is this site. Blocks lazy scripted abuse. */
 export function isSameOrigin(req: Request): boolean {
-  const host = req.headers.get('x-forwarded-host') || req.headers.get('host');
+  // Trust Host, which App Service sets from the real request; a client-supplied
+  // x-forwarded-host that disagrees with it is a spoof attempt.
+  const host = req.headers.get('host');
   if (!host) return false;
+  const forwardedHost = req.headers.get('x-forwarded-host');
+  if (forwardedHost && forwardedHost !== host) return false;
   const source = req.headers.get('origin') || req.headers.get('referer');
   if (!source) return false;
   try {

@@ -281,6 +281,9 @@ describe('POST /api/chat cost guards', () => {
       'mailto:sallie@knowall.ai?subject=Continuing%20our%20chat%20(ref%20CAP12345)'
     );
     expect(body.content).toContain('this conversation is saved');
+    // Over-cap requests don't spend the day's budget
+    const { consume } = await import('@/lib/rate-limit');
+    expect(consume('chat', 'someone-else').ok).toBe(true);
     // Logged with the reason, so Sallie's lead sweep can follow these up
     expect(logChatMock).toHaveBeenLastCalledWith(
       'three',

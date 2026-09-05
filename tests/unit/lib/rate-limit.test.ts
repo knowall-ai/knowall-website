@@ -69,9 +69,17 @@ describe('rate limits', () => {
     const foreign = new Request('http://x', {
       headers: { host: 'www.knowall.ai', origin: 'https://evil.example' },
     });
+    const spoofed = new Request('http://x', {
+      headers: {
+        host: 'www.knowall.ai',
+        'x-forwarded-host': 'evil.example',
+        origin: 'https://evil.example',
+      },
+    });
     expect(isSameOrigin(ok)).toBe(true);
     expect(isSameOrigin(viaReferer)).toBe(true);
     expect(isSameOrigin(foreign)).toBe(false);
+    expect(isSameOrigin(spoofed)).toBe(false);
     expect(isSameOrigin(new Request('http://x', { headers: { host: 'www.knowall.ai' } }))).toBe(
       false
     );
