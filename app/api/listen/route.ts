@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import OpenAI from 'openai';
+import { clientIp, consume, isSameOrigin } from '@/lib/rate-limit';
 
 /**
  * Sallie's ears, for browsers whose own speech recognition is missing or
@@ -10,6 +11,20 @@ import OpenAI from 'openai';
 export const MAX_AUDIO_BYTES = 4 * 1024 * 1024; // ~30s of Opus at 96 kbps, with headroom
 
 export async function POST(req: Request) {
+  if (!isSameOrigin(req)) {
+    return NextResponse.json({ error: 'Listening is only available on the site' }, { status: 403 });
+  }
+  const limit = consume('listen', clientIp(req));
+  if (!limit.ok) {
+    return NextResponse.json(
+      { error: limit.reason === 'day' ? 'Listening is resting for today' : 'Too many requests' },
+      {
+        status: limit.reason === 'day' ? 503 : 429,
+        headers: { 'Retry-After': String(limit.retryAfter ?? 60) },
+      }
+    );
+  }
+
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) {
     return NextResponse.json({ error: 'Listening is not configured' }, { status: 503 });

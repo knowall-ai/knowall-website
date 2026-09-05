@@ -383,6 +383,10 @@ export function useSpeechInput({ onInterim, onFinal, onSilent }: SpeechInputOpti
       const form = new FormData();
       form.append('audio', blob, 'clip.webm');
       const res = await fetch('/api/listen', { method: 'POST', body: form });
+      if (res.status === 429 || res.status === 503) {
+        setError("I've had to pause listening for a little while — please type instead.");
+        return;
+      }
       if (!res.ok) throw new Error(`Listen API responded with ${res.status}`);
       const data = await res.json();
       const text = typeof data.text === 'string' ? data.text.trim() : '';

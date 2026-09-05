@@ -17,9 +17,13 @@ vi.mock('openai', () => ({
   },
 }));
 
-async function post(form: FormData | null) {
+const SITE = { host: 'localhost', origin: 'http://localhost' };
+
+async function post(form: FormData | null, headers: Record<string, string> = SITE) {
   const { POST } = await import('@/app/api/listen/route');
-  const init: RequestInit = form ? { method: 'POST', body: form } : { method: 'POST' };
+  const init: RequestInit = form
+    ? { method: 'POST', body: form, headers }
+    : { method: 'POST', headers };
   return POST(new Request('http://localhost/api/listen', init));
 }
 
@@ -30,10 +34,26 @@ function clip(bytes: number) {
 }
 
 describe('POST /api/listen', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     transcriptionsCreate.mockReset();
     transcriptionsCreate.mockResolvedValue({ text: '  What does KnowAll do?  ' });
     vi.stubEnv('OPENAI_API_KEY', 'sk-test');
+    const { resetRateLimits } = await import('@/lib/rate-limit');
+    resetRateLimits();
+  });
+
+  it('refuses requests that do not come from the site', async () => {
+    const res = await post(clip(100), { host: 'localhost' });
+    expect(res.status).toBe(403);
+    expect(transcriptionsCreate).not.toHaveBeenCalled();
+  });
+
+  it('pauses for the day once the daily budget is spent', async () => {
+    vi.stubEnv('SALLIE_BUDGET_LISTEN_PER_DAY', '1');
+    expect((await post(clip(100))).status).toBe(200);
+    const res = await post(clip(100));
+    expect(res.status).toBe(503);
+    expect(transcriptionsCreate).toHaveBeenCalledTimes(1);
   });
 
   afterEach(() => {

@@ -14,6 +14,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import {
   Loader2,
+  Mail,
   MessageCircle,
   Mic,
   MicOff,
@@ -26,6 +27,7 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 import SallieStage, { Starfield } from '@/components/sallie-stage';
+import { signOffMailto } from '@/lib/sallie-signoff';
 import { useSallieVoice, useSpeechInput } from '@/components/sallie-voice';
 
 interface Message {
@@ -76,13 +78,14 @@ function useSallieConversation() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [ended, setEnded] = useState(false);
   const [conversationId] = useState(() => generateId());
 
   /** Send a message; resolves to Sallie's reply, or null if it failed. */
   const send = useCallback(
     async (text: string): Promise<string | null> => {
       const content = text.trim();
-      if (!content || isLoading) return null;
+      if (!content || isLoading || ended) return null;
       setError(null);
       const userMessage: Message = { id: generateId(), role: 'user', content };
       const history = [...messages, userMessage];
@@ -105,6 +108,7 @@ function useSallieConversation() {
         const data = await res.json();
         const reply: string = data.content || "Sorry, I couldn't process that. Please try again.";
         setMessages((prev) => [...prev, { id: generateId(), role: 'assistant', content: reply }]);
+        if (data.ended) setEnded(true);
         return reply;
       } catch (err) {
         console.error('Sallie chat error', err);
@@ -116,10 +120,10 @@ function useSallieConversation() {
         setIsLoading(false);
       }
     },
-    [messages, isLoading, conversationId]
+    [messages, isLoading, conversationId, ended]
   );
 
-  return { messages, isLoading, error, send };
+  return { messages, isLoading, error, ended, conversationId, send };
 }
 
 /** Track whether an element is on screen; stays "visible" where IntersectionObserver is missing. */
@@ -239,7 +243,7 @@ function ConversationPanel({
   className,
   listClassName,
 }: ConversationPanelProps) {
-  const { messages, isLoading, error } = conversation;
+  const { messages, isLoading, error, ended, conversationId } = conversation;
   const endRef = useRef<HTMLDivElement>(null);
   const started = messages.length > 0;
 
@@ -323,60 +327,72 @@ function ConversationPanel({
         <div ref={endRef} />
       </div>
 
-      <form onSubmit={submit} className="mt-3 flex items-end gap-2">
-        {voice.micSupported && (
-          <Button
-            type="button"
-            variant="outline"
-            aria-label={
-              voice.micOn ? 'Turn your microphone off' : 'Turn your microphone on to talk'
-            }
-            title={voice.micOn ? 'Mic on — tap to turn off' : 'Tap to talk to Sallie'}
-            aria-pressed={voice.micOn}
-            onClick={() => voice.setMicOn(!voice.micOn)}
-            disabled={voice.transcribing}
-            className={cn(
-              'h-12 w-12 shrink-0 border-gray-700 bg-gray-800/90 p-0 text-gray-200 hover:bg-gray-700 hover:text-white',
-              voice.micOn &&
-                'border-lime-400 bg-lime-500/20 text-lime-300 shadow-[0_0_18px_rgba(157,254,10,0.45)]',
-              voice.listening && 'animate-pulse motion-reduce:animate-none'
-            )}
-          >
-            {voice.micOn ? <Mic className="h-5 w-5" /> : <MicOff className="h-5 w-5" />}
+      {ended ? (
+        <div className="mt-3 flex flex-wrap items-center gap-3" data-testid="sallie-ended">
+          <Button asChild className="bg-lime-500 text-gray-950 hover:bg-lime-400">
+            <a href={signOffMailto(conversationId)}>
+              <Mail className="h-4 w-4" />
+              Email Sallie to continue
+            </a>
           </Button>
-        )}
-        <Textarea
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={onKeyDown}
-          placeholder={
-            voice.listening
-              ? 'Listening…'
-              : voice.transcribing
-                ? 'Working out what you said…'
-                : voice.micOn && voice.speaking
-                  ? 'Sallie is speaking…'
-                  : 'Type your message...'
-          }
-          aria-label="Message Sallie"
-          rows={1}
-          className="min-h-[48px] max-h-32 flex-1 resize-none border-gray-700 bg-gray-800/90 text-gray-100 placeholder:text-gray-500 focus-visible:ring-lime-500"
-          disabled={isLoading}
-        />
-        <Button
-          type="submit"
-          aria-label="Send message"
-          disabled={isLoading || voice.listening || voice.transcribing || !input.trim()}
-          className="h-12 w-12 shrink-0 bg-lime-500 p-0 text-gray-950 hover:bg-lime-400"
-        >
-          {isLoading ? (
-            <Loader2 className="h-5 w-5 animate-spin motion-reduce:animate-none" />
-          ) : (
-            <SendHorizontal className="h-5 w-5" />
+          <span className="text-xs text-gray-400">Reference {conversationId}</span>
+        </div>
+      ) : (
+        <form onSubmit={submit} className="mt-3 flex items-end gap-2">
+          {voice.micSupported && (
+            <Button
+              type="button"
+              variant="outline"
+              aria-label={
+                voice.micOn ? 'Turn your microphone off' : 'Turn your microphone on to talk'
+              }
+              title={voice.micOn ? 'Mic on — tap to turn off' : 'Tap to talk to Sallie'}
+              aria-pressed={voice.micOn}
+              onClick={() => voice.setMicOn(!voice.micOn)}
+              disabled={voice.transcribing}
+              className={cn(
+                'h-12 w-12 shrink-0 border-gray-700 bg-gray-800/90 p-0 text-gray-200 hover:bg-gray-700 hover:text-white',
+                voice.micOn &&
+                  'border-lime-400 bg-lime-500/20 text-lime-300 shadow-[0_0_18px_rgba(157,254,10,0.45)]',
+                voice.listening && 'animate-pulse motion-reduce:animate-none'
+              )}
+            >
+              {voice.micOn ? <Mic className="h-5 w-5" /> : <MicOff className="h-5 w-5" />}
+            </Button>
           )}
-        </Button>
-      </form>
-      {voice.micError ? (
+          <Textarea
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={onKeyDown}
+            placeholder={
+              voice.listening
+                ? 'Listening…'
+                : voice.transcribing
+                  ? 'Working out what you said…'
+                  : voice.micOn && voice.speaking
+                    ? 'Sallie is speaking…'
+                    : 'Type your message...'
+            }
+            aria-label="Message Sallie"
+            rows={1}
+            className="min-h-[48px] max-h-32 flex-1 resize-none border-gray-700 bg-gray-800/90 text-gray-100 placeholder:text-gray-500 focus-visible:ring-lime-500"
+            disabled={isLoading}
+          />
+          <Button
+            type="submit"
+            aria-label="Send message"
+            disabled={isLoading || voice.listening || voice.transcribing || !input.trim()}
+            className="h-12 w-12 shrink-0 bg-lime-500 p-0 text-gray-950 hover:bg-lime-400"
+          >
+            {isLoading ? (
+              <Loader2 className="h-5 w-5 animate-spin motion-reduce:animate-none" />
+            ) : (
+              <SendHorizontal className="h-5 w-5" />
+            )}
+          </Button>
+        </form>
+      )}
+      {ended ? null : voice.micError ? (
         <p role="status" className="mt-2 text-xs text-amber-300/90">
           {voice.micError}
         </p>
@@ -482,6 +498,10 @@ export default function SallieAssistant() {
   // Hands-free: while the mic is on, listen whenever she isn't speaking or
   // thinking, and go again after each turn. She keeps talking when the mic
   // is switched on — capture simply waits until she has finished.
+  useEffect(() => {
+    if (conversation.ended && micOn) setMicOnState(false);
+  }, [conversation.ended, micOn]);
+
   useEffect(() => {
     if (!micOn || listening || transcribing || conversation.isLoading || tts.speaking) return;
     const timer = setTimeout(() => startListening(), 350);

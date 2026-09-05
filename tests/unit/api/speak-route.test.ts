@@ -17,10 +17,16 @@ vi.mock('openai', () => ({
   },
 }));
 
-async function post(body: unknown) {
+const SITE = { host: 'localhost', origin: 'http://localhost' };
+
+async function post(body: unknown, headers: Record<string, string> = SITE) {
   const { POST } = await import('@/app/api/speak/route');
   return POST(
-    new Request('http://localhost/api/speak', { method: 'POST', body: JSON.stringify(body) })
+    new Request('http://localhost/api/speak', {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(body),
+    })
   );
 }
 
@@ -33,6 +39,28 @@ describe('POST /api/speak', () => {
     vi.stubEnv('SALLIE_VOICE_ENGINE', 'tts');
     const { clearVoiceCache } = await import('@/app/api/speak/route');
     clearVoiceCache();
+    const { resetRateLimits } = await import('@/lib/rate-limit');
+    resetRateLimits();
+  });
+
+  it('refuses requests that do not come from the site', async () => {
+    const res = await post({ text: 'Hello' }, { host: 'localhost' });
+    expect(res.status).toBe(403);
+    const foreign = await post(
+      { text: 'Hello' },
+      { host: 'localhost', origin: 'https://evil.example' }
+    );
+    expect(foreign.status).toBe(403);
+    expect(speechCreate).not.toHaveBeenCalled();
+  });
+
+  it('rate-limits a single visitor', async () => {
+    vi.stubEnv('SALLIE_LIMIT_SPEAK_PER_IP', '2');
+    expect((await post({ text: 'one' })).status).toBe(200);
+    expect((await post({ text: 'two' })).status).toBe(200);
+    const third = await post({ text: 'three' });
+    expect(third.status).toBe(429);
+    expect(third.headers.get('retry-after')).toBeTruthy();
   });
 
   afterEach(() => {

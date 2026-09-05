@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import OpenAI from 'openai';
 import { synthesizeWithRealtime } from './realtime';
+import { clientIp, consume, isSameOrigin } from '@/lib/rate-limit';
 
 /**
  * Sallie's voice. Turns a short piece of her reply into speech so the
@@ -81,6 +82,20 @@ function remember(key: string, clip: Clip) {
 }
 
 export async function POST(req: Request) {
+  if (!isSameOrigin(req)) {
+    return NextResponse.json({ error: 'Voice is only available on the site' }, { status: 403 });
+  }
+  const limit = consume('speak', clientIp(req));
+  if (!limit.ok) {
+    return NextResponse.json(
+      { error: limit.reason === 'day' ? 'Voice is resting for today' : 'Too many voice requests' },
+      {
+        status: limit.reason === 'day' ? 503 : 429,
+        headers: { 'Retry-After': String(limit.retryAfter ?? 60) },
+      }
+    );
+  }
+
   let text = '';
   try {
     const body = await req.json();

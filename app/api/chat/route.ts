@@ -1,6 +1,8 @@
 import { OpenAI } from 'openai';
 import { systemPrompt } from './system-prompt';
 import { logChat } from './logger';
+import { clientIp, consume, LIMITS } from '@/lib/rate-limit';
+import { signOffMessage } from '@/lib/sallie-signoff';
 
 // Set to force-dynamic to ensure the route is always server-rendered
 export const dynamic = 'force-dynamic';
@@ -48,6 +50,37 @@ export async function POST(req: Request) {
     // Parse the request body to get the messages and conversation ID
     const body = await req.json();
     const conversationId = body.conversationId || Date.now().toString();
+
+    // Cost guards: a visitor's allowance, the day's budget, and the length of
+    // one conversation. When any is hit Sallie signs off gracefully instead
+    // of erroring, and the exchange is still logged so email can continue it.
+    const history: Array<{ role?: string; content?: string }> = Array.isArray(body.messages)
+      ? body.messages
+      : [];
+    const visitorTurns = history.filter((m) => m.role === 'user').length;
+    const limit = consume('chat', clientIp(req));
+    if (!limit.ok || visitorTurns > LIMITS.messagesPerConversation()) {
+      const lastUser = [...history].reverse().find((m) => m.role === 'user')?.content ?? '';
+      const content = signOffMessage(conversationId);
+      await logChat(String(lastUser), content, conversationId, req);
+      return new Response(
+        JSON.stringify({
+          id: Date.now().toString(),
+          role: 'assistant',
+          content,
+          conversationId,
+          ended: true,
+          reason: limit.ok ? 'conversation' : limit.reason,
+        }),
+        {
+          status: 200,
+          headers: {
+            'Content-Type': 'application/json',
+            ...(limit.retryAfter ? { 'Retry-After': String(limit.retryAfter) } : {}),
+          },
+        }
+      );
+    }
 
     // Validate the API key is available
     const apiKey = process.env.OPENAI_API_KEY;

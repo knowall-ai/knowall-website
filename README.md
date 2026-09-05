@@ -227,7 +227,7 @@ The KnowAll.ai website follows security best practices for handling API keys:
 
 ### Security Best Practices
 
-- **Rate Limiting**: The API routes implement basic rate limiting to prevent abuse
+- **Rate Limiting**: Sallie's public routes (`/api/chat`, `/api/speak`, `/api/listen`) are guarded by `lib/rate-limit.ts`: per-IP limits per 10-minute window, a per-route daily budget, a cap on messages per conversation, and a same-origin check on the voice routes. Limits are tunable with `SALLIE_LIMIT_*` / `SALLIE_BUDGET_*` env vars. When a limit is hit Sallie signs off and invites the visitor to continue by email. The hard ceiling is the monthly budget set on the OpenAI project.
 - **Error Handling**: Errors are logged server-side but only generic messages are returned to clients
 - **Input Validation**: All user inputs are validated before processing
 - **Secure Headers**: API responses use appropriate security headers

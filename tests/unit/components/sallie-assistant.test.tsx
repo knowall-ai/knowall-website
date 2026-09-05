@@ -114,6 +114,30 @@ describe('SallieAssistant', () => {
     expect(screen.getByRole('button', { name: 'Mute Sallie' })).toBeInTheDocument();
   });
 
+  it('signs off and offers email when Sallie has to stop', async () => {
+    fetchMock.mockImplementation(async (url: string) =>
+      url === '/api/chat'
+        ? {
+            ok: true,
+            json: async () => ({
+              role: 'assistant',
+              content: 'Thank you for chatting — email me at sallie@knowall.ai to continue.',
+              ended: true,
+            }),
+          }
+        : { ok: false, status: 503, json: async () => ({}) }
+    );
+    render(<SallieAssistant />);
+    fireEvent.click(screen.getByRole('button', { name: 'What does KnowAll do?' }));
+
+    await waitFor(() => expect(screen.getByTestId('sallie-ended')).toBeInTheDocument());
+    const link = screen.getByRole('link', { name: /Email Sallie to continue/ });
+    expect(link.getAttribute('href')).toMatch(
+      /^mailto:sallie@knowall\.ai\?subject=Continuing%20our%20chat%20\(ref%20[A-Z0-9]{8}\)$/
+    );
+    expect(screen.queryByPlaceholderText('Type your message...')).not.toBeInTheDocument();
+  });
+
   it('hides the mic where speech recognition is unsupported', () => {
     mockApis();
     render(<SallieAssistant />);
