@@ -25,14 +25,49 @@ async function post(body: unknown) {
 }
 
 describe('POST /api/speak', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     speechCreate.mockReset();
     speechCreate.mockResolvedValue({ arrayBuffer: async () => new Uint8Array([1, 2, 3]).buffer });
     vi.stubEnv('OPENAI_API_KEY', 'sk-test');
+    // Deterministic engine for these tests; the realtime path is covered below.
+    vi.stubEnv('SALLIE_VOICE_ENGINE', 'tts');
+    const { clearVoiceCache } = await import('@/app/api/speak/route');
+    clearVoiceCache();
   });
 
   afterEach(() => {
     vi.unstubAllEnvs();
+    vi.unstubAllGlobals();
+  });
+
+  it('serves the same clip from cache for repeated text', async () => {
+    const first = await post({ text: 'Hello again' });
+    const second = await post({ text: 'Hello again' });
+    expect(first.status).toBe(200);
+    expect(second.status).toBe(200);
+    expect(speechCreate).toHaveBeenCalledTimes(1);
+    expect(second.headers.get('x-sallie-voice')).toBe('tts');
+  });
+
+  it('prefers the realtime engine and falls back to TTS when it fails', async () => {
+    vi.stubEnv('SALLIE_VOICE_ENGINE', 'realtime');
+    // A WebSocket that errors as soon as it is used.
+    class FailingSocket {
+      onerror: ((e: unknown) => void) | null = null;
+      onopen: (() => void) | null = null;
+      onmessage: ((e: unknown) => void) | null = null;
+      onclose: (() => void) | null = null;
+      constructor() {
+        setTimeout(() => this.onerror?.(new Error('down')), 0);
+      }
+      send() {}
+      close() {}
+    }
+    vi.stubGlobal('WebSocket', FailingSocket);
+    const res = await post({ text: 'Hello' });
+    expect(res.status).toBe(200);
+    expect(res.headers.get('x-sallie-voice')).toBe('tts');
+    expect(speechCreate).toHaveBeenCalledTimes(1);
   });
 
   it('returns 400 for empty text', async () => {

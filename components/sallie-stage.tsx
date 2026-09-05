@@ -186,6 +186,7 @@ function WaveformRing({ className }: { className?: string }) {
     let alpha = 0;
     let lastFrame: AudioFrame | null = null;
     let raf = 0;
+    let radii: number[] = [];
     // The bulge is feedback for her voice and stays; only the decorative spin is dropped.
     const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
 
@@ -211,20 +212,44 @@ function WaveformRing({ className }: { className?: string }) {
       const reach = size * 0.15;
       const rotation = reduceMotion ? 0 : ((performance.now() % 10000) / 10000) * Math.PI * 2;
       const n = frame.bins.length;
-      const loop = new Path2D();
-      for (let i = 0; i <= 120; i++) {
-        const angle = (i / 120) * Math.PI * 2 + rotation;
-        // Walk the spectrum up and down four times around the loop so it
-        // stays symmetric (bass lobes at 0° and 180°) and closes smoothly.
+      const POINTS = 120;
+      // Radius per point, walking the spectrum up and down four times around
+      // the loop so it stays symmetric (bass lobes at 0° and 180°).
+      const target = new Array<number>(POINTS);
+      for (let i = 0; i < POINTS; i++) {
         const seg = Math.floor(i / 30) % 4;
         const pos = (i % 30) / 30;
         const idx = Math.floor((seg % 2 === 0 ? pos : 1 - pos) * (n - 1));
         const amp = frame.bins[idx] / 255;
-        const r = base + amp * reach * (0.4 + 0.6 * frame.level);
-        const x = c + r * Math.cos(angle);
-        const y = c + r * Math.sin(angle);
-        if (i === 0) loop.moveTo(x, y);
-        else loop.lineTo(x, y);
+        target[i] = base + amp * reach * (0.4 + 0.6 * frame.level);
+      }
+      // Smooth around the loop (two passes of a 5-point average) …
+      for (let pass = 0; pass < 2; pass++) {
+        const src = target.slice();
+        for (let i = 0; i < POINTS; i++) {
+          let sum = 0;
+          for (let k = -2; k <= 2; k++) sum += src[(i + k + POINTS) % POINTS];
+          target[i] = sum / 5;
+        }
+      }
+      // … and over time, so the shape eases rather than jumps between frames.
+      if (radii.length !== POINTS) radii = target.slice();
+      for (let i = 0; i < POINTS; i++) radii[i] += (target[i] - radii[i]) * 0.35;
+
+      const pt = (i: number) => {
+        const angle = (i / POINTS) * Math.PI * 2 + rotation;
+        const r = radii[(i + POINTS) % POINTS];
+        return [c + r * Math.cos(angle), c + r * Math.sin(angle)] as const;
+      };
+      // Closed curve through the midpoints, so there are no corners.
+      const loop = new Path2D();
+      const [sx, sy] = pt(0);
+      const [nx, ny] = pt(1);
+      loop.moveTo((sx + nx) / 2, (sy + ny) / 2);
+      for (let i = 1; i <= POINTS; i++) {
+        const [px, py] = pt(i);
+        const [qx, qy] = pt(i + 1);
+        loop.quadraticCurveTo(px, py, (px + qx) / 2, (py + qy) / 2);
       }
       loop.closePath();
       // Fill rim → wave (the loop minus the circle), then edge the wave.
