@@ -75,8 +75,8 @@ export function Starfield({ className }: { className?: string }) {
 }
 
 // Mouth slot geometry as fractions of the rig image, from the call-bot's
-// plate table (robot_avatar.py, "classic" plate) remapped to our 1514px crop.
-const MOUTH = { cx: 0.5, cy: 0.545, w: 0.105, h: 0.058 };
+// plate table (robot_avatar.py, plate "b" — the one she uses on calls), checked against the pixels.
+const MOUTH = { cx: 0.5, cy: 0.59, w: 0.085, h: 0.045 };
 const BAR_GAIN = [0.55, 0.85, 1, 0.85, 0.55];
 
 interface SallieRigProps {
@@ -86,7 +86,7 @@ interface SallieRigProps {
   priority?: boolean;
 }
 
-/** The robot rig with its breathing aura and voice-driven mouth. Bottom-anchored; size via className. */
+/** The robot rig with its breathing aura and voice-driven mouth. Size and anchoring via className. */
 export function SallieRig({ busy = false, className, priority = false }: SallieRigProps) {
   const mouthRef = useRef<HTMLDivElement>(null);
 
@@ -107,10 +107,10 @@ export function SallieRig({ busy = false, className, priority = false }: SallieR
       />
       <div className="relative h-full">
         <Image
-          src="/images/sallie-rig.webp"
+          src="/images/sallie-rig-b.webp"
           alt="Sallie, KnowAll's robot sales agent"
           width={900}
-          height={609}
+          height={601}
           priority={priority}
           className="h-full w-auto max-w-none select-none object-contain object-bottom drop-shadow-[0_0_24px_rgba(157,254,10,0.25)]"
         />
@@ -168,8 +168,9 @@ export default function SallieStage({
         busy={busy}
         priority={priority}
         className={cn(
-          'absolute inset-x-0 bottom-0',
-          shape === 'circle' ? 'h-[88%] translate-y-[4%]' : 'h-[96%]'
+          'absolute inset-x-0',
+          // Her eyes sit 43% down the rig; 118% tall with a -1% top puts them dead centre.
+          shape === 'circle' ? 'top-[-1%] h-[118%] items-start' : 'bottom-0 h-[96%]'
         )}
       />
     </div>
