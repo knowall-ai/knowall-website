@@ -162,7 +162,27 @@ describe('POST /api/chat', () => {
       'What do you do?',
       'A helpful answer',
       'conv-log',
-      expect.anything()
+      expect.anything(),
+      undefined
+    );
+  });
+
+  it('logs which opening line the conversation started with', async () => {
+    vi.stubEnv('OPENAI_API_KEY', 'sk-test-key');
+    createMock.mockResolvedValue({ choices: [{ message: { content: 'Sure' } }] });
+    await POST(
+      postRequest({
+        conversationId: 'conv-greet',
+        greetingId: 'three-questions',
+        messages: [{ role: 'user', content: 'Hi' }],
+      })
+    );
+    expect(logChatMock).toHaveBeenLastCalledWith(
+      'Hi',
+      'Sure',
+      'conv-greet',
+      expect.anything(),
+      'three-questions'
     );
   });
 

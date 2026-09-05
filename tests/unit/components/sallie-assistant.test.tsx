@@ -1,6 +1,9 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import SallieAssistant, { SALLIE_GREETING } from '@/components/sallie-assistant';
+import SallieAssistant from '@/components/sallie-assistant';
+import { GREETINGS } from '@/lib/sallie-greetings';
+
+const SALLIE_GREETING = GREETINGS[0].text;
 
 /**
  * SallieAssistant tests
@@ -36,10 +39,13 @@ describe('SallieAssistant', () => {
     fetchMock.mockReset();
     Element.prototype.scrollIntoView = vi.fn();
     window.localStorage.clear();
+    // Deterministic opener: the first greeting in the pool.
+    vi.spyOn(Math, 'random').mockReturnValue(0);
   });
 
   afterEach(() => {
     vi.unstubAllGlobals();
+    vi.restoreAllMocks();
     window.matchMedia = originalMatchMedia;
   });
 
@@ -82,6 +88,7 @@ describe('SallieAssistant', () => {
     expect(chatCall).toBeTruthy();
     const body = JSON.parse(chatCall![1].body);
     // The greeting she showed on screen is sent as her first turn
+    expect(body.greetingId).toBe(GREETINGS[0].id);
     expect(body.messages).toEqual([
       { role: 'assistant', content: SALLIE_GREETING },
       { role: 'user', content: 'What does KnowAll do?' },

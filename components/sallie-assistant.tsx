@@ -27,6 +27,7 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 import SallieStage, { Starfield } from '@/components/sallie-stage';
+import { pickGreeting, type Greeting } from '@/lib/sallie-greetings';
 import { signOffMailto } from '@/lib/sallie-signoff';
 import { useSallieVoice, useSpeechInput } from '@/components/sallie-voice';
 
@@ -35,9 +36,6 @@ interface Message {
   role: 'user' | 'assistant';
   content: string;
 }
-
-export const SALLIE_GREETING =
-  "Hi, I'm Sallie — welcome to KnowAll AI. I can tell you about our AI agents, Microsoft Copilot work, Bitcoin integration and how we deliver with T-Minus-15. What brings you here today?";
 
 const SUGGESTIONS = [
   'What does KnowAll do?',
@@ -74,7 +72,7 @@ function useTypewriter(text: string) {
   return shown;
 }
 
-function useSallieConversation() {
+function useSallieConversation(greeting: Greeting) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -98,8 +96,9 @@ function useSallieConversation() {
           body: JSON.stringify({
             conversationId,
             // Her on-screen greeting is the first turn, so she doesn't introduce herself twice.
+            greetingId: greeting.id,
             messages: [
-              { role: 'assistant', content: SALLIE_GREETING },
+              { role: 'assistant', content: greeting.text },
               ...history.map(({ role, content }) => ({ role, content })),
             ],
           }),
@@ -120,7 +119,7 @@ function useSallieConversation() {
         setIsLoading(false);
       }
     },
-    [messages, isLoading, conversationId, ended]
+    [messages, isLoading, conversationId, ended, greeting]
   );
 
   return { messages, isLoading, error, ended, conversationId, send };
@@ -297,7 +296,9 @@ function ConversationPanel({
         )}
         aria-live="polite"
       >
-        <MessageBubble message={{ id: 'greeting', role: 'assistant', content: greeting }} />
+        <div data-testid="sallie-greeting" className="contents">
+          <MessageBubble message={{ id: 'greeting', role: 'assistant', content: greeting }} />
+        </div>
         {!started && suggestions}
         {messages.map((m) => (
           <MessageBubble key={m.id} message={m} />
@@ -446,10 +447,11 @@ function SpeechBubble({
  * `/api/chat` and `/api/speak` endpoints — no internal systems are wired in.
  */
 export default function SallieAssistant() {
-  const conversation = useSallieConversation();
+  const [opener] = useState(() => pickGreeting());
+  const conversation = useSallieConversation(opener);
   const tts = useSallieVoice();
   const [input, setInput] = useState('');
-  const greeting = useTypewriter(SALLIE_GREETING);
+  const greeting = useTypewriter(opener.text);
   const heroRef = useRef<HTMLDivElement>(null);
   const heroOnScreen = useOnScreen(heroRef);
   const [dockOpen, setDockOpen] = useState(false);
@@ -534,7 +536,7 @@ export default function SallieAssistant() {
   // Say hello once she is on screen (browsers may hold this until the first
   // interaction; `unlock` releases it).
   useEffect(() => {
-    const timer = setTimeout(() => void speak(SALLIE_GREETING), 600);
+    const timer = setTimeout(() => void speak(opener.text), 600);
     return () => clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -603,7 +605,7 @@ export default function SallieAssistant() {
             voice={voice}
             input={input}
             setInput={setInput}
-            greeting={SALLIE_GREETING}
+            greeting={opener.text}
             className="min-h-0 flex-1 px-4 pb-4 pt-3"
           />
         </div>
@@ -655,6 +657,9 @@ export default function SallieAssistant() {
       <div
         ref={heroRef}
         data-testid="sallie-chat"
+        // While she's docked the same conversation is in the corner; keep
+        // screen readers from finding two copies of the controls.
+        aria-hidden={docked || undefined}
         className="flex w-full max-w-lg flex-col items-center gap-4 text-white"
         onPointerDownCapture={onInteract}
         onKeyDownCapture={onInteract}

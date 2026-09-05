@@ -33,8 +33,9 @@ test.describe('Sallie Chat', () => {
     await expect(
       page.getByTestId('sallie-chat').getByRole('img', { name: /Sallie, KnowAll's robot/ })
     ).toBeVisible();
-    // The greeting is revealed with a typewriter effect, so allow it time to finish.
-    await expect(page.getByText(/welcome to KnowAll AI/)).toBeVisible({ timeout: 15000 });
+    // One of several openers is picked per visit and typed out, so allow it time to finish.
+    await expect(page.getByTestId('sallie-greeting')).toContainText(/Sallie/, { timeout: 15000 });
+    await expect(page.getByTestId('sallie-greeting')).toContainText(/\?/, { timeout: 15000 });
     // The conversation ID is used internally (logging/lead follow-up) but is
     // deliberately not surfaced to visitors.
     await expect(page.getByText(/Our conversation will be saved with the ID/)).toHaveCount(0);

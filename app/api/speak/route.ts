@@ -114,7 +114,11 @@ export async function POST(req: Request) {
 
   const key = `${preferredEngine()}:${text}`;
   let clip = cache.get(key);
-  if (!clip) {
+  if (clip) {
+    // Refresh on hit so often-requested clips (the greetings) stay cached.
+    cache.delete(key);
+    cache.set(key, clip);
+  } else {
     try {
       clip = await synthesize(text, apiKey);
       remember(key, clip);

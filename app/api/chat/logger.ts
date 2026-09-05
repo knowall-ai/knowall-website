@@ -11,6 +11,8 @@ interface ChatLogEntry {
   timestamp: string;
   userMessage: string;
   assistantResponse: string;
+  /** Which opening line the conversation started with (for learning what works). */
+  greetingId?: string;
   userIp?: string;
   userAgent?: string;
 }
@@ -37,7 +39,8 @@ export async function logChat(
   userMessage: string,
   assistantResponse: string,
   conversationId: string,
-  request?: Request
+  request?: Request,
+  greetingId?: string
 ): Promise<boolean> {
   try {
     // Initialize log file if it doesn't exist
@@ -53,6 +56,7 @@ export async function logChat(
       timestamp: new Date().toISOString(),
       userMessage,
       assistantResponse,
+      ...(greetingId ? { greetingId } : {}),
     };
 
     // Add request metadata if available
