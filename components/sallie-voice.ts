@@ -336,6 +336,8 @@ function friendlyMicError(code: string | undefined): string {
 interface SpeechInputOptions {
   onInterim?: (text: string) => void;
   onFinal: (text: string) => void;
+  /** A capture ended without any speech. */
+  onSilent?: () => void;
 }
 
 /**
@@ -344,7 +346,7 @@ interface SpeechInputOptions {
  * fails (Chromium builds without Google's speech keys report "network"), the
  * mic is recorded with MediaRecorder and transcribed by /api/listen instead.
  */
-export function useSpeechInput({ onInterim, onFinal }: SpeechInputOptions) {
+export function useSpeechInput({ onInterim, onFinal, onSilent }: SpeechInputOptions) {
   const [supported, setSupported] = useState(false);
   const [listening, setListening] = useState(false);
   const [transcribing, setTranscribing] = useState(false);
@@ -355,10 +357,10 @@ export function useSpeechInput({ onInterim, onFinal }: SpeechInputOptions) {
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   // Once the browser recogniser fails we stop trying it for this visit.
   const useRecorder = useRef(false);
-  const callbacks = useRef({ onInterim, onFinal });
+  const callbacks = useRef({ onInterim, onFinal, onSilent });
   useEffect(() => {
-    callbacks.current = { onInterim, onFinal };
-  }, [onInterim, onFinal]);
+    callbacks.current = { onInterim, onFinal, onSilent };
+  }, [onInterim, onFinal, onSilent]);
 
   useEffect(() => {
     const hasRecognition = getRecognition() !== null;
@@ -385,7 +387,7 @@ export function useSpeechInput({ onInterim, onFinal }: SpeechInputOptions) {
       const data = await res.json();
       const text = typeof data.text === 'string' ? data.text.trim() : '';
       if (text) callbacks.current.onFinal(text);
-      else setError(friendlyMicError('no-speech'));
+      else callbacks.current.onSilent?.();
     } catch (err) {
       console.warn('Transcription failed', err);
       setError("I couldn't process that recording. Please try again or type instead.");
@@ -459,6 +461,7 @@ export function useSpeechInput({ onInterim, onFinal }: SpeechInputOptions) {
       setListening(false);
       const text = finalText.trim();
       if (text) callbacks.current.onFinal(text);
+      else callbacks.current.onSilent?.();
     };
     recognition.onerror = (event) => {
       const code = event.error;
@@ -476,7 +479,8 @@ export function useSpeechInput({ onInterim, onFinal }: SpeechInputOptions) {
         return;
       }
       setListening(false);
-      if (code !== 'aborted') setError(friendlyMicError(code));
+      if (code === 'no-speech') callbacks.current.onSilent?.();
+      else if (code !== 'aborted') setError(friendlyMicError(code));
     };
     recognitionRef.current = recognition;
     try {

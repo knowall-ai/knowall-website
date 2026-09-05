@@ -94,7 +94,11 @@ function useSallieConversation() {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             conversationId,
-            messages: history.map(({ role, content }) => ({ role, content })),
+            // Her on-screen greeting is the first turn, so she doesn't introduce herself twice.
+            messages: [
+              { role: 'assistant', content: SALLIE_GREETING },
+              ...history.map(({ role, content }) => ({ role, content })),
+            ],
           }),
         });
         if (!res.ok) throw new Error(`Chat API responded with ${res.status}`);
@@ -180,11 +184,14 @@ interface Voice {
   speaking: boolean;
   blocked: boolean;
   micSupported: boolean;
+  /** The visitor has turned their mic on (hands-free conversation). */
+  micOn: boolean;
+  /** The recogniser is actively capturing right now. */
   listening: boolean;
   transcribing: boolean;
   micError: string | null;
-  startListening: () => void;
-  stopListening: () => void;
+  micOnce: boolean;
+  setMicOn: (on: boolean) => void;
 }
 
 function VoiceToggle({ voice, className }: { voice: Voice; className?: string }) {
@@ -196,7 +203,7 @@ function VoiceToggle({ voice, className }: { voice: Voice; className?: string })
       aria-label={voice.muted ? 'Unmute Sallie' : 'Mute Sallie'}
       title={voice.muted ? 'Unmute Sallie' : 'Mute Sallie'}
       className={cn(
-        'inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium transition-colors',
+        'cursor-pointer inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium transition-colors',
         voice.muted
           ? 'border-gray-600 text-gray-400 hover:border-gray-500 hover:text-gray-200'
           : 'border-lime-500/50 bg-lime-500/10 text-lime-300 hover:bg-lime-500/20',
@@ -242,10 +249,10 @@ function ConversationPanel({
 
   const submit = (e?: FormEvent) => {
     e?.preventDefault();
-    // While listening, the recogniser sends the final transcript itself;
-    // submitting here too would double-send.
+    // While the recogniser is capturing it sends the transcript itself;
+    // submitting here too would double-send. Typing means they'd rather type.
     if (voice.listening) {
-      voice.stopListening();
+      voice.setMicOn(false);
       return;
     }
     const text = input;
@@ -268,7 +275,7 @@ function ConversationPanel({
           type="button"
           onClick={() => ask(s)}
           disabled={isLoading}
-          className="rounded-full border border-lime-500/40 bg-lime-500/10 px-3 py-1.5 text-xs font-medium text-lime-300 transition-colors hover:bg-lime-500/20 hover:text-lime-200 disabled:opacity-50"
+          className="cursor-pointer rounded-full border border-lime-500/40 bg-lime-500/10 px-3 py-1.5 text-xs font-medium text-lime-300 transition-colors hover:bg-lime-500/20 hover:text-lime-200 disabled:opacity-50"
         >
           {s}
         </button>
@@ -321,17 +328,21 @@ function ConversationPanel({
           <Button
             type="button"
             variant="outline"
-            aria-label={voice.listening ? 'Stop listening' : 'Speak to Sallie'}
-            aria-pressed={voice.listening}
-            onClick={voice.listening ? voice.stopListening : voice.startListening}
-            disabled={isLoading || voice.transcribing}
+            aria-label={
+              voice.micOn ? 'Turn your microphone off' : 'Turn your microphone on to talk'
+            }
+            title={voice.micOn ? 'Mic on — tap to turn off' : 'Tap to talk to Sallie'}
+            aria-pressed={voice.micOn}
+            onClick={() => voice.setMicOn(!voice.micOn)}
+            disabled={voice.transcribing}
             className={cn(
               'h-12 w-12 shrink-0 border-gray-700 bg-gray-800/90 p-0 text-gray-200 hover:bg-gray-700 hover:text-white',
-              voice.listening &&
-                'border-lime-400 bg-lime-500/20 text-lime-300 shadow-[0_0_18px_rgba(157,254,10,0.45)] animate-pulse motion-reduce:animate-none'
+              voice.micOn &&
+                'border-lime-400 bg-lime-500/20 text-lime-300 shadow-[0_0_18px_rgba(157,254,10,0.45)]',
+              voice.listening && 'animate-pulse motion-reduce:animate-none'
             )}
           >
-            {voice.listening ? <MicOff className="h-5 w-5" /> : <Mic className="h-5 w-5" />}
+            {voice.micOn ? <Mic className="h-5 w-5" /> : <MicOff className="h-5 w-5" />}
           </Button>
         )}
         <Textarea
@@ -340,10 +351,12 @@ function ConversationPanel({
           onKeyDown={onKeyDown}
           placeholder={
             voice.listening
-              ? 'Listening… click the mic again when you’re done'
+              ? 'Listening…'
               : voice.transcribing
                 ? 'Working out what you said…'
-                : 'Type your message...'
+                : voice.micOn && voice.speaking
+                  ? 'Sallie is speaking…'
+                  : 'Type your message...'
           }
           aria-label="Message Sallie"
           rows={1}
@@ -363,11 +376,17 @@ function ConversationPanel({
           )}
         </Button>
       </form>
-      {voice.micError && (
+      {voice.micError ? (
         <p role="status" className="mt-2 text-xs text-amber-300/90">
           {voice.micError}
         </p>
-      )}
+      ) : voice.micSupported && voice.micOn ? (
+        <p role="status" className="mt-2 text-xs text-lime-300/90">
+          Mic on — just talk, and tap the mic again to turn it off.
+        </p>
+      ) : voice.micSupported && !voice.micOnce ? (
+        <p className="mt-2 text-xs text-gray-400">Tap the mic to talk to Sallie, or type below.</p>
+      ) : null}
     </div>
   );
 }
@@ -435,13 +454,48 @@ export default function SallieAssistant() {
     [conversation, speak, stop]
   );
 
+  const [micOn, setMicOnState] = useState(false);
+  const [micOnce, setMicOnce] = useState(false);
+  const [silentTurns, setSilentTurns] = useState(0);
+
   const speech = useSpeechInput({
     onInterim: setInput,
     onFinal: (text) => {
+      setSilentTurns(0);
       setInput('');
       ask(text);
     },
+    onSilent: () => setSilentTurns((n) => n + 1),
   });
+  const { startListening, stopListening, listening, transcribing, error: micError } = speech;
+
+  const setMicOn = useCallback(
+    (on: boolean) => {
+      setMicOnState(on);
+      setSilentTurns(0);
+      if (on) setMicOnce(true);
+      else stopListening();
+    },
+    [stopListening]
+  );
+
+  // Hands-free: while the mic is on, listen whenever she isn't speaking or
+  // thinking, and go again after each turn. She keeps talking when the mic
+  // is switched on — capture simply waits until she has finished.
+  useEffect(() => {
+    if (!micOn || listening || transcribing || conversation.isLoading || tts.speaking) return;
+    const timer = setTimeout(() => startListening(), 350);
+    return () => clearTimeout(timer);
+  }, [micOn, listening, transcribing, conversation.isLoading, tts.speaking, startListening]);
+
+  // Turn the mic off after a long stretch of silence so it never runs forever.
+  useEffect(() => {
+    if (silentTurns >= 4) setMicOnState(false);
+  }, [silentTurns]);
+
+  useEffect(() => {
+    if (micError) setMicOnState(false);
+  }, [micError]);
 
   const voice: Voice = {
     muted: tts.muted,
@@ -449,14 +503,12 @@ export default function SallieAssistant() {
     speaking: tts.speaking,
     blocked: tts.blocked,
     micSupported: speech.supported,
-    listening: speech.listening,
-    transcribing: speech.transcribing,
-    micError: speech.error,
-    startListening: () => {
-      stop();
-      speech.startListening();
-    },
-    stopListening: speech.stopListening,
+    micOn,
+    listening,
+    transcribing,
+    micError,
+    micOnce,
+    setMicOn,
   };
 
   // Say hello once she is on screen (browsers may hold this until the first
@@ -520,7 +572,7 @@ export default function SallieAssistant() {
               type="button"
               onClick={() => setDockOpen(false)}
               aria-label="Close chat"
-              className="relative z-10 rounded-full p-1.5 text-gray-400 hover:bg-white/10 hover:text-white"
+              className="cursor-pointer relative z-10 rounded-full p-1.5 text-gray-400 hover:bg-white/10 hover:text-white"
             >
               <X className="h-4 w-4" />
             </button>
@@ -550,7 +602,7 @@ export default function SallieAssistant() {
             type="button"
             onClick={() => setDockBubbleDismissed(true)}
             aria-label="Dismiss greeting"
-            className="absolute -left-2 -top-2 rounded-full bg-gray-800 p-1 text-gray-400 shadow hover:text-white"
+            className="cursor-pointer absolute -left-2 -top-2 rounded-full bg-gray-800 p-1 text-gray-400 shadow hover:text-white"
           >
             <X className="h-3 w-3" />
           </button>
@@ -563,7 +615,7 @@ export default function SallieAssistant() {
         aria-label={dockOpen ? 'Close chat with Sallie' : 'Chat with Sallie'}
         aria-expanded={dockOpen}
         tabIndex={docked ? 0 : -1}
-        className="group relative rounded-full ring-2 ring-lime-500/60 shadow-[0_0_40px_rgba(157,254,10,0.35)] transition-transform hover:scale-105 focus:outline-none focus-visible:ring-4 motion-reduce:transition-none motion-reduce:hover:scale-100"
+        className="cursor-pointer group relative rounded-full ring-2 ring-lime-500/60 shadow-[0_0_40px_rgba(157,254,10,0.35)] transition-transform hover:scale-105 focus:outline-none focus-visible:ring-4 motion-reduce:transition-none motion-reduce:hover:scale-100"
       >
         <SallieStage
           shape="circle"

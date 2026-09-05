@@ -81,7 +81,11 @@ describe('SallieAssistant', () => {
     const chatCall = fetchMock.mock.calls.find(([url]) => url === '/api/chat');
     expect(chatCall).toBeTruthy();
     const body = JSON.parse(chatCall![1].body);
-    expect(body.messages).toEqual([{ role: 'user', content: 'What does KnowAll do?' }]);
+    // The greeting she showed on screen is sent as her first turn
+    expect(body.messages).toEqual([
+      { role: 'assistant', content: SALLIE_GREETING },
+      { role: 'user', content: 'What does KnowAll do?' },
+    ]);
     expect(body.conversationId).toMatch(/^[A-Z0-9]{8}$/);
 
     await waitFor(() => {
