@@ -43,11 +43,13 @@ export async function POST(req: Request) {
     const openai = new OpenAI({ apiKey });
     const speech = await openai.audio.speech.create({
       model: 'gpt-4o-mini-tts',
-      voice: 'sage',
+      voice: 'marin',
       input: text,
       response_format: 'mp3',
+      // Mirrors her call persona (sallie-openclaw voice_persona.md): warm,
+      // professional, confident, British English — and the same "marin" voice.
       instructions:
-        'You are Sallie, a warm, upbeat British sales assistant for an AI consultancy. Speak clearly and naturally at a relaxed pace, friendly but professional.',
+        "You are Sallie, KnowAll AI's sales agent. Warm, professional and confident, in British English. Speak naturally at a relaxed conversational pace, as if talking to a visitor who has just arrived.",
     });
     const audio = await speech.arrayBuffer();
     return new NextResponse(audio, {

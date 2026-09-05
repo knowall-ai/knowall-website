@@ -159,6 +159,12 @@ function MessageBubble({ message }: { message: Message }) {
               />
             ),
             p: ({ ...props }) => <p {...props} className="mb-2 last:mb-0" />,
+            ul: ({ ...props }) => (
+              <ul {...props} className="mb-2 list-disc space-y-1 pl-5 last:mb-0" />
+            ),
+            ol: ({ ...props }) => (
+              <ol {...props} className="mb-2 list-decimal space-y-1 pl-5 last:mb-0" />
+            ),
           }}
         >
           {message.content}
@@ -175,6 +181,8 @@ interface Voice {
   blocked: boolean;
   micSupported: boolean;
   listening: boolean;
+  transcribing: boolean;
+  micError: string | null;
   startListening: () => void;
   stopListening: () => void;
 }
@@ -207,8 +215,8 @@ interface ConversationPanelProps {
   voice: Voice;
   input: string;
   setInput: (value: string) => void;
-  /** Show the greeting inside the message list (used where there is no speech bubble). */
-  greetingInline?: boolean;
+  /** Sallie's opening line, shown as the first bubble. */
+  greeting: string;
   className?: string;
   listClassName?: string;
 }
@@ -220,7 +228,7 @@ function ConversationPanel({
   voice,
   input,
   setInput,
-  greetingInline = false,
+  greeting,
   className,
   listClassName,
 }: ConversationPanelProps) {
@@ -272,18 +280,14 @@ function ConversationPanel({
     <div className={cn('flex flex-col', className)}>
       <div
         className={cn(
-          'flex flex-col gap-3 overflow-y-auto',
-          started || greetingInline ? 'min-h-0 flex-1' : '',
+          'flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto pr-1',
+          '[scrollbar-width:thin] [scrollbar-color:rgba(157,254,10,0.35)_transparent]',
           listClassName
         )}
         aria-live="polite"
       >
-        {greetingInline && (
-          <MessageBubble
-            message={{ id: 'greeting', role: 'assistant', content: SALLIE_GREETING }}
-          />
-        )}
-        {greetingInline && !started && suggestions}
+        <MessageBubble message={{ id: 'greeting', role: 'assistant', content: greeting }} />
+        {!started && suggestions}
         {messages.map((m) => (
           <MessageBubble key={m.id} message={m} />
         ))}
@@ -312,8 +316,6 @@ function ConversationPanel({
         <div ref={endRef} />
       </div>
 
-      {!started && !greetingInline && suggestions}
-
       <form onSubmit={submit} className="mt-3 flex items-end gap-2">
         {voice.micSupported && (
           <Button
@@ -322,7 +324,7 @@ function ConversationPanel({
             aria-label={voice.listening ? 'Stop listening' : 'Speak to Sallie'}
             aria-pressed={voice.listening}
             onClick={voice.listening ? voice.stopListening : voice.startListening}
-            disabled={isLoading}
+            disabled={isLoading || voice.transcribing}
             className={cn(
               'h-12 w-12 shrink-0 border-gray-700 bg-gray-800/90 p-0 text-gray-200 hover:bg-gray-700 hover:text-white',
               voice.listening &&
@@ -336,7 +338,13 @@ function ConversationPanel({
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={onKeyDown}
-          placeholder={voice.listening ? 'Listening…' : 'Type your message...'}
+          placeholder={
+            voice.listening
+              ? 'Listening… click the mic again when you’re done'
+              : voice.transcribing
+                ? 'Working out what you said…'
+                : 'Type your message...'
+          }
           aria-label="Message Sallie"
           rows={1}
           className="min-h-[48px] max-h-32 flex-1 resize-none border-gray-700 bg-gray-800/90 text-gray-100 placeholder:text-gray-500 focus-visible:ring-lime-500"
@@ -345,7 +353,7 @@ function ConversationPanel({
         <Button
           type="submit"
           aria-label="Send message"
-          disabled={isLoading || voice.listening || !input.trim()}
+          disabled={isLoading || voice.listening || voice.transcribing || !input.trim()}
           className="h-12 w-12 shrink-0 bg-lime-500 p-0 text-gray-950 hover:bg-lime-400"
         >
           {isLoading ? (
@@ -355,6 +363,11 @@ function ConversationPanel({
           )}
         </Button>
       </form>
+      {voice.micError && (
+        <p role="status" className="mt-2 text-xs text-amber-300/90">
+          {voice.micError}
+        </p>
+      )}
     </div>
   );
 }
@@ -437,6 +450,8 @@ export default function SallieAssistant() {
     blocked: tts.blocked,
     micSupported: speech.supported,
     listening: speech.listening,
+    transcribing: speech.transcribing,
+    micError: speech.error,
     startListening: () => {
       stop();
       speech.startListening();
@@ -516,7 +531,7 @@ export default function SallieAssistant() {
             voice={voice}
             input={input}
             setInput={setInput}
-            greetingInline
+            greeting={SALLIE_GREETING}
             className="min-h-0 flex-1 px-4 pb-4 pt-3"
           />
         </div>
@@ -590,15 +605,15 @@ export default function SallieAssistant() {
         {voice.blocked && !voice.muted && (
           <p className="-mt-2 text-xs text-lime-200/80">Click or tap anywhere to hear Sallie</p>
         )}
-        <SpeechBubble text={greeting} tail="top" className="w-full" />
         <ConversationPanel
           conversation={conversation}
           ask={ask}
           voice={voice}
           input={input}
           setInput={setInput}
+          greeting={greeting}
           className="w-full"
-          listClassName="max-h-[260px]"
+          listClassName="max-h-[min(460px,55vh)]"
         />
       </div>
       {mounted && createPortal(dock, document.body)}
