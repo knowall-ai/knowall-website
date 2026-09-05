@@ -234,6 +234,12 @@ function ConversationPanel({
 
   const submit = (e?: FormEvent) => {
     e?.preventDefault();
+    // While listening, the recogniser sends the final transcript itself;
+    // submitting here too would double-send.
+    if (voice.listening) {
+      voice.stopListening();
+      return;
+    }
     const text = input;
     setInput('');
     ask(text);
@@ -339,7 +345,7 @@ function ConversationPanel({
         <Button
           type="submit"
           aria-label="Send message"
-          disabled={isLoading || !input.trim()}
+          disabled={isLoading || voice.listening || !input.trim()}
           className="h-12 w-12 shrink-0 bg-lime-500 p-0 text-gray-950 hover:bg-lime-400"
         >
           {isLoading ? (
@@ -450,6 +456,21 @@ export default function SallieAssistant() {
     if (e.type === 'keydown' && (e as KeyboardEvent).key === 'Tab') return;
     unlock();
   };
+
+  // Voice is on by default, but browsers hold audio until the page has had a
+  // real interaction. The first click or keypress anywhere releases it.
+  useEffect(() => {
+    const release = (e: Event) => {
+      if (e.type === 'keydown' && (e as unknown as { key?: string }).key === 'Tab') return;
+      unlock();
+    };
+    document.addEventListener('pointerdown', release, { capture: true });
+    document.addEventListener('keydown', release, { capture: true });
+    return () => {
+      document.removeEventListener('pointerdown', release, { capture: true });
+      document.removeEventListener('keydown', release, { capture: true });
+    };
+  }, [unlock]);
 
   const docked = mounted && !heroOnScreen;
   const showDockBubble = docked && !dockOpen && !dockBubbleDismissed;
@@ -567,7 +588,7 @@ export default function SallieAssistant() {
           <VoiceToggle voice={voice} />
         </div>
         {voice.blocked && !voice.muted && (
-          <p className="-mt-2 text-xs text-lime-200/80">Click or tap here to hear Sallie</p>
+          <p className="-mt-2 text-xs text-lime-200/80">Click or tap anywhere to hear Sallie</p>
         )}
         <SpeechBubble text={greeting} tail="top" className="w-full" />
         <ConversationPanel

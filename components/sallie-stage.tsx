@@ -186,6 +186,8 @@ function WaveformRing({ className }: { className?: string }) {
     let alpha = 0;
     let lastFrame: AudioFrame | null = null;
     let raf = 0;
+    // The bulge is feedback for her voice and stays; only the decorative spin is dropped.
+    const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
 
     const draw = () => {
       raf = 0;
@@ -205,7 +207,7 @@ function WaveformRing({ className }: { className?: string }) {
       const c = size / 2;
       const base = size * 0.39; // just outside the circle's rim (circle is 78% of this canvas)
       const reach = size * 0.09;
-      const rotation = ((performance.now() % 10000) / 10000) * Math.PI * 2;
+      const rotation = reduceMotion ? 0 : ((performance.now() % 10000) / 10000) * Math.PI * 2;
       const n = frame.bins.length;
       ctx.beginPath();
       for (let i = 0; i <= 120; i++) {

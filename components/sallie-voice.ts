@@ -75,6 +75,9 @@ export function useSallieVoice() {
   const rafRef = useRef<number>(0);
   const pendingRef = useRef<string | null>(null);
   const mutedRef = useRef(false);
+  // Each speak() gets a sequence number so a slow earlier request can't play late.
+  const seqRef = useRef(0);
+  const abortRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
     const m = readMuted();
@@ -89,6 +92,9 @@ export function useSallieVoice() {
 
   const stop = useCallback(() => {
     pendingRef.current = null;
+    seqRef.current += 1;
+    abortRef.current?.abort();
+    abortRef.current = null;
     try {
       sourceRef.current?.stop();
     } catch {
@@ -209,18 +215,23 @@ export function useSallieVoice() {
     async (text: string) => {
       if (mutedRef.current || !text.trim()) return;
       stop();
+      const seq = seqRef.current;
+      const controller = new AbortController();
+      abortRef.current = controller;
       let audio: ArrayBuffer | null = null;
       try {
         const res = await fetch('/api/speak', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ text }),
+          signal: controller.signal,
         });
         if (res.ok) audio = await res.arrayBuffer();
       } catch {
         audio = null;
       }
-      if (mutedRef.current) return;
+      // Superseded by a newer speak()/stop() while we were fetching.
+      if (seq !== seqRef.current || mutedRef.current) return;
       if (audio) {
         const result = await playBuffer(audio);
         if (result === 'played') {
@@ -265,7 +276,14 @@ export function useSallieVoice() {
     [stop]
   );
 
-  useEffect(() => () => stop(), [stop]);
+  useEffect(
+    () => () => {
+      stop();
+      void ctxRef.current?.close().catch(() => undefined);
+      ctxRef.current = null;
+    },
+    [stop]
+  );
 
   return { muted, setMuted, speaking, blocked, speak, stop, unlock };
 }
@@ -351,8 +369,15 @@ export function useSpeechInput({ onInterim, onFinal }: SpeechInputOptions) {
       recognitionRef.current = null;
     };
     recognitionRef.current = recognition;
-    setListening(true);
-    recognition.start();
+    try {
+      recognition.start();
+      setListening(true);
+    } catch (err) {
+      // Permissions, insecure context or a transient browser state.
+      console.warn('Speech recognition could not start', err);
+      recognitionRef.current = null;
+      setListening(false);
+    }
   }, []);
 
   useEffect(() => () => recognitionRef.current?.abort(), []);

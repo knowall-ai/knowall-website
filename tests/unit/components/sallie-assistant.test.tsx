@@ -27,6 +27,7 @@ function mockReducedMotion(reduce: boolean) {
 
 describe('SallieAssistant', () => {
   const fetchMock = vi.fn();
+  const originalMatchMedia = window.matchMedia;
 
   beforeEach(() => {
     // Reduced motion shows the greeting instantly instead of typing it out.
@@ -39,6 +40,7 @@ describe('SallieAssistant', () => {
 
   afterEach(() => {
     vi.unstubAllGlobals();
+    window.matchMedia = originalMatchMedia;
   });
 
   function mockApis(reply = 'We build AI agents.') {
