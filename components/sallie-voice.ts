@@ -456,6 +456,8 @@ export function useSpeechInput({ onInterim, onFinal, onSilent }: SpeechInputOpti
       callbacks.current.onInterim?.((finalText + interim).trim());
     };
     recognition.onend = () => {
+      // A previous, aborted instance can still fire; only the live one may touch state.
+      if (recognitionRef.current !== recognition) return;
       recognitionRef.current = null;
       if (failedOver) return;
       setListening(false);
@@ -464,6 +466,7 @@ export function useSpeechInput({ onInterim, onFinal, onSilent }: SpeechInputOpti
       else callbacks.current.onSilent?.();
     };
     recognition.onerror = (event) => {
+      if (recognitionRef.current !== recognition) return;
       const code = event.error;
       console.warn('Speech recognition error', code);
       recognitionRef.current = null;

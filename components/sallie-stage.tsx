@@ -205,11 +205,13 @@ function WaveformRing({ className }: { className?: string }) {
       if (alpha < 0.01) return;
 
       const c = size / 2;
-      const base = size * 0.39; // just outside the circle's rim (circle is 78% of this canvas)
-      const reach = size * 0.09;
+      // The circle is 2/3 of this canvas, so its rim is at 1/3 — the wave
+      // starts exactly on the rim and the band between rim and wave is filled.
+      const base = size / 3;
+      const reach = size * 0.15;
       const rotation = reduceMotion ? 0 : ((performance.now() % 10000) / 10000) * Math.PI * 2;
       const n = frame.bins.length;
-      ctx.beginPath();
+      const loop = new Path2D();
       for (let i = 0; i <= 120; i++) {
         const angle = (i / 120) * Math.PI * 2 + rotation;
         // Walk the spectrum up and down four times around the loop so it
@@ -221,15 +223,20 @@ function WaveformRing({ className }: { className?: string }) {
         const r = base + amp * reach * (0.4 + 0.6 * frame.level);
         const x = c + r * Math.cos(angle);
         const y = c + r * Math.sin(angle);
-        if (i === 0) ctx.moveTo(x, y);
-        else ctx.lineTo(x, y);
+        if (i === 0) loop.moveTo(x, y);
+        else loop.lineTo(x, y);
       }
-      ctx.closePath();
+      loop.closePath();
+      // Fill rim → wave (the loop minus the circle), then edge the wave.
+      const band = new Path2D(loop);
+      band.arc(c, c, base, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(157, 254, 10, ${(0.55 * alpha).toFixed(3)})`;
+      ctx.fill(band, 'evenodd');
       ctx.lineWidth = 2;
-      ctx.strokeStyle = `rgba(157, 254, 10, ${(0.85 * alpha).toFixed(3)})`;
+      ctx.strokeStyle = `rgba(157, 254, 10, ${(0.95 * alpha).toFixed(3)})`;
       ctx.shadowColor = 'rgba(157, 254, 10, 0.9)';
       ctx.shadowBlur = 10;
-      ctx.stroke();
+      ctx.stroke(loop);
       if (alpha < 0.99 || frame.level > 0) raf = requestAnimationFrame(draw);
     };
 
@@ -247,7 +254,7 @@ function WaveformRing({ className }: { className?: string }) {
     <canvas
       ref={canvasRef}
       aria-hidden="true"
-      className={cn('pointer-events-none absolute -inset-[14%] h-[128%] w-[128%]', className)}
+      className={cn('pointer-events-none absolute -inset-[25%] h-[150%] w-[150%]', className)}
     />
   );
 }
