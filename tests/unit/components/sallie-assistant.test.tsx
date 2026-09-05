@@ -31,6 +31,7 @@ function mockReducedMotion(reduce: boolean) {
 describe('SallieAssistant', () => {
   const fetchMock = vi.fn();
   const originalMatchMedia = window.matchMedia;
+  const originalScrollIntoView = Element.prototype.scrollIntoView;
 
   beforeEach(() => {
     // Reduced motion shows the greeting instantly instead of typing it out.
@@ -47,6 +48,7 @@ describe('SallieAssistant', () => {
     vi.unstubAllGlobals();
     vi.restoreAllMocks();
     window.matchMedia = originalMatchMedia;
+    Element.prototype.scrollIntoView = originalScrollIntoView;
   });
 
   function mockApis(reply = 'We build AI agents.') {
