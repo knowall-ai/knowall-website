@@ -465,7 +465,7 @@ export default function SallieAssistant() {
       onPointerDownCapture={onInteract}
       onKeyDownCapture={onInteract}
     >
-      {dockOpen && (
+      {docked && dockOpen && (
         <div className="flex h-[min(600px,calc(100vh-7rem))] w-[min(400px,calc(100vw-2.5rem))] flex-col overflow-hidden rounded-2xl border border-lime-500/30 bg-gray-950/95 text-white shadow-2xl shadow-black/60 backdrop-blur-md animate-sallie-pop motion-reduce:animate-none">
           <div className="relative flex items-center gap-3 overflow-hidden px-4 py-3">
             <Starfield />

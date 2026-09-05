@@ -110,12 +110,13 @@ export function useSallieVoice() {
     [stopLevelLoop]
   );
 
+  /** Plays decoded audio; 'blocked' means autoplay held it back, 'failed' means the body wasn't playable. */
   const playBuffer = useCallback(
-    async (audio: ArrayBuffer) => {
+    async (audio: ArrayBuffer): Promise<'played' | 'blocked' | 'failed'> => {
       const AudioCtx =
         window.AudioContext ||
         (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
-      if (!AudioCtx) return false;
+      if (!AudioCtx) return 'failed';
       const ctx = ctxRef.current ?? new AudioCtx();
       ctxRef.current = ctx;
       if (ctx.state === 'suspended') {
@@ -125,9 +126,15 @@ export function useSallieVoice() {
           // handled below
         }
       }
-      if (ctx.state !== 'running') return false;
+      if (ctx.state !== 'running') return 'blocked';
 
-      const buffer = await ctx.decodeAudioData(audio.slice(0));
+      if (audio.byteLength === 0) return 'failed';
+      let buffer: AudioBuffer;
+      try {
+        buffer = await ctx.decodeAudioData(audio.slice(0));
+      } catch {
+        return 'failed';
+      }
       const source = ctx.createBufferSource();
       source.buffer = buffer;
       const analyser = ctx.createAnalyser();
@@ -162,7 +169,7 @@ export function useSallieVoice() {
       setSpeaking(true);
       source.start();
       tick();
-      return true;
+      return 'played';
     },
     [stopLevelLoop]
   );
@@ -184,15 +191,18 @@ export function useSallieVoice() {
       }
       if (mutedRef.current) return;
       if (audio) {
-        const played = await playBuffer(audio);
-        if (played) {
+        const result = await playBuffer(audio);
+        if (result === 'played') {
           setBlocked(false);
           return;
         }
-        // Autoplay was blocked: keep the text and say it after the next interaction.
-        pendingRef.current = text;
-        setBlocked(true);
-        return;
+        if (result === 'blocked') {
+          // Autoplay was blocked: keep the text and say it after the next interaction.
+          pendingRef.current = text;
+          setBlocked(true);
+          return;
+        }
+        // Unplayable body: fall through to the browser's own voice.
       }
       if (!speakWithSynth(text)) {
         pendingRef.current = null;
