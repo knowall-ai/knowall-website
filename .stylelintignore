@@ -1,0 +1,3 @@
+# Vendored third-party assets (reveal.js, Google Fonts mirror) — not ours to lint.
+# Mirrors the same exclusion in .prettierignore.
+public/presentations/vendor/

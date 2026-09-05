@@ -37,8 +37,7 @@ const sampleLogs = [
   },
 ];
 
-// The route reads ADMIN_API_KEY at module load time, so stub the env
-// and re-import the module for each test.
+// Stub ADMIN_API_KEY and re-import the module for each test.
 let GET: typeof import('@/app/api/logs/route').GET;
 
 function logsRequest(options: { key?: string; id?: string } = {}): NextRequest {
@@ -100,6 +99,17 @@ describe('GET /api/logs authentication', () => {
     const response = await GET(logsRequest({ key: TEST_ADMIN_KEY }));
 
     expect(response.status).toBe(200);
+  });
+
+  it('returns 503 when ADMIN_API_KEY is not configured (fails closed)', async () => {
+    vi.stubEnv('ADMIN_API_KEY', '');
+
+    const response = await GET(logsRequest({ key: TEST_ADMIN_KEY }));
+
+    expect(response.status).toBe(503);
+    const body = await response.json();
+    expect(body.error).toContain('ADMIN_API_KEY');
+    expect(getAllChatLogsMock).not.toHaveBeenCalled();
   });
 });
 
