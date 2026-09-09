@@ -8,6 +8,7 @@ import { KNOWALL_PUBKEY } from '@/lib/nostr';
 // https://github.com/nostr-protocol/nips/blob/master/05.md
 
 const BEN_PUBKEY = '971615b70ad9ec896f8d5ba0f2d01652f1dfe5f9ced81ac9469ca7facefad68b';
+const SALLIE_PUBKEY = '368eb0cb4e18059e87c25243c09d57f8996d69e446f734fe7ad36cabd4822e07';
 
 const raw = readFileSync(join(process.cwd(), 'public', '.well-known', 'nostr.json'), 'utf8');
 
@@ -29,6 +30,10 @@ describe('public/.well-known/nostr.json (NIP-05)', () => {
 
   it('maps ben.weeks to his personal pubkey', () => {
     expect(parseNostrJson().names['ben.weeks']).toBe(BEN_PUBKEY);
+  });
+
+  it('maps sallie to her public key', () => {
+    expect(parseNostrJson().names.sallie).toBe(SALLIE_PUBKEY);
   });
 
   it('uses 64-char lowercase hex pubkeys (not npubs)', () => {
