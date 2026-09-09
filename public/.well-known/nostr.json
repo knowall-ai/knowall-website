@@ -32,9 +32,14 @@
     ],
     "5688fb12edc9f96fea6766e061cb1705a0ec8d5dd727a7d7fb8256afef19ebec": [
       "wss://relay.damus.io",
-      "wss://relay.nostr.band",
+      "wss://relay.primal.net",
       "wss://nos.lol",
-      "wss://relay.primal.net"
+      "wss://relay.snort.social",
+      "wss://nostr.land",
+      "wss://nostr.bitcoiner.social",
+      "wss://eden.nostr.land",
+      "wss://purplepag.es",
+      "wss://relay.nostr.band"
     ]
   }
 }
