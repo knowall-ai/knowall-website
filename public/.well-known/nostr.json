@@ -5,7 +5,8 @@
     "akash.jadhav": "ca7e6cf15d806abbe882dedb9cc31c8cad7a66a3ca5d65c9f84059fd26394df7",
     "valeriia.khudiakova": "6a3d46f3df7f21cbfd1e5ad96da8c5fa70c028a9bd638b62aa7ef49b7830523f",
     "poppie": "703afc9465dc88169308a76df4d1df33b20d06c43fb0f36b1fa230e68d7b2283",
-    "sammie": "5688fb12edc9f96fea6766e061cb1705a0ec8d5dd727a7d7fb8256afef19ebec"
+    "sammie": "5688fb12edc9f96fea6766e061cb1705a0ec8d5dd727a7d7fb8256afef19ebec",
+    "sallie": "368eb0cb4e18059e87c25243c09d57f8996d69e446f734fe7ad36cabd4822e07"
   },
   "relays": {
     "b733ecad265d8df63e15e28d24972141a5ebc21bfdf1532adad2e6701e853892": [
@@ -46,6 +47,11 @@
       "wss://eden.nostr.land",
       "wss://purplepag.es",
       "wss://relay.nostr.band"
+    ],
+    "368eb0cb4e18059e87c25243c09d57f8996d69e446f734fe7ad36cabd4822e07": [
+      "wss://relay.primal.net",
+      "wss://nos.lol",
+      "wss://nostr.oxtr.dev"
     ]
   }
 }

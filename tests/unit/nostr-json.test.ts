@@ -4,10 +4,11 @@ import { describe, it, expect } from 'vitest';
 import { KNOWALL_PUBKEY } from '@/lib/nostr';
 
 // NIP-05 identity file served at /.well-known/nostr.json so the company npub
-// verifies as _@knowall.ai, with named identities for Ben and Poppie.
+// verifies as _@knowall.ai, with named identities for Ben and the agents.
 // https://github.com/nostr-protocol/nips/blob/master/05.md
 
 const BEN_PUBKEY = '971615b70ad9ec896f8d5ba0f2d01652f1dfe5f9ced81ac9469ca7facefad68b';
+const SALLIE_PUBKEY = '368eb0cb4e18059e87c25243c09d57f8996d69e446f734fe7ad36cabd4822e07';
 const POPPIE_PUBKEY = '703afc9465dc88169308a76df4d1df33b20d06c43fb0f36b1fa230e68d7b2283';
 
 const raw = readFileSync(join(process.cwd(), 'public', '.well-known', 'nostr.json'), 'utf8');
@@ -30,6 +31,10 @@ describe('public/.well-known/nostr.json (NIP-05)', () => {
 
   it('maps ben.weeks to his personal pubkey', () => {
     expect(parseNostrJson().names['ben.weeks']).toBe(BEN_PUBKEY);
+  });
+
+  it('maps sallie to her public key', () => {
+    expect(parseNostrJson().names.sallie).toBe(SALLIE_PUBKEY);
   });
 
   it('maps poppie to her personal pubkey', () => {
