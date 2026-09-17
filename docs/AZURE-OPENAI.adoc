@@ -3,9 +3,10 @@
 :toclevels: 2
 
 Sallie (`/api/chat`) talks to an Azure OpenAI deployment rather than the OpenAI API directly.
-Azure gives us two levers the OpenAI API does not: a hard tokens-per-minute (TPM) ceiling per deployment,
-and a Cost Management budget scoped to the single resource. Together they stop a busy day, a bot, or a bug
-from turning into an open-ended bill.
+Azure gives us two levers the OpenAI API does not: a hard tokens-per-minute (TPM) ceiling per deployment, which
+rate-limits throughput and therefore how fast money can be spent, and a Cost Management budget scoped to the single
+resource, which emails an operator at set thresholds. The budget is an alert, not a cut-off: sustained traffic at the
+TPM ceiling can still pass it before someone acts, so the alerts are there to prompt a capacity change.
 
 == What is provisioned
 
@@ -108,10 +109,21 @@ Playwright always masks these (and `OPENAI_API_KEY`) so e2e tests exercise the f
 
 == Rotating the key
 
+The resource has two keys so rotation is zero-downtime: publish the key that is *not* in use, release, verify, then
+regenerate the old one. The setup script publishes `key1`, so the first rotation moves to `key2`.
+
 [source,bash]
 ----
-az cognitiveservices account keys regenerate -n knowall-website-ai -g KnowAllAIRG --key-name key2
+# 1. Publish the unused key and release
 az cognitiveservices account keys list -n knowall-website-ai -g KnowAllAIRG --query key2 -o tsv \
   | gh secret set AZURE_OPENAI_API_KEY --env "Production - Azure"
-# then push a release tag so the deploy workflow writes the new App Service setting
+git tag vX.Y.Z && git push origin vX.Y.Z     # deploy workflow writes the App Service setting
+
+# 2. Verify the cut-over: the App Service setting must equal key2, and Sallie must answer on www.knowall.ai
+az webapp config appsettings list --name knowall-website --resource-group KnowAllAIRG \
+  --query "[?name=='AZURE_OPENAI_API_KEY'].value" -o tsv | cmp - <(az cognitiveservices account keys list \
+  -n knowall-website-ai -g KnowAllAIRG --query key2 -o tsv) && echo "App Service is on key2"
+
+# 3. Only then retire the old key
+az cognitiveservices account keys regenerate -n knowall-website-ai -g KnowAllAIRG --key-name key1
 ----

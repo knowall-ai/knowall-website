@@ -169,8 +169,11 @@ export async function POST(req: Request) {
       }
 
       if (isRateLimited(apiError)) {
-        // The Azure deployment's tokens-per-minute cap was hit: a deliberate spend
-        // ceiling, so tell the visitor to retry shortly rather than report an outage
+        // HTTP 429 from whichever provider is in use: on Azure that is the
+        // deployment's tokens-per-minute cap (a deliberate spend ceiling), on
+        // OpenAI a rate or quota limit. Either way ask the visitor to retry
+        // shortly rather than report an outage.
+        console.warn(`Chat provider ${provider.name} returned 429 (rate limited)`);
         responseContent = `I'm rather popular right now and have used up my capacity for the minute. Please give me a moment and send that again, or email sallie@knowall.ai and I'll pick it up from there.`;
       } else {
         // Create a fallback response that includes the first sentence of the system prompt

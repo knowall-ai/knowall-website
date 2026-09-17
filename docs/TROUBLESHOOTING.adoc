@@ -17,14 +17,17 @@ To prevent recurrence, enable "Always On": +
 `az webapp config set --name knowall-website --resource-group KnowAllAIRG --always-on true`
 
 | Sallie answers every message with "I'm currently experiencing some technical difficulties"
-| The chat provider call is failing. Check the App Service settings `AZURE_OPENAI_ENDPOINT` / `AZURE_OPENAI_API_KEY`
-(`az webapp config appsettings list --name knowall-website --resource-group KnowAllAIRG`) and the app log stream for the
-upstream error. If the model rejects the request (HTTP 400) the deployment or parameter shape has drifted; see
-xref:AZURE-OPENAI.adoc[Azure OpenAI].
+| The chat provider call is failing. The log stream prints `Chat provider: azure` or `Chat provider: openai` per request,
+so first confirm which backend is in use. On Azure, check the App Service settings `AZURE_OPENAI_ENDPOINT` /
+`AZURE_OPENAI_API_KEY` (`az webapp config appsettings list --name knowall-website --resource-group KnowAllAIRG`) and the
+upstream error; an HTTP 400 means the deployment or parameter shape has drifted (see xref:AZURE-OPENAI.adoc[Azure OpenAI]).
+If it says `openai`, the Azure settings are missing or rejected and the `OPENAI_API_KEY` fallback is in use: check that key
+and the OpenAI project's usage limits.
 
 | Sallie says she is "rather popular right now" / has "used up my capacity for the minute"
-| The Azure deployment's tokens-per-minute cap returned HTTP 429. This is the spend ceiling working as intended.
-Raise it if traffic is legitimate: `scripts/azure-openai-capacity.sh 10` (units of 1,000 TPM).
+| The provider returned HTTP 429. On Azure that is the deployment's tokens-per-minute cap, the spend ceiling working as
+intended: raise it if traffic is legitimate with `scripts/azure-openai-capacity.sh 10` (units of 1,000 TPM). On the
+OpenAI fallback it is an OpenAI rate or quota limit, which is managed on the OpenAI project.
 
 | Shop order service issues (no invoices sent, key refusal at startup, dedup store)
 | See xref:ORDER-SERVICE.adoc[Order Service Operations] — the order daemon runs separately from the website deploy.

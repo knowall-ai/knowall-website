@@ -1,7 +1,8 @@
 // @vitest-environment node
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import {
   azureBaseURL,
+  isAzureEndpoint,
   isRateLimited,
   resolveChatProvider,
   DEFAULT_CHAT_MODEL,
@@ -62,9 +63,37 @@ describe('resolveChatProvider', () => {
     expect(provider?.model).toBe('gpt-5.4-mini');
   });
 
+  it('ignores an endpoint that is not an HTTPS Azure host and falls back to OpenAI', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const provider = resolveChatProvider({
+      AZURE_OPENAI_ENDPOINT: 'https://evil.example.com/',
+      AZURE_OPENAI_API_KEY: 'azure-key',
+      OPENAI_API_KEY: 'sk-openai',
+    });
+
+    expect(provider?.name).toBe('openai');
+    expect(warn).toHaveBeenCalledTimes(1);
+    warn.mockRestore();
+  });
+
   it('returns null when nothing is configured', () => {
     expect(resolveChatProvider({})).toBeNull();
     expect(resolveChatProvider({ OPENAI_API_KEY: '' })).toBeNull();
+  });
+});
+
+describe('isAzureEndpoint', () => {
+  it('accepts the Azure OpenAI and Foundry hostname forms over HTTPS', () => {
+    expect(isAzureEndpoint('https://x.openai.azure.com/')).toBe(true);
+    expect(isAzureEndpoint('https://x.services.ai.azure.com')).toBe(true);
+    expect(isAzureEndpoint('https://x.cognitiveservices.azure.com/')).toBe(true);
+  });
+
+  it('rejects other hosts, plain HTTP and junk', () => {
+    expect(isAzureEndpoint('https://x.openai.azure.com.evil.example/')).toBe(false);
+    expect(isAzureEndpoint('http://x.openai.azure.com/')).toBe(false);
+    expect(isAzureEndpoint('not a url')).toBe(false);
+    expect(isAzureEndpoint('')).toBe(false);
   });
 });
 

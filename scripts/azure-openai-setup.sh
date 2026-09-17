@@ -34,14 +34,11 @@ if ! az cognitiveservices account show -n "$ACCOUNT" -g "$RG" >/dev/null 2>&1; t
 fi
 
 echo "==> 2/4 Deployment $DEPLOYMENT = $MODEL $MODEL_VERSION @ ${CAPACITY}K TPM"
-if az cognitiveservices account deployment show -n "$ACCOUNT" -g "$RG" --deployment-name "$DEPLOYMENT" >/dev/null 2>&1; then
-  az cognitiveservices account deployment update -n "$ACCOUNT" -g "$RG" --deployment-name "$DEPLOYMENT" \
-    --sku-name GlobalStandard --sku-capacity "$CAPACITY" -o none
-else
-  az cognitiveservices account deployment create -n "$ACCOUNT" -g "$RG" --deployment-name "$DEPLOYMENT" \
-    --model-name "$MODEL" --model-version "$MODEL_VERSION" --model-format OpenAI \
-    --sku-name GlobalStandard --sku-capacity "$CAPACITY" -o none
-fi
+# The CLI has no `deployment update`; `create` is an ARM PUT, so re-running it
+# on an existing deployment is the supported way to change its capacity.
+az cognitiveservices account deployment create -n "$ACCOUNT" -g "$RG" --deployment-name "$DEPLOYMENT" \
+  --model-name "$MODEL" --model-version "$MODEL_VERSION" --model-format OpenAI \
+  --sku-name GlobalStandard --sku-capacity "$CAPACITY" -o none
 
 echo "==> 3/4 Budget $ACCOUNT-monthly = $BUDGET_AMOUNT/month, alerts to $BUDGET_EMAIL"
 START=$(date -u +%Y-%m-01T00:00:00Z)
@@ -61,12 +58,18 @@ az rest --method put -o none \
   --url "https://management.azure.com/subscriptions/$SUB/resourceGroups/$RG/providers/Microsoft.Consumption/budgets/$ACCOUNT-monthly?api-version=2023-05-01" \
   --body "$BODY"
 
-ENDPOINT="https://$ACCOUNT.openai.azure.com/"
+# Read the OpenAI endpoint the account actually exposes rather than assuming a
+# hostname: an AIServices account advertises several, and the app's v1 base URL
+# must sit on the OpenAI one.
+ENDPOINT=$(az cognitiveservices account show -n "$ACCOUNT" -g "$RG" \
+  --query 'properties.endpoints."OpenAI Language Model Instance API"' -o tsv)
+ENDPOINT=${ENDPOINT:-https://$ACCOUNT.openai.azure.com/}
 if [[ "${1:-}" == "--set-secrets" ]]; then
-  echo "==> 4/4 GitHub environment secrets ($GH_ENV)"
+  echo "==> 4/4 GitHub environment secrets + deployment variable ($GH_ENV)"
   az cognitiveservices account keys list -n "$ACCOUNT" -g "$RG" --query key1 -o tsv \
     | gh secret set AZURE_OPENAI_API_KEY --env "$GH_ENV"
   printf '%s' "$ENDPOINT" | gh secret set AZURE_OPENAI_ENDPOINT --env "$GH_ENV"
+  gh variable set AZURE_OPENAI_DEPLOYMENT --env "$GH_ENV" --body "$DEPLOYMENT"
 else
   echo "==> 4/4 Skipped GitHub secrets (pass --set-secrets to push them)"
 fi

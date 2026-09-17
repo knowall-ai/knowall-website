@@ -29,6 +29,29 @@ function clean(value: string | undefined): string {
   return (value ?? '').trim();
 }
 
+/** Hostname suffixes an Azure OpenAI / Foundry resource can legitimately have. */
+const AZURE_HOST_SUFFIXES = [
+  '.openai.azure.com',
+  '.services.ai.azure.com',
+  '.cognitiveservices.azure.com',
+];
+
+/**
+ * True only for an HTTPS URL on an Azure OpenAI host. Anything else is ignored
+ * so a misconfigured endpoint can never receive the Azure key or chat traffic.
+ */
+export function isAzureEndpoint(endpoint: string): boolean {
+  try {
+    const url = new URL(clean(endpoint));
+    return (
+      url.protocol === 'https:' &&
+      AZURE_HOST_SUFFIXES.some((suffix) => url.hostname.endsWith(suffix))
+    );
+  } catch {
+    return false;
+  }
+}
+
 /** Turns an Azure resource endpoint into the v1 base URL the SDK expects. */
 export function azureBaseURL(endpoint: string): string {
   const root = clean(endpoint).replace(/\/+$/, '');
@@ -39,7 +62,11 @@ export function resolveChatProvider(env: Env = process.env): ChatProvider | null
   const azureEndpoint = clean(env.AZURE_OPENAI_ENDPOINT);
   const azureKey = clean(env.AZURE_OPENAI_API_KEY);
 
-  if (azureEndpoint && azureKey) {
+  if (azureEndpoint && azureKey && !isAzureEndpoint(azureEndpoint)) {
+    console.warn(
+      'AZURE_OPENAI_ENDPOINT is not an HTTPS Azure OpenAI host; ignoring Azure settings'
+    );
+  } else if (azureEndpoint && azureKey) {
     return {
       name: 'azure',
       apiKey: azureKey,
