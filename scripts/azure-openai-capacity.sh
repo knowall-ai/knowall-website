@@ -20,8 +20,11 @@ fi
 
 # The CLI has no `deployment update`; `create` is an ARM PUT, so re-running it
 # with the deployment's current model and a new capacity is the supported way.
-read -r MODEL_NAME MODEL_VERSION < <(az cognitiveservices account deployment show -n "$ACCOUNT" -g "$RG" \
+# Here-string (not process substitution) so `read` sees a terminating newline
+# and returns 0 under `set -e`.
+CURRENT=$(az cognitiveservices account deployment show -n "$ACCOUNT" -g "$RG" \
   --deployment-name "$DEPLOYMENT" --query "[properties.model.name, properties.model.version]" -o tsv | tr '\n' ' ')
+read -r MODEL_NAME MODEL_VERSION <<< "$CURRENT"
 az cognitiveservices account deployment create -n "$ACCOUNT" -g "$RG" --deployment-name "$DEPLOYMENT" \
   --model-name "$MODEL_NAME" --model-version "$MODEL_VERSION" --model-format OpenAI \
   --sku-name GlobalStandard --sku-capacity "$1" \

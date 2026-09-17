@@ -41,7 +41,11 @@ az cognitiveservices account deployment create -n "$ACCOUNT" -g "$RG" --deployme
   --sku-name GlobalStandard --sku-capacity "$CAPACITY" -o none
 
 echo "==> 3/4 Budget $ACCOUNT-monthly = $BUDGET_AMOUNT/month, alerts to $BUDGET_EMAIL"
-START=$(date -u +%Y-%m-01T00:00:00Z)
+BUDGET_URL="https://management.azure.com/subscriptions/$SUB/resourceGroups/$RG/providers/Microsoft.Consumption/budgets/$ACCOUNT-monthly?api-version=2023-05-01"
+# An existing budget's start date cannot be changed, so keep it on re-runs and
+# only default to the current month when creating the budget for the first time.
+START=$(az rest --method get --url "$BUDGET_URL" --query properties.timePeriod.startDate -o tsv 2>/dev/null || true)
+START=${START:-$(date -u +%Y-%m-01T00:00:00Z)}
 END=$(date -u -d "+2 years" +%Y-%m-01T00:00:00Z)
 BODY=$(cat <<JSON
 {"properties":{"category":"Cost","amount":$BUDGET_AMOUNT,"timeGrain":"Monthly",
@@ -54,9 +58,7 @@ BODY=$(cat <<JSON
   "forecast100":{"enabled":true,"operator":"GreaterThan","threshold":100,"thresholdType":"Forecasted","contactEmails":["$BUDGET_EMAIL"]}}}}
 JSON
 )
-az rest --method put -o none \
-  --url "https://management.azure.com/subscriptions/$SUB/resourceGroups/$RG/providers/Microsoft.Consumption/budgets/$ACCOUNT-monthly?api-version=2023-05-01" \
-  --body "$BODY"
+az rest --method put -o none --url "$BUDGET_URL" --body "$BODY"
 
 # Read the OpenAI endpoint the account actually exposes rather than assuming a
 # hostname: an AIServices account advertises several, and the app's v1 base URL
