@@ -80,7 +80,7 @@ jobs:
       - name: Set environment variables
         run: |
           echo "Setting up environment variables for Azure App Service"
-          az webapp config appsettings set --name knowall-website --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} --settings OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }} ADMIN_API_KEY=${{ secrets.ADMIN_API_KEY }} NODE_ENV=production
+          az webapp config appsettings set --name knowall-website --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} --settings AZURE_OPENAI_ENDPOINT=${{ secrets.AZURE_OPENAI_ENDPOINT }} AZURE_OPENAI_API_KEY=${{ secrets.AZURE_OPENAI_API_KEY }} AZURE_OPENAI_DEPLOYMENT=${{ vars.AZURE_OPENAI_DEPLOYMENT || 'gpt-5.6-sol' }} OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }} ADMIN_API_KEY=${{ secrets.ADMIN_API_KEY }} NODE_ENV=production
 
       - name: Configure Node.js version
         uses: azure/CLI@v3

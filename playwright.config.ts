@@ -51,6 +51,14 @@ export default defineConfig({
         process.env.E2E_USE_REAL_OPENAI_KEY === '1' && process.env.OPENAI_API_KEY
           ? process.env.OPENAI_API_KEY
           : 'sk-test-invalid-key-for-e2e',
+      // Azure OpenAI is preferred over OpenAI when configured, so mask it too
+      // unless real calls were explicitly opted in to.
+      AZURE_OPENAI_ENDPOINT:
+        process.env.E2E_USE_REAL_OPENAI_KEY === '1'
+          ? (process.env.AZURE_OPENAI_ENDPOINT ?? '')
+          : '',
+      AZURE_OPENAI_API_KEY:
+        process.env.E2E_USE_REAL_OPENAI_KEY === '1' ? (process.env.AZURE_OPENAI_API_KEY ?? '') : '',
       ADMIN_API_KEY: process.env.ADMIN_API_KEY || 'test-admin-key-for-e2e',
     },
   },

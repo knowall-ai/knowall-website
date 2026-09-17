@@ -1,0 +1,117 @@
+= Azure OpenAI for Sallie's chat
+:toc:
+:toclevels: 2
+
+Sallie (`/api/chat`) talks to an Azure OpenAI deployment rather than the OpenAI API directly.
+Azure gives us two levers the OpenAI API does not: a hard tokens-per-minute (TPM) ceiling per deployment,
+and a Cost Management budget scoped to the single resource. Together they stop a busy day, a bot, or a bug
+from turning into an open-ended bill.
+
+== What is provisioned
+
+[cols="1,2", options="header"]
+|===
+| Item | Value
+
+| Resource
+| `knowall-website-ai` (Azure AI Services, kind `AIServices`, SKU S0) in resource group `KnowAllAIRG`, UK South
+
+| Endpoint
+| `https://knowall-website-ai.openai.azure.com/` — the app appends `/openai/v1/` and uses the OpenAI SDK's v1 API,
+so no dated `api-version` is needed
+
+| Deployment
+| `gpt-5.6-sol` (GlobalStandard), capacity **5** = 5,000 tokens per minute
+
+| Budget
+| `knowall-website-ai-monthly`: 50 per month, filtered to this one resource, email alerts at 50 %, 80 %, 100 % actual
+and 100 % forecast
+|===
+
+Everything above is reproducible with `scripts/azure-openai-setup.sh` (idempotent; add `--set-secrets` to push the
+endpoint and key into the GitHub `Production - Azure` environment).
+
+== Scope
+
+Only `/api/chat` uses Azure today. The voice routes (`/api/speak`, `/api/listen`) still call the OpenAI API with
+`OPENAI_API_KEY`; moving them is tracked in
+https://github.com/knowall-ai/knowall-website/issues/171[issue #171].
+
+== How the app picks a provider
+
+`app/api/chat/provider.ts` resolves the backend in this order:
+
+. **Azure OpenAI** when `AZURE_OPENAI_ENDPOINT` and `AZURE_OPENAI_API_KEY` are set. `AZURE_OPENAI_DEPLOYMENT`
+  names the deployment (default `gpt-5.6-sol`).
+. **OpenAI** when only `OPENAI_API_KEY` is set (`OPENAI_MODEL` optional). Kept for local development and as a manual
+  fallback.
+. Neither → the route returns HTTP 500 and the UI shows the outage message.
+
+Both providers use the same `openai` client class; only `baseURL` and `model` differ.
+
+== Cost controls, and how to change them
+
+=== 1. The TPM ceiling (the throttle)
+
+The deployment's capacity is the hard limit. Azure rejects anything above it with HTTP 429, and Sallie answers with a
+short "I'm busy, try again in a moment" reply instead of the outage fallback. No tokens are billed for rejected
+requests.
+
+* 1 capacity unit = 1,000 tokens per minute. A typical Sallie turn is roughly 1,200–2,500 tokens (system prompt +
+  conversation + reply), so 5K TPM is about 2–4 replies per minute across all visitors.
+* Worst case the ceiling can be hit continuously: 5K TPM ≈ 7.2 M tokens/day. At GPT-5-class list prices that is on
+  the order of tens of pounds per day, which is why the budget alerts below exist. Real traffic is a tiny fraction of this.
+* Change it any time (takes effect within a minute, no redeploy):
++
+[source,bash]
+----
+scripts/azure-openai-capacity.sh       # show
+scripts/azure-openai-capacity.sh 1     # emergency brake: 1K TPM
+scripts/azure-openai-capacity.sh 5     # normal
+----
+
+=== 2. The budget (the alarm)
+
+Azure has no native "stop serving at £X" switch for OpenAI models, so the budget is an alert, not a cut-off. It is
+filtered to the `knowall-website-ai` resource only, so App Service spend in the same resource group does not count
+towards it. Cost data lags by up to a day, so treat 80 % as the moment to act.
+
+Change the amount by re-running the setup script with `AZURE_OPENAI_BUDGET=<n>`, or edit it in the portal under
+Cost Management → Budgets.
+
+=== 3. Turning it into an automatic cut-off (optional follow-up)
+
+If an email alert is not enough, budgets can call an Azure Monitor action group, and an action group can run an
+Automation runbook or Logic App that lowers the deployment capacity to 1 (or deletes the deployment). That gives a
+true automatic brake at the cost of one more moving part. Not built yet; raise an issue if wanted.
+
+=== 4. Application-level limits
+
+These sit in front of the Azure ceiling and stop one visitor from consuming it:
+
+* `lib/rate-limit.ts`: per-IP limits per 10-minute window, a per-route daily budget, and a cap on messages per
+  conversation (`SALLIE_LIMIT_*` / `SALLIE_BUDGET_*` env vars). When hit, Sallie signs off and invites email.
+* Each reply is capped at 500 completion tokens (`max_completion_tokens`); reasoning tokens count towards that cap on
+  gpt-5.x models.
+
+== Local development
+
+[source]
+----
+AZURE_OPENAI_ENDPOINT=https://knowall-website-ai.openai.azure.com/
+AZURE_OPENAI_API_KEY=<az cognitiveservices account keys list -n knowall-website-ai -g KnowAllAIRG --query key1 -o tsv>
+AZURE_OPENAI_DEPLOYMENT=gpt-5.6-sol   # optional
+----
+
+Playwright always masks these (and `OPENAI_API_KEY`) so e2e tests exercise the fallback path; set
+`E2E_USE_REAL_OPENAI_KEY=1` to opt in to real calls.
+
+== Rotating the key
+
+[source,bash]
+----
+az cognitiveservices account keys regenerate -n knowall-website-ai -g KnowAllAIRG --key-name key2
+az cognitiveservices account keys list -n knowall-website-ai -g KnowAllAIRG --query key2 -o tsv \
+  | gh secret set AZURE_OPENAI_API_KEY --env "Production - Azure"
+# then push a release tag so the deploy workflow writes the new App Service setting
+----
