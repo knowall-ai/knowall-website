@@ -1,5 +1,7 @@
 # KnowAll.ai Website
 
+[![CodeRabbit Pull Request Reviews](https://img.shields.io/coderabbit/prs/github/knowall-ai/knowall-website?label=CodeRabbit+Reviews&labelColor=171717&color=FF570A)](https://coderabbit.ai)
+
 This repository contains the code for the KnowAll.ai website, an AI consultancy specializing in agent development, Microsoft Copilots, and Bitcoin-powered value-for-value transactions.
 
 ## Features
