@@ -31,12 +31,13 @@ npx vitest run tests/unit/lib/utils.test.ts
 
 **Key API routes:**
 
-- `app/api/chat/route.ts` - OpenAI GPT-4o chat endpoint with fallback responses
+- `app/api/chat/route.ts` - Chat endpoint (Azure OpenAI `gpt-5.6-sol`, OpenAI as fallback) with static fallback responses
+- `app/api/chat/provider.ts` - Picks Azure OpenAI or OpenAI from env; see `docs/AZURE-OPENAI.adoc` for the TPM cap and budget
 - `app/api/chat/system-prompt.ts` - Sallie AI assistant persona configuration
 - `app/api/chat/logger.ts` - Logs conversations to `logs/` directory as JSON
 - `app/api/logs/route.ts` - Admin endpoint for viewing chat logs (requires ADMIN_API_KEY)
 
-**Chat flow:** Browser → `/api/chat` (POST) → OpenAI API → Response logged → JSON response returned (not streaming)
+**Chat flow:** Browser → `/api/chat` (POST) → Azure OpenAI (v1 base URL via the `openai` SDK) → Response logged → JSON response returned (not streaming). HTTP 429 from Azure (deployment TPM cap hit) yields a "busy" reply rather than the outage fallback.
 
 **Components:** `components/sallie-assistant.tsx` is Sallie's welcome + chat (band, porthole or dock layouts, chosen in `app/page.tsx`); `components/sallie-stage.tsx` is her animated avatar (static robot rig, animated starfield backdrop). UI components in `components/ui/` are shadcn/ui.
 
@@ -44,7 +45,8 @@ npx vitest run tests/unit/lib/utils.test.ts
 
 Required for development (`.env.local`):
 
-- `OPENAI_API_KEY` - For chat functionality
+- `AZURE_OPENAI_ENDPOINT` + `AZURE_OPENAI_API_KEY` - For chat (preferred); `AZURE_OPENAI_DEPLOYMENT` optional
+- `OPENAI_API_KEY` - Voice routes (`/api/speak`, `/api/listen`), and the chat fallback when the Azure settings are absent
 - `ADMIN_API_KEY` - For `/admin/logs` access
 
 ## CI/CD

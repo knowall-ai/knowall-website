@@ -41,10 +41,11 @@ This repository contains the code for the KnowAll.ai website, an AI consultancy 
    npm install
    ```
 
-3. Create a `.env.local` file in the root directory and add your OpenAI API key:
+3. Create a `.env.local` file in the root directory and point it at the Azure OpenAI resource (or a plain OpenAI key for a quick local run):
 
    ```
-   OPENAI_API_KEY=your_openai_api_key_here
+   AZURE_OPENAI_ENDPOINT=https://knowall-website-ai.openai.azure.com/
+   AZURE_OPENAI_API_KEY=your_azure_openai_key_here
    ```
 
 4. Start the development server:
@@ -62,11 +63,14 @@ This repository contains the code for the KnowAll.ai website, an AI consultancy 
 For local development, create a `.env.local` file in the root directory with the following variables:
 
 ```
-OPENAI_API_KEY=your_openai_api_key_here
+AZURE_OPENAI_ENDPOINT=https://knowall-website-ai.openai.azure.com/
+AZURE_OPENAI_API_KEY=your_azure_openai_key_here
+AZURE_OPENAI_DEPLOYMENT=gpt-5.6-sol   # optional, this is the default
+OPENAI_API_KEY=your_openai_api_key_here  # voice routes, and chat fallback when Azure is not configured
 ADMIN_API_KEY=your_admin_api_key_here
 ```
 
-Make sure to replace the placeholder values with your actual API keys.
+Make sure to replace the placeholder values with your actual API keys. Chat prefers Azure OpenAI when configured; see `docs/AZURE-OPENAI.adoc` for the resource, its tokens-per-minute cap and budget.
 
 ### Troubleshooting Chat Functionality
 
@@ -139,8 +143,11 @@ The deployment uses the following environment variables that must be set in the 
 
 - `AZURE_CREDENTIALS`: The Azure service principal credentials for deployment
 - `AZURE_RESOURCE_GROUP`: The name of the Azure resource group
-- `OPENAI_API_KEY`: Your OpenAI API key for the chat functionality
+- `AZURE_OPENAI_ENDPOINT` / `AZURE_OPENAI_API_KEY`: The Azure OpenAI resource Sallie's chat uses (see `docs/AZURE-OPENAI.adoc`)
+- `OPENAI_API_KEY`: OpenAI API key for the voice routes, and the chat fallback when the Azure settings are absent
 - `ADMIN_API_KEY`: Your admin API key for accessing the chat logs in production
+
+The optional `AZURE_OPENAI_DEPLOYMENT` environment _variable_ overrides the deployment name (default `gpt-5.6-sol`).
 
 These secrets are configured in the GitHub repository under Settings > Environments > Production - Azure.
 
@@ -152,7 +159,8 @@ The following environment variables need to be set in the "Production - Azure" G
 
 - `AZURE_CREDENTIALS`: The Azure service principal credentials for deployment
 - `AZURE_RESOURCE_GROUP`: The name of the Azure resource group
-- `OPENAI_API_KEY`: Your OpenAI API key for the chat functionality
+- `AZURE_OPENAI_ENDPOINT` / `AZURE_OPENAI_API_KEY`: The Azure OpenAI resource Sallie's chat uses
+- `OPENAI_API_KEY`: OpenAI API key for the voice routes, and the chat fallback when the Azure settings are absent
 - `ADMIN_API_KEY`: Your admin API key for accessing the chat logs in production
 
 ### Deployment Process
@@ -227,7 +235,7 @@ The KnowAll.ai website follows security best practices for handling API keys:
 
 ### Security Best Practices
 
-- **Rate Limiting**: Sallie's public routes (`/api/chat`, `/api/speak`, `/api/listen`) are guarded by `lib/rate-limit.ts`: per-IP limits per 10-minute window, a per-route daily budget, a cap on messages per conversation, and a same-origin check on the voice routes. Limits are tunable with `SALLIE_LIMIT_*` / `SALLIE_BUDGET_*` env vars. When a limit is hit Sallie signs off and invites the visitor to continue by email. The hard ceiling is the monthly budget set on the OpenAI project.
+- **Rate Limiting**: Sallie's public routes (`/api/chat`, `/api/speak`, `/api/listen`) are guarded by `lib/rate-limit.ts`: per-IP limits per 10-minute window, a per-route daily budget, a cap on messages per conversation, and a same-origin check on the voice routes. Limits are tunable with `SALLIE_LIMIT_*` / `SALLIE_BUDGET_*` env vars. When a limit is hit Sallie signs off and invites the visitor to continue by email. For chat, the tokens-per-minute capacity of the Azure OpenAI deployment is the throughput ceiling and the Azure budget is alert-only (see `docs/AZURE-OPENAI.adoc`); for the voice routes the hard ceiling is the monthly budget set on the OpenAI project.
 - **Error Handling**: Errors are logged server-side but only generic messages are returned to clients
 - **Input Validation**: All user inputs are validated before processing
 - **Secure Headers**: API responses use appropriate security headers

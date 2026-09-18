@@ -1,4 +1,5 @@
 import { OpenAI } from 'openai';
+import { isRateLimited, resolveChatProvider } from './provider';
 import { systemPrompt } from './system-prompt';
 import { logChat } from './logger';
 import { clientIp, consume, LIMITS } from '@/lib/rate-limit';
@@ -92,18 +93,19 @@ export async function POST(req: Request) {
       );
     }
 
-    // Validate the API key is available
-    const apiKey = process.env.OPENAI_API_KEY;
-    console.log('API key exists:', !!apiKey);
-    console.log('API key length:', apiKey ? apiKey.length : 0);
-
-    if (!apiKey) {
-      throw new Error('OPENAI_API_KEY is not available');
+    // Resolve the chat backend: Azure OpenAI when configured, otherwise OpenAI
+    const provider = resolveChatProvider();
+    if (!provider) {
+      throw new Error(
+        'No chat provider configured: set AZURE_OPENAI_ENDPOINT and AZURE_OPENAI_API_KEY, or OPENAI_API_KEY'
+      );
     }
+    console.log('Chat provider:', provider.name, 'model:', provider.model);
 
-    // Initialize the OpenAI client
+    // The OpenAI SDK talks to Azure via its v1 base URL, so one client serves both
     const openai = new OpenAI({
-      apiKey: apiKey,
+      apiKey: provider.apiKey,
+      baseURL: provider.baseURL,
     });
 
     // Prepare messages for the OpenAI API
@@ -132,7 +134,7 @@ export async function POST(req: Request) {
     try {
       // Try to get a response from the OpenAI API
       const response = await openai.chat.completions.create({
-        model: 'gpt-5.6-sol',
+        model: provider.model,
         messages: messages,
         max_completion_tokens: 500,
       });
@@ -166,9 +168,18 @@ export async function POST(req: Request) {
         }
       }
 
-      // Create a fallback response that includes the first sentence of the system prompt
-      const firstSentence = systemPrompt.split('.')[0] + '.';
-      responseContent = `I received your message: "${userMessage}". However, I'm currently experiencing some technical difficulties connecting to my knowledge base. ${firstSentence} Please try again later or contact us directly for more information about our services.`;
+      if (isRateLimited(apiError)) {
+        // HTTP 429 from whichever provider is in use: on Azure that is the
+        // deployment's tokens-per-minute cap (a deliberate spend ceiling), on
+        // OpenAI a rate or quota limit. Either way ask the visitor to retry
+        // shortly rather than report an outage.
+        console.warn(`Chat provider ${provider.name} returned 429 (rate limited)`);
+        responseContent = `I'm rather popular right now and have used up my capacity for the minute. Please give me a moment and send that again, or email sallie@knowall.ai and I'll pick it up from there.`;
+      } else {
+        // Create a fallback response that includes the first sentence of the system prompt
+        const firstSentence = systemPrompt.split('.')[0] + '.';
+        responseContent = `I received your message: "${userMessage}". However, I'm currently experiencing some technical difficulties connecting to my knowledge base. ${firstSentence} Please try again later or contact us directly for more information about our services.`;
+      }
 
       // Log the fallback conversation
       await logChat(userMessage, responseContent, conversationId, req, { greetingId });
@@ -235,7 +246,7 @@ export async function POST(req: Request) {
         } else if (error.status === 429) {
           clientErrorMessage = 'Rate limit exceeded: Please try again later';
         } else if (error.status === 500) {
-          clientErrorMessage = 'OpenAI server error: Please try again later';
+          clientErrorMessage = 'Chat provider server error: Please try again later';
         }
       }
     }

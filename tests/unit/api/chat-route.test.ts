@@ -5,19 +5,24 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
  * Chat API route tests
  *
  * Requirements: sallie-chat
- * - Messages are sent to the OpenAI API and a response is returned
- * - A fallback response is returned when the OpenAI API is unavailable
+ * - Messages are sent to the chat provider (Azure OpenAI preferred) and a response is returned
+ * - A fallback response is returned when the provider is unavailable
+ * - A distinct "busy" reply is returned when the provider throttles (HTTP 429)
  * - The route degrades gracefully when no API key is configured
  */
 
-const { createMock, logChatMock } = vi.hoisted(() => ({
+const { createMock, clientOptionsMock, logChatMock } = vi.hoisted(() => ({
   createMock: vi.fn(),
+  clientOptionsMock: vi.fn(),
   logChatMock: vi.fn().mockResolvedValue(true),
 }));
 
 vi.mock('openai', () => ({
   OpenAI: class {
     chat = { completions: { create: createMock } };
+    constructor(options: unknown) {
+      clientOptionsMock(options);
+    }
   },
 }));
 
@@ -37,7 +42,13 @@ function postRequest(body: unknown): Request {
 
 beforeEach(() => {
   createMock.mockReset();
+  clientOptionsMock.mockClear();
   logChatMock.mockClear();
+  // Start from a clean provider config regardless of the developer's shell
+  vi.stubEnv('AZURE_OPENAI_ENDPOINT', '');
+  vi.stubEnv('AZURE_OPENAI_API_KEY', '');
+  vi.stubEnv('AZURE_OPENAI_DEPLOYMENT', '');
+  vi.stubEnv('OPENAI_MODEL', '');
   // Silence the route's verbose console output in test runs
   vi.spyOn(console, 'log').mockImplementation(() => {});
   vi.spyOn(console, 'error').mockImplementation(() => {});
@@ -70,7 +81,7 @@ describe('GET /api/chat', () => {
 });
 
 describe('POST /api/chat', () => {
-  it('returns a 500 error response when OPENAI_API_KEY is missing', async () => {
+  it('returns a 500 error response when no chat provider is configured', async () => {
     vi.stubEnv('OPENAI_API_KEY', '');
 
     const response = await POST(
@@ -123,6 +134,9 @@ describe('POST /api/chat', () => {
     expect(createMock).toHaveBeenCalledTimes(1);
     const request = createMock.mock.calls[0][0];
     expect(request.model).toBe('gpt-5.6-sol');
+    expect(request.max_completion_tokens).toBe(500);
+    expect(request).not.toHaveProperty('max_tokens');
+    expect(clientOptionsMock).toHaveBeenCalledWith({ apiKey: 'sk-test-key', baseURL: undefined });
     expect(request.messages[0].role).toBe('system');
     // The conversation id is used for logging only and is no longer injected
     // into the system prompt or surfaced to visitors.
@@ -130,6 +144,29 @@ describe('POST /api/chat', () => {
     expect(request.messages[0].content).not.toContain('{{CONVERSATION_ID}}');
     expect(request.messages[0].content).toContain('sallie@knowall.ai');
     expect(request.messages[1]).toEqual({ role: 'user', content: 'Hello' });
+  });
+
+  it('uses Azure OpenAI via the v1 base URL when configured', async () => {
+    vi.stubEnv('AZURE_OPENAI_ENDPOINT', 'https://knowall-website-ai.openai.azure.com/');
+    vi.stubEnv('AZURE_OPENAI_API_KEY', 'azure-test-key');
+    vi.stubEnv('AZURE_OPENAI_DEPLOYMENT', 'sallie-chat');
+    vi.stubEnv('OPENAI_API_KEY', 'sk-test-key');
+    createMock.mockResolvedValue({
+      choices: [{ message: { content: 'Hello from Azure!' } }],
+    });
+
+    const response = await POST(
+      postRequest({ messages: [{ role: 'user', content: 'Hello' }], conversationId: 'conv-az' })
+    );
+
+    expect(response.status).toBe(200);
+    expect(clientOptionsMock).toHaveBeenCalledWith({
+      apiKey: 'azure-test-key',
+      baseURL: 'https://knowall-website-ai.openai.azure.com/openai/v1/',
+    });
+    expect(createMock.mock.calls[0][0].model).toBe('sallie-chat');
+    const body = await response.json();
+    expect(body.content).toBe('Hello from Azure!');
   });
 
   it('generates a conversation id when none is provided', async () => {
@@ -199,6 +236,27 @@ describe('POST /api/chat', () => {
     expect(body.content).toContain('I received your message: "Are you there?"');
     expect(body.content).toContain('technical difficulties');
     expect(body.conversationId).toBe('conv-fallback');
+  });
+
+  it('returns a busy reply instead of the outage fallback when throttled (429)', async () => {
+    vi.stubEnv('OPENAI_API_KEY', 'sk-test-key');
+    createMock.mockRejectedValue(
+      Object.assign(new Error('Rate limit is exceeded'), { status: 429 })
+    );
+
+    const response = await POST(
+      postRequest({
+        messages: [{ role: 'user', content: 'Tell me about AI agents' }],
+        conversationId: 'conv-429',
+      })
+    );
+
+    expect(response.status).toBe(200);
+    const body = await response.json();
+    expect(body.role).toBe('assistant');
+    expect(body.content).toContain('capacity for the minute');
+    expect(body.content).not.toContain('technical difficulties');
+    expect(logChatMock).toHaveBeenCalledTimes(1);
   });
 
   it('logs fallback conversations too', async () => {
