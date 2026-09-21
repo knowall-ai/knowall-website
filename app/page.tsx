@@ -43,6 +43,7 @@ import ZaplieCarousel from '@/components/zaplie-carousel';
 import ZaplieShowcase from '@/components/zaplie-showcase';
 import TeamSection from '@/components/team-section';
 import AgentsSection from '@/components/agents-section';
+import AllieSection from '@/components/allie-section';
 import TMinus15Book from '@/components/tminus15-book';
 
 /** Homepage: hero, services, agents, products, Sallie for Sales and contact sections. */
@@ -816,6 +817,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Allie for Accounts Section */}
+      <AllieSection />
 
       {/* Meet the Team Section */}
       <TeamSection />
