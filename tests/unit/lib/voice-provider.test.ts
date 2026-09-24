@@ -26,6 +26,17 @@ describe('resolveVoiceProvider', () => {
     });
   });
 
+  it('strips a pasted /openai or /openai/v1 suffix from the endpoint', () => {
+    for (const suffix of ['/openai', '/openai/', '/openai/v1', '/openai/v1/']) {
+      expect(
+        resolveVoiceProvider({
+          AZURE_OPENAI_VOICE_ENDPOINT: `https://knowall-website-voice.openai.azure.com${suffix}`,
+          AZURE_OPENAI_VOICE_API_KEY: 'voice-key',
+        })?.endpoint
+      ).toBe('https://knowall-website-voice.openai.azure.com');
+    }
+  });
+
   it('ignores the chat resource settings', () => {
     const provider = resolveVoiceProvider({
       AZURE_OPENAI_ENDPOINT: 'https://knowall-website-ai.openai.azure.com/',
