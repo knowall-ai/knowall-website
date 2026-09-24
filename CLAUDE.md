@@ -33,6 +33,7 @@ npx vitest run tests/unit/lib/utils.test.ts
 
 - `app/api/chat/route.ts` - Chat endpoint (Azure OpenAI `gpt-5.6-sol`, OpenAI as fallback) with static fallback responses
 - `app/api/chat/provider.ts` - Picks Azure OpenAI or OpenAI from env; see `docs/AZURE-OPENAI.adoc` for the TPM cap and budget
+- `app/api/speak/route.ts`, `app/api/listen/route.ts` - Sallie's voice and ears; `lib/voice-provider.ts` picks the separate Azure voice resource (East US 2) or OpenAI
 - `app/api/chat/system-prompt.ts` - Sallie AI assistant persona configuration
 - `app/api/chat/logger.ts` - Logs conversations to `logs/` directory as JSON
 - `app/api/logs/route.ts` - Admin endpoint for viewing chat logs (requires ADMIN_API_KEY)
@@ -46,7 +47,8 @@ npx vitest run tests/unit/lib/utils.test.ts
 Required for development (`.env.local`):
 
 - `AZURE_OPENAI_ENDPOINT` + `AZURE_OPENAI_API_KEY` - For chat (preferred); `AZURE_OPENAI_DEPLOYMENT` optional
-- `OPENAI_API_KEY` - Voice routes (`/api/speak`, `/api/listen`), and the chat fallback when the Azure settings are absent
+- `AZURE_OPENAI_VOICE_ENDPOINT` + `AZURE_OPENAI_VOICE_API_KEY` - For voice (`/api/speak`, `/api/listen`), a separate resource
+- `OPENAI_API_KEY` - Fallback for chat and voice when the Azure settings are absent
 - `ADMIN_API_KEY` - For `/admin/logs` access
 
 ## CI/CD
