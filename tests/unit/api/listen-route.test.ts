@@ -112,7 +112,7 @@ describe('POST /api/listen', () => {
     expect(res.status).toBe(200);
     expect(openaiOptions).not.toHaveBeenCalled();
     expect(azureOptions).toHaveBeenCalledWith({
-      endpoint: 'https://knowall-website-voice.openai.azure.com',
+      baseURL: 'https://knowall-website-voice.openai.azure.com/openai',
       apiKey: 'azure-voice-key',
       apiVersion: '2025-04-01-preview',
       deployment: 'gpt-4o-mini-transcribe',
