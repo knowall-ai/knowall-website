@@ -12,7 +12,8 @@
 #
 # Voice deployments are already at the minimum of 1. To brake voice harder, set
 # the App Service setting SALLIE_VOICE_ENGINE=tts (cheaper model) or lower
-# SALLIE_BUDGET_SPEAK_PER_DAY, or delete the deployment (voice then falls silent).
+# SALLIE_BUDGET_SPEAK_PER_DAY. Deleting gpt-realtime alone does not silence voice:
+# speech falls back to gpt-4o-mini-tts, so delete both to stop server-side speech.
 set -euo pipefail
 
 RG=${AZURE_RESOURCE_GROUP:-KnowAllAIRG}
