@@ -125,7 +125,9 @@ Levers, cheapest first, all App Service settings that need no redeploy beyond a 
 * `SALLIE_VOICE_ENGINE=tts` switches from realtime to `gpt-4o-mini-tts`, billed at a much lower audio-output rate
   (Azure lists 0.012 USD per 1K audio tokens). The voice is still "marin" but less expressive.
 * Lower `SALLIE_BUDGET_SPEAK_PER_DAY` / `SALLIE_BUDGET_LISTEN_PER_DAY`.
-* Delete a deployment to silence it outright; the site degrades to text-only chat.
+* Delete deployments to silence voice outright. Speech needs both `gpt-realtime` and `gpt-4o-mini-tts` gone, because
+  deleting realtime alone just shifts every clip onto the TTS fallback. Deleting `gpt-4o-mini-transcribe` disables the
+  server-side mic fallback. The site then degrades to text-only chat.
 
 === 5. Application-level limits
 
