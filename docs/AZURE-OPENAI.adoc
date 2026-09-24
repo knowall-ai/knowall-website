@@ -1,44 +1,47 @@
-= Azure OpenAI for Sallie's chat
+= Azure OpenAI for Sallie
 :toc:
 :toclevels: 2
 
-Sallie (`/api/chat`) talks to an Azure OpenAI deployment rather than the OpenAI API directly.
-Azure gives us two levers the OpenAI API does not: a hard tokens-per-minute (TPM) ceiling per deployment, which
+Sallie's chat (`/api/chat`) and voice (`/api/speak`, `/api/listen`) talk to Azure OpenAI deployments rather than the
+OpenAI API directly. Azure gives us two levers the OpenAI API does not: a hard tokens-per-minute (TPM) ceiling per deployment, which
 rate-limits throughput and therefore how fast money can be spent, and a Cost Management budget scoped to the single
 resource, which emails an operator at set thresholds. The budget is an alert, not a cut-off: sustained traffic at the
 TPM ceiling can still pass it before someone acts, so the alerts are there to prompt a capacity change.
 
 == What is provisioned
 
-[cols="1,2", options="header"]
-|===
-| Item | Value
+There are two resources because the voice models (realtime, TTS, transcription) are not offered in UK South. All
+deployments are GlobalStandard, which Azure may process in any region whatever the resource's location.
 
-| Resource
-| `knowall-website-ai` (Azure AI Services, kind `AIServices`, SKU S0) in resource group `KnowAllAIRG`, UK South
+[cols="1,2,2", options="header"]
+|===
+| Item | Chat | Voice
+
+| Resource (resource group `KnowAllAIRG`)
+| `knowall-website-ai`, UK South
+| `knowall-website-voice`, East US 2
 
 | Endpoint
-| `https://knowall-website-ai.openai.azure.com/` — the app appends `/openai/v1/` and uses the OpenAI SDK's v1 API,
-so no dated `api-version` is needed
+| `https://knowall-website-ai.openai.azure.com/`
+| `https://knowall-website-voice.openai.azure.com/`
 
-| Deployment
-| `gpt-5.6-sol` (GlobalStandard), capacity **5** = 5,000 tokens per minute
+| Deployments (named after the model)
+| `gpt-5.6-sol`, capacity **5** = 5,000 tokens/min
+| `gpt-realtime`, capacity 1 = 20 requests + 10,000 tokens/min +
+`gpt-4o-mini-tts`, capacity 1 = 100 requests + 1,000 tokens/min +
+`gpt-4o-mini-transcribe`, capacity 1 = 100 requests + 1,000 tokens/min
 
-| Budget
-| `knowall-website-ai-monthly`: 50 per month, filtered to this one resource, email alerts at 50 %, 80 %, 100 % actual
-and 100 % forecast
+| Budget (email alerts at 50 %, 80 %, 100 % actual and 100 % forecast)
+| `knowall-website-ai-monthly`: 50 per month
+| `knowall-website-voice-monthly`: 50 per month
 |===
 
 Everything above is reproducible with `scripts/azure-openai-setup.sh` (idempotent; add `--set-secrets` to push the
-endpoint and key into the GitHub `Production - Azure` environment).
-
-== Scope
-
-Only `/api/chat` uses Azure today. The voice routes (`/api/speak`, `/api/listen`) still call the OpenAI API with
-`OPENAI_API_KEY`; moving them is tracked in
-https://github.com/knowall-ai/knowall-website/issues/171[issue #171].
+endpoints and keys into the GitHub `Production - Azure` environment).
 
 == How the app picks a provider
+
+=== Chat
 
 `app/api/chat/provider.ts` resolves the backend in this order:
 
@@ -49,6 +52,29 @@ https://github.com/knowall-ai/knowall-website/issues/171[issue #171].
 . Neither → the route returns HTTP 500 and the UI shows the outage message.
 
 Both providers use the same `openai` client class; only `baseURL` and `model` differ.
+
+=== Voice
+
+`lib/voice-provider.ts` uses the voice resource when `AZURE_OPENAI_VOICE_ENDPOINT` and `AZURE_OPENAI_VOICE_API_KEY` are
+set, otherwise `OPENAI_API_KEY`. Neither → the routes return 503 and the site falls back to the browser's own speech.
+It deliberately ignores the chat resource's settings. On Azure each call goes a slightly different way, all verified
+against the live resource:
+
+[cols="1,3", options="header"]
+|===
+| Call | How it reaches Azure
+
+| Realtime voice (`/api/speak`, default engine)
+| WebSocket to `wss://<resource>.openai.azure.com/openai/v1/realtime?model=gpt-realtime`, key in an `api-key` handshake
+header. Node 22.10+ supports the header; App Service runs Node 22 LTS.
+
+| TTS fallback (`/api/speak`, `SALLIE_VOICE_ENGINE=tts` or when realtime fails)
+| OpenAI SDK against the v1 base URL, as for chat.
+
+| Transcription (`/api/listen`)
+| SDK's `AzureOpenAI` client on the deployment-scoped URL with api-version `2025-04-01-preview`. The v1 path returns
+`DeploymentNotFound` for this model.
+|===
 
 == Cost controls, and how to change them
 
@@ -86,9 +112,24 @@ If an email alert is not enough, budgets can call an Azure Monitor action group,
 Automation runbook or Logic App that lowers the deployment capacity to 1 (or deletes the deployment). That gives a
 true automatic brake at the cost of one more moving part. Not built yet; raise an issue if wanted.
 
-=== 4. Application-level limits
+=== 4. Voice
 
-These sit in front of the Azure ceiling and stop one visitor from consuming it:
+Voice deployments start at the minimum capacity of 1, so the capacity script can only raise them. A typical reply
+(about 300 characters) measured at about 620 realtime tokens: 87 text in, 87 text out and 450 audio out, for 22 seconds
+of speech. The binding limit day to day is therefore the app's `SALLIE_BUDGET_SPEAK_PER_DAY` (default 1,500 clips,
+roughly 0.9 M realtime tokens a day at that size), with the voice budget alerts behind it. Repeated text, such as the
+greetings, is served from an in-memory cache and costs nothing.
+
+Levers, cheapest first, all App Service settings that need no redeploy beyond a restart:
+
+* `SALLIE_VOICE_ENGINE=tts` switches from realtime to `gpt-4o-mini-tts`, billed at a much lower audio-output rate
+  (Azure lists 0.012 USD per 1K audio tokens). The voice is still "marin" but less expressive.
+* Lower `SALLIE_BUDGET_SPEAK_PER_DAY` / `SALLIE_BUDGET_LISTEN_PER_DAY`.
+* Delete a deployment to silence it outright; the site degrades to text-only chat.
+
+=== 5. Application-level limits
+
+These sit in front of the Azure ceilings and stop one visitor from consuming them:
 
 * `lib/rate-limit.ts`: per-IP limits per 10-minute window, a per-route daily budget, and a cap on messages per
   conversation (`SALLIE_LIMIT_*` / `SALLIE_BUDGET_*` env vars). When hit, Sallie signs off and invites email.
@@ -102,6 +143,8 @@ These sit in front of the Azure ceiling and stop one visitor from consuming it:
 AZURE_OPENAI_ENDPOINT=https://knowall-website-ai.openai.azure.com/
 AZURE_OPENAI_API_KEY=<az cognitiveservices account keys list -n knowall-website-ai -g KnowAllAIRG --query key1 -o tsv>
 AZURE_OPENAI_DEPLOYMENT=gpt-5.6-sol   # optional
+AZURE_OPENAI_VOICE_ENDPOINT=https://knowall-website-voice.openai.azure.com/
+AZURE_OPENAI_VOICE_API_KEY=<az cognitiveservices account keys list -n knowall-website-voice -g KnowAllAIRG --query key1 -o tsv>
 ----
 
 Playwright always masks these (and `OPENAI_API_KEY`) so e2e tests exercise the fallback path; set
@@ -109,8 +152,9 @@ Playwright always masks these (and `OPENAI_API_KEY`) so e2e tests exercise the f
 
 == Rotating the key
 
-The resource has two keys so rotation is zero-downtime: publish the key that is *not* in use, release, verify, then
-regenerate the old one. The setup script publishes `key1`, so the first rotation moves to `key2`.
+Each resource has two keys so rotation is zero-downtime: publish the key that is *not* in use, release, verify, then
+regenerate the old one. The setup script publishes `key1`, so the first rotation moves to `key2`. The steps below are for
+chat; for voice substitute `knowall-website-voice` and `AZURE_OPENAI_VOICE_API_KEY`.
 
 [source,bash]
 ----
