@@ -29,6 +29,12 @@ and the OpenAI project's usage limits.
 intended: raise it if traffic is legitimate with `scripts/azure-openai-capacity.sh 10` (units of 1,000 TPM). On the
 OpenAI fallback it is an OpenAI rate or quota limit, which is managed on the OpenAI project.
 
+| Sallie's voice is silent, or the mic falls back to typing
+| Check the App Service settings `AZURE_OPENAI_VOICE_ENDPOINT` / `AZURE_OPENAI_VOICE_API_KEY` and the log stream for
+`Error in speak API (azure)` / `Error in listen API (azure)`. A 429 means a voice deployment's capacity or the app's daily
+voice budget (`SALLIE_BUDGET_SPEAK_PER_DAY`) was hit. If the log says `(openai)`, the Azure voice settings are missing or
+rejected. See xref:AZURE-OPENAI.adoc[Azure OpenAI].
+
 | Shop order service issues (no invoices sent, key refusal at startup, dedup store)
 | See xref:ORDER-SERVICE.adoc[Order Service Operations] — the order daemon runs separately from the website deploy.
 
