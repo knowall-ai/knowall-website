@@ -32,11 +32,14 @@ export function isAzureEndpoint(endpoint: string): boolean {
   }
 }
 
-/** The resource root with no trailing slash or /openai/v1 suffix. */
+/**
+ * The resource root with no trailing slash and no `/openai` or `/openai/v1`
+ * suffix, so callers can append whichever path they need.
+ */
 export function azureRoot(endpoint: string): string {
   return clean(endpoint)
     .replace(/\/+$/, '')
-    .replace(/\/openai\/v1$/, '');
+    .replace(/\/openai(\/v1)?$/, '');
 }
 
 /** Turns an Azure resource endpoint into the v1 base URL the SDK expects. */
