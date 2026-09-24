@@ -78,8 +78,11 @@ export function speechClient(provider: VoiceProvider): OpenAI {
 /** Client for transcription (deployment-scoped on Azure, see AZURE_TRANSCRIBE_API_VERSION). */
 export function transcriptionClient(provider: VoiceProvider): OpenAI {
   if (provider.name === 'azure' && provider.endpoint) {
+    // Explicit baseURL (what the SDK derives from `endpoint`) so a stray
+    // OPENAI_BASE_URL env var can't override it; the SDK then inserts
+    // /deployments/<deployment> per request.
     return new AzureOpenAI({
-      endpoint: provider.endpoint,
+      baseURL: `${provider.endpoint}/openai`,
       apiKey: provider.apiKey,
       apiVersion: AZURE_TRANSCRIBE_API_VERSION,
       deployment: VOICE_MODELS.transcribe,
