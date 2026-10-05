@@ -31,14 +31,20 @@ describe('TeamSection', () => {
   });
   afterEach(() => vi.unstubAllGlobals());
 
-  it('renders all four team members in a four-column grid', () => {
+  it('renders all five team members in a centred, wrapping row', () => {
     render(<TeamSection />);
-    for (const name of ['Ben Weeks', 'Valeriia Khudiakova', 'Akash Jadhav', 'Edit Weeks']) {
+    for (const name of [
+      'Ben Weeks',
+      'Valeriia Khudiakova',
+      'Akash Jadhav',
+      'Edit Weeks',
+      'Eduardo Cortez',
+    ]) {
       expect(screen.getByText(name)).toBeInTheDocument();
     }
     const grid = screen.getByTestId('team-grid');
-    expect(grid.className).toContain('lg:grid-cols-4');
-    expect(grid.children).toHaveLength(4);
+    expect(grid.className).toContain('justify-center');
+    expect(grid.children).toHaveLength(5);
   });
 
   it('asks the NIP-05 hint relays for profiles too', () => {
