@@ -59,6 +59,15 @@ export default defineConfig({
           : '',
       AZURE_OPENAI_API_KEY:
         process.env.E2E_USE_REAL_OPENAI_KEY === '1' ? (process.env.AZURE_OPENAI_API_KEY ?? '') : '',
+      // Same for the voice resource behind /api/speak and /api/listen.
+      AZURE_OPENAI_VOICE_ENDPOINT:
+        process.env.E2E_USE_REAL_OPENAI_KEY === '1'
+          ? (process.env.AZURE_OPENAI_VOICE_ENDPOINT ?? '')
+          : '',
+      AZURE_OPENAI_VOICE_API_KEY:
+        process.env.E2E_USE_REAL_OPENAI_KEY === '1'
+          ? (process.env.AZURE_OPENAI_VOICE_API_KEY ?? '')
+          : '',
       ADMIN_API_KEY: process.env.ADMIN_API_KEY || 'test-admin-key-for-e2e',
     },
   },

@@ -1,16 +1,18 @@
 /**
- * Sallie's voice via the OpenAI Realtime API — the same model and "marin"
- * voice her Teams call bot uses — driven as a text-to-speech engine: it is
- * told to read a script verbatim and we collect the PCM it streams back.
+ * Sallie's voice via the Realtime API — the same model and "marin" voice her
+ * Teams call bot uses — driven as a text-to-speech engine: it is told to read
+ * a script verbatim and we collect the PCM it streams back.
  *
- * Uses the global WebSocket (Node 22+) with OpenAI's subprotocol auth, so no
- * extra dependency is needed.
+ * Uses the global WebSocket (Node 22+), so no extra dependency is needed. The
+ * caller supplies the connection (Azure OpenAI or OpenAI, see
+ * lib/voice-provider.ts), which carries the URL and the auth.
  */
+
+import type { RealtimeConnection } from '@/lib/voice-provider';
 
 const SAMPLE_RATE = 24000;
 const TIMEOUT_MS = 25000;
 
-export const REALTIME_MODEL = 'gpt-realtime';
 export const REALTIME_VOICE = 'marin';
 
 const SESSION_INSTRUCTIONS =
@@ -49,14 +51,22 @@ interface RealtimeEvent {
 }
 
 /** Read `text` aloud with the realtime model; resolves to WAV bytes. */
-export function synthesizeWithRealtime(text: string, apiKey: string): Promise<Uint8Array> {
+export function synthesizeWithRealtime(
+  text: string,
+  connection: RealtimeConnection
+): Promise<Uint8Array> {
   return new Promise((resolve, reject) => {
     if (typeof WebSocket === 'undefined') {
       reject(new Error('WebSocket is not available in this runtime'));
       return;
     }
-    const url = `wss://api.openai.com/v1/realtime?model=${REALTIME_MODEL}`;
-    const ws = new WebSocket(url, ['realtime', `openai-insecure-api-key.${apiKey}`]);
+    // Node's WebSocket accepts an init object with handshake headers in place of
+    // the protocols list; the DOM typings don't know that, hence the cast.
+    const ws = connection.headers
+      ? new WebSocket(connection.url, {
+          headers: connection.headers,
+        } as unknown as string[])
+      : new WebSocket(connection.url, connection.protocols);
     const chunks: Uint8Array[] = [];
     let settled = false;
     const finish = (err: Error | null, data?: Uint8Array) => {

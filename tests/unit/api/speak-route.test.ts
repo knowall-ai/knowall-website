@@ -4,18 +4,25 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
  * /api/speak tests
  *
  * Requirements: sallie-chat
- * - Turns Sallie's reply text into speech via OpenAI
+ * - Turns Sallie's reply text into speech (Azure OpenAI preferred, OpenAI fallback)
  * - Refuses empty input and reports when voice is not configured
  * - Never sends markdown syntax or over-long text to the voice model
  */
 
-const speechCreate = vi.fn();
-
-vi.mock('openai', () => ({
-  default: class {
-    audio = { speech: { create: speechCreate } };
-  },
+const { speechCreate, clientOptions } = vi.hoisted(() => ({
+  speechCreate: vi.fn(),
+  clientOptions: vi.fn(),
 }));
+
+vi.mock('openai', () => {
+  class Client {
+    audio = { speech: { create: speechCreate } };
+    constructor(options: unknown) {
+      clientOptions(options);
+    }
+  }
+  return { default: Client, AzureOpenAI: Client };
+});
 
 const SITE = { host: 'localhost', origin: 'http://localhost' };
 
@@ -33,6 +40,9 @@ async function post(body: unknown, headers: Record<string, string> = SITE) {
 describe('POST /api/speak', () => {
   beforeEach(async () => {
     speechCreate.mockReset();
+    clientOptions.mockClear();
+    vi.stubEnv('AZURE_OPENAI_VOICE_ENDPOINT', '');
+    vi.stubEnv('AZURE_OPENAI_VOICE_API_KEY', '');
     speechCreate.mockResolvedValue({ arrayBuffer: async () => new Uint8Array([1, 2, 3]).buffer });
     vi.stubEnv('OPENAI_API_KEY', 'sk-test');
     // Deterministic engine for these tests; the realtime path is covered below.
@@ -96,6 +106,21 @@ describe('POST /api/speak', () => {
     expect(res.status).toBe(200);
     expect(res.headers.get('x-sallie-voice')).toBe('tts');
     expect(speechCreate).toHaveBeenCalledTimes(1);
+  });
+
+  it('speaks through Azure OpenAI when the voice resource is configured', async () => {
+    vi.stubEnv('AZURE_OPENAI_VOICE_ENDPOINT', 'https://knowall-website-voice.openai.azure.com/');
+    vi.stubEnv('AZURE_OPENAI_VOICE_API_KEY', 'azure-voice-key');
+    const res = await post({ text: 'Hello from Azure' });
+    expect(res.status).toBe(200);
+    expect(clientOptions).toHaveBeenCalledWith({
+      apiKey: 'azure-voice-key',
+      baseURL: 'https://knowall-website-voice.openai.azure.com/openai/v1/',
+    });
+    expect(speechCreate.mock.calls[0][0]).toMatchObject({
+      model: 'gpt-4o-mini-tts',
+      voice: 'marin',
+    });
   });
 
   it('returns 400 for empty text', async () => {

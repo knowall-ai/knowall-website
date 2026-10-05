@@ -10,6 +10,11 @@
  * See docs/AZURE-OPENAI.adoc.
  */
 
+import { azureBaseURL, clean, readAzureCredentials, type Env } from '@/lib/azure-openai';
+
+// Re-exported so existing imports keep working; the helpers live in lib/azure-openai.
+export { azureBaseURL, isAzureEndpoint, isRateLimited } from '@/lib/azure-openai';
+
 export const DEFAULT_CHAT_MODEL = 'gpt-5.6-sol';
 
 export type ChatProviderName = 'azure' | 'openai';
@@ -23,54 +28,13 @@ export interface ChatProvider {
   model: string;
 }
 
-type Env = Record<string, string | undefined>;
-
-function clean(value: string | undefined): string {
-  return (value ?? '').trim();
-}
-
-/** Hostname suffixes an Azure OpenAI / Foundry resource can legitimately have. */
-const AZURE_HOST_SUFFIXES = [
-  '.openai.azure.com',
-  '.services.ai.azure.com',
-  '.cognitiveservices.azure.com',
-];
-
-/**
- * True only for an HTTPS URL on an Azure OpenAI host. Anything else is ignored
- * so a misconfigured endpoint can never receive the Azure key or chat traffic.
- */
-export function isAzureEndpoint(endpoint: string): boolean {
-  try {
-    const url = new URL(clean(endpoint));
-    return (
-      url.protocol === 'https:' &&
-      AZURE_HOST_SUFFIXES.some((suffix) => url.hostname.endsWith(suffix))
-    );
-  } catch {
-    return false;
-  }
-}
-
-/** Turns an Azure resource endpoint into the v1 base URL the SDK expects. */
-export function azureBaseURL(endpoint: string): string {
-  const root = clean(endpoint).replace(/\/+$/, '');
-  return root.endsWith('/openai/v1') ? `${root}/` : `${root}/openai/v1/`;
-}
-
 export function resolveChatProvider(env: Env = process.env): ChatProvider | null {
-  const azureEndpoint = clean(env.AZURE_OPENAI_ENDPOINT);
-  const azureKey = clean(env.AZURE_OPENAI_API_KEY);
-
-  if (azureEndpoint && azureKey && !isAzureEndpoint(azureEndpoint)) {
-    console.warn(
-      'AZURE_OPENAI_ENDPOINT is not an HTTPS Azure OpenAI host; ignoring Azure settings'
-    );
-  } else if (azureEndpoint && azureKey) {
+  const azure = readAzureCredentials(env, 'AZURE_OPENAI_ENDPOINT', 'AZURE_OPENAI_API_KEY');
+  if (azure) {
     return {
       name: 'azure',
-      apiKey: azureKey,
-      baseURL: azureBaseURL(azureEndpoint),
+      apiKey: azure.apiKey,
+      baseURL: azureBaseURL(azure.endpoint),
       model: clean(env.AZURE_OPENAI_DEPLOYMENT) || DEFAULT_CHAT_MODEL,
     };
   }
@@ -85,14 +49,4 @@ export function resolveChatProvider(env: Env = process.env): ChatProvider | null
   }
 
   return null;
-}
-
-/** True when the upstream rejected the call because the deployment's capacity was exceeded. */
-export function isRateLimited(error: unknown): boolean {
-  return (
-    typeof error === 'object' &&
-    error !== null &&
-    'status' in error &&
-    (error as { status?: unknown }).status === 429
-  );
 }
