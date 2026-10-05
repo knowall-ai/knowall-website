@@ -14,6 +14,17 @@ import TeamSection from '@/components/team-section';
 
 const BEN = '971615b70ad9ec896f8d5ba0f2d01652f1dfe5f9ced81ac9469ca7facefad68b';
 
+// we can't sign as a real team member, so the positive control trusts every signature
+const signatures = vi.hoisted(() => ({ trustAll: false }));
+vi.mock('nostr-tools/pure', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('nostr-tools/pure')>();
+  return {
+    ...actual,
+    verifyEvent: (event: Parameters<typeof actual.verifyEvent>[0]) =>
+      signatures.trustAll || actual.verifyEvent(event),
+  };
+});
+
 class QuietSocket {
   static urls: string[] = [];
   static instances: QuietSocket[] = [];
@@ -42,6 +53,7 @@ describe('TeamSection', () => {
   beforeEach(() => {
     QuietSocket.urls = [];
     QuietSocket.instances = [];
+    signatures.trustAll = false;
     vi.stubGlobal('WebSocket', QuietSocket);
   });
   afterEach(() => vi.unstubAllGlobals());
@@ -66,6 +78,24 @@ describe('TeamSection', () => {
     render(<TeamSection />);
     expect(QuietSocket.urls).toEqual(
       expect.arrayContaining(['wss://relay.primal.net', 'wss://nostr.oxtr.dev'])
+    );
+  });
+
+  it("shows the picture from a team member's signed profile", () => {
+    signatures.trustAll = true;
+    render(<TeamSection />);
+    relaySends({
+      kind: 0,
+      pubkey: BEN,
+      created_at: 1_800_000_000,
+      tags: [],
+      content: JSON.stringify({ picture: 'https://example.com/ben.png' }),
+      id: '00',
+      sig: '00',
+    });
+    expect(screen.getByRole('img', { name: 'Ben Weeks' })).toHaveAttribute(
+      'src',
+      'https://example.com/ben.png'
     );
   });
 
