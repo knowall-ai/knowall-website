@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { ExternalLink, UserRound } from 'lucide-react';
+import { verifyEvent } from 'nostr-tools/pure';
 import { Card } from '@/components/ui/card';
 
 interface TeamMember {
@@ -87,6 +88,8 @@ export default function TeamSection() {
           const data = JSON.parse(msg.data);
           if (data[0] === 'EVENT') {
             const event = data[2];
+            // relays are untrusted: only accept a profile signed by one of our team keys
+            if (event?.kind !== 0 || !authors.includes(event.pubkey) || !verifyEvent(event)) return;
             const { picture } = JSON.parse(event.content);
             if (
               (newest[event.pubkey] ?? 0) < event.created_at &&
