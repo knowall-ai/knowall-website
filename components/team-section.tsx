@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { ExternalLink, UserRound } from 'lucide-react';
+import { verifyEvent } from 'nostr-tools/pure';
 import { Card } from '@/components/ui/card';
 
 interface TeamMember {
@@ -12,12 +13,6 @@ interface TeamMember {
 }
 
 const teamMembers: TeamMember[] = [
-  {
-    name: 'Ben Weeks',
-    title: 'Chief Builder',
-    npub: 'npub1jutptdc2m8kgjmudtws095qk2tcale0eemvp4j2xnjnl4nh6669slrf04x',
-    pubkey: '971615b70ad9ec896f8d5ba0f2d01652f1dfe5f9ced81ac9469ca7facefad68b',
-  },
   {
     name: 'Valeriia Khudiakova',
     title: 'Chief Planner',
@@ -35,6 +30,18 @@ const teamMembers: TeamMember[] = [
     title: 'Chief Tester',
     npub: 'npub1wdzc9uy9wggfjf8sz8tvj39utkgf0vj8874x05ptqkxf28sqqlnsxw2z0e',
     pubkey: '734582f08572109924f011d6c944bc5d9097b2473faa67d02b058c951e0007e7',
+  },
+  {
+    name: 'Ben Weeks',
+    title: 'Chief Builder',
+    npub: 'npub1jutptdc2m8kgjmudtws095qk2tcale0eemvp4j2xnjnl4nh6669slrf04x',
+    pubkey: '971615b70ad9ec896f8d5ba0f2d01652f1dfe5f9ced81ac9469ca7facefad68b',
+  },
+  {
+    name: 'Eduardo Cortez',
+    title: 'Senior Engineer',
+    npub: 'npub1m3g4gc0a4jxhca2nun3frnamc7jvvhh6jfkd4mjha8xn7x44gteqjdxmqq',
+    pubkey: 'dc515461fdac8d7c7553e4e291cfbbc7a4c65efa926cdaee57e9cd3f1ab542f2',
   },
 ];
 
@@ -81,6 +88,8 @@ export default function TeamSection() {
           const data = JSON.parse(msg.data);
           if (data[0] === 'EVENT') {
             const event = data[2];
+            // relays are untrusted: only accept a profile signed by one of our team keys
+            if (event?.kind !== 0 || !authors.includes(event.pubkey) || !verifyEvent(event)) return;
             const { picture } = JSON.parse(event.content);
             if (
               (newest[event.pubkey] ?? 0) < event.created_at &&
@@ -149,13 +158,13 @@ export default function TeamSection() {
         </p>
 
         <div
-          className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4"
+          className="flex flex-wrap justify-center gap-8 max-w-4xl mx-auto"
           data-testid="team-grid"
         >
           {teamMembers.map((member) => (
             <Card
               key={member.npub}
-              className="p-6 shadow-md border-0 bg-gray-900 text-white flex flex-col items-center text-center"
+              className="w-full sm:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1.334rem)] p-6 shadow-md border-0 bg-gray-900 text-white flex flex-col items-center text-center"
             >
               {pictures[member.pubkey] && !broken[member.pubkey] ? (
                 // eslint-disable-next-line @next/next/no-img-element -- avatar URLs come from Nostr profiles, hosts unknown at build time
