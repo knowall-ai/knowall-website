@@ -15,8 +15,15 @@ export const BUNKER = {
   secret: '',
 };
 
-/** Relays listings are published to and read from. */
+/**
+ * Relays listings are published to and read from. relay.weeksfamily.me (our
+ * own relay) and relay.plebeian.market (a Market relay) are the durable copies:
+ * public relays can silently prune kind-30402 events — in October 2026 every
+ * listing vanished from nos.lol/damus, and relay.primal.net never stored them.
+ */
 export const PUBLISH_RELAYS = [
+  'wss://relay.weeksfamily.me',
+  'wss://relay.plebeian.market',
   'wss://relay.damus.io',
   'wss://nos.lol',
   'wss://relay.primal.net',
