@@ -1,9 +1,8 @@
-# KnowAll AI sticker pack listing (d: knowall-sticker-pack) — not yet published.
-# The image entries are local paths, resolved relative to this YAML file: the CLI
-# uploads each to Blossom automatically (one Amber approval per file) and puts the
-# hosted URLs in the event. Drop the sticker artwork into an images/ folder next to
-# this file (or point the entries wherever it lives — ideally photographs of the
-# printed sheets) before publishing.
+# KnowAll AI sticker pack listing (d: knowall-sticker-pack) — published 2026-10-15.
+# The images are already hosted on Blossom (uploaded by the CLI), so republishing
+# needs only the one Amber approval for the listing itself. To replace artwork,
+# swap an entry for a local path (resolved relative to this file) and the CLI will
+# upload it first — one extra Amber approval per file.
 # Publish with:
 #   node tools/nostr-listings/cli.mjs publish tools/nostr-listings/examples/knowall-sticker-pack.yaml --yes
 d: knowall-sticker-pack
