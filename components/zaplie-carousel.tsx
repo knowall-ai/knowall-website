@@ -39,7 +39,7 @@ const images = [
     alt: 'Zaplie Wallet & Transactions',
   },
   {
-    src: '/images/zaplie/09-sasha.png',
+    src: '/images/zaplie/09-profile.png',
     alt: 'Zaplie User Profile',
   },
 ];
