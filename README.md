@@ -272,7 +272,7 @@ Only the mute list's public tags are honoured; private (encrypted) mutes are pre
 
 ## Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contributions are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) first, including the rules on keeping company and personal information out.
 
 1. Fork the repository
 2. Create your feature branch (`git checkout -b feature/amazing-feature`)
