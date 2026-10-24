@@ -1,5 +1,7 @@
 import fs from 'fs';
 import path from 'path';
+import { after } from 'next/server';
+import { type ChatTurn, trackChatTurn } from '@/lib/analytics/track';
 
 // Define the log directory and file
 const LOG_DIR = path.join(process.cwd(), 'logs');
@@ -18,6 +20,29 @@ interface ChatLogEntry {
   endedReason?: 'conversation' | 'ip' | 'day';
   userIp?: string;
   userAgent?: string;
+}
+
+/** Chat log entries older than this are pruned (the privacy policy says 30 days). */
+export const LOG_RETENTION_DAYS = 30;
+
+/** Entries younger than the retention period (entries without a valid time are dropped). */
+export function withinRetention<T extends { timestamp: string }>(logs: T[], now = Date.now()): T[] {
+  const cutoff = now - LOG_RETENTION_DAYS * 86_400_000;
+  return logs.filter((l) => Date.parse(l.timestamp) >= cutoff);
+}
+
+/**
+ * Runs analytics after the response when called in a request (Next's after()),
+ * otherwise straight away without waiting. Never throws.
+ */
+function inBackground(task: () => Promise<unknown>) {
+  const run = () => task().catch(() => {});
+  try {
+    after(run);
+  } catch {
+    // Outside a request scope (scripts, tests): fire and forget
+    void run();
+  }
 }
 
 // Initialize the log directory and file if they don't exist
@@ -40,6 +65,11 @@ function initializeLogFile() {
 export interface ChatLogMeta {
   greetingId?: string;
   endedReason?: 'conversation' | 'ip' | 'day';
+  /** For the App Insights event: the page's Sallie context, path and turn number */
+  context?: string;
+  page?: string;
+  turn?: number;
+  outcome?: ChatTurn['outcome'];
 }
 
 // Log a chat conversation
@@ -50,6 +80,21 @@ export async function logChat(
   request?: Request,
   meta: ChatLogMeta = {}
 ): Promise<boolean> {
+  // Also one App Insights event per turn, for the sales portal's Website page.
+  // Off the reply's critical path; the file log below is kept as it was.
+  inBackground(() =>
+    trackChatTurn(request, {
+      conversationId,
+      userMessage,
+      reply: assistantResponse,
+      greetingId: meta.greetingId,
+      context: meta.context,
+      page: meta.page,
+      turn: meta.turn,
+      outcome: meta.outcome ?? (meta.endedReason ? 'ended' : 'ok'),
+      endedReason: meta.endedReason,
+    })
+  );
   try {
     // Initialize log file if it doesn't exist
     const initialized = initializeLogFile();
@@ -94,7 +139,8 @@ export async function logChat(
         logs = [];
       }
 
-      // Add the new entry to the logs
+      // Add the new entry, dropping entries past the retention period
+      logs = withinRetention(logs);
       logs.push(newEntry);
 
       // Write the updated logs back to the file
@@ -118,9 +164,11 @@ export async function getAllChatLogs(): Promise<ChatLogEntry[]> {
     // Initialize log file if it doesn't exist
     initializeLogFile();
 
-    // Read and return all logs
-    const logsRaw = fs.readFileSync(CHAT_LOG_FILE, 'utf-8');
-    return JSON.parse(logsRaw);
+    // Read and return the logs within the retention period, pruning the file if any aged out
+    const logs: ChatLogEntry[] = JSON.parse(fs.readFileSync(CHAT_LOG_FILE, 'utf-8'));
+    const kept = withinRetention(logs);
+    if (kept.length < logs.length) fs.writeFileSync(CHAT_LOG_FILE, JSON.stringify(kept, null, 2));
+    return kept;
   } catch (error) {
     console.error('Error reading chat logs:', error);
     return [];

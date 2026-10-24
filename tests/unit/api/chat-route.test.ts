@@ -231,7 +231,7 @@ describe('POST /api/chat', () => {
       'A helpful answer',
       'conv-log',
       expect.anything(),
-      { greetingId: undefined }
+      expect.objectContaining({ greetingId: undefined, turn: 1 })
     );
   });
 
@@ -245,9 +245,38 @@ describe('POST /api/chat', () => {
         messages: [{ role: 'user', content: 'Hi' }],
       })
     );
-    expect(logChatMock).toHaveBeenLastCalledWith('Hi', 'Sure', 'conv-greet', expect.anything(), {
-      greetingId: 'three-questions',
-    });
+    expect(logChatMock).toHaveBeenLastCalledWith(
+      'Hi',
+      'Sure',
+      'conv-greet',
+      expect.anything(),
+      expect.objectContaining({ greetingId: 'three-questions' })
+    );
+  });
+
+  it('passes the page and turn on for the analytics event, never to the model', async () => {
+    vi.stubEnv('OPENAI_API_KEY', 'sk-test-key');
+    createMock.mockResolvedValue({ choices: [{ message: { content: 'Sure' } }] });
+    await POST(
+      postRequest({
+        conversationId: 'conv-page',
+        context: 'purple-team',
+        page: '/purple-team?utm_source=x',
+        messages: [
+          { role: 'user', content: 'One' },
+          { role: 'assistant', content: 'Reply' },
+          { role: 'user', content: 'Two' },
+        ],
+      })
+    );
+    expect(logChatMock).toHaveBeenLastCalledWith(
+      'Two',
+      'Sure',
+      'conv-page',
+      expect.anything(),
+      expect.objectContaining({ context: 'purple-team', page: '/purple-team', turn: 2 })
+    );
+    expect(JSON.stringify(createMock.mock.calls[0][0])).not.toContain('/purple-team?');
   });
 
   it('returns a fallback response when the OpenAI API call fails', async () => {
@@ -506,7 +535,11 @@ describe('POST /api/chat cost guards', () => {
       expect.stringContaining('sallie@knowall.ai'),
       'CAP12345',
       expect.anything(),
-      { greetingId: undefined, endedReason: 'conversation' }
+      expect.objectContaining({
+        greetingId: undefined,
+        endedReason: 'conversation',
+        outcome: 'ended',
+      })
     );
   });
 

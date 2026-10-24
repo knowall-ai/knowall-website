@@ -128,3 +128,91 @@ describe('getChatLogById', () => {
     expect(log).toBeNull();
   });
 });
+
+describe('App Insights chat event', () => {
+  // Requirements: site-analytics - one SallieChatTurn event per turn, never with an IP
+  it('emits one event per turn, with the conversation and no IP address', async () => {
+    vi.stubEnv(
+      'APPLICATIONINSIGHTS_CONNECTION_STRING',
+      'InstrumentationKey=00000000-0000-0000-0000-000000000000;IngestionEndpoint=https://example.in.applicationinsights.azure.com/'
+    );
+    const sent: string[] = [];
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (_url: unknown, init?: RequestInit) => {
+        sent.push(String(init?.body));
+        return new Response(null, { status: 200 });
+      })
+    );
+    const req = new Request('http://localhost/api/chat', {
+      method: 'POST',
+      headers: { 'x-forwarded-for': '198.51.100.23:40000', 'user-agent': 'Mozilla/5.0' },
+    });
+
+    await logger.logChat('Do you work with SMEs?', 'Yes, mostly.', 'conv-ai', req, {
+      greetingId: 'g-1',
+      context: 'purple-team',
+      page: '/purple-team',
+      turn: 2,
+    });
+
+    // Sent in the background, off the reply's critical path
+    await vi.waitFor(() => expect(sent).toHaveLength(1));
+    const [envelope] = JSON.parse(sent[0]);
+    expect(envelope.data.baseData.name).toBe('SallieChatTurn');
+    expect(envelope.data.baseData.properties).toMatchObject({
+      conversationId: 'conv-ai',
+      userMessage: 'Do you work with SMEs?',
+      reply: 'Yes, mostly.',
+      greetingId: 'g-1',
+      page: '/purple-team',
+      turn: '2',
+    });
+    expect(sent[0]).not.toContain('198.51.100.23');
+    // The file log is kept as before
+    expect(JSON.parse(fs.readFileSync(logFilePath(), 'utf-8'))).toHaveLength(1);
+    vi.unstubAllGlobals();
+    vi.unstubAllEnvs();
+  });
+
+  it('sends nothing when App Insights is not configured', async () => {
+    vi.stubEnv('APPLICATIONINSIGHTS_CONNECTION_STRING', '');
+    const fetchMock = vi.fn();
+    vi.stubGlobal('fetch', fetchMock);
+    await logger.logChat('Hi', 'Hello', 'conv-none');
+    expect(fetchMock).not.toHaveBeenCalled();
+    vi.unstubAllGlobals();
+    vi.unstubAllEnvs();
+  });
+});
+
+describe('retention', () => {
+  it('prunes chat log entries older than 30 days', async () => {
+    const old = new Date(Date.now() - 31 * 86_400_000).toISOString();
+    fs.mkdirSync(path.join(tempDir, 'logs'), { recursive: true });
+    fs.writeFileSync(
+      logFilePath(),
+      JSON.stringify([
+        { id: 'old', timestamp: old, userMessage: 'a', assistantResponse: 'b', userIp: '1.2.3.4' },
+      ])
+    );
+    await logger.logChat('New', 'Reply', 'conv-new');
+    const logs = JSON.parse(fs.readFileSync(logFilePath(), 'utf-8'));
+    expect(logs.map((l: { id: string }) => l.id)).toEqual(['conv-new']);
+  });
+
+  it('prunes on read too', async () => {
+    const old = new Date(Date.now() - 40 * 86_400_000).toISOString();
+    const fresh = new Date().toISOString();
+    fs.mkdirSync(path.join(tempDir, 'logs'), { recursive: true });
+    fs.writeFileSync(
+      logFilePath(),
+      JSON.stringify([
+        { id: 'old', timestamp: old, userMessage: 'a', assistantResponse: 'b' },
+        { id: 'fresh', timestamp: fresh, userMessage: 'c', assistantResponse: 'd' },
+      ])
+    );
+    expect((await logger.getAllChatLogs()).map((l) => l.id)).toEqual(['fresh']);
+    expect(JSON.parse(fs.readFileSync(logFilePath(), 'utf-8'))).toHaveLength(1);
+  });
+});

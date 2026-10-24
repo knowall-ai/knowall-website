@@ -7,6 +7,7 @@ import { Inter } from 'next/font/google';
 import { ContactPanelProvider } from '@/components/contact-panel';
 import { NostrAuthProvider } from '@/components/auth/nostr-auth-provider';
 import { CartProvider } from '@/hooks/use-cart';
+import PageViewBeacon from '@/components/page-view-beacon';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -50,6 +51,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             <ContactPanelProvider>{children}</ContactPanelProvider>
           </CartProvider>
         </NostrAuthProvider>
+        <PageViewBeacon />
       </body>
     </html>
   );

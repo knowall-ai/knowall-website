@@ -100,6 +100,8 @@ function useSallieConversation(greeting: Greeting, context?: SallieContext) {
             greetingId: greeting.id,
             // Keeps her on the page's topic (an allowlisted key, checked server-side).
             ...(context ? { context } : {}),
+            // The page she's on, for the anonymous analytics event only
+            page: window.location.pathname,
             messages: [
               { role: 'assistant', content: greeting.text },
               ...history.map(({ role, content }) => ({ role, content })),
