@@ -1095,7 +1095,7 @@
                   <div><strong>Time spent per case,</strong> so every hour billed is accounted for.</div>
                 </div>
               </div>
-              <div class="portal-shot portal-carousel" aria-roledescription="carousel" aria-label="Purple Team Portal screens">
+              <div class="portal-shot portal-carousel" role="group" aria-roledescription="carousel" aria-label="Purple Team Portal screens">
                 <div class="pc-track">
                   <figure class="pc-slide is-active" aria-hidden="false">
                     <img src="images/portal-dashboard.jpg" alt="Purple Team Portal, Dashboard page, for the fictional company Contoso: Security score, its trend and the month's key figures" />
@@ -1285,7 +1285,10 @@
         const show = (n) => {
           i = (n + slides.length) % slides.length;
           slides.forEach((s, k) => { s.classList.toggle('is-active', k === i); s.setAttribute('aria-hidden', String(k !== i)); });
-          dots.forEach((d, k) => d.classList.toggle('is-active', k === i));
+          dots.forEach((d, k) => {
+            d.classList.toggle('is-active', k === i);
+            d.setAttribute('aria-current', String(k === i));
+          });
         };
         const stop = () => { clearInterval(timer); timer = null; };
         const start = () => { if (!still && !timer) timer = setInterval(() => show(i + 1), 4500); };
@@ -1296,6 +1299,10 @@
         // keep the deck's own keyboard and swipe handling away from the controls
         root.querySelectorAll('button').forEach((b) => b.addEventListener('keydown', (e) => e.stopPropagation()));
         Reveal.on('ready', onSlide);
+        // Pause while the visitor is looking at or using it (WCAG 2.2.2).
+        root.addEventListener('mouseenter', stop);
+        root.addEventListener('focusin', stop);
+        root.addEventListener('mouseleave', onSlide);
         Reveal.on('slidechanged', onSlide);
         if (Reveal.isReady()) onSlide();
       })();
