@@ -1406,3 +1406,68 @@ section > .logo-light--left {
 .logo-plate--eir img {
   max-height: 64px;
 }
+
+/* --- Our agents: every agent, tagged by the team(s) it belongs to ------- */
+.agent-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 34px 26px;
+}
+.agent-tile {
+  width: 236px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+}
+.agent-tile .agent-av--photo {
+  width: 132px;
+  height: 132px;
+  margin-bottom: 4px;
+}
+.agent-tile--purple .agent-av--photo {
+  border-color: #c4a4ff;
+  box-shadow: 0 0 26px rgba(196, 164, 255, 0.45);
+}
+.agent-tags {
+  display: flex;
+  gap: 6px;
+  min-height: 26px;
+}
+.agent-tag {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.agent-tag--t15 {
+  color: var(--lime);
+  border: 1px solid rgba(157, 254, 10, 0.6);
+}
+.agent-tag--purple {
+  color: #c4a4ff;
+  border: 1px solid rgba(196, 164, 255, 0.7);
+}
+.agent-legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px 40px;
+  margin-top: 40px;
+  font-size: 20px;
+  color: var(--mist);
+}
+.agent-legend > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+.agent-legend-plain {
+  font-style: italic;
+}
