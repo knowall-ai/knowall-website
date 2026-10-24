@@ -2,6 +2,7 @@ import type React from 'react';
 import './globals.css';
 import { preload } from 'react-dom';
 import type { Metadata } from 'next';
+import { connection } from 'next/server';
 import { Inter } from 'next/font/google';
 import { ContactPanelProvider } from '@/components/contact-panel';
 import { NostrAuthProvider } from '@/components/auth/nostr-auth-provider';
@@ -34,7 +35,10 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  // The CSP nonce (proxy.ts) is per request, so pages must render per request
+  // rather than being prerendered at build time.
+  await connection();
   // Hint the hero background early without hand-writing <head> (which makes React
   // warn about Next's dev-injected script tags on every page).
   preload('/images/green-bg.png', { as: 'image' });
