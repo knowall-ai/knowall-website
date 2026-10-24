@@ -1,7 +1,13 @@
 import { NextResponse } from 'next/server';
-import OpenAI from 'openai';
 import { synthesizeWithRealtime } from './realtime';
 import { clientIp, consume, isSameOrigin } from '@/lib/rate-limit';
+import {
+  realtimeConnection,
+  resolveVoiceProvider,
+  speechClient,
+  VOICE_MODELS,
+  type VoiceProvider,
+} from '@/lib/voice-provider';
 
 /**
  * Sallie's voice. Turns a short piece of her reply into speech so the
@@ -11,7 +17,8 @@ import { clientIp, consume, isSameOrigin } from '@/lib/rate-limit';
  *
  * Engine: the Realtime model with the "marin" voice — exactly what her Teams
  * call bot uses — falling back to gpt-4o-mini-tts (also marin) if that fails.
- * `SALLIE_VOICE_ENGINE=tts` forces the fallback.
+ * `SALLIE_VOICE_ENGINE=tts` forces the fallback. Both run on Azure OpenAI when
+ * AZURE_OPENAI_VOICE_* is set, otherwise OpenAI (lib/voice-provider.ts).
  */
 
 export const MAX_SPEAK_CHARS = 700;
@@ -49,10 +56,9 @@ function preferredEngine(): Engine {
   return process.env.SALLIE_VOICE_ENGINE === 'tts' ? 'tts' : 'realtime';
 }
 
-async function synthesizeWithTts(text: string, apiKey: string): Promise<Uint8Array> {
-  const openai = new OpenAI({ apiKey });
-  const speech = await openai.audio.speech.create({
-    model: 'gpt-4o-mini-tts',
+async function synthesizeWithTts(text: string, provider: VoiceProvider): Promise<Uint8Array> {
+  const speech = await speechClient(provider).audio.speech.create({
+    model: VOICE_MODELS.tts,
     voice: 'marin',
     input: text,
     response_format: 'mp3',
@@ -60,16 +66,16 @@ async function synthesizeWithTts(text: string, apiKey: string): Promise<Uint8Arr
   return new Uint8Array(await speech.arrayBuffer());
 }
 
-async function synthesize(text: string, apiKey: string): Promise<Clip> {
+async function synthesize(text: string, provider: VoiceProvider): Promise<Clip> {
   if (preferredEngine() === 'realtime') {
     try {
-      const bytes = await synthesizeWithRealtime(text, apiKey);
+      const bytes = await synthesizeWithRealtime(text, realtimeConnection(provider));
       return { bytes, type: 'audio/wav', engine: 'realtime' };
     } catch (error) {
       console.warn('Realtime voice failed, falling back to TTS:', error);
     }
   }
-  const bytes = await synthesizeWithTts(text, apiKey);
+  const bytes = await synthesizeWithTts(text, provider);
   return { bytes, type: 'audio/mpeg', engine: 'tts' };
 }
 
@@ -107,8 +113,8 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Nothing to say' }, { status: 400 });
   }
 
-  const apiKey = process.env.OPENAI_API_KEY;
-  if (!apiKey) {
+  const provider = resolveVoiceProvider();
+  if (!provider) {
     return NextResponse.json({ error: 'Voice is not configured' }, { status: 503 });
   }
 
@@ -120,10 +126,10 @@ export async function POST(req: Request) {
     cache.set(key, clip);
   } else {
     try {
-      clip = await synthesize(text, apiKey);
+      clip = await synthesize(text, provider);
       remember(key, clip);
     } catch (error) {
-      console.error('Error in speak API:', error);
+      console.error(`Error in speak API (${provider.name}):`, error);
       return NextResponse.json({ error: 'Voice is unavailable right now' }, { status: 502 });
     }
   }

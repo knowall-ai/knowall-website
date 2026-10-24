@@ -6,14 +6,29 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
  *
  * Requirements: sallie-chat
  * - Transcribes a short audio clip so the mic works in every browser
+ * - Uses the Azure deployment-scoped client when the voice resource is configured
  * - Refuses empty or oversized clips and reports when not configured
+ * - Names the upload after the recorded format so Safari's MP4 is accepted
  */
 
-const transcriptionsCreate = vi.fn();
+const { transcriptionsCreate, openaiOptions, azureOptions } = vi.hoisted(() => ({
+  transcriptionsCreate: vi.fn(),
+  openaiOptions: vi.fn(),
+  azureOptions: vi.fn(),
+}));
 
 vi.mock('openai', () => ({
   default: class {
     audio = { transcriptions: { create: transcriptionsCreate } };
+    constructor(options: unknown) {
+      openaiOptions(options);
+    }
+  },
+  AzureOpenAI: class {
+    audio = { transcriptions: { create: transcriptionsCreate } };
+    constructor(options: unknown) {
+      azureOptions(options);
+    }
   },
 }));
 
@@ -27,15 +42,19 @@ async function post(form: FormData | null, headers: Record<string, string> = SIT
   return POST(new Request('http://localhost/api/listen', init));
 }
 
-function clip(bytes: number) {
+function clip(bytes: number, type = 'audio/webm') {
   const form = new FormData();
-  form.append('audio', new File([new Uint8Array(bytes)], 'clip.webm', { type: 'audio/webm' }));
+  form.append('audio', new File([new Uint8Array(bytes)], 'recording', { type }));
   return form;
 }
 
 describe('POST /api/listen', () => {
   beforeEach(async () => {
     transcriptionsCreate.mockReset();
+    openaiOptions.mockClear();
+    azureOptions.mockClear();
+    vi.stubEnv('AZURE_OPENAI_VOICE_ENDPOINT', '');
+    vi.stubEnv('AZURE_OPENAI_VOICE_API_KEY', '');
     transcriptionsCreate.mockResolvedValue({ text: '  What does KnowAll do?  ' });
     vi.stubEnv('OPENAI_API_KEY', 'sk-test');
     const { resetRateLimits } = await import('@/lib/rate-limit');
@@ -84,6 +103,27 @@ describe('POST /api/listen', () => {
     expect(res.status).toBe(200);
     expect(await res.json()).toEqual({ text: 'What does KnowAll do?' });
     expect(transcriptionsCreate.mock.calls[0][0].model).toBe('gpt-4o-mini-transcribe');
+  });
+
+  it('transcribes through the Azure deployment when the voice resource is configured', async () => {
+    vi.stubEnv('AZURE_OPENAI_VOICE_ENDPOINT', 'https://knowall-website-voice.openai.azure.com/');
+    vi.stubEnv('AZURE_OPENAI_VOICE_API_KEY', 'azure-voice-key');
+    const res = await post(clip(100));
+    expect(res.status).toBe(200);
+    expect(openaiOptions).not.toHaveBeenCalled();
+    expect(azureOptions).toHaveBeenCalledWith({
+      baseURL: 'https://knowall-website-voice.openai.azure.com/openai',
+      apiKey: 'azure-voice-key',
+      apiVersion: '2025-04-01-preview',
+      deployment: 'gpt-4o-mini-transcribe',
+    });
+  });
+
+  it("sends Safari's MP4 recording as .m4a and Chrome's as .webm", async () => {
+    await post(clip(100, 'audio/mp4'));
+    await post(clip(100, 'audio/webm;codecs=opus'));
+    expect(transcriptionsCreate.mock.calls[0][0].file.name).toBe('clip.m4a');
+    expect(transcriptionsCreate.mock.calls[1][0].file.name).toBe('clip.webm');
   });
 
   it('returns 502 when transcription fails', async () => {

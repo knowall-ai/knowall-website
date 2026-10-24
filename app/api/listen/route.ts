@@ -1,14 +1,29 @@
 import { NextResponse } from 'next/server';
-import OpenAI from 'openai';
 import { clientIp, consume, isSameOrigin } from '@/lib/rate-limit';
+import { resolveVoiceProvider, transcriptionClient, VOICE_MODELS } from '@/lib/voice-provider';
 
 /**
  * Sallie's ears, for browsers whose own speech recognition is missing or
  * broken. Takes a short audio clip and returns the transcript. Public like
- * /api/chat; nothing is stored and the audio is not kept.
+ * /api/chat; nothing is stored and the audio is not kept. Runs on Azure OpenAI
+ * when AZURE_OPENAI_VOICE_* is set, otherwise OpenAI (lib/voice-provider.ts).
  */
 
 export const MAX_AUDIO_BYTES = 4 * 1024 * 1024; // ~30s of Opus at 96 kbps, with headroom
+
+/**
+ * The transcription service identifies the format from the file name, so it must
+ * match what the browser recorded: WebM/Opus on Chrome and Firefox, MP4/AAC on
+ * Safari. Naming an MP4 ".webm" gets it rejected as corrupted.
+ */
+export function clipFileName(mimeType: string): string {
+  const type = mimeType.toLowerCase();
+  if (type.includes('mp4') || type.includes('m4a') || type.includes('aac')) return 'clip.m4a';
+  if (type.includes('ogg')) return 'clip.ogg';
+  if (type.includes('mpeg') || type.includes('mp3')) return 'clip.mp3';
+  if (type.includes('wav')) return 'clip.wav';
+  return 'clip.webm';
+}
 
 export async function POST(req: Request) {
   if (!isSameOrigin(req)) {
@@ -25,8 +40,8 @@ export async function POST(req: Request) {
     );
   }
 
-  const apiKey = process.env.OPENAI_API_KEY;
-  if (!apiKey) {
+  const provider = resolveVoiceProvider();
+  if (!provider) {
     return NextResponse.json({ error: 'Listening is not configured' }, { status: 503 });
   }
 
@@ -49,15 +64,16 @@ export async function POST(req: Request) {
   }
 
   try {
-    const openai = new OpenAI({ apiKey });
-    const result = await openai.audio.transcriptions.create({
-      model: 'gpt-4o-mini-transcribe',
-      file: new File([file], 'clip.webm', { type: file.type || 'audio/webm' }),
+    const result = await transcriptionClient(provider).audio.transcriptions.create({
+      model: VOICE_MODELS.transcribe,
+      file: new File([file], clipFileName(file.type || 'audio/webm'), {
+        type: file.type || 'audio/webm',
+      }),
       language: 'en',
     });
     return NextResponse.json({ text: result.text.trim() });
   } catch (error) {
-    console.error('Error in listen API:', error);
+    console.error(`Error in listen API (${provider.name}):`, error);
     return NextResponse.json({ error: 'Listening is unavailable right now' }, { status: 502 });
   }
 }
