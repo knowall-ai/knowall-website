@@ -40,4 +40,4 @@ For pure-refactor / docs / CI / deps PRs with no user-visible change, replace th
 
 ## Checklist
 
-- [ ] No company-specific or personal information (real names, addresses, clients, IDs, prices) in code, docs, tests, screenshots or this description — see CONTRIBUTING.md
+- [ ] No confidential company-specific or personal information (real names, addresses, clients, IDs, prices) in code, docs, tests, screenshots, the PR title, the PR description or commit messages — see CONTRIBUTING.md
