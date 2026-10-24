@@ -218,7 +218,14 @@ export default function EnquiryForm() {
         <Send className="ml-2 h-4 w-4" aria-hidden="true" />
       </Button>
       <p className="text-xs text-gray-400">
-        Sent as an encrypted Nostr DM. We never test anything without your written authorisation.
+        Prefer email? Write to{' '}
+        <a
+          href="mailto:hello@knowall.ai?subject=Purple%20Team%20enquiry"
+          className="text-violet-300 underline-offset-4 hover:underline"
+        >
+          hello@knowall.ai
+        </a>
+        . We never test anything without your written authorisation.
       </p>
     </form>
   );
