@@ -41,9 +41,11 @@ test.describe('Purple Team Page', () => {
     // Integrations, grouped by job.
     const integrations = page.getByTestId('integrations');
     await expect(integrations.getByRole('heading', { level: 4 })).toHaveCount(6);
-    await expect(integrations.getByText('Microsoft Foundry')).toBeVisible();
-    await expect(integrations.getByText('ZAP (Zed Attack Proxy)')).toBeVisible();
-    await expect(integrations.getByText('Thyme and Business Central')).toBeVisible();
+    await expect(integrations.getByText('Microsoft Foundry', { exact: true })).toBeVisible();
+    await expect(integrations.getByText('ZAP (Zed Attack Proxy)', { exact: true })).toBeVisible();
+    await expect(
+      integrations.getByText('Thyme and Business Central', { exact: true })
+    ).toBeVisible();
 
     await page.getByRole('button', { name: 'Is it legal to attack our systems?' }).click();
     await expect(page.getByText('Only with your written permission.')).toBeVisible();
