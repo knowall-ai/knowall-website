@@ -159,9 +159,10 @@ export default function Home() {
               New: continuous security
             </p>
             <h2 className="text-3xl md:text-4xl font-bold mb-6">
-              The <span className="text-red-400">Pur</span>
-              <span className="text-violet-400">ple</span>{' '}
-              <span className="text-blue-400">Team</span>
+              The{' '}
+              <span className="text-purple-400 [text-shadow:0_0_18px_rgba(168,85,247,0.6)]">
+                Purple Team
+              </span>
             </h2>
             <p className="text-lg text-gray-300 mb-8">
               Hundreds of new vulnerabilities are published every day, and attackers use AI to find

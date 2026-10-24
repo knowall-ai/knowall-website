@@ -256,14 +256,18 @@ export default function PurpleTeamPage() {
             <h1 className="mb-6 text-5xl font-bold leading-[1.05] md:text-7xl">
               Break it
               <br />
-              before <span className="text-red-400">they</span> do.
+              before{' '}
+              <span className="text-red-500 [text-shadow:0_0_22px_rgba(239,68,68,0.5)]">
+                they
+              </span>{' '}
+              do.
             </h1>
             <p className="mb-8 text-xl text-white/90">
               Attackers now use AI to find holes around the clock. So does the KnowAll{' '}
-              <span className="font-semibold text-red-400">Pur</span>
-              <span className="font-semibold text-violet-400">ple</span>{' '}
-              <span className="font-semibold text-blue-400">Team</span>: Pennie attacks, Ollie
-              defends and fixes, and Poppie runs the loop between them.
+              <span className="font-semibold text-purple-400 [text-shadow:0_0_18px_rgba(168,85,247,0.6)]">
+                Purple Team
+              </span>
+              : Pennie attacks, Ollie defends and fixes, and Poppie runs the loop between them.
             </p>
             <div className="flex flex-wrap gap-4">
               <Button
