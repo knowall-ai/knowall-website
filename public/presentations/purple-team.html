@@ -108,7 +108,8 @@
 
       /* Statement slides keep their copy on the dark left half of the art. */
       .dark-inner.with-agent .col {
-        max-width: 1010px;
+        /* narrow enough that copy wraps before it reaches the agent art */
+        max-width: 820px;
         display: flex;
         flex-direction: column;
         gap: 34px;
@@ -1124,7 +1125,7 @@
         <section role="region" aria-label="Slide 10 of 12: Three ways to run it">
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
           <div
-            class="dark-inner with-agent"
+            class="dark-inner with-agent with-agent--wide"
             style="--deck-agent: url('images/divider-purple-team-defend.jpg')"
           >
             <div class="col">
@@ -1137,7 +1138,7 @@
                   </div>
                   <div>
                     <h4>Hosted</h4>
-                    <p>The team and your portal run on security.knowall.ai. Fastest to start.</p>
+                    <p>We run the team and your portal for you. Fastest to start.</p>
                   </div>
                 </div>
                 <div class="card">
@@ -1146,7 +1147,7 @@
                   </div>
                   <div>
                     <h4>In your tenant</h4>
-                    <p>Your data stays in your Azure; the agents work into it from ours.</p>
+                    <p>Your data stays in your Azure. Our agents work on it.</p>
                   </div>
                 </div>
                 <div class="card">
@@ -1155,7 +1156,7 @@
                   </div>
                   <div>
                     <h4>Fully sovereign</h4>
-                    <p>Agents and models run in your Azure too. Nothing leaves your estate.</p>
+                    <p>Agents and models run in your Azure too. Nothing leaves.</p>
                   </div>
                 </div>
               </div>
