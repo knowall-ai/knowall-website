@@ -65,6 +65,335 @@
         position: relative;
         z-index: 1;
       }
+
+      /* --- The shift: one big statement over an agent-free landscape -------------- */
+      .dark-inner.shift {
+        gap: 48px;
+        padding-right: 360px;
+      }
+      .shift-line {
+        font-size: 104px;
+        line-height: 1.08;
+      }
+      .shift-line em {
+        color: var(--lime);
+        font-style: italic;
+      }
+
+      /* --- Mission & vision: two short cards, then the delivery timeline ----------- */
+      .content.mv {
+        gap: 96px;
+      }
+
+      /* --- Two stages, one journey ---------------------------------------------------- */
+      .journey {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        gap: 56px;
+        align-items: center;
+      }
+      .journey-arrow {
+        font-size: 84px;
+        color: var(--lime);
+      }
+      .journey .stage p {
+        font-size: 27px;
+      }
+      .journey-fact {
+        display: inline-block;
+        margin-top: 22px;
+        font-family: 'Playfair Display', Georgia, serif;
+        font-weight: 900;
+        font-size: 44px;
+        color: var(--lime);
+      }
+
+      /* --- Platforms & partners ----------------------------------------------------- */
+      .partner-groups {
+        display: grid;
+        grid-template-columns: 3fr 2fr;
+        gap: 72px;
+      }
+      .reveal .partner-label {
+        margin-bottom: 26px;
+        color: var(--lime);
+        font-weight: 800;
+        font-size: 20px;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+      }
+      .partner-grid--3 {
+        grid-template-columns: repeat(3, 1fr);
+      }
+      .partner-grid--2 {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .partner-grid .card p {
+        font-size: 24px;
+      }
+      .logo-plate .eir-logo {
+        max-height: 64px;
+      }
+      a.partner-link {
+        display: block;
+        width: 100%;
+      }
+      a.partner-link:focus-visible {
+        outline: var(--focus-ring);
+        outline-offset: 4px;
+        border-radius: 14px;
+      }
+
+      /* --- Self-improving: the loop, then four short points ------------------------ */
+      .cycle {
+        margin: 0;
+      }
+      .cycle svg {
+        width: 100%;
+        max-height: 270px;
+        height: auto;
+        display: block;
+      }
+      .cyc-line,
+      .cyc-return {
+        fill: none;
+        stroke: #9dff0a;
+        stroke-width: 3;
+      }
+      .cyc-return {
+        stroke-opacity: 0.45;
+        stroke-dasharray: 9 8;
+      }
+      .cyc-stops circle {
+        fill: #9dff0a;
+      }
+      .cyc-stops text {
+        fill: #ffffff;
+        font-size: 26px;
+        font-weight: 800;
+        text-anchor: middle;
+      }
+      .cyc-caption {
+        fill: #eef3f7;
+        font-size: 27px;
+        font-weight: 700;
+        font-style: italic;
+        text-anchor: middle;
+        paint-order: stroke;
+        stroke: rgba(11, 13, 16, 0.85);
+        stroke-width: 8px;
+        stroke-linejoin: round;
+      }
+
+      /* --- Reverie: a bigger graph beside three points ----------------------------- */
+      .memory-split {
+        display: grid;
+        grid-template-columns: 1.15fr 1fr;
+        gap: 64px;
+        align-items: center;
+      }
+      .memory-graph {
+        margin: 0;
+        padding: 18px 16px 10px;
+        background: rgba(255, 255, 255, 0.04);
+        border-radius: 18px;
+      }
+      .memory-graph svg {
+        width: 100%;
+        max-height: 470px;
+        height: auto;
+        display: block;
+      }
+      .memory-graph figcaption {
+        margin-top: 10px;
+        text-align: center;
+        font-size: 19px;
+        color: var(--mist);
+      }
+      .mg-edges path {
+        fill: none;
+        stroke: #9dff0a;
+        stroke-opacity: 0.42;
+        stroke-width: 2;
+      }
+      .mg-new path {
+        stroke-opacity: 0.95;
+        stroke-width: 2.5;
+        stroke-dasharray: 7 7;
+      }
+      .mg-nodes circle {
+        fill: #9dff0a;
+      }
+      .mg-nodes circle[fill^='url'] {
+        fill: url(#mg-glow);
+      }
+      .mg-nodes text {
+        fill: #e8f5d8;
+        font-size: 17px;
+        font-weight: 700;
+        text-anchor: middle;
+      }
+      .memory-points {
+        margin-top: 0;
+        gap: 34px;
+      }
+      .github-logo-link .gh-mark {
+        font-size: 46px;
+        flex: 0 0 auto;
+      }
+      .github-logo-link span {
+        font-weight: 400;
+        font-size: 24px;
+      }
+      @media (prefers-reduced-motion: no-preference) {
+        .reveal .mg-new path {
+          animation: mg-draw 1.6s ease-out both;
+        }
+      }
+      @keyframes mg-draw {
+        from {
+          stroke-dashoffset: 240;
+          stroke-opacity: 0;
+        }
+        to {
+          stroke-dashoffset: 0;
+          stroke-opacity: 0.95;
+        }
+      }
+
+      /* --- Presence: copy left, the real call frame big on the right --------------- */
+      .content.feature {
+        flex-direction: row;
+        align-items: center;
+        gap: 64px;
+        padding-top: 40px;
+      }
+      .feature-copy {
+        flex: 0 0 760px;
+        display: flex;
+        flex-direction: column;
+        gap: 34px;
+      }
+      .feature-copy .checks-stacked {
+        margin-top: 0;
+        gap: 24px;
+      }
+      .reveal .feature-note {
+        font-size: 21px;
+        font-style: italic;
+        color: var(--mist);
+      }
+      .feature-art {
+        position: relative;
+        flex: 1;
+        margin: 0 0 60px;
+      }
+      .feature-art img {
+        display: block;
+        width: 100%;
+        border-radius: 18px;
+        border: 2px solid rgba(157, 254, 10, 0.35);
+        box-shadow: 0 30px 70px rgba(0, 0, 0, 0.6);
+      }
+      .feature-art .feature-inset {
+        position: absolute;
+        width: 44%;
+        right: -24px;
+        bottom: -70px;
+        border-color: rgba(255, 255, 255, 0.35);
+      }
+
+      /* --- Security: four short points, larger type --------------------------------- */
+      .cards-2.security {
+        gap: 64px 96px;
+      }
+      .cards-2.security .card h4 {
+        font-size: 36px;
+      }
+      .cards-2.security .card p {
+        font-size: 27px;
+      }
+
+      /* --- Microsoft: a logo wall instead of three text cards ---------------------- */
+      .ms-wall {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 40px 32px;
+      }
+      .ms-tile {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+        text-align: center;
+        font-size: 22px;
+        font-weight: 700;
+        color: #eef1e7;
+      }
+      .ms-plate {
+        width: 100%;
+        height: 128px;
+        border-radius: 18px;
+        background: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .ms-plate img {
+        width: 64px;
+        height: 64px;
+        object-fit: contain;
+      }
+      .partner-grid .logo-plate {
+        width: 100%;
+      }
+
+      /* --- The Purple Team: the four agents' own art, big --------------------------- */
+      .pt-strip {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 32px;
+      }
+      .pt-tile {
+        margin: 0;
+      }
+      .pt-tile img {
+        display: block;
+        width: 100%;
+        aspect-ratio: 1;
+        object-fit: cover;
+        border-radius: 18px;
+        border: 2px solid rgba(196, 164, 255, 0.45);
+        box-shadow: 0 0 34px rgba(150, 90, 255, 0.28);
+      }
+      .pt-tile figcaption {
+        margin-top: 18px;
+        font-size: 23px;
+        line-height: 1.4;
+        color: var(--mist);
+      }
+      .pt-tile strong {
+        display: block;
+        font-size: 28px;
+        font-weight: 800;
+      }
+      .pt-red {
+        color: #ff6b6b;
+      }
+      .pt-blue {
+        color: #6cb6ff;
+      }
+      .pt-purple,
+      .pt-word {
+        color: #c4a4ff;
+      }
+      .pt-word {
+        text-shadow: 0 0 28px rgba(196, 164, 255, 0.55);
+      }
+      .reveal .pt-link {
+        color: #c4a4ff;
+        border-color: rgba(196, 164, 255, 0.55);
+      }
     </style>
   </head>
   <body>
@@ -72,7 +401,7 @@
     <div class="reveal">
       <div class="slides">
         <!-- Slide 1: Title -->
-        <section role="region" aria-label="Slide 1 of 23: Company overview">
+        <section role="region" aria-label="Slide 1 of 31: Company overview">
           <div
             class="cover-hero"
             role="img"
@@ -91,7 +420,7 @@
         </section>
 
         <!-- Slide 2: About KnowAll AI -->
-        <section class="scene" style="--scene: url('images/cyber-bridge-bluehour-landscape.jpg')" role="region" aria-label="Slide 2 of 23: About KnowAll AI">
+        <section class="scene" style="--scene: url('images/cyber-bridge-bluehour-landscape.jpg')" role="region" aria-label="Slide 2 of 31: About KnowAll AI">
           <div class="band">
             <div>
               <h2>About KnowAll AI</h2>
@@ -149,8 +478,23 @@
           </div>
         </section>
 
-        <!-- Slide 3: Who you're working with — humans and the agents that augment them -->
-        <section class="scene" style="--scene: url('images/scene-team-studio.jpg')" role="region" aria-label="Slide 3 of 23: Who you're working with">
+                <!-- Slide 3: The shift -->
+        <section class="scene" style="--scene: url('images/scene-summit.jpg')" role="region" aria-label="Slide 3 of 31: The shift">
+          <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
+          <div class="dark-inner shift">
+            <p class="kicker">The shift</p>
+            <h2 class="shift-line">
+              Building is cheap.<br />Building the <em>wrong thing</em> is expensive.
+            </h2>
+            <p class="lead">
+              AI has collapsed the cost of writing software. What is scarce now is knowing exactly
+              what to build &mdash; so every engagement starts with the requirements, not the code.
+            </p>
+          </div>
+        </section>
+
+<!-- Slide 4: Who you're working with — humans and the agents that augment them -->
+        <section class="scene" style="--scene: url('images/scene-team-studio.jpg')" role="region" aria-label="Slide 4 of 31: Who you're working with">
           <div class="band">
             <div>
               <h2>Who you&rsquo;re working with</h2>
@@ -310,16 +654,16 @@
           </div>
         </section>
 
-        <!-- Slide 4: Mission and vision -->
-        <section class="scene" style="--scene: url('images/cyber-rooftop-skyline-landscape.jpg')" role="region" aria-label="Slide 4 of 23: Mission and vision">
+                <!-- Slide 5: Mission and vision -->
+        <section class="scene" style="--scene: url('images/scene-dawn-mist.jpg')" role="region" aria-label="Slide 5 of 31: Mission and vision">
           <div class="band">
             <div>
               <h2>Mission &amp; vision</h2>
-              <p class="band-sub">Innovation through AI, Bitcoin and low-code</p>
+              <p class="band-sub">Walk in with an idea &mdash; walk out with working software</p>
             </div>
             <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
           </div>
-          <div class="content">
+          <div class="content mv">
             <div class="cards-2">
               <div class="card">
                 <div class="chip" aria-hidden="true">
@@ -328,10 +672,9 @@
                 <div>
                   <h4>Mission</h4>
                   <p>
-                    To spearhead innovation through the fusion of artificial intelligence, Bitcoin
-                    and low-code development, delivering high-impact projects faster than
-                    traditional teams &mdash; championing incentive systems that reward
-                    collaboration and excellence across teammates, AI agents and customers.
+                    Fuse AI, Bitcoin and low-code to deliver high-impact work faster than traditional
+                    teams &mdash; and reward everyone who creates the value: teammates, agents and
+                    customers.
                   </p>
                 </div>
               </div>
@@ -342,20 +685,33 @@
                 <div>
                   <h4>Vision</h4>
                   <p>
-                    To be globally recognised as pioneers seamlessly merging Bitcoin with AI and
-                    leading the way in incentive-driven collaboration &mdash; aligning incentives
-                    with the contributions of humans and AI agents to redefine industries.
+                    Idea to production in a single meeting &mdash; with humans and AI agents rewarded
+                    in proportion to what they contribute.
                   </p>
                 </div>
+              </div>
+            </div>
+            <div class="timeline">
+              <div class="timeline-point">
+                <h4>Today</h4>
+                <p>Solutions built with you in focused Agentic Delivery Workshops</p>
+              </div>
+              <div class="timeline-point">
+                <h4>Next</h4>
+                <p>The same solutions built live, in a two-hour meeting with your users</p>
+              </div>
+              <div class="timeline-point">
+                <h4>Beyond</h4>
+                <p>Business ideas become working software overnight</p>
               </div>
             </div>
           </div>
         </section>
 
-        <!-- Slide 5: Incentives -->
+        <!-- Slide 6: Incentives -->
         <section
           role="region"
-          aria-label="Slide 5 of 23: Incentives — teammates, copilots, customers"
+          aria-label="Slide 6 of 31: Incentives — teammates, copilots, customers"
         >
           <div class="dark-inner with-agent">
             <p class="kicker">What drives us</p>
@@ -372,8 +728,8 @@
           </div>
         </section>
 
-        <!-- Slide 6: Our customers -->
-        <section class="scene" style="--scene: url('images/cyber-street-empty-landscape.jpg')" role="region" aria-label="Slide 6 of 23: Our customers">
+        <!-- Slide 7: Our customers -->
+        <section class="scene" style="--scene: url('images/cyber-street-empty-landscape.jpg')" role="region" aria-label="Slide 7 of 31: Our customers">
           <div class="band">
             <div>
               <h2>Our customers</h2>
@@ -441,8 +797,8 @@
           </div>
         </section>
 
-        <!-- Slide 7: Service offerings -->
-        <section class="scene" style="--scene: url('images/scene-five-doors.jpg')" role="region" aria-label="Slide 7 of 23: Service offerings">
+        <!-- Slide 8: Service offerings -->
+        <section class="scene" style="--scene: url('images/scene-five-doors.jpg')" role="region" aria-label="Slide 8 of 31: Service offerings">
           <div class="band">
             <div>
               <h2>Service offerings</h2>
@@ -504,8 +860,8 @@
           </div>
         </section>
 
-        <!-- Slide 8: Service — Discovery Day -->
-        <section class="scene" style="--scene: url('images/scene-dawn-deck.jpg')" role="region" aria-label="Slide 8 of 23: Service — Discovery Day">
+        <!-- Slide 9: Service — Discovery Day -->
+        <section class="scene" style="--scene: url('images/scene-dawn-deck.jpg')" role="region" aria-label="Slide 9 of 31: Service — Discovery Day">
           <div class="band">
             <div>
               <h2>Service &middot; Discovery Day</h2>
@@ -585,8 +941,46 @@
           </div>
         </section>
 
-        <!-- Slide 9: Service — Agentic Delivery Workshop -->
-        <section class="scene" style="--scene: url('images/cyber-rooftop-empty-landscape.jpg')" role="region" aria-label="Slide 9 of 23: Service — Agentic Delivery Workshop">
+                <!-- Slide 10: Two stages, one journey -->
+        <section class="scene" style="--scene: url('images/scene-highway.jpg')" role="region" aria-label="Slide 10 of 31: Two stages, one journey">
+          <div class="band">
+            <div>
+              <h2>Two stages, one journey</h2>
+              <p class="band-sub">Prove it in a workshop &mdash; scale it as a Project</p>
+            </div>
+            <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
+          </div>
+          <div class="content" style="gap: 70px">
+            <p class="lead" style="max-width: 1500px">
+              Prove the idea small, then scale what works. Both stages run on our open-source
+              T-Minus-15 methodology, so nothing is thrown away between them.
+            </p>
+            <div class="journey">
+              <div class="stage">
+                <span class="step" aria-hidden="true">01</span>
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="icons.svg#i-zap" /></svg>
+                </div>
+                <h4>AGENTIC DELIVERY WORKSHOP</h4>
+                <p>2&ndash;4 days from idea to a working prototype that proves the concept before the bigger spend.</p>
+                <span class="journey-fact">&euro;2,000&ndash;&euro;4,500</span>
+              </div>
+              <div class="journey-arrow" aria-hidden="true">&rarr;</div>
+              <div class="stage">
+                <span class="step" aria-hidden="true">02</span>
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="icons.svg#i-rocket" /></svg>
+                </div>
+                <h4>PROJECTS</h4>
+                <p>Production-grade phases of 3&ndash;6 weeks, built in 2-to-3-week sprints with your stakeholders in the room.</p>
+                <span class="journey-fact">&euro;25k&ndash;&euro;100k per phase</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+<!-- Slide 11: Service — Agentic Delivery Workshop -->
+        <section class="scene" style="--scene: url('images/cyber-rooftop-empty-landscape.jpg')" role="region" aria-label="Slide 11 of 31: Service — Agentic Delivery Workshop">
           <div class="band">
             <div>
               <h2>Service &middot; Agentic Delivery Workshop</h2>
@@ -659,8 +1053,8 @@
           </div>
         </section>
 
-        <!-- Slide 10: Service — Projects -->
-        <section class="scene" style="--scene: url('images/cyber-tower-base-scale-landscape.jpg')" role="region" aria-label="Slide 10 of 23: Service — Projects">
+        <!-- Slide 12: Service — Projects -->
+        <section class="scene" style="--scene: url('images/cyber-tower-base-scale-landscape.jpg')" role="region" aria-label="Slide 12 of 31: Service — Projects">
           <div class="band">
             <div>
               <h2>Service &middot; Projects</h2>
@@ -740,8 +1134,8 @@
           </div>
         </section>
 
-        <!-- Slide 11: Service — Blended Squads -->
-        <section class="scene" style="--scene: url('images/scene-walkways.jpg')" role="region" aria-label="Slide 11 of 23: Service — Blended Squads">
+        <!-- Slide 13: Service — Blended Squads -->
+        <section class="scene" style="--scene: url('images/scene-walkways.jpg')" role="region" aria-label="Slide 13 of 31: Service — Blended Squads">
           <div class="band">
             <div>
               <h2>Service &middot; Blended Squads</h2>
@@ -811,10 +1205,10 @@
           </div>
         </section>
 
-        <!-- Slide 12: Service — Continuous Improvement Service Plans -->
+        <!-- Slide 14: Service — Continuous Improvement Service Plans -->
         <section class="scene" style="--scene: url('images/scene-observatory.jpg')"
           role="region"
-          aria-label="Slide 12 of 23: Service — Continuous Improvement Service Plans"
+          aria-label="Slide 14 of 31: Service — Continuous Improvement Service Plans"
         >
           <div class="band">
             <div>
@@ -887,8 +1281,8 @@
           </div>
         </section>
 
-        <!-- Slide 13: DevOps lifecycle -->
-        <section class="scene" style="--scene: url('images/scene-downpour.jpg')" role="region" aria-label="Slide 13 of 23: The T-Minus-15 lifecycle">
+        <!-- Slide 15: DevOps lifecycle -->
+        <section class="scene" style="--scene: url('images/scene-downpour.jpg')" role="region" aria-label="Slide 15 of 31: The T-Minus-15 lifecycle">
           <div class="dark-inner" style="padding: 96px 96px calc(40px + var(--ctl-band)); gap: 48px">
             <div>
               <p class="kicker">Our methodology &middot; a continuous Dev &amp; Ops loop</p>
@@ -941,8 +1335,8 @@
           </div>
         </section>
 
-        <!-- Slide 14: Deliverables — what, how and why -->
-        <section class="scene" style="--scene: url('images/scene-datacenter.jpg')" role="region" aria-label="Slide 14 of 23: Deliverables — what, how and why">
+        <!-- Slide 16: Deliverables — what, how and why -->
+        <section class="scene" style="--scene: url('images/scene-datacenter.jpg')" role="region" aria-label="Slide 16 of 31: Deliverables — what, how and why">
           <div class="band">
             <div>
               <h2>Deliverables</h2>
@@ -997,8 +1391,8 @@
           </div>
         </section>
 
-        <!-- Slide 15: Case study — invoice automation -->
-        <section class="scene" style="--scene: url('images/scene-rain-room.jpg')" role="region" aria-label="Slide 15 of 23: Case study — invoice automation">
+        <!-- Slide 17: Case study — invoice automation -->
+        <section class="scene" style="--scene: url('images/scene-rain-room.jpg')" role="region" aria-label="Slide 17 of 31: Case study — invoice automation">
           <div class="band">
             <div>
               <h2>Case study &middot; Invoice automation</h2>
@@ -1082,10 +1476,10 @@
           </div>
         </section>
 
-        <!-- Slide 16: Case study — health and safety inspection -->
+        <!-- Slide 18: Case study — health and safety inspection -->
         <section class="scene" style="--scene: url('images/scene-catwalk.jpg')"
           role="region"
-          aria-label="Slide 16 of 23: Case study — health and safety inspection"
+          aria-label="Slide 18 of 31: Case study — health and safety inspection"
         >
           <div class="band">
             <div>
@@ -1172,8 +1566,8 @@
           </div>
         </section>
 
-        <!-- Slide 17: Proof of work -->
-        <section class="scene" style="--scene: url('images/scene-pillars.jpg')" role="region" aria-label="Slide 17 of 23: Proof of work — who we have done this for">
+        <!-- Slide 19: Proof of work -->
+        <section class="scene" style="--scene: url('images/scene-pillars.jpg')" role="region" aria-label="Slide 19 of 31: Proof of work — who we have done this for">
           <div class="band">
             <div>
               <h2>Proof of work</h2>
@@ -1235,8 +1629,61 @@
           </div>
         </section>
 
-        <!-- Slide 18: T-Minus-15 -->
-        <section class="scene" style="--scene: url('images/cyber-high-vantage-landscape.jpg')" role="region" aria-label="Slide 18 of 23: The T-Minus-15 methodology">
+        <!-- Slide 20: Platforms and partners -->
+        <section class="scene" style="--scene: url('images/scene-boardroom.jpg')" role="region" aria-label="Slide 20 of 31: Platforms and partners">
+          <div class="band">
+            <div>
+              <h2>Platforms &amp; partners</h2>
+              <p class="band-sub">The technology we build on &mdash; and who takes it to market with us</p>
+            </div>
+            <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
+          </div>
+          <div class="content">
+            <div class="partner-groups">
+              <div>
+                <p class="partner-label">We build on</p>
+                <div class="partner-grid partner-grid--3">
+                <div class="card">
+                  <div class="logo-plate"><svg viewBox="0 0 96 96" width="44" height="44" role="img" aria-label="Microsoft">
+                      <path fill="#F25022" d="M0 0h45.5v45.5H0z" />
+                      <path fill="#7FBA00" d="M50.5 0H96v45.5H50.5z" />
+                      <path fill="#00A4EF" d="M0 50.5h45.5V96H0z" />
+                      <path fill="#FFB900" d="M50.5 50.5H96V96H50.5z" />
+                    </svg>
+                    <span class="plate-word">Microsoft</span></div>
+                  <p>Azure, Microsoft 365 and Power Platform &mdash; the cloud we build on.</p>
+                </div>
+                <div class="card">
+                  <div class="logo-plate"><img src="images/logos/anthropic-dark.svg" alt="Anthropic" /></div>
+                  <p>Claude &mdash; the frontier models behind our agents.</p>
+                </div>
+                <div class="card">
+                  <div class="logo-plate"><span class="plate-word">OpenAI</span></div>
+                  <p>GPT &mdash; the models behind our voice agents.</p>
+                </div>
+                </div>
+              </div>
+              <div>
+                <p class="partner-label">We go to market with</p>
+                <div class="partner-grid partner-grid--2">
+                  <div class="card">
+                    <a class="partner-link" href="https://www.eirbusiness.co.uk" target="_blank" rel="noopener noreferrer" aria-label="eir Business UK">
+                      <div class="logo-plate logo-plate--eir"><img class="eir-logo" src="images/logos/eir-business.svg" alt="eir business" /></div>
+                    </a>
+                    <p>Enterprise connectivity and infrastructure across Ireland.</p>
+                  </div>
+                <div class="card">
+                  <div class="logo-plate"><img src="images/logos/xma.png" alt="XMA" /></div>
+                  <p>Technology services and enterprise IT across the UK.</p>
+                </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Slide 21: T-Minus-15 -->
+        <section class="scene" style="--scene: url('images/cyber-high-vantage-landscape.jpg')" role="region" aria-label="Slide 21 of 31: The T-Minus-15 methodology">
           <div class="dark-inner" style="padding: 108px 96px calc(52px + var(--ctl-band))">
             <div style="display: flex; align-items: center; gap: 56px">
               <div style="flex: 1">
@@ -1273,8 +1720,8 @@
           </div>
         </section>
 
-        <!-- Slide 19: Our products -->
-        <section class="scene" style="--scene: url('images/scene-gallery.jpg')" role="region" aria-label="Slide 19 of 23: Our products">
+        <!-- Slide 22: Our products -->
+        <section class="scene" style="--scene: url('images/scene-gallery.jpg')" role="region" aria-label="Slide 22 of 31: Our products">
           <div class="band">
             <div>
               <h2>Our products</h2>
@@ -1340,8 +1787,8 @@
           </div>
         </section>
 
-        <!-- Slide 20: Our agents -->
-        <section class="scene" style="--scene: url('images/cyber-rooftop-empty-landscape.jpg')" role="region" aria-label="Slide 20 of 23: Our agents">
+        <!-- Slide 23: Our agents -->
+        <section class="scene" style="--scene: url('images/cyber-rooftop-empty-landscape.jpg')" role="region" aria-label="Slide 23 of 31: Our agents">
           <div class="band">
             <div>
               <h2>Our agents</h2>
@@ -1426,8 +1873,309 @@
           </div>
         </section>
 
-        <!-- Slide 21: Zaplie — rewards and incentives -->
-        <section class="scene" style="--scene: url('images/scene-particles.jpg')" role="region" aria-label="Slide 21 of 23: Zaplie — rewards and incentives">
+        <!-- Slide 24: Self-improving agents -->
+        <section class="scene" style="--scene: url('images/scene-interchange.jpg')" role="region" aria-label="Slide 24 of 31: Self-improving agents">
+          <div class="band">
+            <div>
+              <h2>Self-improving agents</h2>
+              <p class="band-sub">They ship their own upgrades &mdash; you approve every one</p>
+            </div>
+            <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
+          </div>
+          <div class="content" style="gap: 54px">
+            <figure class="cycle" aria-hidden="true">
+              <svg viewBox="0 0 1200 235" role="presentation" focusable="false">
+                <defs>
+                  <marker id="cyc-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                    <path d="M0 0 L10 5 L0 10 z" fill="#9dff0a" />
+                  </marker>
+                </defs>
+                <path class="cyc-line" d="M110 60 H1090" marker-end="url(#cyc-arrow)" />
+                <path class="cyc-return" d="M1090 60 C1150 60 1150 150 1090 150 H110 C50 150 50 60 110 60" marker-end="url(#cyc-arrow)" />
+                <g class="cyc-stops">
+                  <circle cx="110" cy="60" r="13" /><text x="110" y="30">Propose</text>
+                  <circle cx="437" cy="60" r="13" /><text x="437" y="30">Review</text>
+                  <circle cx="763" cy="60" r="13" /><text x="763" y="30">Merge</text>
+                  <circle cx="1090" cy="60" r="13" /><text x="1090" y="30">Measure</text>
+                </g>
+                <text class="cyc-caption" x="600" y="222">every cycle leaves the system better than it found it</text>
+              </svg>
+            </figure>
+            <div class="checks">
+              <p class="check">
+                <svg class="ic" aria-hidden="true"><use href="icons.svg#i-git-pull-request" /></svg>
+                <span><strong>Pull requests to their own code,</strong> reviewed and merged like any developer&rsquo;s</span>
+              </p>
+              <p class="check">
+                <svg class="ic" aria-hidden="true"><use href="icons.svg#i-refresh-cw" /></svg>
+                <span><strong>Learns from every outcome:</strong> corrections feed the next cycle</span>
+              </p>
+              <p class="check">
+                <svg class="ic" aria-hidden="true"><use href="icons.svg#i-trending-up" /></svg>
+                <span><strong>Compounding quality,</strong> better every week after go-live</span>
+              </p>
+              <p class="check">
+                <svg class="ic" aria-hidden="true"><use href="icons.svg#i-users" /></svg>
+                <span><strong>Human in the loop:</strong> nothing ships without your approval</span>
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Slide 25: Reverie agent memory -->
+        <section class="scene" style="--scene: url('images/scene-graph-sky.jpg')" role="region" aria-label="Slide 25 of 31: Reverie — agent memory">
+          <div class="band">
+            <div>
+              <h2>Reverie: memory that sleeps on it</h2>
+              <p class="band-sub">A Neo4j knowledge graph that consolidates overnight</p>
+            </div>
+            <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
+          </div>
+          <div class="content" style="gap: 34px">
+            <div class="memory-split">
+              <figure class="memory-graph" aria-hidden="true">
+                <svg viewBox="0 0 560 400" role="presentation" focusable="false">
+                  <defs>
+                    <radialGradient id="mg-glow">
+                      <stop offset="0%" stop-color="#9dff0a" stop-opacity=".5" />
+                      <stop offset="100%" stop-color="#9dff0a" stop-opacity="0" />
+                    </radialGradient>
+                  </defs>
+                  <g class="mg-edges">
+                    <path d="M138 88 L268 46" /><path d="M138 88 L232 176" />
+                    <path d="M268 46 L410 96" /><path d="M232 176 L410 96" />
+                    <path d="M232 176 L126 268" /><path d="M410 96 L456 214" />
+                    <path d="M126 268 L286 322" /><path d="M286 322 L456 214" />
+                    <path d="M456 214 L470 330" /><path d="M232 176 L286 322" />
+                    <path d="M410 96 L470 330" />
+                  </g>
+                  <g class="mg-edges mg-new">
+                    <path d="M138 88 L456 214" /><path d="M268 46 L126 268" />
+                    <path d="M232 176 L470 330" />
+                  </g>
+                  <g class="mg-nodes">
+                    <circle cx="138" cy="88" r="40" fill="url(#mg-glow)" />
+                    <circle cx="138" cy="88" r="15" /><text x="138" y="132">Person</text>
+                    <circle cx="268" cy="46" r="12" /><text x="268" y="24">Company</text>
+                    <circle cx="410" cy="96" r="34" fill="url(#mg-glow)" />
+                    <circle cx="410" cy="96" r="15" /><text x="410" y="140">Project</text>
+                    <circle cx="232" cy="176" r="12" /><text x="232" y="212">Place</text>
+                    <circle cx="126" cy="268" r="11" /><text x="126" y="302">Meeting</text>
+                    <circle cx="286" cy="322" r="11" /><text x="286" y="356">Decision</text>
+                    <circle cx="456" cy="214" r="30" fill="url(#mg-glow)" />
+                    <circle cx="456" cy="214" r="13" /><text x="456" y="256">Opportunity</text>
+                    <circle cx="470" cy="330" r="11" /><text x="470" y="364">Commitment</text>
+                  </g>
+                </svg>
+                <figcaption>Solid links were already known &mdash; dashed links were found overnight</figcaption>
+              </figure>
+              <div class="checks checks-stacked memory-points">
+              <p class="check">
+                <svg class="ic" aria-hidden="true"><use href="icons.svg#i-network" /></svg>
+                <span><strong>Concepts, not keywords:</strong> people, companies and projects, and how they connect</span>
+              </p>
+              <p class="check">
+                <svg class="ic" aria-hidden="true"><use href="icons.svg#i-moon" /></svg>
+                <span><strong>They sleep on it:</strong> overnight each agent consolidates the day, merges duplicates and strengthens what matters</span>
+              </p>
+              <p class="check">
+                <svg class="ic" aria-hidden="true"><use href="icons.svg#i-sprout" /></svg>
+                <span><strong>New connections surface:</strong> links nobody wrote down emerge from the graph itself</span>
+              </p>
+              </div>
+            </div>
+            <a class="github-link github-logo-link" href="https://github.com/knowall-ai/mcp-reverie" target="_blank" rel="noopener" aria-label="mcp-reverie, our open-source agent memory, on GitHub">
+              <svg class="ic gh-mark" aria-hidden="true"><use href="icons.svg#i-github" /></svg>
+              <span><strong>knowall-ai/mcp-reverie</strong> &mdash; open source, for any agent</span>
+            </a>
+          </div>
+        </section>
+
+        <!-- Slide 26: Presence -->
+        <section class="scene" style="--scene: url('images/scene-cyber-sky.jpg')" role="region" aria-label="Slide 26 of 31: Presence — agents in the room">
+          <div class="band">
+            <div>
+              <h2>Presence: agents in the room</h2>
+              <p class="band-sub">Our agents on your Teams calls &mdash; seen, heard and sharing</p>
+            </div>
+            <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
+          </div>
+          <div class="content feature">
+            <div class="feature-copy">
+              <p class="lead">
+                One shared media plane that lets any of our agents join the meeting like a colleague.
+              </p>
+              <div class="checks checks-stacked">
+              <p class="check">
+                <svg class="ic" aria-hidden="true"><use href="icons.svg#i-users" /></svg>
+                <span><strong>On Teams,</strong> online, joining calls and woken by Microsoft Graph events</span>
+              </p>
+              <p class="check">
+                <svg class="ic" aria-hidden="true"><use href="icons.svg#i-radio-tower" /></svg>
+                <span><strong>Hears and speaks in realtime,</strong> and knows who is speaking</span>
+              </p>
+              <p class="check">
+                <svg class="ic" aria-hidden="true"><use href="icons.svg#i-gauge" /></svg>
+                <span><strong>A live avatar</strong> with an on-video HUD of what it is doing</span>
+              </p>
+              <p class="check">
+                <svg class="ic" aria-hidden="true"><use href="icons.svg#i-send" /></svg>
+                <span><strong>Shares its screen</strong> to show the work as it happens</span>
+              </p>
+              </div>
+              <p class="feature-note">Sallie and Poppie use it today &mdash; memory stays separate, in Reverie.</p>
+            </div>
+            <figure class="feature-art">
+              <img src="images/presence-sallie.jpg" alt="Sallie on a Teams call: her robot avatar with live telemetry panels" />
+              <img class="feature-inset" src="images/presence-poppie.jpg" alt="Poppie on a call, rendered by the same Presence plane" />
+            </figure>
+          </div>
+        </section>
+
+        <!-- Slide 27: Enterprise-grade security -->
+        <section class="scene" style="--scene: url('images/scene-vault.jpg')" role="region" aria-label="Slide 27 of 31: Enterprise-grade security">
+          <div class="band">
+            <div>
+              <h2>Enterprise-grade security</h2>
+              <p class="band-sub">Built on Microsoft Azure &mdash; governed like any system you run</p>
+            </div>
+            <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
+          </div>
+          <div class="content" style="gap: 56px">
+            <div class="cards-2 security">
+              <div class="card">
+                <div class="chip" aria-hidden="true"><svg class="ic"><use href="icons.svg#i-shield-check" /></svg></div>
+                <div>
+                  <h4>Data protection</h4>
+                  <p>Encrypted in transit and at rest, managed keys, and data residency you choose.</p>
+                </div>
+              </div>
+              <div class="card">
+                <div class="chip" aria-hidden="true"><svg class="ic"><use href="icons.svg#i-key-round" /></svg></div>
+                <div>
+                  <h4>Access control</h4>
+                  <p>Microsoft Entra ID, role-based access and MFA on every agent interaction.</p>
+                </div>
+              </div>
+              <div class="card">
+                <div class="chip" aria-hidden="true"><svg class="ic"><use href="icons.svg#i-scroll-text" /></svg></div>
+                <div>
+                  <h4>Audit &amp; compliance</h4>
+                  <p>A complete audit trail of what every agent did, plugged into your governance.</p>
+                </div>
+              </div>
+              <div class="card">
+                <div class="chip" aria-hidden="true"><svg class="ic"><use href="icons.svg#i-network" /></svg></div>
+                <div>
+                  <h4>Zero trust</h4>
+                  <p>Network isolation and secure endpoints, with rate limiting and threat detection.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Slide 28: Microsoft integration -->
+        <section class="scene" style="--scene: url('images/scene-controlroom.jpg')" role="region" aria-label="Slide 28 of 31: Seamless Microsoft integration">
+          <div class="band">
+            <div>
+              <h2>Built on the Microsoft you own</h2>
+              <p class="band-sub">Seamless Microsoft integration, from Teams to Azure</p>
+            </div>
+            <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
+          </div>
+          <div class="content" style="gap: 56px">
+            <p class="lead" style="max-width: 1560px">
+              Agents and copilots that live in Teams, Outlook and SharePoint, and build on the
+              Azure, Power Platform and data you already have &mdash; no new silo to adopt.
+            </p>
+            <div class="ms-wall" role="list" aria-label="Microsoft technologies we build on">
+              <div class="ms-tile" role="listitem">
+                <div class="ms-plate"><svg viewBox="0 0 96 96" width="56" height="56" role="img" aria-label="Microsoft 365">
+                    <path fill="#F25022" d="M0 0h45.5v45.5H0z" />
+                    <path fill="#7FBA00" d="M50.5 0H96v45.5H50.5z" />
+                    <path fill="#00A4EF" d="M0 50.5h45.5V96H0z" />
+                    <path fill="#FFB900" d="M50.5 50.5H96V96H50.5z" />
+                  </svg></div>
+                <span>Microsoft 365</span>
+              </div>
+              <div class="ms-tile" role="listitem">
+                <div class="ms-plate"><img src="images/microsoft-copilot-logo.png" alt="" style="width: auto; height: 84px" /></div>
+                <span>Microsoft Copilot</span>
+              </div>
+              <div class="ms-tile" role="listitem">
+                <div class="ms-plate"><img src="images/logos/copilot-studio.svg" alt="" /></div>
+                <span>Copilot Studio</span>
+              </div>
+              <div class="ms-tile" role="listitem">
+                <div class="ms-plate"><img src="images/logos/ai-foundry.svg" alt="" /></div>
+                <span>Azure AI Foundry</span>
+              </div>
+              <div class="ms-tile" role="listitem">
+                <div class="ms-plate"><img src="images/logos/power-platform.svg" alt="" /></div>
+                <span>Power Platform</span>
+              </div>
+              <div class="ms-tile" role="listitem">
+                <div class="ms-plate"><img src="images/logos/azure.svg" alt="" /></div>
+                <span>Microsoft Azure</span>
+              </div>
+              <div class="ms-tile" role="listitem">
+                <div class="ms-plate"><img src="images/logos/azure-devops.svg" alt="" /></div>
+                <span>Azure DevOps</span>
+              </div>
+              <div class="ms-tile" role="listitem">
+                <div class="ms-plate"><img src="images/logos/fabric.svg" alt="" /></div>
+                <span>Microsoft Fabric</span>
+              </div>
+              <div class="ms-tile" role="listitem">
+                <div class="ms-plate"><img src="images/logos/dataverse.svg" alt="" /></div>
+                <span>Dataverse</span>
+              </div>
+              <div class="ms-tile" role="listitem">
+                <div class="ms-plate"><img src="images/logos/sharepoint.svg" alt="" /></div>
+                <span>SharePoint</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Slide 29: The Purple Team -->
+        <section class="scene" style="--scene: url('images/divider-purple-team-core.jpg')" role="region" aria-label="Slide 29 of 31: The Purple Team — continuous AI security">
+          <div class="band">
+            <div>
+              <h2>The <span class="pt-word">Purple</span> Team</h2>
+              <p class="band-sub">Break it before they do &mdash; continuous AI security</p>
+            </div>
+            <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
+          </div>
+          <div class="content" style="gap: 44px">
+            <div class="pt-strip">
+              <figure class="pt-tile">
+                <img src="images/purple-team/pennie-attack.jpg" alt="" />
+                <figcaption><strong class="pt-red">Pennie attacks</strong> your apps the way a real attacker would</figcaption>
+              </figure>
+              <figure class="pt-tile">
+                <img src="images/purple-team/ollie-defend.jpg" alt="" />
+                <figcaption><strong class="pt-blue">Ollie defends</strong> watching every new advisory, around the clock</figcaption>
+              </figure>
+              <figure class="pt-tile">
+                <img src="images/purple-team/ollie-fix.jpg" alt="" />
+                <figcaption><strong class="pt-blue">Ollie fixes</strong> raising the patch as a pull request</figcaption>
+              </figure>
+              <figure class="pt-tile">
+                <img src="images/purple-team/poppie-report.jpg" alt="" />
+                <figcaption><strong class="pt-purple">Poppie runs the loop</strong> and reports what changed</figcaption>
+              </figure>
+            </div>
+            <a class="github-link pt-link" href="purple-team.html">
+              <svg class="ic" aria-hidden="true"><use href="icons.svg#i-shield-check" /></svg>
+              <span>See the Purple Team deck</span>
+            </a>
+          </div>
+        </section>
+
+        <!-- Slide 30: Zaplie — rewards and incentives -->
+        <section class="scene" style="--scene: url('images/scene-particles.jpg')" role="region" aria-label="Slide 30 of 31: Zaplie — rewards and incentives">
           <div class="band">
             <div>
               <h2>Zaplie &middot; Rewards &amp; incentives</h2>
@@ -1491,73 +2239,8 @@
           </div>
         </section>
 
-        <!-- Slide 22: Build — AI agents and Microsoft Copilots -->
-        <section class="scene" style="--scene: url('images/scene-serverhall.jpg')"
-          role="region"
-          aria-label="Slide 22 of 23: Build — AI agents and Microsoft Copilots"
-        >
-          <div class="band">
-            <div>
-              <h2>AI agents &amp; Copilots</h2>
-              <p class="band-sub">Tailored assistants, from single copilots to multi-agent teams</p>
-            </div>
-            <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
-          </div>
-          <div class="content">
-            <div class="cards-2">
-              <div class="card">
-                <div class="chip" aria-hidden="true">
-                  <svg class="ic"><use href="icons.svg#i-zap" /></svg>
-                </div>
-                <div>
-                  <h4>Microsoft Copilot</h4>
-                  <p>
-                    Tailored Microsoft Copilots that integrate with your existing systems and
-                    workflows &mdash; built on the Microsoft Bot Framework for robust, scalable
-                    conversational experiences across channels.
-                  </p>
-                </div>
-              </div>
-              <div class="card">
-                <div class="chip" aria-hidden="true">
-                  <svg class="ic"><use href="icons.svg#i-network" /></svg>
-                </div>
-                <div>
-                  <h4>Multi-agent teams (AutoGen)</h4>
-                  <p>
-                    Collaborative multi-agent teams built on Microsoft AutoGen &mdash; specialised
-                    agents with distinct roles, coordinated problem-solving, and human-in-the-loop
-                    oversight.
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div class="checks">
-              <p class="check">
-                <svg class="ic" aria-hidden="true"><use href="icons.svg#i-check" /></svg>
-                <span><strong>Microsoft 365 and Teams</strong> integration out of the box</span>
-              </p>
-              <p class="check">
-                <svg class="ic" aria-hidden="true"><use href="icons.svg#i-file-text" /></svg>
-                <span><strong>Custom knowledge bases</strong> and data sources</span>
-              </p>
-              <p class="check">
-                <svg class="ic" aria-hidden="true"><use href="icons.svg#i-zap" /></svg>
-                <span
-                  ><strong>Full Power Platform automations</strong> (Apps, Automate, Pages,
-                  BI)</span
-                >
-              </p>
-              <p class="check">
-                <svg class="ic" aria-hidden="true"><use href="icons.svg#i-users" /></svg>
-                <span><strong>Human-in-the-loop</strong> collaboration and oversight</span>
-              </p>
-            </div>
-          </div>
-        </section>
-
-        <!-- Slide 23: Contact -->
-        <section role="region" aria-label="Slide 23 of 23: Let&rsquo;s build together">
+                <!-- Slide 31: Contact -->
+        <section role="region" aria-label="Slide 31 of 31: Let&rsquo;s build together">
           <div class="cta-top">
             <h2>Let&rsquo;s build,<br />together.</h2>
             <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
@@ -1571,8 +2254,8 @@
               </p>
               <a
                 class="cta-button"
-                href="mailto:Ben.Weeks@KnowAll.ai"
-                aria-label="Email Ben Weeks at KnowAll AI"
+                href="mailto:hello@knowall.ai?subject=Company%20overview%20enquiry"
+                aria-label="Email KnowAll AI at hello@knowall.ai"
               >
                 <svg class="ic" aria-hidden="true"><use href="icons.svg#i-send" /></svg>
                 Get in touch
@@ -1580,16 +2263,12 @@
             </div>
             <div class="contact-row">
               <div class="contact-item">
-                <svg class="ic" aria-hidden="true"><use href="icons.svg#i-users" /></svg>
-                <span>Ben Weeks &mdash; Chief Builder</span>
-              </div>
-              <div class="contact-item">
-                <svg class="ic" aria-hidden="true"><use href="icons.svg#i-phone" /></svg>
-                <a href="tel:+447968847178">+44 7968 847178</a>
-              </div>
-              <div class="contact-item">
                 <svg class="ic" aria-hidden="true"><use href="icons.svg#i-mail" /></svg>
-                <a href="mailto:Ben.Weeks@KnowAll.ai">Ben.Weeks@KnowAll.ai</a>
+                <a href="mailto:hello@knowall.ai?subject=Company%20overview%20enquiry">hello@knowall.ai</a>
+              </div>
+              <div class="contact-item">
+                <svg class="ic" aria-hidden="true"><use href="icons.svg#i-globe" /></svg>
+                <a href="https://www.knowall.ai">knowall.ai</a>
               </div>
             </div>
           </div>
