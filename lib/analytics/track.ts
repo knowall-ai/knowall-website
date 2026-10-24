@@ -16,7 +16,7 @@ export const MAX_MESSAGE = 2000;
 export const MAX_REPLY = 4000;
 
 function requestHost(req: Request): string {
-  return req.headers.get('x-forwarded-host') || req.headers.get('host') || 'www.knowall.ai';
+  return req.headers.get('host') || 'www.knowall.ai';
 }
 
 /** Visitor id and geolocation network for a request; both omitted when opted out. */

@@ -156,7 +156,8 @@ describe('App Insights chat event', () => {
       turn: 2,
     });
 
-    expect(sent).toHaveLength(1);
+    // Sent in the background, off the reply's critical path
+    await vi.waitFor(() => expect(sent).toHaveLength(1));
     const [envelope] = JSON.parse(sent[0]);
     expect(envelope.data.baseData.name).toBe('SallieChatTurn');
     expect(envelope.data.baseData.properties).toMatchObject({
@@ -182,5 +183,36 @@ describe('App Insights chat event', () => {
     expect(fetchMock).not.toHaveBeenCalled();
     vi.unstubAllGlobals();
     vi.unstubAllEnvs();
+  });
+});
+
+describe('retention', () => {
+  it('prunes chat log entries older than 30 days', async () => {
+    const old = new Date(Date.now() - 31 * 86_400_000).toISOString();
+    fs.mkdirSync(path.join(tempDir, 'logs'), { recursive: true });
+    fs.writeFileSync(
+      logFilePath(),
+      JSON.stringify([
+        { id: 'old', timestamp: old, userMessage: 'a', assistantResponse: 'b', userIp: '1.2.3.4' },
+      ])
+    );
+    await logger.logChat('New', 'Reply', 'conv-new');
+    const logs = JSON.parse(fs.readFileSync(logFilePath(), 'utf-8'));
+    expect(logs.map((l: { id: string }) => l.id)).toEqual(['conv-new']);
+  });
+
+  it('prunes on read too', async () => {
+    const old = new Date(Date.now() - 40 * 86_400_000).toISOString();
+    const fresh = new Date().toISOString();
+    fs.mkdirSync(path.join(tempDir, 'logs'), { recursive: true });
+    fs.writeFileSync(
+      logFilePath(),
+      JSON.stringify([
+        { id: 'old', timestamp: old, userMessage: 'a', assistantResponse: 'b' },
+        { id: 'fresh', timestamp: fresh, userMessage: 'c', assistantResponse: 'd' },
+      ])
+    );
+    expect((await logger.getAllChatLogs()).map((l) => l.id)).toEqual(['fresh']);
+    expect(JSON.parse(fs.readFileSync(logFilePath(), 'utf-8'))).toHaveLength(1);
   });
 });

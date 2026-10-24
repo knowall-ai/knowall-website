@@ -60,11 +60,13 @@ export default function PrivacyPolicyPage() {
         Across www.knowall.ai we count visits without cookies or anything else stored on your
         device, so there is no consent banner. When a page loads, your browser tells our own server
         which page it was and, on arrival, which site linked you here (without its query string).
-        The server turns your IP address and browser into an anonymous code that changes every day,
-        so a visit can be counted once but you can&apos;t be followed from day to day. Your full IP
-        address is never stored or sent on: only its network part goes to Microsoft Azure
-        Application Insights, in the UK, to work out the country and city, and Application Insights
-        then discards it. Records are kept for 90 days.
+        The server turns your IP address and browser into an anonymous code using that day&apos;s
+        salt, a secret key that changes every day and is only held in memory for the day, so a visit
+        can be counted once but you can&apos;t be followed from day to day, and the code can&apos;t
+        be turned back into your address. Your full IP address isn&apos;t kept for this or sent on:
+        only its network part goes to Microsoft Azure Application Insights, in the UK, to work out
+        the country and city, and Application Insights then discards it. These records are kept for
+        90 days.
       </p>
       <p>
         If your browser sends <strong className="text-white">Do Not Track</strong> or{' '}
@@ -73,11 +75,11 @@ export default function PrivacyPolicyPage() {
       </p>
       <p>
         Conversations with Sallie, our AI assistant, are kept so we can follow up and improve her:
-        what you wrote and her replies, the page you were on and the country you were in. Only the
-        website server&apos;s own chat log, which we use to stop abuse, notes your IP address.
-        Please don&apos;t share anything sensitive with her. With Do Not Track or Global Privacy
-        Control on, the conversation is kept without a location or visitor code. Email
-        hello@knowall.ai to have a conversation deleted.
+        what you wrote and her replies, the page you were on and the country you were in, for 90
+        days. The website server also keeps its own chat log, with your IP address, to stop abuse;
+        entries in it are deleted after 30 days. Please don&apos;t share anything sensitive with
+        her. With Do Not Track or Global Privacy Control on, the conversation is kept without a
+        location or visitor code. Email hello@knowall.ai to have a conversation deleted.
       </p>
 
       <h2 className="text-2xl font-semibold text-white">Questions</h2>

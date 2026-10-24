@@ -33,6 +33,8 @@ export const LIMITS = {
     speak: () => envInt('SALLIE_LIMIT_SPEAK_PER_IP', 30),
     listen: () => envInt('SALLIE_LIMIT_LISTEN_PER_IP', 30),
     contact: () => envInt('CONTACT_LIMIT_PER_IP', 5),
+    // Page-view beacon: one per page opened; generous for a reader, tight for a script
+    collect: () => envInt('COLLECT_LIMIT_PER_IP', 120),
   },
   windowMs: () => envInt('SALLIE_LIMIT_WINDOW_MINUTES', 10) * 60 * 1000,
   /** Requests per route per UTC day, across all visitors. */
@@ -41,12 +43,14 @@ export const LIMITS = {
     speak: () => envInt('SALLIE_BUDGET_SPEAK_PER_DAY', 1500),
     listen: () => envInt('SALLIE_BUDGET_LISTEN_PER_DAY', 1500),
     contact: () => envInt('CONTACT_BUDGET_PER_DAY', 200),
+    // Caps App Insights ingestion (about 1 KB a view) whatever the per-IP spread
+    collect: () => envInt('COLLECT_BUDGET_PER_DAY', 20000),
   },
   /** Visitor messages allowed in one conversation. */
   messagesPerConversation: () => envInt('SALLIE_LIMIT_MESSAGES_PER_CONVERSATION', 40),
 } as const;
 
-export type Route = 'chat' | 'speak' | 'listen' | 'contact';
+export type Route = 'chat' | 'speak' | 'listen' | 'contact' | 'collect';
 
 export interface LimitResult {
   ok: boolean;

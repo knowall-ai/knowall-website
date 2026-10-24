@@ -9,6 +9,7 @@ import {
 import {
   cleanPath,
   cleanReferrer,
+  dailySalt,
   isBot,
   optedOut,
   truncate,
@@ -92,6 +93,15 @@ describe('privacy helpers', () => {
     expect(visitorId('198.51.100.1', UA, day1)).not.toBe(id);
   });
 
+  it('derives the day salt from ANALYTICS_SALT and the date', () => {
+    vi.stubEnv('ANALYTICS_SALT', 'salt-a');
+    const a = dailySalt(new Date('2026-10-24T01:00:00Z'));
+    expect(dailySalt(new Date('2026-10-24T23:00:00Z')).equals(a)).toBe(true);
+    expect(dailySalt(new Date('2026-10-25T01:00:00Z')).equals(a)).toBe(false);
+    vi.stubEnv('ANALYTICS_SALT', 'salt-b');
+    expect(dailySalt(new Date('2026-10-24T01:00:00Z')).equals(a)).toBe(false);
+  });
+
   it('respects DNT and GPC', () => {
     expect(optedOut(new Headers({ dnt: '1' }))).toBe(true);
     expect(optedOut(new Headers({ 'sec-gpc': '1' }))).toBe(true);
@@ -116,6 +126,9 @@ describe('privacy helpers', () => {
     expect(cleanReferrer('https://knowall.ai/shop', 'www.knowall.ai')).toBe('');
     expect(cleanReferrer('javascript:alert(1)', 'www.knowall.ai')).toBe('');
     expect(truncate('abcdef', 4)).toBe('abc…');
+    // Code points, not UTF-16 units: an emoji is never cut in half
+    expect(truncate('ab😀😀😀', 4)).toBe('ab😀…');
+    expect(truncate('😀😀', 2)).toBe('😀😀');
   });
 });
 

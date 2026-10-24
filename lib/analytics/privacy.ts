@@ -4,14 +4,15 @@ import { createHmac, randomBytes } from 'node:crypto';
  * Cookieless, anonymous visitor counting (the approach Plausible and Fathom use).
  *
  * Nothing is stored on the visitor's device, so PECR needs no consent banner.
- * A visitor is a keyed hash of their address and browser, with a key that
- * changes every UTC day, so the same person can't be followed from one day to
- * the next and the hash can't be turned back into an address. The address
- * itself is only held in memory for the hash.
+ * A visitor is a keyed hash of their address and browser. The key is the day's
+ * salt: an HMAC of ANALYTICS_SALT and the UTC date, so it rotates every day and
+ * the same person can't be followed from one day to the next. Only today's
+ * salt is held, in memory; no salt or address is ever written anywhere, and the
+ * hash can't be turned back into an address.
  *
- * Set ANALYTICS_SALT on the App Service so every instance (and a restart) uses
- * the same daily key; without it each process makes a random one, which only
- * means a visitor may be counted twice on a day the site restarts.
+ * ANALYTICS_SALT (an App Service setting) keeps the day's salt the same across
+ * instances and restarts. Without it each process uses a random secret, which
+ * only means a visitor may be counted twice on a day the site restarts.
  */
 
 let processSecret: string | null = null;
@@ -22,13 +23,26 @@ function secret(): string {
   return processSecret;
 }
 
-/** The UTC day, e.g. 2026-10-24: the key rotates when it changes. */
+/** The UTC day, e.g. 2026-10-24: the salt rotates when it changes. */
 export const utcDay = (now: Date) => now.toISOString().slice(0, 10);
+
+/** Today's salt only: a new day replaces it, so earlier salts aren't kept. */
+let current: { day: string; secret: string; salt: Buffer } | null = null;
+export function dailySalt(now = new Date()): Buffer {
+  const day = utcDay(now);
+  const s = secret();
+  if (!current || current.day !== day || current.secret !== s) {
+    current = { day, secret: s, salt: createHmac('sha256', s).update(`salt:${day}`).digest() };
+  }
+  return current.salt;
+}
 
 /** A 16-hex-character id for this address and browser, on this UTC day only. */
 export function visitorId(ip: string, userAgent: string, now = new Date()): string {
-  const dayKey = createHmac('sha256', secret()).update(utcDay(now)).digest();
-  return createHmac('sha256', dayKey).update(`${ip}|${userAgent}`).digest('hex').slice(0, 16);
+  return createHmac('sha256', dailySalt(now))
+    .update(`${ip}|${userAgent}`)
+    .digest('hex')
+    .slice(0, 16);
 }
 
 /** Do Not Track or Global Privacy Control: the visitor has asked not to be counted. */
@@ -73,7 +87,8 @@ export function cleanReferrer(value: unknown, siteHost: string): string {
   }
 }
 
-/** Shortens text for an event property, marking the cut. */
+/** Shortens text for an event property, marking the cut. Counts code points, so emoji aren't split. */
 export function truncate(value: string, max: number): string {
-  return value.length <= max ? value : `${value.slice(0, max - 1)}…`;
+  const chars = Array.from(value);
+  return chars.length <= max ? value : `${chars.slice(0, max - 1).join('')}…`;
 }
