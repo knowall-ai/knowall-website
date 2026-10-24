@@ -114,6 +114,87 @@
         gap: 34px;
       }
 
+      /* --- Works with what you already run: a logo wall, explained on hover --- */
+      .tool-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 26px 16px;
+        max-width: 1040px;
+      }
+      .tool {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        text-align: center;
+        outline: none;
+      }
+      .tool-plate {
+        width: 100%;
+        height: 92px;
+        border-radius: 16px;
+        background: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 10px 26px rgba(0, 0, 0, 0.45);
+        transition: transform 0.16s ease, box-shadow 0.16s ease;
+      }
+      .tool-plate img {
+        width: 52px;
+        height: 52px;
+        object-fit: contain;
+      }
+      .tool:hover .tool-plate,
+      .tool:focus-visible .tool-plate {
+        transform: translateY(-4px);
+        box-shadow: 0 0 0 3px var(--lime), 0 14px 30px rgba(0, 0, 0, 0.55);
+      }
+      .tool-name {
+        font-size: 16px;
+        font-weight: 700;
+        line-height: 1.25;
+        color: #dbe3ea;
+      }
+      .tool-tip {
+        position: absolute;
+        bottom: calc(100% + 12px);
+        left: 50%;
+        width: 250px;
+        transform: translateX(-50%) translateY(8px);
+        background: #14140f;
+        border: 1px solid var(--lime);
+        border-radius: 14px;
+        padding: 14px 16px;
+        font-size: 17px;
+        line-height: 1.45;
+        color: #e6e9de;
+        text-align: left;
+        opacity: 0;
+        pointer-events: none;
+        transition: 0.18s ease;
+        box-shadow: 0 22px 44px rgba(0, 0, 0, 0.65);
+        z-index: 6;
+      }
+      .tool:hover .tool-tip,
+      .tool:focus-visible .tool-tip {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+      .tool:nth-child(7n + 1) .tool-tip {
+        left: 0;
+        transform: translateY(8px);
+      }
+      .tool:nth-child(7n + 1):hover .tool-tip,
+      .tool:nth-child(7n + 1):focus-visible .tool-tip {
+        transform: translateY(0);
+      }
+      .tool-hint {
+        font-size: 18px;
+        color: var(--mist);
+      }
+
       .dark-inner.with-agent .col--wide {
         max-width: 1180px;
         gap: 30px;
@@ -808,75 +889,79 @@
             <div class="col col--wide">
               <p class="kicker">Nothing new to install</p>
               <h2>Works with what<br />you already run.</h2>
-              <div class="cards-2">
-                <div class="card">
-                  <div class="chip" aria-hidden="true">
-                    <svg class="ic"><use href="icons.svg#i-github" /></svg>
-                  </div>
-                  <div>
-                    <h4>Code and delivery</h4>
-                    <p>GitHub, Azure DevOps, Dependabot and Renovate, CodeRabbit where you use it.</p>
-                  </div>
+              <div class="tool-grid" role="list" aria-label="Tools it works with; hover or focus a logo for what it does">
+                <div class="tool" role="listitem" tabindex="0">
+                  <div class="tool-plate"><img src="images/logos/github.svg" alt="" /></div>
+                  <div class="tool-name">GitHub</div>
+                  <div class="tool-tip" role="tooltip">Repos, issues and pull requests: where every fix lands for you to review.</div>
                 </div>
-                <div class="card">
-                  <div class="chip" aria-hidden="true">
-                    <svg class="ic"><use href="icons.svg#i-search" /></svg>
-                  </div>
-                  <div>
-                    <h4>Security scanning</h4>
-                    <p>GitHub Advanced Security, ZAP (Zed Attack Proxy), Nuclei.</p>
-                  </div>
+                <div class="tool" role="listitem" tabindex="0">
+                  <div class="tool-plate"><img src="images/logos/azure-devops.svg" alt="" /></div>
+                  <div class="tool-name">Azure DevOps</div>
+                  <div class="tool-tip" role="tooltip">Repos, boards and pipelines, for teams that live in Microsoft.</div>
                 </div>
-                <div class="card">
-                  <div class="chip" aria-hidden="true">
-                    <svg class="ic"><use href="icons.svg#i-shield-check" /></svg>
-                  </div>
-                  <div>
-                    <h4>Microsoft security</h4>
-                    <p>Microsoft Defender for Cloud, Microsoft Sentinel, Azure Lighthouse.</p>
-                  </div>
+                <div class="tool" role="listitem" tabindex="0">
+                  <div class="tool-plate"><img src="images/logos/github.svg" alt="" /></div>
+                  <div class="tool-name">GitHub Advanced Security</div>
+                  <div class="tool-tip" role="tooltip">Code, secret and dependency scanning, in GitHub or Azure DevOps.</div>
                 </div>
-                <div class="card">
-                  <div class="chip" aria-hidden="true">
-                    <svg class="ic"><use href="icons.svg#i-key-round" /></svg>
-                  </div>
-                  <div>
-                    <h4>Identity and access</h4>
-                    <p>Microsoft Entra ID: agents as named guests or identities you can switch off.</p>
-                  </div>
+                <div class="tool" role="listitem" tabindex="0">
+                  <div class="tool-plate"><img src="images/logos/dependabot.svg" alt="" /></div>
+                  <div class="tool-name">Dependabot</div>
+                  <div class="tool-tip" role="tooltip">Automatic pull requests that bump vulnerable dependencies.</div>
                 </div>
-                <div class="card">
-                  <div class="chip chip-white" aria-hidden="true">
-                    <img
-                      src="images/logos/ai-foundry.svg"
-                      alt=""
-                      style="width: 38px; height: 38px; object-fit: contain"
-                    />
-                  </div>
-                  <div>
-                    <h4>AI models</h4>
-                    <p>Microsoft Foundry: OpenAI and Claude models, optionally in your own tenant.</p>
-                  </div>
+                <div class="tool" role="listitem" tabindex="0">
+                  <div class="tool-plate"><img src="images/logos/renovate.svg" alt="" /></div>
+                  <div class="tool-name">Renovate</div>
+                  <div class="tool-tip" role="tooltip">Dependency updates on any platform, grouped and scheduled.</div>
                 </div>
-                <div class="card">
-                  <div class="chip" aria-hidden="true">
-                    <svg class="ic"><use href="icons.svg#i-clock" /></svg>
-                  </div>
-                  <div>
-                    <h4>Time and billing</h4>
-                    <p>Thyme and Business Central: agents log the real hours they work.</p>
-                  </div>
+                <div class="tool" role="listitem" tabindex="0">
+                  <div class="tool-plate"><img src="images/logos/coderabbit.svg" alt="" /></div>
+                  <div class="tool-name">CodeRabbit</div>
+                  <div class="tool-tip" role="tooltip">AI review on every pull request, where you already use it.</div>
+                </div>
+                <div class="tool" role="listitem" tabindex="0">
+                  <div class="tool-plate"><img src="images/logos/zap.svg" alt="" /></div>
+                  <div class="tool-name">ZAP</div>
+                  <div class="tool-tip" role="tooltip">Zed Attack Proxy: Pennie’s scanner for live web apps.</div>
+                </div>
+                <div class="tool" role="listitem" tabindex="0">
+                  <div class="tool-plate"><img src="images/logos/nuclei.jpg" alt="" /></div>
+                  <div class="tool-name">Nuclei</div>
+                  <div class="tool-tip" role="tooltip">Fast, template-based checks for known vulnerabilities.</div>
+                </div>
+                <div class="tool" role="listitem" tabindex="0">
+                  <div class="tool-plate"><img src="images/logos/defender-for-cloud.svg" alt="" /></div>
+                  <div class="tool-name">Defender for Cloud</div>
+                  <div class="tool-tip" role="tooltip">Microsoft’s posture and threat protection across your Azure.</div>
+                </div>
+                <div class="tool" role="listitem" tabindex="0">
+                  <div class="tool-plate"><img src="images/logos/sentinel.svg" alt="" /></div>
+                  <div class="tool-name">Microsoft Sentinel</div>
+                  <div class="tool-tip" role="tooltip">Your SIEM: Ollie reads its alerts and incidents.</div>
+                </div>
+                <div class="tool" role="listitem" tabindex="0">
+                  <div class="tool-plate"><img src="images/logos/lighthouse.svg" alt="" /></div>
+                  <div class="tool-name">Azure Lighthouse</div>
+                  <div class="tool-tip" role="tooltip">We work in your Azure from ours, with your consent and a full audit trail.</div>
+                </div>
+                <div class="tool" role="listitem" tabindex="0">
+                  <div class="tool-plate"><img src="images/logos/entra-id.svg" alt="" /></div>
+                  <div class="tool-name">Microsoft Entra ID</div>
+                  <div class="tool-tip" role="tooltip">Each agent is a named identity you can see and switch off.</div>
+                </div>
+                <div class="tool" role="listitem" tabindex="0">
+                  <div class="tool-plate"><img src="images/logos/ai-foundry.svg" alt="" /></div>
+                  <div class="tool-name">Microsoft Foundry</div>
+                  <div class="tool-tip" role="tooltip">OpenAI and Claude models, optionally in your own tenant.</div>
+                </div>
+                <div class="tool" role="listitem" tabindex="0">
+                  <div class="tool-plate"><img src="images/logos/azure.svg" alt="" /></div>
+                  <div class="tool-name">Microsoft Azure</div>
+                  <div class="tool-tip" role="tooltip">Where the portal and the agents run, ours or yours.</div>
                 </div>
               </div>
-              <div class="pill-row" role="list" aria-label="Where it runs">
-                <span class="pill pill-logo" role="listitem"
-                  ><img src="images/logos/azure-devops.svg" alt="" />Azure DevOps</span
-                >
-                <span class="pill pill-logo" role="listitem"
-                  ><img src="images/logos/azure.svg" alt="" />Microsoft Azure</span
-                >
-                <span class="pill" role="listitem">Bills as hours on a KnowAll support plan (CISP), new or existing</span>
-              </div>
+              <p class="tool-hint">Hover over a logo to see what it does.</p>
             </div>
           </div>
         </section>
