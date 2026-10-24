@@ -28,6 +28,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 import SallieStage, { Starfield } from '@/components/sallie-stage';
 import { pickGreeting, type Greeting } from '@/lib/sallie-greetings';
+import type { SallieContext } from '@/lib/sallie-context';
 import { signOffMailto } from '@/lib/sallie-signoff';
 import { useSallieVoice, useSpeechInput } from '@/components/sallie-voice';
 
@@ -72,7 +73,7 @@ function useTypewriter(text: string) {
   return shown;
 }
 
-function useSallieConversation(greeting: Greeting) {
+function useSallieConversation(greeting: Greeting, context?: SallieContext) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -97,6 +98,8 @@ function useSallieConversation(greeting: Greeting) {
             conversationId,
             // Her on-screen greeting is the first turn, so she doesn't introduce herself twice.
             greetingId: greeting.id,
+            // Keeps her on the page's topic (an allowlisted key, checked server-side).
+            ...(context ? { context } : {}),
             messages: [
               { role: 'assistant', content: greeting.text },
               ...history.map(({ role, content }) => ({ role, content })),
@@ -119,7 +122,7 @@ function useSallieConversation(greeting: Greeting) {
         setIsLoading(false);
       }
     },
-    [messages, isLoading, conversationId, ended, greeting]
+    [messages, isLoading, conversationId, ended, greeting, context]
   );
 
   return { messages, isLoading, error, ended, conversationId, send };
@@ -447,9 +450,16 @@ function SpeechBubble({
  * corner with the same conversation. She talks only to the public
  * `/api/chat` and `/api/speak` endpoints — no internal systems are wired in.
  */
-export default function SallieAssistant({ dockOnly = false }: { dockOnly?: boolean } = {}) {
-  const [opener] = useState(() => pickGreeting());
-  const conversation = useSallieConversation(opener);
+export default function SallieAssistant({
+  dockOnly = false,
+  context,
+}: {
+  dockOnly?: boolean;
+  /** Keep her on this page's topic: her opener and her instructions. */
+  context?: SallieContext;
+} = {}) {
+  const [opener] = useState(() => pickGreeting(Math.random, context));
+  const conversation = useSallieConversation(opener, context);
   const tts = useSallieVoice();
   const [input, setInput] = useState('');
   const greeting = useTypewriter(opener.text);

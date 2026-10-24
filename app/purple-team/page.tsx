@@ -499,7 +499,7 @@ export default function PurpleTeamPage() {
       </section>
 
       <Footer />
-      <SallieAssistant dockOnly />
+      <SallieAssistant dockOnly context="purple-team" />
     </main>
   );
 }

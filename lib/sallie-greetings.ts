@@ -7,6 +7,8 @@
  * Sallie by name, gives the visitor a hook, and ends with one question.
  */
 
+import { SALLIE_CONTEXTS, type SallieContext } from '@/lib/sallie-context';
+
 export interface Greeting {
   id: string;
   text: string;
@@ -39,8 +41,15 @@ export const GREETINGS: Greeting[] = [
   },
 ];
 
-/** Pick a greeting; pass a random function to make the choice deterministic. */
-export function pickGreeting(random: () => number = Math.random): Greeting {
-  const index = Math.min(GREETINGS.length - 1, Math.floor(random() * GREETINGS.length));
-  return GREETINGS[index];
+/**
+ * Pick a greeting; pass a random function to make the choice deterministic.
+ * On a page with its own context (e.g. /purple-team) she uses that page's openers.
+ */
+export function pickGreeting(
+  random: () => number = Math.random,
+  context?: SallieContext
+): Greeting {
+  const pool: readonly Greeting[] = context ? SALLIE_CONTEXTS[context].greetings : GREETINGS;
+  const index = Math.min(pool.length - 1, Math.floor(random() * pool.length));
+  return pool[index];
 }
