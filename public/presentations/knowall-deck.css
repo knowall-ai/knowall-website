@@ -527,6 +527,49 @@ section > .logo-light,
   max-width: 1250px;
 }
 
+/* --- Recurring agent motif on statement slides ----------------------------
+   `.dark-inner.with-agent` paints the deck's agent art (--deck-agent, set on
+   :root or per slide) behind the copy, faded in from the left so the words
+   sit on charcoal. --deck-agent-pos moves the art's focal point. */
+.dark-inner.with-agent {
+  background: var(--charcoal);
+  overflow: hidden;
+}
+
+.dark-inner.with-agent::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background:
+    linear-gradient(
+      90deg,
+      var(--charcoal) 30%,
+      rgba(15, 18, 22, 0.76) 48%,
+      rgba(15, 18, 22, 0) 78%
+    ),
+    var(--deck-agent) var(--deck-agent-pos, right 15%) / cover no-repeat,
+    var(--charcoal);
+}
+
+/* Wider copy column: the fade reaches further right before the art shows. */
+.dark-inner.with-agent.with-agent--wide::before {
+  background:
+    linear-gradient(
+      90deg,
+      var(--charcoal) 40%,
+      rgba(15, 18, 22, 0.82) 58%,
+      rgba(15, 18, 22, 0) 84%
+    ),
+    var(--deck-agent) var(--deck-agent-pos, right 15%) / cover no-repeat,
+    var(--charcoal);
+}
+
+.dark-inner.with-agent > * {
+  position: relative;
+  z-index: 1;
+}
+
 /* --- Cards ------------------------------------------------------------
    De-boxed (Ben, 2026-08-11: "too boxy"). Items are open editorial
    blocks — a thin lime rule on the left, no fill, no border, no shadow —
@@ -1388,7 +1431,8 @@ section > .logo-light,
 .logo-plate--eir {
   background: #005c63;
 }
-.logo-plate--eir img {
+.logo-plate--eir img,
+.logo-plate .eir-logo {
   max-height: 64px;
 }
 
@@ -1455,4 +1499,618 @@ section > .logo-light,
 }
 .agent-legend-plain {
   font-style: italic;
+}
+
+/* ================================================================
+   Shared motifs and opt-in components
+   Everything below used to be copied into individual decks. It sits at
+   the end of the file on purpose: these rules refine the house rules
+   above, exactly as they did when they lived in each deck's <style>.
+   ================================================================ */
+
+/* --- Platforms & partners ------------------------------------------------ */
+a.partner-link {
+  display: block;
+}
+
+a.partner-link:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: 4px;
+  border-radius: 14px;
+}
+
+/* Grouped layout: "We build on" beside "We go to market with" */
+.partner-groups {
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  gap: 72px;
+}
+
+.reveal .partner-label {
+  margin-bottom: 26px;
+  color: var(--lime);
+  font-weight: 800;
+  font-size: 20px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+}
+
+.partner-grid--3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.partner-grid--2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.partner-groups .partner-grid .card p {
+  font-size: 24px;
+}
+
+.partner-groups .logo-plate,
+.partner-groups a.partner-link {
+  width: 100%;
+}
+
+/* --- Cards: opt-in modifiers ---------------------------------------------- */
+/* The link belongs to its product, so it sits at the foot of that product's
+   card rather than in a separate row underneath. */
+.cards--linked > .card {
+  display: flex;
+  flex-direction: column;
+}
+
+.cards--linked > .card > div {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.card-link {
+  display: block;
+  margin: 18px 0 0;
+  margin-top: auto;
+  width: max-content;
+  padding: 9px 0 0;
+  border: 0;
+  border-top: 1px solid rgba(157, 254, 10, 0.45);
+  border-radius: 0;
+  background: none;
+  color: var(--mist);
+  font-size: 19px;
+  font-weight: 700;
+}
+
+/* On KPI cards the number is the message, so the icon moves out of its way
+   to the top-right corner (Ben, 2026-07-29). */
+.card--stat {
+  position: relative;
+}
+
+.card--stat > .chip {
+  position: absolute;
+  top: 22px;
+  right: 22px;
+  margin: 0;
+}
+
+.agent:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: 4px;
+  border-radius: 12px;
+}
+
+/* --- Self-improving: the loop ---------------------------------------------- */
+/* Self-improvement is a LOOP: show the loop, do not list it in four
+   identical boxes floating in dead space (Ben, 2026-07-28). */
+.cycle {
+  margin: 0;
+}
+
+.cycle svg {
+  width: 100%;
+  max-height: 270px;
+  height: auto;
+  display: block;
+}
+
+/* shorter loop with air beneath it, for slides with cards under it */
+.cycle--short {
+  margin: 0 0 26px;
+}
+
+.cycle--short svg {
+  max-height: 240px;
+}
+
+.cyc-line,
+.cyc-return {
+  fill: none;
+  stroke: #9dff0a;
+  stroke-width: 3;
+}
+
+.cyc-return {
+  stroke-opacity: 0.45;
+  stroke-dasharray: 9 8;
+}
+
+.cyc-stops circle {
+  fill: #9dff0a;
+}
+
+.cyc-stops text {
+  fill: #ffffff;
+  font-size: 26px;
+  font-weight: 800;
+  text-anchor: middle;
+}
+
+.cyc-caption {
+  fill: #eef3f7;
+  font-size: 27px;
+  font-weight: 700;
+  font-style: italic;
+  text-anchor: middle;
+  paint-order: stroke;
+  stroke: rgba(11, 13, 16, 0.85);
+  stroke-width: 8px;
+  stroke-linejoin: round;
+}
+
+/* --- Agent memory: a knowledge graph beside its points --------------------- */
+.memory-split {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 64px;
+  align-items: center;
+}
+
+/* graph-led variant: the graph takes more of the row and squares off */
+.memory-split--graph-led {
+  grid-template-columns: 1.35fr 1fr;
+  gap: 32px;
+  align-items: start;
+}
+
+.memory-graph {
+  margin: 0;
+  padding: 18px 16px 10px;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 18px;
+}
+
+.memory-split--graph-led .memory-graph {
+  border-radius: 0;
+}
+
+.memory-graph svg {
+  width: 100%;
+  max-height: 470px;
+  height: auto;
+  display: block;
+}
+
+/* Capped: an uncapped 560x400 graph overflowed UPWARD through the header
+   (2026-07-28). */
+.memory-split--graph-led .memory-graph svg {
+  max-height: 520px;
+}
+
+.memory-graph figcaption {
+  margin-top: 10px;
+  text-align: center;
+  font-size: 19px;
+  color: var(--mist);
+}
+
+.mg-edges path {
+  fill: none;
+  stroke: #9dff0a;
+  stroke-opacity: 0.42;
+  stroke-width: 2;
+}
+
+/* Found overnight: drawn as a dashed link that draws itself in */
+.mg-new path {
+  stroke-opacity: 0.95;
+  stroke-width: 2.5;
+  stroke-dasharray: 7 7;
+}
+
+.mg-nodes circle {
+  fill: #9dff0a;
+}
+
+.mg-nodes circle[fill^='url'] {
+  fill: url(#mg-glow);
+}
+
+.mg-nodes text {
+  fill: #e8f5d8;
+  font-size: 17px;
+  font-weight: 700;
+  text-anchor: middle;
+}
+
+.memory-split--graph-led .mg-nodes text {
+  letter-spacing: 0.02em;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .reveal .mg-new path {
+    animation: mg-draw 1.6s ease-out both;
+  }
+}
+
+@keyframes mg-draw {
+  from {
+    stroke-dashoffset: 240;
+    stroke-opacity: 0;
+  }
+  to {
+    stroke-dashoffset: 0;
+    stroke-opacity: 0.95;
+  }
+}
+
+/* the points beside the graph: stacked checks, or compact cards */
+.memory-points {
+  margin-top: 0;
+  gap: 34px;
+}
+
+.memory-cards {
+  display: grid;
+  gap: 10px;
+}
+
+.memory-cards .card {
+  padding: 18px 22px;
+}
+
+.memory-cards .card h4 {
+  font-size: 26px;
+}
+
+.memory-cards .card p {
+  font-size: 20px;
+  line-height: 1.35;
+}
+
+/* GitHub link with a large mark and a light second line */
+.github-logo-link .gh-mark {
+  font-size: 46px;
+  flex: 0 0 auto;
+}
+
+.github-logo-link span {
+  font-weight: 400;
+  font-size: 24px;
+}
+
+/* --- Cover and closing-slide variants --------------------------------------- */
+/* For covers whose subjects stand close to camera: the title takes less
+   height to leave their faces clear. */
+.cover-copy--compact h1 {
+  font-size: 100px;
+  max-width: 1000px;
+}
+
+.cover-copy--compact .lead {
+  max-width: 1000px;
+}
+
+/* Closing slide whose subjects' faces sit mid-frame: the side fade lets more
+   of the art through, and the foot gradient starts lower before it goes
+   solid. Set on the <section>. */
+.cta--mid-subject .cta-top::before {
+  background:
+    linear-gradient(
+      90deg,
+      rgba(15, 18, 22, 0.94) 0%,
+      rgba(15, 18, 22, 0.78) 34%,
+      rgba(15, 18, 22, 0.22) 58%,
+      rgba(15, 18, 22, 0.04) 100%
+    ),
+    var(--deck-hero) center 62% / cover no-repeat;
+}
+
+.cta--mid-subject .cta-bottom {
+  background: linear-gradient(
+    180deg,
+    rgba(15, 18, 22, 0) 0%,
+    rgba(15, 18, 22, 0.5) 30%,
+    rgba(15, 18, 22, 0.88) 50%,
+    var(--charcoal) 66%
+  );
+}
+
+/* The closing slide's pitch and button, beside the contact details */
+.cta-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  max-width: 1180px;
+}
+
+.reveal .cta-text {
+  color: var(--mist);
+  font-size: 27px;
+  line-height: 1.5;
+}
+
+.reveal .cta-text strong {
+  color: #fff;
+  font-weight: 800;
+}
+
+/* "they" (the attackers) in proper red with a soft glow, as on the website */
+.they {
+  color: #ef4444;
+  text-shadow: 0 0 22px rgba(239, 68, 68, 0.5);
+}
+
+/* --- Logo wall, explained on hover (opt-in) --------------------------------
+   .tool-grid > .tool[tabindex=0] > .tool-plate + .tool-name + .tool-tip.
+   Seven to a row; the first logo of each row anchors its tooltip to the
+   left so it can't run off the slide. */
+.tool-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 26px 16px;
+  max-width: 1040px;
+}
+
+.tool {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+  outline: none;
+}
+
+.tool-plate {
+  width: 100%;
+  height: 92px;
+  border-radius: 16px;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.45);
+  transition:
+    transform 0.16s ease,
+    box-shadow 0.16s ease;
+}
+
+.tool-plate img {
+  width: 52px;
+  height: 52px;
+  object-fit: contain;
+}
+
+.tool:hover .tool-plate,
+.tool:focus-visible .tool-plate {
+  transform: translateY(-4px);
+  box-shadow:
+    0 0 0 3px var(--lime),
+    0 14px 30px rgba(0, 0, 0, 0.55);
+}
+
+.tool-name {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.25;
+  color: #dbe3ea;
+}
+
+.tool-tip {
+  position: absolute;
+  bottom: calc(100% + 12px);
+  left: 50%;
+  width: 250px;
+  transform: translateX(-50%) translateY(8px);
+  background: #14140f;
+  border: 1px solid var(--lime);
+  border-radius: 14px;
+  padding: 14px 16px;
+  font-size: 17px;
+  line-height: 1.45;
+  color: #e6e9de;
+  text-align: left;
+  opacity: 0;
+  pointer-events: none;
+  transition: 0.18s ease;
+  box-shadow: 0 22px 44px rgba(0, 0, 0, 0.65);
+  z-index: 6;
+}
+
+.tool:hover .tool-tip,
+.tool:focus-visible .tool-tip {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.tool:nth-child(7n + 1) .tool-tip {
+  left: 0;
+  transform: translateY(8px);
+}
+
+.tool:nth-child(7n + 1):hover .tool-tip,
+.tool:nth-child(7n + 1):focus-visible .tool-tip {
+  transform: translateY(0);
+}
+
+.tool-hint {
+  font-size: 18px;
+  color: var(--mist);
+}
+
+/* --- Carousel (opt-in; behaviour in knowall-deck.js) -------------------------
+   .carousel > .carousel-track > figure.carousel-slide (img + figcaption),
+   then .carousel-prev / .carousel-next buttons and .carousel-dots. Screens
+   cross-fade; the controls sit inside the frame so they never collide with
+   the deck's own arrows. --carousel-ratio sets the frame's shape. */
+.carousel {
+  position: relative;
+}
+
+.carousel .carousel-track {
+  position: relative;
+  aspect-ratio: var(--carousel-ratio, 16 / 9);
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-hi);
+  background: #0b0d10;
+}
+
+.carousel .carousel-slide {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+
+.carousel .carousel-slide.is-active {
+  opacity: 1;
+}
+
+.carousel .carousel-slide img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top left;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.carousel figcaption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 46px 28px 58px;
+  background: linear-gradient(transparent, rgba(8, 10, 13, 0.92) 45%);
+  color: #dbe3ea;
+  font-size: 21px;
+}
+
+.carousel figcaption strong {
+  color: #fff;
+}
+
+.carousel .carousel-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  border: 1px solid rgba(157, 254, 10, 0.6);
+  background: rgba(8, 10, 13, 0.75);
+  color: var(--lime);
+  font-size: 36px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.carousel .carousel-prev {
+  left: 16px;
+}
+
+.carousel .carousel-next {
+  right: 16px;
+}
+
+.carousel .carousel-dots {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.carousel .carousel-dot {
+  width: 12px;
+  height: 12px;
+  padding: 0;
+  border-radius: 50%;
+  border: 0;
+  background: rgba(255, 255, 255, 0.35);
+  cursor: pointer;
+}
+
+.carousel .carousel-dot.is-active {
+  background: var(--lime);
+}
+
+.carousel button:focus-visible {
+  outline: 3px solid var(--lime);
+  outline-offset: 3px;
+}
+
+/* --- Utilities ----------------------------------------------------------------
+   Named versions of the one-off layout tweaks the decks used to carry as
+   inline style attributes. Prefixed with .reveal so they beat the house
+   rules they adjust, as the inline styles did. */
+.reveal .lead--wide {
+  max-width: 1560px;
+}
+
+/* white emphasis inside mist body copy */
+.reveal .hi {
+  color: #fff;
+  font-weight: 700;
+}
+
+.reveal .gap-44 {
+  gap: 44px;
+}
+
+.reveal .gap-54 {
+  gap: 54px;
+}
+
+.reveal .gap-56 {
+  gap: 56px;
+}
+
+/* statement slide with the content-slide side gutters */
+.reveal .dark-inner--wide {
+  padding: 108px 96px calc(52px + var(--ctl-band));
+}
+
+/* content slide that needs nearly all of the frame */
+.reveal .content--dense {
+  padding: 44px 96px calc(12px + var(--ctl-band));
+  gap: 24px;
+}
+
+/* copy beside a picture, vertically centred */
+.split-row {
+  display: flex;
+  align-items: center;
+  gap: 56px;
+}
+
+.grow {
+  flex: 1;
+}
+
+/* the T-Minus-15 book, beside its intro */
+.reveal .book-cover {
+  width: 176px;
+  height: auto;
+  flex: none;
+  border-radius: 8px;
+  box-shadow: 0 22px 46px rgba(0, 0, 0, 0.6);
 }

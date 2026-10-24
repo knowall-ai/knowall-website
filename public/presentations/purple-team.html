@@ -33,77 +33,8 @@
       :root {
         --deck-cover: url('images/cover-purple-team.jpg');
         --deck-hero: url('images/close-purple-team.jpg');
-      }
-
-      /* The trio stands close to camera on this cover, so the title takes a
-         little less height to leave their faces clear. */
-      .cover-copy h1 {
-        font-size: 100px;
-        max-width: 1000px;
-      }
-
-      /* The trio's faces sit mid-frame on the close, so the foot gradient starts
-         a little lower than the house default before it goes solid. */
-      .cta-top::before {
-        background:
-          linear-gradient(
-            90deg,
-            rgba(15, 18, 22, 0.94) 0%,
-            rgba(15, 18, 22, 0.78) 34%,
-            rgba(15, 18, 22, 0.22) 58%,
-            rgba(15, 18, 22, 0.04) 100%
-          ),
-          var(--deck-hero) center 62% / cover no-repeat;
-      }
-
-      .cta-bottom {
-        background: linear-gradient(
-          180deg,
-          rgba(15, 18, 22, 0) 0%,
-          rgba(15, 18, 22, 0.5) 30%,
-          rgba(15, 18, 22, 0.88) 50%,
-          var(--charcoal) 66%
-        );
-      }
-
-      /* --- Recurring agent motif on statement slides (as in the flagship deck) --- */
-      .dark-inner.with-agent {
-        background: var(--charcoal);
-        overflow: hidden;
-      }
-
-      .dark-inner.with-agent::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        z-index: 0;
-        background:
-          linear-gradient(
-            90deg,
-            var(--charcoal) 30%,
-            rgba(15, 18, 22, 0.76) 48%,
-            rgba(15, 18, 22, 0) 78%
-          ),
-          var(--deck-agent) right center / cover no-repeat,
-          var(--charcoal);
-      }
-
-      /* Wider copy column: the fade reaches further right before the art shows. */
-      .dark-inner.with-agent.with-agent--wide::before {
-        background:
-          linear-gradient(
-            90deg,
-            var(--charcoal) 40%,
-            rgba(15, 18, 22, 0.82) 58%,
-            rgba(15, 18, 22, 0) 84%
-          ),
-          var(--deck-agent) right center / cover no-repeat,
-          var(--charcoal);
-      }
-
-      .dark-inner.with-agent > * {
-        position: relative;
-        z-index: 1;
+        /* this deck's agent art is centred vertically */
+        --deck-agent-pos: right center;
       }
 
       /* Statement slides keep their copy on the dark left half of the art. */
@@ -115,136 +46,23 @@
         gap: 34px;
       }
 
-      /* --- Works with what you already run: a logo wall, explained on hover --- */
-      .tool-grid {
-        display: grid;
-        grid-template-columns: repeat(7, 1fr);
-        gap: 26px 16px;
-        max-width: 1040px;
-      }
-      .tool {
-        position: relative;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 10px;
-        text-align: center;
-        outline: none;
-      }
-      .tool-plate {
-        width: 100%;
-        height: 92px;
-        border-radius: 16px;
-        background: #ffffff;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: 0 10px 26px rgba(0, 0, 0, 0.45);
-        transition: transform 0.16s ease, box-shadow 0.16s ease;
-      }
-      .tool-plate img {
-        width: 52px;
-        height: 52px;
-        object-fit: contain;
-      }
-      .tool:hover .tool-plate,
-      .tool:focus-visible .tool-plate {
-        transform: translateY(-4px);
-        box-shadow: 0 0 0 3px var(--lime), 0 14px 30px rgba(0, 0, 0, 0.55);
-      }
-      .tool-name {
-        font-size: 16px;
-        font-weight: 700;
-        line-height: 1.25;
-        color: #dbe3ea;
-      }
-      .tool-tip {
-        position: absolute;
-        bottom: calc(100% + 12px);
-        left: 50%;
-        width: 250px;
-        transform: translateX(-50%) translateY(8px);
-        background: #14140f;
-        border: 1px solid var(--lime);
-        border-radius: 14px;
-        padding: 14px 16px;
-        font-size: 17px;
-        line-height: 1.45;
-        color: #e6e9de;
-        text-align: left;
-        opacity: 0;
-        pointer-events: none;
-        transition: 0.18s ease;
-        box-shadow: 0 22px 44px rgba(0, 0, 0, 0.65);
-        z-index: 6;
-      }
-      .tool:hover .tool-tip,
-      .tool:focus-visible .tool-tip {
-        opacity: 1;
-        transform: translateX(-50%) translateY(0);
-      }
-      .tool:nth-child(7n + 1) .tool-tip {
-        left: 0;
-        transform: translateY(8px);
-      }
-      .tool:nth-child(7n + 1):hover .tool-tip,
-      .tool:nth-child(7n + 1):focus-visible .tool-tip {
-        transform: translateY(0);
-      }
-      .tool-hint {
-        font-size: 18px;
-        color: var(--mist);
-      }
-
       .dark-inner.with-agent .col--wide {
         max-width: 1180px;
         gap: 30px;
       }
 
-      .dark-inner.with-agent h2 {
+      .with-agent .col h2 {
         font-size: 80px;
       }
 
-      .dark-inner.with-agent .checks {
+      .with-agent .col .checks {
         grid-template-columns: 1fr;
         gap: 30px;
       }
 
-      .dark-inner.with-agent .cards-2 {
+      .with-agent .col .cards-2 {
         grid-template-columns: 1fr;
         gap: 34px;
-      }
-
-      /* Six integrations in two columns beside Ollie and Poppie's ops room. */
-      .col--wide .cards-2 {
-        grid-template-columns: 1fr 1fr;
-        gap: 26px 48px;
-      }
-
-      .col--wide .card {
-        padding: 2px 0 2px 24px;
-        gap: 20px;
-      }
-
-      .col--wide .card h4 {
-        font-size: 28px;
-        margin-bottom: 6px;
-      }
-
-      .col--wide .card p {
-        font-size: 22px;
-      }
-
-      .col--wide .chip {
-        width: 52px;
-        height: 52px;
-        font-size: 42px;
-      }
-
-      .col--wide .chip-white {
-        width: 60px;
-        height: 60px;
-        border-radius: 16px;
       }
 
       /* --- The flood: big numbers over the data city ---------------------------- */
@@ -445,12 +263,12 @@
         font-weight: 800;
       }
 
-      .with-agent .kpi-row {
+      .col .kpi-row {
         margin-top: 10px;
         max-width: 860px;
       }
 
-      .with-agent .kpi-val {
+      .col .kpi-val {
         font-size: 36px;
       }
 
@@ -481,15 +299,6 @@
         position: relative;
       }
 
-      .portal-shot img {
-        display: block;
-        width: 100%;
-        height: auto;
-        border-radius: 16px;
-        border: 1px solid var(--line);
-        box-shadow: var(--shadow-hi);
-      }
-
       .portal-shot .tag {
         position: absolute;
         top: 18px;
@@ -504,125 +313,8 @@
         text-transform: uppercase;
       }
 
-      /* --- Portal carousel: six screens, cross-fading; controls sit inside the
-         frame so they never collide with the deck's own arrows --------------- */
-      .portal-carousel .pc-track {
-        position: relative;
-        aspect-ratio: 1440 / 800;
-        border-radius: 16px;
-        overflow: hidden;
-        border: 1px solid var(--line);
-        box-shadow: var(--shadow-hi);
-        background: #0b0d10;
-      }
-      .portal-carousel .pc-slide {
-        position: absolute;
-        inset: 0;
-        margin: 0;
-        opacity: 0;
-        transition: opacity 0.6s ease;
-      }
-      .portal-carousel .pc-slide.is-active {
-        opacity: 1;
-      }
-      .portal-carousel .pc-slide img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        object-position: top left;
-        border: 0;
-        border-radius: 0;
-        box-shadow: none;
-      }
-      .portal-carousel figcaption {
-        position: absolute;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        padding: 46px 28px 58px;
-        background: linear-gradient(transparent, rgba(8, 10, 13, 0.92) 45%);
-        color: #dbe3ea;
-        font-size: 21px;
-      }
-      .portal-carousel figcaption strong {
-        color: #fff;
-      }
-      .portal-carousel .pc-nav {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 54px;
-        height: 54px;
-        border-radius: 50%;
-        border: 1px solid rgba(157, 254, 10, 0.6);
-        background: rgba(8, 10, 13, 0.75);
-        color: var(--lime);
-        font-size: 36px;
-        line-height: 1;
-        cursor: pointer;
-      }
-      .portal-carousel .pc-prev {
-        left: 16px;
-      }
-      .portal-carousel .pc-next {
-        right: 16px;
-      }
-      .portal-carousel .pc-dots {
-        position: absolute;
-        left: 0;
-        right: 0;
-        bottom: 20px;
-        display: flex;
-        justify-content: center;
-        gap: 12px;
-        /* the row spans the frame; only the dots themselves take the pointer,
-           so it never covers the pause/play toggle */
-        pointer-events: none;
-      }
-      .portal-carousel .pc-dot {
-        pointer-events: auto;
-        width: 12px;
-        height: 12px;
-        padding: 0;
-        border-radius: 50%;
-        border: 0;
-        background: rgba(255, 255, 255, 0.35);
-        cursor: pointer;
-      }
-      .portal-carousel .pc-dot.is-active {
-        background: var(--lime);
-      }
-      /* pause/play: a visitor who stops it stays in control (WCAG 2.2.2) */
-      .portal-carousel .pc-toggle {
-        position: absolute;
-        right: 16px;
-        bottom: 10px;
-        width: 40px;
-        height: 40px;
-        padding: 0;
-        display: grid;
-        place-items: center;
-        border-radius: 50%;
-        border: 1px solid rgba(157, 254, 10, 0.6);
-        background: rgba(8, 10, 13, 0.75);
-        color: var(--lime);
-        cursor: pointer;
-      }
-      .portal-carousel .pc-toggle svg {
-        width: 16px;
-        height: 16px;
-        fill: currentColor;
-      }
-      .portal-carousel .pc-toggle .pc-icon-play,
-      .portal-carousel .pc-toggle[aria-pressed='true'] .pc-icon-pause {
-        display: none;
-      }
-      .portal-carousel .pc-toggle[aria-pressed='true'] .pc-icon-play {
-        display: block;
-      }
-      .portal-carousel button:focus-visible {
-        outline: 3px solid var(--lime);
-        outline-offset: 3px;
+      .portal-carousel {
+        --carousel-ratio: 1440 / 800;
       }
 
       /* --- How you pay: three numbered stages beside Poppie's report -------------- */
@@ -667,12 +359,6 @@
         font-size: 23px;
       }
 
-      /* "they" (the attackers) in proper red with a soft glow, as on the website */
-      .they {
-        color: #ef4444;
-        text-shadow: 0 0 22px rgba(239, 68, 68, 0.5);
-      }
-
       .pay-split--solo {
         grid-template-columns: 1fr;
       }
@@ -687,7 +373,10 @@
       }
     </style>
   </head>
-  <body>
+  <body
+    data-cta-label="Book a Security Discovery"
+    data-cta-href="https://www.knowall.ai/purple-team#enquire"
+  >
 
     <div class="reveal">
       <div class="slides">
@@ -700,10 +389,10 @@
           ></div>
           <div class="cover-scrim" aria-hidden="true"></div>
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
-          <div class="cover-copy">
+          <div class="cover-copy cover-copy--compact">
             <p class="kicker">KnowAll AI &middot; Continuous AI security</p>
             <h1>The Purple Team:<br /><em>break it</em><br />before <span class="they">they</span> do.</h1>
-            <p class="lead" style="max-width: 1000px">
+            <p class="lead">
               Attackers now use AI to find holes around the clock. So does the KnowAll Purple Team:
               Pennie attacks, Ollie defends and fixes, and Poppie runs the loop between them.
             </p>
@@ -1127,41 +816,37 @@
                   <div><strong>Time spent per case,</strong> so every hour billed is accounted for.</div>
                 </div>
               </div>
-              <div class="portal-shot portal-carousel" role="group" aria-roledescription="carousel" aria-label="Purple Team Portal screens">
-                <div class="pc-track">
-                  <figure class="pc-slide is-active" aria-hidden="false">
+              <div class="portal-shot portal-carousel carousel" role="group" aria-roledescription="carousel" aria-label="Purple Team Portal screens">
+                <div class="carousel-track">
+                  <figure class="carousel-slide is-active" aria-hidden="false">
                     <img src="images/portal-dashboard.jpg" alt="Purple Team Portal, Dashboard page, for the fictional company Contoso: Security score, its trend and the month's key figures" />
                     <figcaption><strong>Dashboard</strong> &middot; Security score, its trend and the month&rsquo;s key figures</figcaption>
                   </figure>
-                  <figure class="pc-slide" aria-hidden="true">
+                  <figure class="carousel-slide" aria-hidden="true">
                     <img src="images/portal-advisories.jpg" alt="Purple Team Portal, Advisories page, for the fictional company Contoso: Every advisory that affects you, scored and matched to your repositories" />
                     <figcaption><strong>Advisories</strong> &middot; Every advisory that affects you, scored and matched to your repositories</figcaption>
                   </figure>
-                  <figure class="pc-slide" aria-hidden="true">
+                  <figure class="carousel-slide" aria-hidden="true">
                     <img src="images/portal-advisory.jpg" alt="Purple Team Portal, Advisory detail page, for the fictional company Contoso: Why it matters to you, the evidence, and what the team did about it" />
                     <figcaption><strong>Advisory detail</strong> &middot; Why it matters to you, the evidence, and what the team did about it</figcaption>
                   </figure>
-                  <figure class="pc-slide" aria-hidden="true">
+                  <figure class="carousel-slide" aria-hidden="true">
                     <img src="images/portal-repos.jpg" alt="Purple Team Portal, Repositories page, for the fictional company Contoso: Each repository's open findings and the scanners watching it" />
                     <figcaption><strong>Repositories</strong> &middot; Each repository&rsquo;s open findings and the scanners watching it</figcaption>
                   </figure>
-                  <figure class="pc-slide" aria-hidden="true">
+                  <figure class="carousel-slide" aria-hidden="true">
                     <img src="images/portal-owasp.jpg" alt="Purple Team Portal, OWASP checklists page, for the fictional company Contoso: The OWASP Top 10 and LLM Top 10, item by item, with Pennie's results" />
                     <figcaption><strong>OWASP checklists</strong> &middot; The OWASP Top 10 and LLM Top 10, item by item, with Pennie&rsquo;s results</figcaption>
                   </figure>
-                  <figure class="pc-slide" aria-hidden="true">
+                  <figure class="carousel-slide" aria-hidden="true">
                     <img src="images/portal-usage.jpg" alt="Purple Team Portal, Usage and hours page, for the fictional company Contoso: Time spent per case, by agent and by job, against your plan" />
                     <figcaption><strong>Usage and hours</strong> &middot; Time spent per case, by agent and by job, against your plan</figcaption>
                   </figure>
                 </div>
                 <span class="tag">Example</span>
-                <button type="button" class="pc-nav pc-prev" aria-label="Previous screen">&lsaquo;</button>
-                <button type="button" class="pc-nav pc-next" aria-label="Next screen">&rsaquo;</button>
-                <button type="button" class="pc-toggle" aria-label="Pause screens" aria-pressed="false">
-                  <svg class="pc-icon-pause" viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="2" width="3.5" height="12" rx="1" /><rect x="9.5" y="2" width="3.5" height="12" rx="1" /></svg>
-                  <svg class="pc-icon-play" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2.2v11.6c0 .6.7 1 1.2.6l8.4-5.8a.75.75 0 0 0 0-1.2L5.2 1.6c-.5-.4-1.2 0-1.2.6z" /></svg>
-                </button>
-                <div class="pc-dots"><button type="button" class="pc-dot is-active" aria-label="Show Dashboard"></button><button type="button" class="pc-dot" aria-label="Show Advisories"></button><button type="button" class="pc-dot" aria-label="Show Advisory detail"></button><button type="button" class="pc-dot" aria-label="Show Repositories"></button><button type="button" class="pc-dot" aria-label="Show OWASP checklists"></button><button type="button" class="pc-dot" aria-label="Show Usage and hours"></button></div>
+                <button type="button" class="carousel-nav carousel-prev" aria-label="Previous screen">&lsaquo;</button>
+                <button type="button" class="carousel-nav carousel-next" aria-label="Next screen">&rsaquo;</button>
+                <div class="carousel-dots"><button type="button" class="carousel-dot is-active" aria-label="Show Dashboard"></button><button type="button" class="carousel-dot" aria-label="Show Advisories"></button><button type="button" class="carousel-dot" aria-label="Show Advisory detail"></button><button type="button" class="carousel-dot" aria-label="Show Repositories"></button><button type="button" class="carousel-dot" aria-label="Show OWASP checklists"></button><button type="button" class="carousel-dot" aria-label="Show Usage and hours"></button></div>
               </div>
             </div>
           </div>
@@ -1259,16 +944,16 @@
         </section>
 
         <!-- Slide 12: CTA -->
-        <section role="region" aria-label="Slide 12 of 12: Book a Security Discovery">
+        <section class="cta--mid-subject" role="region" aria-label="Slide 12 of 12: Book a Security Discovery">
           <div class="cta-top">
             <h2>Break it before<br /><span class="they">they</span> do.</h2>
             <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
           </div>
           <div class="cta-bottom">
-            <div style="display: flex; flex-direction: column; gap: 30px; max-width: 1180px">
-              <p style="color: var(--mist); font-size: 27px; line-height: 1.5">
+            <div class="cta-copy">
+              <p class="cta-text">
                 Start with a
-                <strong style="color: #fff; font-weight: 800">Security Discovery</strong> &mdash;
+                <strong>Security Discovery</strong> &mdash;
                 we measure your estate, set your starting score and come back with a scoped plan:
                 what Pennie would test, what Ollie would watch, and what your first month&rsquo;s
                 report would show.
@@ -1299,60 +984,5 @@
 
     <script src="vendor/reveal/reveal.js"></script>
     <script src="knowall-deck.js"></script>
-    <script>
-      // This deck's call to action is the Security Discovery, not the generic
-      // working session the shared runtime injects.
-      document.querySelectorAll('.slide-cta').forEach((cta) => {
-        cta.textContent = 'Book a Security Discovery';
-        cta.href = 'https://www.knowall.ai/purple-team#enquire';
-        cta.setAttribute('aria-label', 'Book a Security Discovery with KnowAll AI');
-      });
-    </script>
-    <script>
-      // Portal carousel: auto-advances only while its slide is on screen. Once the
-      // visitor pauses it, uses an arrow or dot, or focuses one of those, it stays
-      // stopped until they press play (WCAG 2.2.2); hovering pauses it only while
-      // the pointer is over it. Under prefers-reduced-motion it starts paused.
-      (() => {
-        const root = document.querySelector('.portal-carousel');
-        if (!root) return;
-        const slides = [...root.querySelectorAll('.pc-slide')];
-        const dots = [...root.querySelectorAll('.pc-dot')];
-        const toggle = root.querySelector('.pc-toggle');
-        let i = 0, timer = null, hovering = false;
-        let userStopped = matchMedia('(prefers-reduced-motion: reduce)').matches;
-        const show = (n) => {
-          i = (n + slides.length) % slides.length;
-          slides.forEach((s, k) => { s.classList.toggle('is-active', k === i); s.setAttribute('aria-hidden', String(k !== i)); });
-          dots.forEach((d, k) => {
-            d.classList.toggle('is-active', k === i);
-            d.setAttribute('aria-current', String(k === i));
-          });
-        };
-        const stop = () => { clearInterval(timer); timer = null; };
-        const start = () => { if (!userStopped && !hovering && !timer) timer = setInterval(() => show(i + 1), 4500); };
-        const onSlide = () => (Reveal.getCurrentSlide()?.contains(root) ? start() : stop());
-        const setStopped = (value) => {
-          userStopped = value;
-          toggle.setAttribute('aria-pressed', String(value));
-          if (value) stop();
-          else onSlide();
-        };
-        setStopped(userStopped);
-        toggle.addEventListener('click', () => setStopped(!userStopped));
-        root.querySelector('.pc-prev').addEventListener('click', () => { setStopped(true); show(i - 1); });
-        root.querySelector('.pc-next').addEventListener('click', () => { setStopped(true); show(i + 1); });
-        dots.forEach((d, k) => d.addEventListener('click', () => { setStopped(true); show(k); }));
-        // focusing an arrow or dot stops it for good; the toggle is how to resume
-        root.addEventListener('focusin', (e) => { if (e.target !== toggle) setStopped(true); });
-        // keep the deck's own keyboard and swipe handling away from the controls
-        root.querySelectorAll('button').forEach((b) => b.addEventListener('keydown', (e) => e.stopPropagation()));
-        root.addEventListener('mouseenter', () => { hovering = true; stop(); });
-        root.addEventListener('mouseleave', () => { hovering = false; onSlide(); });
-        Reveal.on('ready', onSlide);
-        Reveal.on('slidechanged', onSlide);
-        if (Reveal.isReady()) onSlide();
-      })();
-    </script>
   </body>
 </html>

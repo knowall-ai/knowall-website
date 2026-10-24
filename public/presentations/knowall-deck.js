@@ -3,14 +3,21 @@
 // image drift) live in knowall-deck.css alongside the rest of the house style.
 
 // --- Per-slide call to action -------------------------------------------
-// Every content slide carries a floating "Book a working session" pill; the
-// cover, the slide after it and the closing CTA slide stay clean.
+// Every content slide carries a floating call-to-action pill; the cover, the
+// slide after it and the closing CTA slide stay clean. A deck can change the
+// pill with attributes on <body>:
+//   <body data-cta-label="Book a Security Discovery"
+//         data-cta-href="https://www.knowall.ai/purple-team#enquire">
 const deckSlides = Array.from(document.querySelectorAll('.reveal .slides > section'));
+const ctaLabel = document.body.dataset.ctaLabel || 'Book a working session';
+const ctaHref = document.body.dataset.ctaHref || 'https://www.knowall.ai/#contact';
 deckSlides.slice(2, -1).forEach((slide) => {
-  slide.insertAdjacentHTML(
-    'beforeend',
-    '<a class="slide-cta" href="https://www.knowall.ai/#contact" aria-label="Book a working session with KnowAll AI">Book a working session</a>'
-  );
+  const cta = document.createElement('a');
+  cta.className = 'slide-cta';
+  cta.href = ctaHref;
+  cta.setAttribute('aria-label', `${ctaLabel} with KnowAll AI`);
+  cta.textContent = ctaLabel;
+  slide.append(cta);
 });
 
 // --- Sequenced reveal -------------------------------------------------
@@ -141,3 +148,63 @@ function guardWhenSettled(slide) {
 Reveal.on('ready', (event) => guardWhenSettled(event.currentSlide));
 Reveal.on('slidechanged', (event) => guardWhenSettled(event.currentSlide));
 Reveal.on('resize', () => guardWhenSettled(Reveal.getCurrentSlide()));
+
+// --- Carousels (opt-in) ---------------------------------------------------
+// Markup and styles: see "Carousel" in knowall-deck.css. Each .carousel
+// auto-advances (every data-carousel-interval ms, default 4500) only while
+// its slide is on screen, never under prefers-reduced-motion, and pauses
+// while the visitor hovers or focuses it (WCAG 2.2.2). The arrows and dots
+// always work, and never move the deck.
+document.querySelectorAll('.carousel').forEach((root) => {
+  const slides = [...root.querySelectorAll('.carousel-slide')];
+  const dots = [...root.querySelectorAll('.carousel-dot')];
+  if (!slides.length) return;
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const interval = Number(root.dataset.carouselInterval) || 4500;
+  let i = 0;
+  let timer = null;
+  const show = (n) => {
+    i = (n + slides.length) % slides.length;
+    slides.forEach((s, k) => {
+      s.classList.toggle('is-active', k === i);
+      s.setAttribute('aria-hidden', String(k !== i));
+    });
+    dots.forEach((d, k) => {
+      d.classList.toggle('is-active', k === i);
+      d.setAttribute('aria-current', String(k === i));
+    });
+  };
+  const stop = () => {
+    clearInterval(timer);
+    timer = null;
+  };
+  const start = () => {
+    if (!still && !timer) timer = setInterval(() => show(i + 1), interval);
+  };
+  const onSlide = () => (Reveal.getCurrentSlide()?.contains(root) ? start() : stop());
+  root.querySelector('.carousel-prev')?.addEventListener('click', () => {
+    stop();
+    show(i - 1);
+  });
+  root.querySelector('.carousel-next')?.addEventListener('click', () => {
+    stop();
+    show(i + 1);
+  });
+  dots.forEach((d, k) =>
+    d.addEventListener('click', () => {
+      stop();
+      show(k);
+    })
+  );
+  // keep the deck's own keyboard and swipe handling away from the controls
+  root
+    .querySelectorAll('button')
+    .forEach((b) => b.addEventListener('keydown', (e) => e.stopPropagation()));
+  Reveal.on('ready', onSlide);
+  // Pause while the visitor is looking at or using it (WCAG 2.2.2).
+  root.addEventListener('mouseenter', stop);
+  root.addEventListener('focusin', stop);
+  root.addEventListener('mouseleave', onSlide);
+  Reveal.on('slidechanged', onSlide);
+  if (Reveal.isReady()) onSlide();
+});

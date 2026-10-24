@@ -39,33 +39,6 @@
         --deck-agent: url('images/divider-gantry.jpg');
       }
 
-      /* --- Recurring agent motif on statement slides ---------------------------------- */
-      .dark-inner.with-agent {
-        background: var(--charcoal);
-        overflow: hidden;
-      }
-
-      .dark-inner.with-agent::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        z-index: 0;
-        background:
-          linear-gradient(
-            90deg,
-            var(--charcoal) 30%,
-            rgba(15, 18, 22, 0.76) 48%,
-            rgba(15, 18, 22, 0) 78%
-          ),
-          var(--deck-agent) right 15% / cover no-repeat,
-          var(--charcoal);
-      }
-
-      .dark-inner.with-agent > * {
-        position: relative;
-        z-index: 1;
-      }
-
       /* --- The shift: one big statement over an agent-free landscape -------------- */
       .dark-inner.shift {
         gap: 48px;
@@ -106,159 +79,6 @@
         font-weight: 900;
         font-size: 44px;
         color: var(--lime);
-      }
-
-      /* --- Platforms & partners ----------------------------------------------------- */
-      .partner-groups {
-        display: grid;
-        grid-template-columns: 3fr 2fr;
-        gap: 72px;
-      }
-      .reveal .partner-label {
-        margin-bottom: 26px;
-        color: var(--lime);
-        font-weight: 800;
-        font-size: 20px;
-        letter-spacing: 0.3em;
-        text-transform: uppercase;
-      }
-      .partner-grid--3 {
-        grid-template-columns: repeat(3, 1fr);
-      }
-      .partner-grid--2 {
-        grid-template-columns: repeat(2, 1fr);
-      }
-      .partner-grid .card p {
-        font-size: 24px;
-      }
-      .logo-plate .eir-logo {
-        max-height: 64px;
-      }
-      a.partner-link {
-        display: block;
-        width: 100%;
-      }
-      a.partner-link:focus-visible {
-        outline: var(--focus-ring);
-        outline-offset: 4px;
-        border-radius: 14px;
-      }
-
-      /* --- Self-improving: the loop, then four short points ------------------------ */
-      .cycle {
-        margin: 0;
-      }
-      .cycle svg {
-        width: 100%;
-        max-height: 270px;
-        height: auto;
-        display: block;
-      }
-      .cyc-line,
-      .cyc-return {
-        fill: none;
-        stroke: #9dff0a;
-        stroke-width: 3;
-      }
-      .cyc-return {
-        stroke-opacity: 0.45;
-        stroke-dasharray: 9 8;
-      }
-      .cyc-stops circle {
-        fill: #9dff0a;
-      }
-      .cyc-stops text {
-        fill: #ffffff;
-        font-size: 26px;
-        font-weight: 800;
-        text-anchor: middle;
-      }
-      .cyc-caption {
-        fill: #eef3f7;
-        font-size: 27px;
-        font-weight: 700;
-        font-style: italic;
-        text-anchor: middle;
-        paint-order: stroke;
-        stroke: rgba(11, 13, 16, 0.85);
-        stroke-width: 8px;
-        stroke-linejoin: round;
-      }
-
-      /* --- Reverie: a bigger graph beside three points ----------------------------- */
-      .memory-split {
-        display: grid;
-        grid-template-columns: 1.15fr 1fr;
-        gap: 64px;
-        align-items: center;
-      }
-      .memory-graph {
-        margin: 0;
-        padding: 18px 16px 10px;
-        background: rgba(255, 255, 255, 0.04);
-        border-radius: 18px;
-      }
-      .memory-graph svg {
-        width: 100%;
-        max-height: 470px;
-        height: auto;
-        display: block;
-      }
-      .memory-graph figcaption {
-        margin-top: 10px;
-        text-align: center;
-        font-size: 19px;
-        color: var(--mist);
-      }
-      .mg-edges path {
-        fill: none;
-        stroke: #9dff0a;
-        stroke-opacity: 0.42;
-        stroke-width: 2;
-      }
-      .mg-new path {
-        stroke-opacity: 0.95;
-        stroke-width: 2.5;
-        stroke-dasharray: 7 7;
-      }
-      .mg-nodes circle {
-        fill: #9dff0a;
-      }
-      .mg-nodes circle[fill^='url'] {
-        fill: url(#mg-glow);
-      }
-      .mg-nodes text {
-        fill: #e8f5d8;
-        font-size: 17px;
-        font-weight: 700;
-        text-anchor: middle;
-      }
-      .memory-points {
-        margin-top: 0;
-        gap: 34px;
-      }
-      .github-logo-link .gh-mark {
-        font-size: 46px;
-        flex: 0 0 auto;
-      }
-      .github-logo-link span {
-        font-weight: 400;
-        font-size: 24px;
-      }
-      @media (prefers-reduced-motion: no-preference) {
-        .reveal .mg-new path {
-          animation: mg-draw 1.6s ease-out both;
-        }
-      }
-      @keyframes mg-draw {
-        from {
-          stroke-dashoffset: 240;
-          stroke-opacity: 0;
-        }
-        to {
-          stroke-dashoffset: 0;
-          stroke-opacity: 0.95;
-        }
       }
 
       /* --- Presence: copy left, the real call frame big on the right --------------- */
@@ -343,9 +163,6 @@
         width: 64px;
         height: 64px;
         object-fit: contain;
-      }
-      .partner-grid .logo-plate {
-        width: 100%;
       }
 
       /* --- The Purple Team: the four agents' own art, big --------------------------- */
@@ -490,7 +307,7 @@
             <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
           </div>
           <div class="content">
-            <p class="lead" style="max-width: 1560px">
+            <p class="lead lead--wide">
               We help organisations build intelligent solutions using low-code and AI-driven
               products aligned with Microsoft&rsquo;s ecosystem &mdash; Power Platform, Dataverse,
               Microsoft Fabric and SharePoint &mdash; while experimenting with emerging technologies
@@ -602,11 +419,11 @@
             <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
           </div>
           <div class="content" style="gap: 38px">
-            <p class="lead" style="max-width: 1560px">
+            <p class="lead lead--wide">
               Formed in 2019, led by directors who have specialised in Microsoft technologies since
               2003 &mdash; and on every engagement, this human team is augmented by our T-Minus-15
               agent suite.
-              <strong style="color: #fff; font-weight: 700">Hover any agent</strong> to see what it
+              <strong class="hi">Hover any agent</strong> to see what it
               does.
             </p>
             <div class="human-row">
@@ -907,7 +724,7 @@
             <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
           </div>
           <div class="content" style="gap: 84px">
-            <p class="lead" style="max-width: 1560px">
+            <p class="lead lead--wide">
               Several engagement models tailored to different stages of your digital journey. Each
               balances risk and value, with clear expectations around scope and timeline &mdash; you
               choose the level of involvement that best suits your organisation.
@@ -1051,7 +868,7 @@
             <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
           </div>
           <div class="content" style="gap: 70px">
-            <p class="lead" style="max-width: 1500px">
+            <p class="lead">
               Prove the idea small, then scale what works. Both stages run on our open-source
               T-Minus-15 methodology, so nothing is thrown away between them.
             </p>
@@ -1501,7 +1318,7 @@
             </div>
             <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
           </div>
-          <div class="content" style="padding: 44px 96px calc(12px + var(--ctl-band)); gap: 24px">
+          <div class="content content--dense">
             <div class="cards-2">
               <div class="card">
                 <div class="chip" aria-hidden="true">
@@ -1589,7 +1406,7 @@
             </div>
             <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
           </div>
-          <div class="content" style="padding: 44px 96px calc(12px + var(--ctl-band)); gap: 24px">
+          <div class="content content--dense">
             <div class="cards-2">
               <div class="card">
                 <div class="chip" aria-hidden="true">
@@ -1692,7 +1509,7 @@
                     &ldquo;KnowAll provided a great solution that would fit in with our current
                     Office 365 platform&hellip; They took the time to really understand the business
                     needs and requirements.&rdquo;<br />
-                    <strong style="color: #fff; font-weight: 700"
+                    <strong class="hi"
                       >Louise Postill &mdash; Group Quality Assurance Manager &amp; GDPR
                       Practitioner, John Henry Group</strong
                     >
@@ -1786,9 +1603,9 @@
         <!-- Slide 22: T-Minus-15 -->
         <section class="scene" style="--scene: url('images/cyber-high-vantage-landscape.jpg')" role="region" aria-label="Slide 22 of 32: The T-Minus-15 methodology">
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
-          <div class="dark-inner" style="padding: 108px 96px calc(52px + var(--ctl-band))">
-            <div style="display: flex; align-items: center; gap: 56px">
-              <div style="flex: 1">
+          <div class="dark-inner dark-inner--wide">
+            <div class="split-row">
+              <div class="grow">
                 <p class="kicker">Our methodology</p>
                 <h2>T-Minus-15</h2>
                 <p class="lead">
@@ -1800,15 +1617,9 @@
                 </p>
               </div>
               <img
+                class="book-cover"
                 src="images/tminus15-book.png"
                 alt="The T-Minus-15 methodology book"
-                style="
-                  width: 176px;
-                  height: auto;
-                  flex: none;
-                  border-radius: 8px;
-                  box-shadow: 0 22px 46px rgba(0, 0, 0, 0.6);
-                "
               />
             </div>
             <a
@@ -1985,7 +1796,7 @@
             </div>
             <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
           </div>
-          <div class="content" style="gap: 54px">
+          <div class="content gap-54">
             <figure class="cycle" aria-hidden="true">
               <svg viewBox="0 0 1200 235" role="presentation" focusable="false">
                 <defs>
@@ -2144,7 +1955,7 @@
             </div>
             <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
           </div>
-          <div class="content" style="gap: 56px">
+          <div class="content gap-56">
             <div class="cards-2 security">
               <div class="card">
                 <div class="chip" aria-hidden="true"><svg class="ic"><use href="icons.svg#i-shield-check" /></svg></div>
@@ -2187,8 +1998,8 @@
             </div>
             <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
           </div>
-          <div class="content" style="gap: 56px">
-            <p class="lead" style="max-width: 1560px">
+          <div class="content gap-56">
+            <p class="lead lead--wide">
               Agents and copilots that live in Teams, Outlook and SharePoint, and build on the
               Azure, Power Platform and data you already have &mdash; no new silo to adopt.
             </p>
@@ -2251,7 +2062,7 @@
             </div>
             <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
           </div>
-          <div class="content" style="gap: 44px">
+          <div class="content gap-44">
             <div class="pt-strip">
               <figure class="pt-tile">
                 <img src="images/purple-team/pennie-attack.jpg" alt="" />
@@ -2287,7 +2098,7 @@
             <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
           </div>
           <div class="content">
-            <p class="lead" style="max-width: 1560px">
+            <p class="lead lead--wide">
               Zaplie integrates into Microsoft Teams and leverages Microsoft Copilot to create a
               dynamic, value-driven ecosystem of collaboration &mdash; AI automation and Bitcoin
               micro-transactions let users, copilots and even customers engage in meaningful
@@ -2349,10 +2160,10 @@
             <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
           </div>
           <div class="cta-bottom">
-            <div style="display: flex; flex-direction: column; gap: 30px; max-width: 1180px">
-              <p style="color: var(--mist); font-size: 27px; line-height: 1.5">
+            <div class="cta-copy">
+              <p class="cta-text">
                 Any further questions &mdash; or ready to start with a
-                <strong style="color: #fff; font-weight: 800">Discovery Day</strong>? We&rsquo;d
+                <strong>Discovery Day</strong>? We&rsquo;d
                 love to hear from you.
               </p>
               <a
