@@ -1,5 +1,5 @@
 /**
- * Cost guards for Sallie's public API routes (chat, speak, listen).
+ * Cost guards for the public API routes (chat, speak, listen, contact).
  *
  * All in memory: the site runs as a single App Service instance, and a
  * limiter that resets on deploy is fine — the hard ceiling is the monthly
@@ -32,6 +32,7 @@ export const LIMITS = {
     chat: () => envInt('SALLIE_LIMIT_CHAT_PER_IP', 30),
     speak: () => envInt('SALLIE_LIMIT_SPEAK_PER_IP', 30),
     listen: () => envInt('SALLIE_LIMIT_LISTEN_PER_IP', 30),
+    contact: () => envInt('CONTACT_LIMIT_PER_IP', 5),
   },
   windowMs: () => envInt('SALLIE_LIMIT_WINDOW_MINUTES', 10) * 60 * 1000,
   /** Requests per route per UTC day, across all visitors. */
@@ -39,12 +40,13 @@ export const LIMITS = {
     chat: () => envInt('SALLIE_BUDGET_CHAT_PER_DAY', 2000),
     speak: () => envInt('SALLIE_BUDGET_SPEAK_PER_DAY', 1500),
     listen: () => envInt('SALLIE_BUDGET_LISTEN_PER_DAY', 1500),
+    contact: () => envInt('CONTACT_BUDGET_PER_DAY', 200),
   },
   /** Visitor messages allowed in one conversation. */
   messagesPerConversation: () => envInt('SALLIE_LIMIT_MESSAGES_PER_CONVERSATION', 40),
 } as const;
 
-export type Route = 'chat' | 'speak' | 'listen';
+export type Route = 'chat' | 'speak' | 'listen' | 'contact';
 
 export interface LimitResult {
   ok: boolean;
@@ -53,10 +55,20 @@ export interface LimitResult {
   reason?: 'ip' | 'day';
 }
 
-/** Best-effort client address: App Service and most proxies set x-forwarded-for. */
+/**
+ * Best-effort client address. App Service appends the real client as the LAST
+ * x-forwarded-for entry (as ip:port); anything before it was sent by the
+ * client and can be forged, so it's ignored.
+ */
 export function clientIp(req: Request): string {
   const forwarded = req.headers.get('x-forwarded-for');
-  if (forwarded) return forwarded.split(',')[0].trim();
+  if (forwarded) {
+    const last = forwarded.split(',').at(-1)!.trim();
+    const v6 = /^\[([^\]]+)\](?::\d+)?$/.exec(last);
+    if (v6) return v6[1];
+    // Strip a port from IPv4 (one colon); leave bare IPv6 untouched.
+    return /^[^:]+:\d+$/.test(last) ? last.slice(0, last.lastIndexOf(':')) : last;
+  }
   return req.headers.get('x-real-ip') || 'unknown';
 }
 

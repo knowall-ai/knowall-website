@@ -53,9 +53,21 @@ describe('rate limits', () => {
     expect(trackedKeys()).toBeLessThanOrEqual(5001);
   });
 
-  it('reads the client IP from x-forwarded-for', () => {
+  it('reads the client IP from the last x-forwarded-for entry, which the proxy appends', () => {
     const req = new Request('http://x', { headers: { 'x-forwarded-for': '9.9.9.9, 10.0.0.1' } });
-    expect(clientIp(req)).toBe('9.9.9.9');
+    expect(clientIp(req)).toBe('10.0.0.1');
+    // A visitor-supplied first entry can't mint a fresh rate-limit key.
+    const spoofed = (fake: string) =>
+      clientIp(
+        new Request('http://x', { headers: { 'x-forwarded-for': `${fake}, 203.0.113.9:51234` } })
+      );
+    expect(spoofed('1.1.1.1')).toBe('203.0.113.9');
+    expect(spoofed('2.2.2.2')).toBe('203.0.113.9');
+    // App Service's ip:port forms, IPv4 and IPv6.
+    const one = (v: string) =>
+      clientIp(new Request('http://x', { headers: { 'x-forwarded-for': v } }));
+    expect(one('[2001:db8::1]:443')).toBe('2001:db8::1');
+    expect(one('2001:db8::1')).toBe('2001:db8::1');
     expect(clientIp(new Request('http://x'))).toBe('unknown');
   });
 

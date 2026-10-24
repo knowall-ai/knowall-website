@@ -54,8 +54,7 @@ test.describe('Contact Us', () => {
   });
 
   test('Header mail icon opens the contact panel', async ({ page }) => {
-    // The header Contact Us link was replaced by a mail icon that opens the
-    // Nostr contact panel (slide-out message form)
+    // The header mail icon opens the slide-out message form
     await page.locator('header').getByRole('button', { name: 'Message' }).first().click();
 
     const panel = page.getByRole('dialog');
@@ -63,6 +62,11 @@ test.describe('Contact Us', () => {
     await expect(panel.getByLabel('Name')).toBeVisible();
     await expect(panel.getByLabel('Email')).toBeVisible();
     await expect(panel.getByLabel('Message')).toBeVisible();
+    // People who'd rather not use the form can just email us.
+    await expect(panel.getByRole('link', { name: 'hello@knowall.ai' })).toHaveAttribute(
+      'href',
+      'mailto:hello@knowall.ai'
+    );
   });
 
   test('Footer shows the contact email address', async ({ page }) => {

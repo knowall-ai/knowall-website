@@ -18,9 +18,10 @@ export default function PrivacyPolicyPage() {
       <h2 className="text-2xl font-semibold text-white">What goes over Nostr</h2>
       <ul className="list-disc pl-6 space-y-2">
         <li>
-          <strong className="text-white">Orders and messages</strong> are sent as end-to-end
-          encrypted direct messages to our Nostr key. Relays carry the encrypted events but cannot
-          read the contents — including your delivery address.
+          <strong className="text-white">Orders</strong> are sent as end-to-end encrypted direct
+          messages to our Nostr key. Relays carry the encrypted events but cannot read the contents
+          — including your delivery address. Contact-form messages are covered under &ldquo;A note
+          on Nostr&rdquo; below.
         </li>
         <li>
           <strong className="text-white">Public activity</strong> — replies and zaps you post are
@@ -45,10 +46,13 @@ export default function PrivacyPolicyPage() {
 
       <h2 className="text-2xl font-semibold text-white">A note on Nostr</h2>
       <p>
-        Messages sent through this site travel as encrypted direct messages over public Nostr
-        relays. The content is end-to-end encrypted, but relays (which we don&apos;t operate) can
-        see that an encrypted message passed between two keys and when. Reviews, replies and zaps
-        are public Nostr events signed by their authors and visible network-wide.
+        Contact-form messages from visitors who aren&apos;t signed in with Nostr are emailed to
+        hello@knowall.ai through our Microsoft 365 tenant, where we keep them as ordinary business
+        email. If you&apos;re signed in with Nostr, your message is also sent as an end-to-end
+        encrypted direct message to our Nostr key over public relays: relays (which we don&apos;t
+        operate) can see that an encrypted message passed between two keys and when, but not its
+        contents. Reviews, replies and zaps are public Nostr events signed by their authors and
+        visible network-wide.
       </p>
 
       <h2 className="text-2xl font-semibold text-white">Questions</h2>

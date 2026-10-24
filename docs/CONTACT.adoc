@@ -1,0 +1,75 @@
+= Contact form routing
+:toc:
+
+How enquiries from the "Message us" panel (and the Purple Team form) reach us.
+
+== Routes
+
+[cols="1,3"]
+|===
+| Visitor | What happens
+
+| Guest (not signed in with Nostr)
+| `POST /api/contact` emails *hello@knowall.ai* from *sallie@knowall.ai* through Microsoft Graph. Reply-To is the visitor, so replying in Outlook answers them directly.
+
+| Signed in with a Nostr extension that supports NIP-44
+| The browser sends a NIP-17 private DM from the visitor's own key to the KnowAll AI npub (`npub1kue7…322ar`), then posts a copy to `/api/contact` so it also lands in hello@ with their npub. If the copy fails, the DM still counts as sent.
+
+| Signed in, but the extension can't encrypt
+| Falls back to the guest email route.
+|===
+
+Nobody needs a Nostr identity to contact us, and the site no longer creates throwaway keys. Both forms also show a plain `mailto:hello@knowall.ai` link.
+
+== Protections on `/api/contact`
+
+* Same-origin only (`isSameOrigin`).
+* Rate limited per IP: `CONTACT_LIMIT_PER_IP` (default 5 per `SALLIE_LIMIT_WINDOW_MINUTES`, 10 minutes), and `CONTACT_BUDGET_PER_DAY` overall (default 200).
+* Zod validation and length caps; a hidden `website` honeypot field. Bots that fill it get a 200 and no email.
+* If the mail settings are missing, the route returns 503 and tells the visitor to email hello@knowall.ai.
+
+== Current setup (done 24 Oct 2026)
+
+[cols="1,3"]
+|===
+| Entra app | `knowall-website-contact` (app ID `947671aa-3151-44c5-9882-f22a81b3b665`), single tenant. *No* Graph API permissions: Exchange grants the only right it has.
+| Exchange | Management scope `Sallie mailbox only` (`PrimarySmtpAddress -eq 'sallie@knowall.ai'`) and role assignment `Application Mail.Send` scoped to it. `Test-ServicePrincipalAuthorization` shows InScope True for sallie@ and False for any other mailbox.
+| Secret | "knowall-website App Service", *expires 24 Oct 2028*. Stored only in the App Service setting.
+| App Service | `CONTACT_MAIL_TENANT_ID`, `CONTACT_MAIL_CLIENT_ID`, `CONTACT_MAIL_CLIENT_SECRET`, `CONTACT_MAIL_FROM=sallie@knowall.ai`, `CONTACT_MAIL_TO=hello@knowall.ai`
+| Verified | Graph `sendMail` as sallie@ returned 202 (test mail to hello@); as another mailbox it returned 403 `ErrorAccessDenied`.
+|===
+
+== Recreating it
+
+. Create the app and a secret (no API permissions):
++
+[source,bash]
+----
+APPID=$(az ad app create --display-name knowall-website-contact --sign-in-audience AzureADMyOrg --query appId -o tsv)
+SPID=$(az ad sp create --id $APPID --query id -o tsv)
+SECRET=$(az ad app credential reset --id $APPID --display-name "knowall-website App Service" --years 2 --query password -o tsv)
+----
+. Scope it to Sallie's mailbox with RBAC for Applications. Exchange Online PowerShell can reuse your Azure CLI sign-in:
++
+[source,powershell]
+----
+$t = az account get-access-token --resource https://outlook.office365.com --query accessToken -o tsv
+Connect-ExchangeOnline -AccessToken $t -Organization knowall.ai
+New-ServicePrincipal -AppId <APPID> -ObjectId <SPID> -DisplayName 'knowall-website-contact'
+New-ManagementScope -Name 'Sallie mailbox only' -RecipientRestrictionFilter "PrimarySmtpAddress -eq 'sallie@knowall.ai'"
+New-ManagementRoleAssignment -App <APPID> -Role 'Application Mail.Send' -CustomResourceScope 'Sallie mailbox only'
+Test-ServicePrincipalAuthorization -Identity <APPID> -Resource sallie@knowall.ai
+----
++
+Don't also grant Graph `Mail.Send` in Entra: that would allow sending as every mailbox and bypass the scope.
+. Set the App Service settings (this restarts the site for a few seconds):
++
+[source,bash]
+----
+az webapp config appsettings set -g KnowAllAIRG -n knowall-website --settings \
+  CONTACT_MAIL_TENANT_ID=<tenant> CONTACT_MAIL_CLIENT_ID=$APPID "CONTACT_MAIL_CLIENT_SECRET=$SECRET" \
+  CONTACT_MAIL_FROM=sallie@knowall.ai CONTACT_MAIL_TO=hello@knowall.ai
+----
+. Send a test enquiry from production as a guest, and one signed in with Nostr. Check both arrive in hello@, and the DM in the KnowAll AI Nostr inbox.
+
+To rotate the secret before it expires, run `az ad app credential reset --id <APPID> --years 2` and update `CONTACT_MAIL_CLIENT_SECRET`.
