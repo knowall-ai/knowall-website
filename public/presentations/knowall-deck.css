@@ -49,6 +49,23 @@ body {
   background: #000;
 }
 
+/* Size the deck to exactly 16:9 and centre it, so the letterboxing sits
+   OUTSIDE it. reveal.js positions its arrows, progress bar and slide number
+   inside .reveal, so they stay on the slide whatever the window's shape
+   (instead of drifting out into the black bars). Slides are 1920x1080 with no
+   margin, so they fill this box edge to edge. */
+html.reveal-full-page body.reveal-viewport {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+html.reveal-full-page body.reveal-viewport > .reveal {
+  width: min(100vw, calc(100vh * 16 / 9));
+  height: min(100vh, calc(100vw * 9 / 16));
+  flex: none;
+}
+
 .reveal {
   font-family: 'Mulish', 'Segoe UI', sans-serif;
   font-size: 30px;
