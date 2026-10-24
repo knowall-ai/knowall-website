@@ -95,13 +95,21 @@ const agents: Agent[] = [
 
 const legend: Embodiment[] = ['claude', 'ms-account', 'teams-bot'];
 
+/**
+ * The agents, shown inside "Meet the Team" after the people, like the deck's
+ * blended-squad slide: a divider reading "…and the agents", then the agents.
+ */
 export default function AgentsSection() {
   return (
-    <section id="agents" className="py-20 px-4 bg-gray-900">
-      <div className="container max-w-6xl mx-auto">
-        <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center text-white">
-          Meet the Agents
-        </h2>
+    <div id="agents" className="mt-20 scroll-mt-24">
+      <div className="mb-8 flex items-center gap-4" role="presentation">
+        <span className="h-px flex-1 bg-gradient-to-r from-transparent to-lime-500/50" />
+        <h3 className="text-sm font-semibold uppercase tracking-[0.25em] text-lime-400">
+          …and the agents
+        </h3>
+        <span className="h-px flex-1 bg-gradient-to-l from-transparent to-lime-500/50" />
+      </div>
+      <div>
         <p className="text-lg text-center text-gray-300 max-w-3xl mx-auto mb-12">
           We practise what we preach. Our AI agents work alongside the team across the{' '}
           <a href="#tminus15" className="text-lime-500 hover:text-lime-400 transition-colors">
@@ -114,7 +122,7 @@ export default function AgentsSection() {
           {agents.map((agent) => (
             <Card
               key={agent.name}
-              className="p-6 shadow-md border-0 bg-gray-800 text-white flex flex-col items-center text-center"
+              className="p-6 shadow-md border-0 bg-gray-900 text-white flex flex-col items-center text-center"
             >
               <Image
                 src={agent.image}
@@ -154,6 +162,6 @@ export default function AgentsSection() {
           ))}
         </div>
       </div>
-    </section>
+    </div>
   );
 }

@@ -864,11 +864,10 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Meet the Team Section */}
-      <TeamSection />
-
-      {/* Meet the Agents Section */}
-      <AgentsSection />
+      {/* Meet the Team: the people first, then "…and the agents" — one blended squad */}
+      <TeamSection>
+        <AgentsSection />
+      </TeamSection>
 
       {/* Contact Section */}
       <section id="contact">

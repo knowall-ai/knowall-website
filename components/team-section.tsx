@@ -1,5 +1,7 @@
 'use client';
 
+import type { ReactNode } from 'react';
+
 import { useEffect, useState } from 'react';
 import { ExternalLink, UserRound } from 'lucide-react';
 import { verifyEvent } from 'nostr-tools/pure';
@@ -56,7 +58,7 @@ const PROFILE_RELAYS = [
   'wss://nostr.oxtr.dev',
 ];
 
-export default function TeamSection() {
+export default function TeamSection({ children }: { children?: ReactNode } = {}) {
   const [pictures, setPictures] = useState<Record<string, string>>({});
   const [broken, setBroken] = useState<Record<string, boolean>>({});
 
@@ -154,7 +156,8 @@ export default function TeamSection() {
           Meet the Team
         </h2>
         <p className="text-lg text-center text-gray-300 max-w-3xl mx-auto mb-12">
-          The people behind our AI systems. Connect with us on Nostr.
+          A blended squad: the people behind our AI systems, working alongside our AI agents.
+          Connect with the people on Nostr.
         </p>
 
         <div
@@ -195,6 +198,7 @@ export default function TeamSection() {
             </Card>
           ))}
         </div>
+        {children}
       </div>
     </section>
   );
