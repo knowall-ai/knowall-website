@@ -84,6 +84,14 @@ export default function Footer({ darkMode = false }: FooterProps) {
                   Purple Team
                 </Link>
               </li>
+              <li>
+                <Link
+                  href="/presentations/purple-team.html"
+                  className="text-gray-400 hover:text-white transition-colors"
+                >
+                  Purple Team deck
+                </Link>
+              </li>
             </ul>
           </div>
 

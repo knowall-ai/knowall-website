@@ -1,0 +1,1065 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The Purple Team — break it before they do</title>
+    <meta
+      name="description"
+      content="The Purple Team from KnowAll AI: continuous AI security. Pennie the Pen Tester attacks, Ollie the Operator defends and fixes, and Poppie the Planner runs the loop — from new advisory to merged fix, in your GitHub or Azure DevOps."
+    />
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+    <meta property="og:title" content="The Purple Team — break it before they do" />
+    <meta
+      property="og:description"
+      content="The Purple Team from KnowAll AI: continuous AI security. Pennie the Pen Tester attacks, Ollie the Operator defends and fixes, and Poppie the Planner runs the loop — from new advisory to merged fix, in your GitHub or Azure DevOps."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://www.knowall.ai/presentations/purple-team.html" />
+    <meta property="og:image" content="https://www.knowall.ai/opengraph-image.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="The Purple Team — break it before they do" />
+    <meta
+      name="twitter:description"
+      content="The Purple Team from KnowAll AI: continuous AI security. Pennie the Pen Tester attacks, Ollie the Operator defends and fixes, and Poppie the Planner runs the loop — from new advisory to merged fix, in your GitHub or Azure DevOps."
+    />
+    <meta name="twitter:image" content="https://www.knowall.ai/twitter-image.png" />
+    <link rel="stylesheet" href="vendor/reveal/reset.css" />
+    <link rel="stylesheet" href="vendor/reveal/reveal.css" />
+    <link rel="stylesheet" href="vendor/fonts.css" />
+    <link rel="stylesheet" href="knowall-deck.css" />
+    <style>
+      /* Deck-specific styles — everything shared lives in knowall-deck.css */
+      :root {
+        --deck-cover: url('images/cover-purple-team.jpg');
+        --deck-hero: url('images/close-purple-team.jpg');
+      }
+
+      /* The trio stands close to camera on this cover, so the title takes a
+         little less height to leave their faces clear. */
+      .cover-copy h1 {
+        font-size: 100px;
+        max-width: 1000px;
+      }
+
+      /* The trio's faces sit mid-frame on the close, so the foot gradient starts
+         a little lower than the house default before it goes solid. */
+      .cta-top::before {
+        background:
+          linear-gradient(
+            90deg,
+            rgba(15, 18, 22, 0.94) 0%,
+            rgba(15, 18, 22, 0.78) 34%,
+            rgba(15, 18, 22, 0.22) 58%,
+            rgba(15, 18, 22, 0.04) 100%
+          ),
+          var(--deck-hero) center 62% / cover no-repeat;
+      }
+
+      .cta-bottom {
+        background: linear-gradient(
+          180deg,
+          rgba(15, 18, 22, 0) 0%,
+          rgba(15, 18, 22, 0.5) 30%,
+          rgba(15, 18, 22, 0.88) 50%,
+          var(--charcoal) 66%
+        );
+      }
+
+      /* --- Recurring agent motif on statement slides (as in the flagship deck) --- */
+      .dark-inner.with-agent {
+        background: var(--charcoal);
+        overflow: hidden;
+      }
+
+      .dark-inner.with-agent::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        background:
+          linear-gradient(
+            90deg,
+            var(--charcoal) 30%,
+            rgba(15, 18, 22, 0.76) 48%,
+            rgba(15, 18, 22, 0) 78%
+          ),
+          var(--deck-agent) right center / cover no-repeat,
+          var(--charcoal);
+      }
+
+      /* Wider copy column: the fade reaches further right before the art shows. */
+      .dark-inner.with-agent.with-agent--wide::before {
+        background:
+          linear-gradient(
+            90deg,
+            var(--charcoal) 40%,
+            rgba(15, 18, 22, 0.82) 58%,
+            rgba(15, 18, 22, 0) 84%
+          ),
+          var(--deck-agent) right center / cover no-repeat,
+          var(--charcoal);
+      }
+
+      .dark-inner.with-agent > * {
+        position: relative;
+        z-index: 1;
+      }
+
+      /* Statement slides keep their copy on the dark left half of the art. */
+      .dark-inner.with-agent .col {
+        max-width: 1010px;
+        display: flex;
+        flex-direction: column;
+        gap: 34px;
+      }
+
+      .dark-inner.with-agent .col--wide {
+        max-width: 1180px;
+        gap: 30px;
+      }
+
+      .dark-inner.with-agent h2 {
+        font-size: 80px;
+      }
+
+      .dark-inner.with-agent .checks {
+        grid-template-columns: 1fr;
+        gap: 30px;
+      }
+
+      .dark-inner.with-agent .cards-2 {
+        grid-template-columns: 1fr;
+        gap: 34px;
+      }
+
+      /* Six integrations in two columns beside Ollie and Poppie's ops room. */
+      .col--wide .cards-2 {
+        grid-template-columns: 1fr 1fr;
+        gap: 26px 48px;
+      }
+
+      .col--wide .card {
+        padding: 2px 0 2px 24px;
+        gap: 20px;
+      }
+
+      .col--wide .card h4 {
+        font-size: 28px;
+        margin-bottom: 6px;
+      }
+
+      .col--wide .card p {
+        font-size: 22px;
+      }
+
+      .col--wide .chip {
+        width: 52px;
+        height: 52px;
+        font-size: 42px;
+      }
+
+      .col--wide .chip-white {
+        width: 60px;
+        height: 60px;
+        border-radius: 16px;
+      }
+
+      /* --- The flood: big numbers over the data city ---------------------------- */
+      .dark-inner.flood {
+        padding: 96px 96px calc(40px + var(--ctl-band));
+        gap: 44px;
+      }
+
+      .flood h2 {
+        font-size: 84px;
+        line-height: 1.06;
+        color: #ffffff;
+        max-width: 1000px;
+        text-shadow: 0 6px 30px rgba(0, 0, 0, 0.55);
+      }
+
+      .flood h2 em {
+        font-style: italic;
+        color: var(--lime);
+      }
+
+      .flood-stats {
+        display: flex;
+        flex-direction: column;
+        gap: 26px;
+        max-width: 1000px;
+      }
+
+      .flood-stat {
+        display: flex;
+        gap: 30px;
+        align-items: baseline;
+        border-left: 3px solid var(--lime);
+        padding: 2px 0 2px 28px;
+      }
+
+      .flood-stat .num {
+        font-family: 'Playfair Display', Georgia, serif;
+        font-weight: 900;
+        font-size: 84px;
+        line-height: 1;
+        color: var(--lime);
+        min-width: 330px;
+        white-space: nowrap;
+      }
+
+      .flood-stat p {
+        font-size: 25px;
+        line-height: 1.4;
+        color: #dbe3ea;
+      }
+
+      .flood-stat p strong {
+        color: #fff;
+        font-weight: 800;
+      }
+
+      .source {
+        font-size: 19px;
+        color: var(--mist);
+        max-width: 1000px;
+      }
+
+      /* --- Meet the team: three members beside the trio's hero portrait ----------- */
+      .members {
+        display: flex;
+        flex-direction: column;
+        gap: 26px;
+      }
+
+      .member {
+        display: flex;
+        gap: 28px;
+        align-items: center;
+      }
+
+      .member .agent-av--photo {
+        flex: none;
+        width: 132px;
+        height: 132px;
+        border-width: 3px;
+      }
+
+      .member .agent-name {
+        font-size: 30px;
+      }
+
+      .member .agent-role {
+        font-size: 17px;
+        margin-top: 2px;
+      }
+
+      .member .agent-role.red {
+        color: #ff6b6b;
+      }
+
+      .member .agent-role.blue {
+        color: #6cb6ff;
+      }
+
+      .member .agent-role.purple {
+        color: #c4a4ff;
+      }
+
+      .member p {
+        font-size: 22px;
+        line-height: 1.45;
+        color: var(--mist);
+        margin-top: 8px;
+        max-width: 640px;
+      }
+
+      /* --- The loop: four stills, one per step ------------------------------------ */
+      .loop {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 36px;
+      }
+
+      .loop-step {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .loop-step img {
+        width: 100%;
+        aspect-ratio: 1 / 1;
+        object-fit: cover;
+        border-radius: 18px;
+        border: 1px solid var(--line);
+        box-shadow: var(--shadow-card);
+      }
+
+      .loop-step .step {
+        position: absolute;
+        top: 18px;
+        left: 18px;
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Playfair Display', Georgia, serif;
+        font-weight: 900;
+        font-size: 30px;
+        color: var(--ink);
+        background: var(--lime);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+      }
+
+      .loop-step h4 {
+        color: #ffffff;
+        font-size: 30px;
+        margin-top: 6px;
+      }
+
+      .loop-step p {
+        font-size: 22px;
+        line-height: 1.45;
+        color: var(--mist);
+      }
+
+      /* --- Patch fast: five numbered steps down the dark side of Ollie's wall ----- */
+      .steps {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        max-width: 800px;
+      }
+
+      .steps .step-row {
+        display: flex;
+        gap: 22px;
+        align-items: baseline;
+      }
+
+      .steps .n {
+        flex: none;
+        width: 54px;
+        font-family: 'Playfair Display', Georgia, serif;
+        font-weight: 900;
+        font-size: 36px;
+        line-height: 1;
+        color: var(--lime);
+      }
+
+      .steps p {
+        font-size: 24px;
+        line-height: 1.4;
+        color: var(--mist);
+      }
+
+      .steps p strong {
+        color: #ffffff;
+        font-weight: 800;
+      }
+
+      .with-agent .kpi-row {
+        margin-top: 10px;
+        max-width: 860px;
+      }
+
+      .with-agent .kpi-val {
+        font-size: 36px;
+      }
+
+      /* --- The portal: four points beside the example screen ---------------------- */
+      .portal-split {
+        display: grid;
+        grid-template-columns: 1fr 1180px;
+        gap: 56px;
+        align-items: center;
+      }
+
+      .portal-split .checks {
+        grid-template-columns: 1fr;
+        gap: 30px;
+        margin-top: 0;
+      }
+
+      .portal-split .check {
+        font-size: 23px;
+        gap: 20px;
+      }
+
+      .portal-split .check .ic {
+        font-size: 34px;
+      }
+
+      .portal-shot {
+        position: relative;
+      }
+
+      .portal-shot img {
+        display: block;
+        width: 100%;
+        height: auto;
+        border-radius: 16px;
+        border: 1px solid var(--line);
+        box-shadow: var(--shadow-hi);
+      }
+
+      .portal-shot .tag {
+        position: absolute;
+        top: 18px;
+        right: 18px;
+        padding: 6px 16px;
+        border-radius: 999px;
+        background: var(--lime);
+        color: var(--ink);
+        font-size: 18px;
+        font-weight: 800;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      /* --- How you pay: three numbered stages beside Poppie's report -------------- */
+      .pay-split {
+        display: grid;
+        grid-template-columns: 1fr 600px;
+        gap: 72px;
+        align-items: center;
+      }
+
+      .pay-split .stages {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+      }
+
+      .pay-split .stage {
+        display: flex;
+        gap: 26px;
+        align-items: flex-start;
+        border: 0;
+        border-left: 3px solid var(--lime);
+        padding: 4px 0 4px 28px;
+      }
+
+      .pay-split .stage .step {
+        position: static;
+        flex: none;
+        width: 76px;
+        font-size: 48px;
+        line-height: 1;
+        margin-top: 4px;
+      }
+
+      .pay-split .stage h4 {
+        font-size: 32px;
+        letter-spacing: 0.02em;
+        margin-bottom: 8px;
+      }
+
+      .pay-split .stage p {
+        font-size: 23px;
+      }
+
+      .pay-split > img {
+        width: 600px;
+        height: 600px;
+        object-fit: cover;
+        border-radius: 22px;
+        border: 1px solid var(--line);
+        box-shadow: var(--shadow-hi);
+      }
+    </style>
+  </head>
+  <body>
+
+    <div class="reveal">
+      <div class="slides">
+        <!-- Slide 1: Title -->
+        <section role="region" aria-label="Slide 1 of 12: The Purple Team — break it before they do">
+          <div
+            class="cover-hero"
+            role="img"
+            aria-label="Pennie, Poppie and Ollie, three robots, close to camera in front of a neon city skyline, lit red, purple and blue"
+          ></div>
+          <div class="cover-scrim" aria-hidden="true"></div>
+          <img class="logo-light logo-light--left" src="/images/logo.png" alt="KnowAll.ai" />
+          <div class="cover-copy">
+            <p class="kicker">KnowAll AI &middot; Continuous AI security</p>
+            <h1>The Purple Team:<br /><em>break it</em><br />before they do.</h1>
+            <p class="lead" style="max-width: 1000px">
+              Attackers now use AI to find holes around the clock. So does the KnowAll Purple Team:
+              Pennie attacks, Ollie defends and fixes, and Poppie runs the loop between them.
+            </p>
+          </div>
+        </section>
+
+        <!-- Slide 2: The problem, with data -->
+        <section
+          class="scene"
+          style="--scene: url('images/divider-purple-team-flood.jpg')"
+          role="region"
+          aria-label="Slide 2 of 12: A flood of advisories, a handful that matter"
+        >
+          <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
+          <div class="dark-inner flood">
+            <p class="kicker">The problem</p>
+            <h2>A flood of advisories.<br />A <em>handful</em> that matter.</h2>
+            <div class="flood-stats">
+              <div class="flood-stat">
+                <div class="num">566</div>
+                <p>
+                  <strong>new CVEs a day</strong> &mdash; published in the 30 days to 23 Oct 2026.
+                  No person can read every one.
+                </p>
+              </div>
+              <div class="flood-stat">
+                <div class="num">88,565</div>
+                <p>
+                  <strong>published in 2026 so far</strong> (to 23 Oct), against 49,972 in the whole
+                  of 2025.
+                </p>
+              </div>
+              <div class="flood-stat">
+                <div class="num">245</div>
+                <p>
+                  <strong>added to CISA&rsquo;s actively exploited list in 2025.</strong> The skill is
+                  knowing which handful affect <em>your</em> code, and fixing those first.
+                </p>
+              </div>
+            </div>
+            <p class="source">Sources: NIST NVD; CISA KEV.</p>
+          </div>
+        </section>
+
+        <!-- Slide 3: Attackers use AI, so do we -->
+        <section role="region" aria-label="Slide 3 of 12: Attackers use AI, so do we">
+          <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" style="top: 70px" />
+          <div
+            class="dark-inner with-agent"
+            style="--deck-agent: url('images/divider-purple-team-core.jpg')"
+          >
+            <div class="col">
+              <p class="kicker">Frontier AI on defence</p>
+              <h2>Attackers use AI.<br />So do we.</h2>
+              <div class="cards-2">
+                <div class="card">
+                  <div class="chip" aria-hidden="true">
+                    <svg class="ic"><use href="icons.svg#i-network" /></svg>
+                  </div>
+                  <div>
+                    <h4>Frontier models do the reasoning</h4>
+                    <p>
+                      Models from Anthropic and OpenAI, via Microsoft Foundry in KnowAll&rsquo;s
+                      Azure or yours, read your code, judge whether a flaw is really exploitable and
+                      write the fix.
+                    </p>
+                  </div>
+                </div>
+                <div class="card">
+                  <div class="chip" aria-hidden="true">
+                    <svg class="ic"><use href="icons.svg#i-refresh-cw" /></svg>
+                  </div>
+                  <div>
+                    <h4>Plain software does the matching</h4>
+                    <p>
+                      Every new advisory is matched continuously against the exact packages you
+                      use, around the clock, so the models only ever look at what touches you.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div class="pill-row" role="list" aria-label="AI platforms">
+                <span class="pill" role="listitem">Anthropic</span>
+                <span class="pill" role="listitem">OpenAI</span>
+                <span class="pill pill-logo" role="listitem"
+                  ><img src="images/logos/ai-foundry.svg" alt="" />Microsoft Foundry</span
+                >
+                <span class="pill pill-logo" role="listitem"
+                  ><img src="images/logos/azure.svg" alt="" />KnowAll&rsquo;s Azure, or your own</span
+                >
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Slide 4: Meet the team -->
+        <section role="region" aria-label="Slide 4 of 12: Meet the team">
+          <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" style="top: 70px" />
+          <div
+            class="dark-inner with-agent with-agent--wide"
+            style="--deck-agent: url('images/purple-team-hero.jpg')"
+          >
+            <div class="col">
+              <p class="kicker">Meet the team</p>
+              <h2 style="font-size: 64px">Red attacks. Blue defends.<br />Purple makes them one team.</h2>
+              <div class="members">
+                <div class="member">
+                  <div class="agent-av agent-av--photo">
+                    <img src="images/purple-team/pennie-portrait.jpg" alt="" />
+                  </div>
+                  <div>
+                    <div class="agent-name">Pennie the Pen Tester</div>
+                    <div class="agent-role red">Red team</div>
+                    <p>
+                      Attacks like a real adversary, mapped to the OWASP Top 10, the OWASP LLM Top
+                      10 and MITRE ATT&amp;CK.
+                    </p>
+                  </div>
+                </div>
+                <div class="member">
+                  <div class="agent-av agent-av--photo">
+                    <img src="images/purple-team/ollie-portrait.jpg" alt="" />
+                  </div>
+                  <div>
+                    <div class="agent-name">Ollie the Operator</div>
+                    <div class="agent-role blue">Blue team</div>
+                    <p>
+                      Filters the daily CVE flood down to what affects you using CISA KEV and EPSS,
+                      then defends and patches.
+                    </p>
+                  </div>
+                </div>
+                <div class="member">
+                  <div class="agent-av agent-av--photo">
+                    <img src="images/agents/poppie.jpg" alt="" />
+                  </div>
+                  <div>
+                    <div class="agent-name">Poppie the Planner</div>
+                    <div class="agent-role purple">Purple lead</div>
+                    <p>
+                      Runs the attack, detect and fix loop between them, so red and blue work as one
+                      team.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Slide 5: How it works -->
+        <section class="scene" style="--scene: url('images/scene-datacenter.jpg')" role="region" aria-label="Slide 5 of 12: How it works">
+          <div class="band">
+            <div>
+              <h2>How it works</h2>
+              <p class="band-sub">Attack. Defend. Fix. Report. Repeat.</p>
+            </div>
+            <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
+          </div>
+          <div class="content">
+            <div class="loop">
+              <div class="loop-step">
+                <img
+                  src="images/purple-team/pennie-attack.jpg"
+                  alt="Pennie, the red robot, picking a glowing red holographic padlock on a server rack"
+                />
+                <div class="step" aria-hidden="true">1</div>
+                <h4>Pennie attacks</h4>
+                <p>
+                  With your written authorisation, Pennie probes your apps, APIs and cloud, and
+                  checks every new CVE against your code to prove what is really exploitable.
+                </p>
+              </div>
+              <div class="loop-step">
+                <img
+                  src="images/purple-team/ollie-defend.jpg"
+                  alt="Ollie, the blue robot, raising a glowing hexagonal shield against red shards"
+                />
+                <div class="step" aria-hidden="true">2</div>
+                <h4>Ollie defends</h4>
+                <p>
+                  Did Ollie see it? He watches your Microsoft Defender for Cloud and Sentinel around
+                  the clock, and every attack he missed becomes a new detection.
+                </p>
+              </div>
+              <div class="loop-step">
+                <img
+                  src="images/purple-team/ollie-fix.jpg"
+                  alt="Ollie, the blue robot, sealing a crack in a glowing panel of code"
+                />
+                <div class="step" aria-hidden="true">3</div>
+                <h4>Ollie fixes</h4>
+                <p>
+                  He opens a pull request with the fix and a test that proves it. Your developers
+                  review and merge, then Pennie attacks again to confirm it holds.
+                </p>
+              </div>
+              <div class="loop-step">
+                <img
+                  src="images/purple-team/poppie-report.jpg"
+                  alt="Poppie, the copper robot, holding a tablet projecting a locked padlock and a rising chart"
+                />
+                <div class="step" aria-hidden="true">4</div>
+                <h4>Poppie reports</h4>
+                <p>
+                  Poppie scopes the work, tracks every finding as a risk, issue or task, and shows
+                  your score, time to detect and time to fix each month.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Slide 6: Patch fast -->
+        <section role="region" aria-label="Slide 6 of 12: Patch fast">
+          <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" style="top: 70px" />
+          <div
+            class="dark-inner with-agent with-agent--wide"
+            style="--deck-agent: url('images/divider-purple-team-patch.jpg')"
+          >
+            <div class="col">
+              <p class="kicker">Patch fast</p>
+              <h2>From advisory<br />to merged fix.</h2>
+              <div class="steps">
+                <div class="step-row">
+                  <div class="n" aria-hidden="true">1</div>
+                  <p><strong>Matched.</strong> Every new advisory is checked continuously against the packages you run.</p>
+                </div>
+                <div class="step-row">
+                  <div class="n" aria-hidden="true">2</div>
+                  <p><strong>Prioritised.</strong> CISA KEV and EPSS put the actively exploited and the likely-next first.</p>
+                </div>
+                <div class="step-row">
+                  <div class="n" aria-hidden="true">3</div>
+                  <p><strong>Fixed.</strong> Ollie opens a pull request with the fix and a test that proves it.</p>
+                </div>
+                <div class="step-row">
+                  <div class="n" aria-hidden="true">4</div>
+                  <p><strong>Merged.</strong> Your developers review and merge. Nothing lands without you.</p>
+                </div>
+                <div class="step-row">
+                  <div class="n" aria-hidden="true">5</div>
+                  <p><strong>Re-tested.</strong> Pennie attacks again to confirm the fix holds.</p>
+                </div>
+              </div>
+              <div class="kpi-row" role="list" aria-label="What we measure">
+                <div class="kpi" role="listitem">
+                  <div class="kpi-val">Time to fix</div>
+                  <div class="kpi-label">From advisory published to merged fix</div>
+                </div>
+                <div class="kpi" role="listitem">
+                  <div class="kpi-val">Exploited, still open</div>
+                  <div class="kpi-label">Actively exploited issues open right now</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Slide 7: Safe by design -->
+        <section role="region" aria-label="Slide 7 of 12: Safe by design">
+          <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" style="top: 70px" />
+          <div
+            class="dark-inner with-agent"
+            style="--deck-agent: url('images/divider-purple-team-attack.jpg')"
+          >
+            <div class="col">
+              <p class="kicker">Safe by design</p>
+              <h2>Attacked on purpose.<br />Never by surprise.</h2>
+              <div class="checks">
+                <div class="check">
+                  <svg class="ic" aria-hidden="true"><use href="icons.svg#i-scroll-text" /></svg>
+                  <div>
+                    <strong>Nothing is tested without written authorisation.</strong> Targets,
+                    timings and rules of engagement are agreed with you first.
+                  </div>
+                </div>
+                <div class="check">
+                  <svg class="ic" aria-hidden="true"><use href="icons.svg#i-shield-check" /></svg>
+                  <div>
+                    <strong>Non-destructive by default.</strong> Anything risky runs against a
+                    staging copy, or is scheduled with you.
+                  </div>
+                </div>
+                <div class="check">
+                  <svg class="ic" aria-hidden="true"><use href="icons.svg#i-git-pull-request" /></svg>
+                  <div>
+                    <strong>Every fix goes through your own code review.</strong> A pull request
+                    with a proving test; you merge it.
+                  </div>
+                </div>
+                <div class="check">
+                  <svg class="ic" aria-hidden="true"><use href="icons.svg#i-key-round" /></svg>
+                  <div>
+                    <strong>Private until the fix ships.</strong> On public repos, new flaws go
+                    through a private GitHub Security Advisory, never a public issue.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Slide 8: Works with what you already run -->
+        <section role="region" aria-label="Slide 8 of 12: Works with what you already run">
+          <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" style="top: 70px" />
+          <div
+            class="dark-inner with-agent with-agent--wide"
+            style="--deck-agent: url('images/divider-purple-team-ops.jpg')"
+          >
+            <div class="col col--wide">
+              <p class="kicker">Nothing new to install</p>
+              <h2>Works with what<br />you already run.</h2>
+              <div class="cards-2">
+                <div class="card">
+                  <div class="chip" aria-hidden="true">
+                    <svg class="ic"><use href="icons.svg#i-github" /></svg>
+                  </div>
+                  <div>
+                    <h4>Code and delivery</h4>
+                    <p>GitHub, Azure DevOps, Dependabot and Renovate, CodeRabbit where you use it.</p>
+                  </div>
+                </div>
+                <div class="card">
+                  <div class="chip" aria-hidden="true">
+                    <svg class="ic"><use href="icons.svg#i-search" /></svg>
+                  </div>
+                  <div>
+                    <h4>Security scanning</h4>
+                    <p>GitHub Advanced Security, ZAP (Zed Attack Proxy), Nuclei.</p>
+                  </div>
+                </div>
+                <div class="card">
+                  <div class="chip" aria-hidden="true">
+                    <svg class="ic"><use href="icons.svg#i-shield-check" /></svg>
+                  </div>
+                  <div>
+                    <h4>Microsoft security</h4>
+                    <p>Microsoft Defender for Cloud, Microsoft Sentinel, Azure Lighthouse.</p>
+                  </div>
+                </div>
+                <div class="card">
+                  <div class="chip" aria-hidden="true">
+                    <svg class="ic"><use href="icons.svg#i-key-round" /></svg>
+                  </div>
+                  <div>
+                    <h4>Identity and access</h4>
+                    <p>Microsoft Entra ID: agents as named guests or identities you can switch off.</p>
+                  </div>
+                </div>
+                <div class="card">
+                  <div class="chip chip-white" aria-hidden="true">
+                    <img
+                      src="images/logos/ai-foundry.svg"
+                      alt=""
+                      style="width: 38px; height: 38px; object-fit: contain"
+                    />
+                  </div>
+                  <div>
+                    <h4>AI models</h4>
+                    <p>Microsoft Foundry: OpenAI and Claude models, optionally in your own tenant.</p>
+                  </div>
+                </div>
+                <div class="card">
+                  <div class="chip" aria-hidden="true">
+                    <svg class="ic"><use href="icons.svg#i-clock" /></svg>
+                  </div>
+                  <div>
+                    <h4>Time and billing</h4>
+                    <p>Thyme and Business Central: agents log the real hours they work.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="pill-row" role="list" aria-label="Where it runs">
+                <span class="pill pill-logo" role="listitem"
+                  ><img src="images/logos/azure-devops.svg" alt="" />Azure DevOps</span
+                >
+                <span class="pill pill-logo" role="listitem"
+                  ><img src="images/logos/azure.svg" alt="" />Microsoft Azure</span
+                >
+                <span class="pill" role="listitem">Bills as hours on a KnowAll support plan (CISP), new or existing</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Slide 9: Your Purple Team Portal -->
+        <section class="scene" style="--scene: url('images/scene-observatory.jpg')" role="region" aria-label="Slide 9 of 12: Your Purple Team Portal">
+          <div class="band">
+            <div>
+              <h2>Your Purple Team Portal</h2>
+              <p class="band-sub">security.knowall.ai &mdash; what you see each month</p>
+            </div>
+            <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
+          </div>
+          <div class="content">
+            <div class="portal-split">
+              <div class="checks">
+                <div class="check">
+                  <svg class="ic" aria-hidden="true"><use href="icons.svg#i-gauge" /></svg>
+                  <div><strong>Your security score,</strong> and how it moves month by month.</div>
+                </div>
+                <div class="check">
+                  <svg class="ic" aria-hidden="true"><use href="icons.svg#i-search" /></svg>
+                  <div><strong>Every advisory that affects you,</strong> matched to your repositories.</div>
+                </div>
+                <div class="check">
+                  <svg class="ic" aria-hidden="true"><use href="icons.svg#i-git-pull-request" /></svg>
+                  <div><strong>What we did about each one,</strong> from first seen to merged fix.</div>
+                </div>
+                <div class="check">
+                  <svg class="ic" aria-hidden="true"><use href="icons.svg#i-clock" /></svg>
+                  <div><strong>Time spent per case,</strong> so every hour billed is accounted for.</div>
+                </div>
+              </div>
+              <div class="portal-shot">
+                <img
+                  src="images/purple-team-portal.png"
+                  alt="The Purple Team Portal dashboard for a fictional company, Contoso: security score, score trend and the month's key figures"
+                />
+                <span class="tag">Example</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Slide 10: Three ways to run it -->
+        <section role="region" aria-label="Slide 10 of 12: Three ways to run it">
+          <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" style="top: 70px" />
+          <div
+            class="dark-inner with-agent"
+            style="--deck-agent: url('images/divider-purple-team-defend.jpg')"
+          >
+            <div class="col">
+              <p class="kicker">Three ways to run it</p>
+              <h2>Your data,<br />where you want it.</h2>
+              <div class="cards-2">
+                <div class="card">
+                  <div class="chip" aria-hidden="true">
+                    <svg class="ic"><use href="icons.svg#i-globe" /></svg>
+                  </div>
+                  <div>
+                    <h4>Hosted</h4>
+                    <p>The team and your portal run on security.knowall.ai. Fastest to start.</p>
+                  </div>
+                </div>
+                <div class="card">
+                  <div class="chip" aria-hidden="true">
+                    <svg class="ic"><use href="icons.svg#i-database" /></svg>
+                  </div>
+                  <div>
+                    <h4>In your tenant</h4>
+                    <p>Your data stays in your Azure; the agents work into it from ours.</p>
+                  </div>
+                </div>
+                <div class="card">
+                  <div class="chip" aria-hidden="true">
+                    <svg class="ic"><use href="icons.svg#i-server-cog" /></svg>
+                  </div>
+                  <div>
+                    <h4>Fully sovereign</h4>
+                    <p>Agents and models run in your Azure too. Nothing leaves your estate.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Slide 11: How you pay -->
+        <section class="scene" style="--scene: url('images/scene-blocks.jpg')" role="region" aria-label="Slide 11 of 12: How you pay">
+          <div class="band">
+            <div>
+              <h2>How you pay</h2>
+              <p class="band-sub">Real hours, a cap you set, no surprises</p>
+            </div>
+            <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
+          </div>
+          <div class="content">
+            <div class="pay-split">
+              <div class="stages">
+                <div class="stage">
+                  <div class="step" aria-hidden="true">01</div>
+                  <div>
+                    <h4>Security Discovery</h4>
+                    <p>
+                      Measures your estate: the repositories, cloud and apps in scope, and what is
+                      already exposed. Sets your starting score.
+                    </p>
+                  </div>
+                </div>
+                <div class="stage">
+                  <div class="step" aria-hidden="true">02</div>
+                  <div>
+                    <h4>Hours on a CISP</h4>
+                    <p>
+                      Agents bill the real hours they work on a Continuous Improvement Service Plan,
+                      new or existing, with a monthly cap Poppie will not exceed without asking you.
+                    </p>
+                  </div>
+                </div>
+                <div class="stage">
+                  <div class="step" aria-hidden="true">03</div>
+                  <div>
+                    <h4>Monitoring</h4>
+                    <p>
+                      A flat monthly rate keeps Ollie watching Defender and Sentinel, and the
+                      matching running, around the clock.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <img
+                src="images/purple-team/poppie-report.jpg"
+                alt="Poppie, the copper robot, holding a tablet projecting a locked blue padlock and a rising chart"
+              />
+            </div>
+          </div>
+        </section>
+
+        <!-- Slide 12: CTA -->
+        <section role="region" aria-label="Slide 12 of 12: Book a Security Discovery">
+          <div class="cta-top">
+            <h2>Break it before<br />they do.</h2>
+            <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
+          </div>
+          <div class="cta-bottom">
+            <div style="display: flex; flex-direction: column; gap: 30px; max-width: 1180px">
+              <p style="color: var(--mist); font-size: 27px; line-height: 1.5">
+                Start with a
+                <strong style="color: #fff; font-weight: 800">Security Discovery</strong> &mdash;
+                we measure your estate, set your starting score and come back with a scoped plan:
+                what Pennie would test, what Ollie would watch, and what your first month&rsquo;s
+                report would show.
+              </p>
+              <a
+                class="cta-button"
+                href="https://www.knowall.ai/purple-team#enquire"
+                aria-label="Book a Security Discovery - open the Purple Team enquiry form"
+              >
+                <svg class="ic" aria-hidden="true"><use href="icons.svg#i-calendar-check" /></svg>
+                Book a Security Discovery
+              </a>
+            </div>
+            <div class="contact-row">
+              <div class="contact-item">
+                <svg class="ic" aria-hidden="true"><use href="icons.svg#i-mail" /></svg>
+                <a href="mailto:hello@knowall.ai?subject=Purple%20Team%20enquiry">hello@knowall.ai</a>
+              </div>
+              <div class="contact-item">
+                <svg class="ic" aria-hidden="true"><use href="icons.svg#i-globe" /></svg>
+                <a href="https://www.knowall.ai/purple-team">knowall.ai/purple-team</a>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <script src="vendor/reveal/reveal.js"></script>
+    <script src="knowall-deck.js"></script>
+    <script>
+      // This deck's call to action is the Security Discovery, not the generic
+      // working session the shared runtime injects.
+      document.querySelectorAll('.slide-cta').forEach((cta) => {
+        cta.textContent = 'Book a Security Discovery';
+        cta.href = 'https://www.knowall.ai/purple-team#enquire';
+        cta.setAttribute('aria-label', 'Book a Security Discovery with KnowAll AI');
+      });
+    </script>
+  </body>
+</html>

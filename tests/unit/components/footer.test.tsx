@@ -41,6 +41,19 @@ describe('Footer', () => {
     );
   });
 
+  it('links the Purple Team page and its presentation deck', () => {
+    render(<Footer />);
+
+    expect(screen.getByRole('link', { name: 'Purple Team' })).toHaveAttribute(
+      'href',
+      '/purple-team'
+    );
+    expect(screen.getByRole('link', { name: 'Purple Team deck' })).toHaveAttribute(
+      'href',
+      '/presentations/purple-team.html'
+    );
+  });
+
   it('renders Our Story and Shop route links', () => {
     render(<Footer />);
 
