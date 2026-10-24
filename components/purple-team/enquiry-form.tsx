@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { CheckCircle, Send } from 'lucide-react';
+import { CheckCircle, Mail, Send } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -217,15 +217,18 @@ export default function EnquiryForm() {
         {sending ? 'Sending…' : 'Talk to the Purple Team'}
         <Send className="ml-2 h-4 w-4" aria-hidden="true" />
       </Button>
-      <p className="text-xs text-gray-400">
-        Prefer email? Write to{' '}
+      <p className="flex items-center gap-2 text-sm text-gray-300">
+        <Mail className="h-4 w-4 shrink-0 text-violet-300" aria-hidden="true" />
+        Prefer email?{' '}
         <a
           href="mailto:hello@knowall.ai?subject=Purple%20Team%20enquiry"
-          className="text-violet-300 underline-offset-4 hover:underline"
+          className="font-medium text-white underline decoration-violet-400 underline-offset-4 hover:text-violet-200"
         >
           hello@knowall.ai
         </a>
-        . We never test anything without your written authorisation.
+      </p>
+      <p className="text-xs text-gray-400">
+        We never test anything without your written authorisation.
       </p>
     </form>
   );

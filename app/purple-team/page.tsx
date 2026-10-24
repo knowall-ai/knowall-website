@@ -480,6 +480,16 @@ export default function PurpleTeamPage() {
                   </li>
                 ))}
               </ul>
+              <p className="mt-8 text-gray-300">
+                Or just email us at{' '}
+                <a
+                  href="mailto:hello@knowall.ai?subject=Purple%20Team%20enquiry"
+                  className="font-semibold text-white underline decoration-violet-400 underline-offset-4 hover:text-violet-200"
+                >
+                  hello@knowall.ai
+                </a>
+                .
+              </p>
             </div>
             <div className="rounded-2xl border border-gray-800 bg-gray-950/80 p-6 sm:p-8">
               <EnquiryForm />
