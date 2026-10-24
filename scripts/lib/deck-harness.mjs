@@ -5,12 +5,14 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join, normalize, extname, relative, isAbsolute } from 'node:path';
 import { readFile } from 'node:fs/promises';
 import { createServer } from 'node:http';
+import { loadManifest } from './decks.mjs';
 
 export const root = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 export const publicDir = join(root, 'public');
 
-// Single source of truth for which decks exist (file name without .html).
-export const decks = ['company-overview', 'ai-discovery', 'cisp', 'purple-team'];
+// Which decks exist (file name without .html), in gallery order. The single
+// source of truth is public/presentations/decks.json.
+export const decks = loadManifest().decks.map((deck) => deck.slug);
 
 const MIME = {
   '.html': 'text/html',

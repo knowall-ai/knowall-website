@@ -15,7 +15,10 @@
     "test:headed": "playwright test --headed",
     "test:unit": "vitest run",
     "test:unit:watch": "vitest",
-    "listings": "node tools/nostr-listings/cli.mjs"
+    "listings": "node tools/nostr-listings/cli.mjs",
+    "decks:build": "node scripts/build-presentations.mjs",
+    "decks:check": "node scripts/build-presentations.mjs --check",
+    "prebuild": "npm run decks:build"
   },
   "engines": {
     "node": ">=22.0.0"

@@ -1,0 +1,49 @@
+{
+  "$comment": "The one list of KnowAll AI slide decks. Drives the presentations index cards (npm run decks:build), the QA harness (scripts/lib/deck-harness.mjs) and the site-index test. Paths are relative to /presentations/. A deck that is withdrawn moves to 'retired' and keeps a redirect page so shared links don't 404.",
+  "decks": [
+    {
+      "slug": "company-overview",
+      "title": "Company Overview",
+      "description": "The full corporate overview — who we are, how we deliver from workshop to project, case studies, our products and agents, Presence, Reverie memory and the Purple Team.",
+      "cover": "images/cover-overview-full.jpg",
+      "thumb": "images/thumbs/company-overview.jpg",
+      "order": 1
+    },
+    {
+      "slug": "ai-discovery",
+      "title": "AI Discovery Workshop",
+      "description": "A focused one-day workshop to uncover where automation and AI can transform your organisation — pre-work surveys, on-site workshop, 1-to-1 interviews and a prioritised report.",
+      "cover": "images/cover-discovery.jpg",
+      "thumb": "images/thumbs/ai-discovery.jpg",
+      "order": 2
+    },
+    {
+      "slug": "cisp",
+      "title": "Continuous Improvement",
+      "description": "The Continuous Improvement Service Plan — proactive, flexible ongoing support via pre-purchased time-and-material blocks that keeps your solutions improving, month after month.",
+      "cover": "images/cover-cisp.jpg",
+      "thumb": "images/thumbs/cisp.jpg",
+      "order": 3
+    },
+    {
+      "slug": "purple-team",
+      "title": "The Purple Team",
+      "description": "Continuous AI security — Pennie attacks, Ollie defends and fixes, Poppie runs the loop. From new advisory to merged fix in your GitHub or Azure DevOps, with a portal that shows your score.",
+      "cover": "images/cover-purple-team.jpg",
+      "thumb": "images/thumbs/purple-team.jpg",
+      "order": 4
+    }
+  ],
+  "retired": [
+    {
+      "slug": "agentic-delivery",
+      "redirectTo": "company-overview",
+      "note": "The Agentic Delivery Workshop now lives in the Company Overview."
+    },
+    {
+      "slug": "agentic-ai-solutions",
+      "redirectTo": "company-overview",
+      "note": "Agentic AI Solutions was folded into the Company Overview."
+    }
+  ]
+}

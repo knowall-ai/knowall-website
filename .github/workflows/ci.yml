@@ -49,6 +49,9 @@ jobs:
       - name: Check formatting
         run: npm run format:check
 
+      - name: Check generated presentations are up to date
+        run: npm run decks:check
+
   typecheck:
     name: Type Check
     runs-on: ubuntu-latest

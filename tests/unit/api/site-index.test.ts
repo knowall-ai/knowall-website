@@ -1,4 +1,6 @@
 import { describe, it, expect } from 'vitest';
+import { readFileSync } from 'node:fs';
+import path from 'node:path';
 import { siteIndex } from '@/app/api/chat/site-index';
 import { systemPrompt } from '@/app/api/chat/system-prompt';
 
@@ -10,7 +12,12 @@ import { systemPrompt } from '@/app/api/chat/system-prompt';
  *   deck with its public URL, so she can refer visitors on for more depth
  */
 
-const DECKS = ['company-overview', 'ai-discovery', 'cisp', 'purple-team'];
+// every deck in the manifest (public/presentations/decks.json)
+const DECKS = (
+  JSON.parse(
+    readFileSync(path.resolve(__dirname, '../../../public/presentations/decks.json'), 'utf8')
+  ) as { decks: { slug: string }[] }
+).decks.map((deck) => deck.slug);
 
 describe('site index', () => {
   it('is part of the system prompt', () => {
