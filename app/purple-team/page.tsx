@@ -443,7 +443,7 @@ export default function PurpleTeamPage() {
       <Quote
         text="I break in so nobody else can."
         by="Pennie the Pen Tester"
-        tint="bg-gradient-to-r from-red-950/60 to-gray-950"
+        tint="bg-gradient-to-r from-red-950/40 via-violet-950/60 to-blue-950/40"
       />
 
       {/* Standards & platforms */}
