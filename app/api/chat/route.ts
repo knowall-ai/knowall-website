@@ -6,6 +6,7 @@ import { CONTEXT_BRIEFS } from './context-briefs';
 import { logChat } from './logger';
 import { clientIp, consume, LIMITS } from '@/lib/rate-limit';
 import { signOffMessage } from '@/lib/sallie-signoff';
+import { parseChatRequest } from './validate';
 
 // Set to force-dynamic to ensure the route is always server-rendered
 export const dynamic = 'force-dynamic';
@@ -49,9 +50,12 @@ export async function GET(req: Request) {
 }
 
 export async function POST(req: Request) {
+  // Origin, size and shape checks: a bad request gets a 4xx, never the model.
+  const parsed = await parseChatRequest(req);
+  if (!parsed.ok) return parsed.response;
+  const { body, messages: clientMessages } = parsed;
+
   try {
-    // Parse the request body to get the messages and conversation ID
-    const body = await req.json();
     const conversationId = body.conversationId || Date.now().toString();
     // Which opening line this visit started with — logged so we can learn what works.
     const greetingId =
@@ -62,9 +66,7 @@ export async function POST(req: Request) {
     // Cost guards: a visitor's allowance, the day's budget, and the length of
     // one conversation. When any is hit Sallie signs off gracefully instead
     // of erroring, and the exchange is still logged so email can continue it.
-    const history: Array<{ role?: string; content?: string }> = Array.isArray(body.messages)
-      ? body.messages
-      : [];
+    const history = clientMessages;
     const visitorTurns = history.filter((m) => m.role === 'user').length;
     // Check the conversation cap first so over-cap requests don't spend the day's budget.
     const overCap = visitorTurns > LIMITS.messagesPerConversation();
@@ -121,16 +123,9 @@ export async function POST(req: Request) {
       },
     ];
 
-    // Add the user messages from the request
-    if (body.messages && Array.isArray(body.messages)) {
-      // Map the messages to the format expected by OpenAI
-      const userMessages = body.messages.map((msg: any) => ({
-        role: msg.role as 'user' | 'assistant',
-        content: msg.content as string,
-      }));
-
-      messages.push(...userMessages);
-    }
+    // Add the conversation so far: validated to user/assistant turns only, so
+    // the system prompt above stays the only system message.
+    messages.push(...clientMessages);
 
     console.log('Sending messages to OpenAI:', JSON.stringify(messages, null, 2));
 

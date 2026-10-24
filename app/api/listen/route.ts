@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import OpenAI from 'openai';
 import { clientIp, consume, isSameOrigin } from '@/lib/rate-limit';
+import { BodyTooLargeError, readBodyWithLimit } from '@/lib/request-guards';
 
 /**
  * Sallie's ears, for browsers whose own speech recognition is missing or
@@ -9,6 +10,8 @@ import { clientIp, consume, isSameOrigin } from '@/lib/rate-limit';
  */
 
 export const MAX_AUDIO_BYTES = 4 * 1024 * 1024; // ~30s of Opus at 96 kbps, with headroom
+/** The clip plus multipart overhead; anything bigger is refused before it's buffered. */
+const MAX_LISTEN_BODY_BYTES = MAX_AUDIO_BYTES + 64 * 1024;
 
 export async function POST(req: Request) {
   if (!isSameOrigin(req)) {
@@ -32,13 +35,20 @@ export async function POST(req: Request) {
 
   let file: Blob | null = null;
   try {
-    const form = await req.formData();
+    // Capped read first: formData() alone would buffer a body of any size.
+    const bytes = await readBodyWithLimit(req, MAX_LISTEN_BODY_BYTES);
+    const form = await new Response(bytes, {
+      headers: { 'content-type': req.headers.get('content-type') ?? '' },
+    }).formData();
     const entry = form.get('audio');
     // Duck-type rather than instanceof: the runtime's File class can differ from the global one.
     if (entry && typeof entry === 'object' && 'arrayBuffer' in entry && 'size' in entry) {
       file = entry as Blob;
     }
-  } catch {
+  } catch (error) {
+    if (error instanceof BodyTooLargeError) {
+      return NextResponse.json({ error: 'Clip too long' }, { status: 413 });
+    }
     return NextResponse.json({ error: 'Expected multipart form data' }, { status: 400 });
   }
   if (!file || file.size === 0) {

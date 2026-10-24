@@ -98,6 +98,21 @@ describe('POST /api/speak', () => {
     expect(speechCreate).toHaveBeenCalledTimes(1);
   });
 
+  it('returns 413 for an oversized body without calling the voice model', async () => {
+    const { MAX_SPEAK_BODY_BYTES } = await import('@/app/api/speak/route');
+    const res = await post({ text: 'a'.repeat(MAX_SPEAK_BODY_BYTES) });
+    expect(res.status).toBe(413);
+    expect(speechCreate).not.toHaveBeenCalled();
+  });
+
+  it('returns 400 for malformed JSON', async () => {
+    const { POST } = await import('@/app/api/speak/route');
+    const res = await POST(
+      new Request('http://localhost/api/speak', { method: 'POST', headers: SITE, body: '{nope' })
+    );
+    expect(res.status).toBe(400);
+  });
+
   it('returns 400 for empty text', async () => {
     const res = await post({ text: '   ' });
     expect(res.status).toBe(400);

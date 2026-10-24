@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import OpenAI from 'openai';
 import { synthesizeWithRealtime } from './realtime';
 import { clientIp, consume, isSameOrigin } from '@/lib/rate-limit';
+import { BodyTooLargeError, readTextWithLimit } from '@/lib/request-guards';
 
 /**
  * Sallie's voice. Turns a short piece of her reply into speech so the
@@ -15,6 +16,8 @@ import { clientIp, consume, isSameOrigin } from '@/lib/rate-limit';
  */
 
 export const MAX_SPEAK_CHARS = 700;
+/** Text is trimmed to MAX_SPEAK_CHARS anyway; this just refuses absurd bodies unread. */
+export const MAX_SPEAK_BODY_BYTES = 16 * 1024;
 const CACHE_MAX = 40;
 
 type Engine = 'realtime' | 'tts';
@@ -98,9 +101,12 @@ export async function POST(req: Request) {
 
   let text = '';
   try {
-    const body = await req.json();
+    const body = JSON.parse(await readTextWithLimit(req, MAX_SPEAK_BODY_BYTES));
     text = toSpeakable(typeof body?.text === 'string' ? body.text : '');
-  } catch {
+  } catch (error) {
+    if (error instanceof BodyTooLargeError) {
+      return NextResponse.json({ error: 'Request body is too large' }, { status: 413 });
+    }
     return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
   }
   if (!text) {

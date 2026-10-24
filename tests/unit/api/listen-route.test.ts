@@ -79,6 +79,13 @@ describe('POST /api/listen', () => {
     expect(transcriptionsCreate).not.toHaveBeenCalled();
   });
 
+  it('returns 413 for a body far past the clip limit, before parsing it', async () => {
+    const { MAX_AUDIO_BYTES } = await import('@/app/api/listen/route');
+    const res = await post(clip(MAX_AUDIO_BYTES + 128 * 1024));
+    expect(res.status).toBe(413);
+    expect(transcriptionsCreate).not.toHaveBeenCalled();
+  });
+
   it('returns the trimmed transcript', async () => {
     const res = await post(clip(100));
     expect(res.status).toBe(200);
