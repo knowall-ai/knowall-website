@@ -40,7 +40,7 @@ const steps = [
     image: '/images/purple-team/ollie-defend.jpg',
     alt: 'Ollie, the blue robot, raising a glowing hexagonal shield against red shards',
     title: 'Ollie defends',
-    text: 'Did Ollie see it? He watches Microsoft Defender for Cloud and Sentinel 24/7, and every attack he missed becomes a new detection.',
+    text: 'Did Ollie see it? He watches your Microsoft Defender for Cloud and Sentinel around the clock, and every attack he missed becomes a new detection.',
     accent: 'bg-blue-500',
   },
   {
@@ -240,7 +240,7 @@ export default function PurpleTeamPage() {
       <section className="border-y border-gray-800 bg-gray-900 px-4 py-12">
         <dl className="container mx-auto grid max-w-6xl gap-8 text-center sm:grid-cols-3">
           <div className="flex flex-col-reverse">
-            <dt className="mt-2 text-gray-400">new CVEs published every day</dt>
+            <dt className="mt-2 text-gray-400">new CVEs a day, over the last 30 days</dt>
             <dd className="text-4xl font-bold text-white md:text-5xl">{fmt(perDay)}</dd>
           </div>
           <div className="flex flex-col-reverse">
@@ -250,7 +250,7 @@ export default function PurpleTeamPage() {
             </dd>
           </div>
           <div className="flex flex-col-reverse">
-            <dt className="mt-2 text-gray-400">agents on watch, 24/7</dt>
+            <dt className="mt-2 text-gray-400">agents on watch, around the clock</dt>
             <dd className="text-4xl font-bold text-white md:text-5xl">3</dd>
           </div>
         </dl>
@@ -258,7 +258,7 @@ export default function PurpleTeamPage() {
           No person can read every advisory. The skill is knowing which handful affect <em>your</em>{' '}
           code and are being exploited, and fixing those first.
         </p>
-        <p className="mx-auto mt-3 max-w-2xl text-center text-xs text-gray-500">
+        <p className="mx-auto mt-3 max-w-2xl text-center text-xs text-gray-400">
           Sources: <SourceLink source={SOURCES.nvd} /> (CVEs published in the 30 days to {asOfLabel}
           ) and <SourceLink source={SOURCES.kev} /> (entries added in 2025).
         </p>
@@ -400,8 +400,8 @@ export default function PurpleTeamPage() {
             Mapped to the registers your auditors already know.
           </h2>
           <p className="mb-12 max-w-2xl text-lg text-gray-300">
-            Every finding carries its public references, so it stands up in an ISO 27001 or Cyber
-            Essentials review.
+            Every finding carries its public references, so your auditors can trace it, whether for
+            ISO 27001, Cyber Essentials or your own risk register.
           </p>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {standards.map((s) => (

@@ -537,6 +537,9 @@ export default function SallieAssistant({ dockOnly = false }: { dockOnly?: boole
   // Say hello once she is on screen (browsers may hold this until the first
   // interaction; `unlock` releases it).
   useEffect(() => {
+    // Docked from load on phones, her greeting bubble is hidden, so don't
+    // speak a line nobody can see.
+    if (dockOnly && !window.matchMedia('(min-width: 640px)').matches) return;
     const timer = setTimeout(() => void speak(opener.text), 600);
     return () => clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps

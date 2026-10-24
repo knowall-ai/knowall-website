@@ -74,7 +74,7 @@ function ScoreTrend() {
       <svg
         viewBox={`0 0 ${W} ${H}`}
         className="h-auto w-full"
-        role="img"
+        role="group"
         aria-label="Security score by month, rising from 54 in May to 82 in October"
       >
         <line x1={P.l} x2={W - P.r} y1={H - P.b} y2={H - P.b} stroke="#374151" />
@@ -93,7 +93,7 @@ function ScoreTrend() {
           <g
             key={d.month}
             tabIndex={0}
-            role="button"
+            role="img"
             aria-label={`${d.month}: score ${d.score}`}
             onMouseEnter={() => setActive(i)}
             onMouseLeave={() => setActive(null)}
@@ -120,7 +120,7 @@ function ScoreTrend() {
         <div
           className="pointer-events-none absolute rounded-md border border-gray-700 bg-gray-900/95 px-2.5 py-1.5 text-xs shadow-lg"
           style={{ left: `${(x(active) / W) * 100}%`, top: 0, transform: 'translate(-50%, -100%)' }}
-          role="status"
+          aria-hidden="true"
         >
           <span className="font-semibold text-white">{TREND[active].month}</span>{' '}
           <span className="text-gray-300">score {TREND[active].score}</span>

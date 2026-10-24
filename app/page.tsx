@@ -150,6 +150,7 @@ export default function Home() {
               alt="Pennie, Poppie and Ollie, the KnowAll Purple Team agents"
               width={1536}
               height={1024}
+              sizes="(min-width: 1024px) 50vw, 100vw"
               className="rounded-2xl border border-violet-500/30 shadow-2xl shadow-violet-500/20"
             />
           </div>

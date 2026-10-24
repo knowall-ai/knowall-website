@@ -103,11 +103,12 @@ export default function EnquiryForm() {
             autoComplete="name"
             placeholder="Your name"
             aria-invalid={!!errors.name}
+            aria-describedby={errors.name ? 'pt-name-error' : undefined}
             className={field}
             {...register('name')}
           />
           {errors.name && (
-            <p role="alert" className="text-sm text-red-400">
+            <p id="pt-name-error" role="alert" className="text-sm text-red-400">
               {errors.name.message}
             </p>
           )}
@@ -122,11 +123,12 @@ export default function EnquiryForm() {
             autoComplete="email"
             placeholder="you@company.com"
             aria-invalid={!!errors.email}
+            aria-describedby={errors.email ? 'pt-email-error' : undefined}
             className={field}
             {...register('email')}
           />
           {errors.email && (
-            <p role="alert" className="text-sm text-red-400">
+            <p id="pt-email-error" role="alert" className="text-sm text-red-400">
               {errors.email.message}
             </p>
           )}
@@ -142,17 +144,22 @@ export default function EnquiryForm() {
           autoComplete="organization"
           placeholder="Company name"
           aria-invalid={!!errors.company}
+          aria-describedby={errors.company ? 'pt-company-error' : undefined}
           className={field}
           {...register('company')}
         />
         {errors.company && (
-          <p role="alert" className="text-sm text-red-400">
+          <p id="pt-company-error" role="alert" className="text-sm text-red-400">
             {errors.company.message}
           </p>
         )}
       </div>
 
-      <fieldset className="space-y-2">
+      <fieldset
+        className="space-y-2"
+        aria-invalid={!!errors.platform}
+        aria-describedby={errors.platform ? 'pt-platform-error' : undefined}
+      >
         <legend className="text-sm font-medium text-gray-200">Where does your code live?</legend>
         <div className="flex flex-wrap gap-2">
           {PLATFORMS.map((p) => (
@@ -165,13 +172,17 @@ export default function EnquiryForm() {
           ))}
         </div>
         {errors.platform && (
-          <p role="alert" className="text-sm text-red-400">
+          <p id="pt-platform-error" role="alert" className="text-sm text-red-400">
             {errors.platform.message}
           </p>
         )}
       </fieldset>
 
-      <fieldset className="space-y-2">
+      <fieldset
+        className="space-y-2"
+        aria-invalid={!!errors.scope}
+        aria-describedby={errors.scope ? 'pt-scope-error' : undefined}
+      >
         <legend className="text-sm font-medium text-gray-200">What would you like tested?</legend>
         <div className="flex flex-wrap gap-2">
           {SCOPES.map((s) => (
@@ -184,7 +195,7 @@ export default function EnquiryForm() {
           ))}
         </div>
         {errors.scope && (
-          <p role="alert" className="text-sm text-red-400">
+          <p id="pt-scope-error" role="alert" className="text-sm text-red-400">
             {errors.scope.message}
           </p>
         )}

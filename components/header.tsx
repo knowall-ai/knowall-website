@@ -133,7 +133,7 @@ export default function Header() {
               >
                 {menuGroups.map((group) => (
                   <DropdownMenuGroup key={group.label} className="min-w-44">
-                    <DropdownMenuLabel className="text-xs font-medium uppercase tracking-wider text-gray-500">
+                    <DropdownMenuLabel className="text-xs font-medium uppercase tracking-wider text-gray-400">
                       {group.label}
                     </DropdownMenuLabel>
                     {group.links.map((link) => (
@@ -235,7 +235,7 @@ export default function Header() {
 
               {menuGroups.map((group) => (
                 <div key={group.label}>
-                  <span className="block text-gray-500 text-sm font-medium uppercase tracking-wider py-2">
+                  <span className="block text-gray-400 text-sm font-medium uppercase tracking-wider py-2">
                     {group.label}
                   </span>
                   {group.links.map((link) => (

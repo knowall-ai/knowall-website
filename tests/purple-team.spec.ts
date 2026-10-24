@@ -25,7 +25,7 @@ test.describe('Purple Team Page', () => {
     await expect(steps).toHaveCount(4);
     await expect(steps.first()).toContainText('Pennie attacks');
     await expect(
-      page.getByRole('img', { name: 'Bar chart of new CVEs published per year' })
+      page.getByRole('group', { name: 'Bar chart of new CVEs published per year' })
     ).toBeVisible();
     await expect(page.getByRole('img', { name: /Security score \d+ out of 100/ })).toBeVisible();
 
