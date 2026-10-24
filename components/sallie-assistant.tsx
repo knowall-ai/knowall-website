@@ -614,7 +614,8 @@ export default function SallieAssistant({ dockOnly = false }: { dockOnly?: boole
       )}
 
       {showDockBubble && (
-        <div className="relative max-w-[300px]">
+        // Docked from page load, the bubble would cover content on phones.
+        <div className={cn('relative max-w-[300px]', dockOnly && 'hidden sm:block')}>
           <SpeechBubble
             text={
               conversation.messages.length ? 'Still here if you have more questions.' : greeting
