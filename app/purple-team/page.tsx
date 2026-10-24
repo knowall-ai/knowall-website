@@ -100,7 +100,7 @@ const integrations = [
       { name: 'GitHub', role: 'repos, issues, pull requests, security advisories' },
       { name: 'Azure DevOps', role: 'repos, pipelines, Boards work items' },
       { name: 'Dependabot and Renovate', role: 'routine dependency upgrades' },
-      { name: 'CodeRabbit', role: 'AI review on every fix before your team approves it' },
+      { name: 'CodeRabbit', role: 'AI review on each fix, in repos where you use it' },
     ],
   },
   {
@@ -110,7 +110,7 @@ const integrations = [
         name: 'GitHub Advanced Security',
         role: 'code, secret and dependency scanning, on GitHub or Azure DevOps',
       },
-      { name: 'OWASP ZAP', role: 'non-destructive web app scans' },
+      { name: 'ZAP (Zed Attack Proxy)', role: 'non-destructive web app scans' },
       { name: 'Nuclei', role: 'checks for known CVEs on your public sites' },
     ],
   },
@@ -145,7 +145,7 @@ const integrations = [
     items: [
       {
         name: 'Thyme and Business Central',
-        role: 'agents log real hours to your existing support plan',
+        role: 'agents log the real hours they work to your support plan',
       },
     ],
   },
@@ -162,7 +162,7 @@ const faqs = [
   },
   {
     q: 'Will the agents change our code without asking?',
-    a: 'No. Every fix arrives as a pull request with a test that proves it. Your developers review and merge it, with a CodeRabbit review alongside.',
+    a: 'No. Every fix arrives as a pull request with a test that proves it. Your developers review and merge it, with an AI review (such as CodeRabbit) alongside where you use one.',
   },
   {
     q: 'Could testing break production?',
@@ -473,8 +473,9 @@ export default function PurpleTeamPage() {
           <div className="mt-16">
             <h3 className="mb-2 text-2xl font-bold">Works with what you already run</h3>
             <p className="mb-8 max-w-2xl text-gray-300">
-              No new platform to adopt: the team works inside your code hosting, security tools and
-              Microsoft tenant, and bills through the support plan you already have.
+              Nothing new to install: the team works inside your code hosting, security tools and
+              Microsoft tenant, and bills as hours on a KnowAll support plan (CISP), new or
+              existing.
             </p>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3" data-testid="integrations">
               {integrations.map((g) => (
