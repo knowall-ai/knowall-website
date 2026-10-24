@@ -646,6 +646,13 @@ export default function SallieAssistant({
             tail="right"
             className="px-4 py-3 [&_p]:text-sm"
           />
+          {/* Browsers hold her voice until the page has been clicked; say so here
+              too, or after a refresh she just stays silent in the corner. */}
+          {voice.blocked && !voice.muted && (
+            <p className="mt-1.5 text-right text-xs text-lime-200/80">
+              Click or tap anywhere to hear Sallie
+            </p>
+          )}
           <button
             type="button"
             onClick={() => setDockBubbleDismissed(true)}
