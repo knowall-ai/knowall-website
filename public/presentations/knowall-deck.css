@@ -170,15 +170,26 @@ html.reveal-full-page:not(.print-pdf) body.reveal-viewport > .reveal {
   z-index: 5;
 }
 
-.logo-light {
-  filter: brightness(0) invert(1);
+/* ONE placement for the mark on every slide of every deck — covers, dividers,
+   header-band slides and the closing slide alike — so it never jumps as the
+   slides change (Ben, 2026-10-24). Change it here, nowhere else: no per-deck
+   or inline top/right/height overrides. */
+:root {
+  --logo-top: 49px;
+  --logo-right: 84px;
+  --logo-h: 112px;
 }
 
-section > .logo-light {
+section > .logo-light,
+.band .logo-dark,
+.cta-top .logo-dark {
   position: absolute;
-  top: 54px;
-  right: 80px;
-  height: 132px;
+  top: var(--logo-top);
+  right: var(--logo-right);
+  height: var(--logo-h);
+  /* white mark, with a soft shadow so it stays legible on busy cover art */
+  filter: brightness(0) invert(1) drop-shadow(0 2px 14px rgba(0, 0, 0, 0.75));
+  opacity: 1;
 }
 
 /* Opt-in modifier, not a new default. The white logo normally sits top right,
@@ -486,13 +497,6 @@ section > .logo-light--left {
   font-size: 26px;
   font-weight: 600;
   color: var(--mist);
-}
-
-/* the mark is dark-on-light artwork — invert it for the dark header */
-.band .logo-dark {
-  height: 112px;
-  filter: brightness(0) invert(1);
-  opacity: 0.9;
 }
 
 .content {
@@ -994,16 +998,6 @@ section > .logo-light--left {
   padding-bottom: 30px;
 }
 
-/* Same spot and size as the header-band logo (49px down, 84px in, 112px
-   tall), so it doesn't jump when the closing slide comes in (Ben, 2026-10-24). */
-.cta-top .logo-dark {
-  position: absolute;
-  top: 49px;
-  right: 84px;
-  height: 112px;
-  filter: brightness(0) invert(1);
-  opacity: 0.9;
-}
 
 .cta-bottom {
   position: absolute;
