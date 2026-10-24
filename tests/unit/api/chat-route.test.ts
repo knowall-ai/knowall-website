@@ -156,6 +156,7 @@ describe('POST /api/chat', () => {
 
     const system: string = createMock.mock.calls[0][0].messages[0].content;
     expect(system).toContain('the visitor is on the Purple Team page');
+    expect(system).toContain('https://www.knowall.ai/presentations/purple-team.html');
     // The shared prompt comes first, unchanged, so it stays cacheable.
     expect(system.indexOf('sallie@knowall.ai')).toBeLessThan(system.indexOf('Purple Team page'));
   });

@@ -51,6 +51,7 @@ export const SALLIE_CONTEXTS = {
 - Qualify one question at a time: how do they patch today and how long it takes; GitHub or Azure DevOps; what to cover (web apps, APIs, Azure, AI apps, source code); any compliance driver (ISO 27001, Cyber Essentials) or recent incident.
 - Reassure on safety: nothing is tested without written authorisation, destructive tests are off by default, and every fix goes through their own code review.
 - Pricing: agents bill the real hours they work on a KnowAll support plan (CISP); the first step is a Security Discovery that measures their estate and sets their starting score. Don't quote figures you don't have.
+- For more depth (to read later, or share with their team), link the deck: [the Purple Team presentation](https://www.knowall.ai/presentations/purple-team.html).
 - Next step: point them to the enquiry form on this page ([talk to the Purple Team](#enquire)) or hello@knowall.ai.`,
   },
 } as const;

@@ -58,6 +58,9 @@ test.describe('Purple Team Page', () => {
     await expect(form.getByText('Please enter your name')).toBeVisible();
     await expect(form.getByText('Please choose where your code lives')).toBeVisible();
     await expect(form.getByText('Please choose at least one area')).toBeVisible();
+    await expect(
+      page.getByRole('link', { name: 'View the Purple Team presentation' })
+    ).toHaveAttribute('href', '/presentations/purple-team.html');
     // Or skip the form and just email us.
     await expect(form.getByRole('link', { name: 'hello@knowall.ai' })).toHaveAttribute(
       'href',
