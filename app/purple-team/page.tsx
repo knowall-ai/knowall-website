@@ -18,6 +18,7 @@ import {
   CVES_PER_YEAR,
   KEV_ADDED_LAST_YEAR,
   CVES_LAST_30_DAYS,
+  CVES_AS_OF,
 } from '@/components/purple-team/data';
 
 export const metadata: Metadata = {
@@ -344,7 +345,7 @@ export default function PurpleTeamPage() {
               <p className="mb-6 text-sm text-gray-400">
                 Source: NIST National Vulnerability Database. *Year to date.
               </p>
-              <CveTrendChart data={CVES_PER_YEAR} />
+              <CveTrendChart data={CVES_PER_YEAR} asOf={CVES_AS_OF} />
               <KevCallout />
             </div>
             <div>
@@ -467,21 +468,25 @@ export default function PurpleTeamPage() {
   );
 }
 
-/** The needle in the haystack: last full year's CVEs vs those CISA saw exploited. */
+/**
+ * The needle in the haystack: a year's new CVEs beside the CVEs (from any
+ * year) CISA added to its exploited list that year. Different cohorts, so no
+ * percentage — just the two numbers side by side.
+ */
 function KevCallout() {
   const last = CVES_PER_YEAR.filter((d) => !d.partial).at(-1);
   if (!last) return null;
-  const pct = ((KEV_ADDED_LAST_YEAR / last.count) * 100).toFixed(1);
   return (
     <div className="mt-auto grid grid-cols-2 gap-4 border-t border-gray-800 pt-6">
       <div>
         <p className="text-3xl font-bold">{fmt(last.count)}</p>
-        <p className="text-sm text-gray-400">CVEs published in {last.year}</p>
+        <p className="text-sm text-gray-400">new CVEs published in {last.year}</p>
       </div>
       <div>
         <p className="text-3xl font-bold text-red-400">{fmt(KEV_ADDED_LAST_YEAR)}</p>
         <p className="text-sm text-gray-400">
-          seen exploited in the wild ({pct}%). Those are the ones to fix first.
+          CVEs CISA confirmed as exploited in the wild in {last.year}. Those are the ones to fix
+          first.
         </p>
       </div>
     </div>

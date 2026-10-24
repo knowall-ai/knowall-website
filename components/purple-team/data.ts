@@ -18,9 +18,11 @@ export const CVES_PER_YEAR: YearCount[] = [
   { year: 2023, count: 30949 },
   { year: 2024, count: 40704 },
   { year: 2025, count: 49972 },
-  // 1 Jan – 23 Oct 2026.
   { year: 2026, count: 88565, partial: true },
 ];
+
+/** The partial year's count runs from 1 Jan to this date (inclusive). */
+export const CVES_AS_OF = '2026-10-23';
 
 /** NVD CVEs published 24 Sep – 24 Oct 2026. */
 export const CVES_LAST_30_DAYS = 16966;

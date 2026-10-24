@@ -636,7 +636,7 @@ export default function SallieAssistant({ dockOnly = false }: { dockOnly?: boole
 
       <div className="flex items-center gap-3">
         {/* Keep the voice option visible while the chat is closed. */}
-        {!dockOpen && (
+        {docked && !dockOpen && (
           <VoiceToggle voice={voice} className="bg-gray-950/90 shadow-lg backdrop-blur" />
         )}
         <button
