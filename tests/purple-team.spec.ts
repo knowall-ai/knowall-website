@@ -58,6 +58,9 @@ test.describe('Purple Team Page', () => {
     await expect(form.getByText('Please enter your name')).toBeVisible();
     await expect(form.getByText('Please choose where your code lives')).toBeVisible();
     await expect(form.getByText('Please choose at least one area')).toBeVisible();
+    await expect(
+      page.getByRole('link', { name: 'View the Purple Team presentation' })
+    ).toHaveAttribute('href', '/presentations/purple-team.html');
     // Or skip the form and just email us.
     await expect(form.getByRole('link', { name: 'hello@knowall.ai' })).toHaveAttribute(
       'href',
@@ -70,6 +73,11 @@ test.describe('Purple Team Page', () => {
     const dock = page.getByTestId('sallie-dock');
     await expect(dock.getByRole('button', { name: 'Chat with Sallie' })).toBeVisible();
     await expect(dock.getByRole('button', { name: /(Mute|Unmute) Sallie/ })).toBeVisible();
+
+    // Her chips are about the Purple Team here, not the homepage topics.
+    await dock.getByRole('button', { name: 'Chat with Sallie' }).click();
+    await expect(dock.getByRole('button', { name: 'How fast can you patch?' })).toBeVisible();
+    await expect(dock.getByRole('button', { name: 'How does Bitcoin fit in?' })).toHaveCount(0);
     const box = await dock.boundingBox();
     const viewport = page.viewportSize();
     expect(box && viewport && box.x + box.width > viewport.width - 40).toBeTruthy();

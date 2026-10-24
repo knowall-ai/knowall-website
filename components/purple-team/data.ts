@@ -27,6 +27,9 @@ export const CVES_AS_OF = '2026-10-23';
 /** NVD CVEs published 24 Sep – 24 Oct 2026. */
 export const CVES_LAST_30_DAYS = 16966;
 
+/** The year KEV_ADDED_LAST_YEAR counts: update both together. */
+export const KEV_YEAR = 2025;
+
 /** CISA Known Exploited Vulnerabilities catalogue entries with a 2025 `dateAdded`. */
 export const KEV_ADDED_LAST_YEAR = 245;
 

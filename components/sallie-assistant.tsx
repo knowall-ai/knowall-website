@@ -28,6 +28,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 import SallieStage, { Starfield } from '@/components/sallie-stage';
 import { pickGreeting, type Greeting } from '@/lib/sallie-greetings';
+import { SALLIE_CONTEXTS, type SallieContext } from '@/lib/sallie-context';
 import { signOffMailto } from '@/lib/sallie-signoff';
 import { useSallieVoice, useSpeechInput } from '@/components/sallie-voice';
 
@@ -72,7 +73,7 @@ function useTypewriter(text: string) {
   return shown;
 }
 
-function useSallieConversation(greeting: Greeting) {
+function useSallieConversation(greeting: Greeting, context?: SallieContext) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -97,6 +98,8 @@ function useSallieConversation(greeting: Greeting) {
             conversationId,
             // Her on-screen greeting is the first turn, so she doesn't introduce herself twice.
             greetingId: greeting.id,
+            // Keeps her on the page's topic (an allowlisted key, checked server-side).
+            ...(context ? { context } : {}),
             messages: [
               { role: 'assistant', content: greeting.text },
               ...history.map(({ role, content }) => ({ role, content })),
@@ -119,7 +122,7 @@ function useSallieConversation(greeting: Greeting) {
         setIsLoading(false);
       }
     },
-    [messages, isLoading, conversationId, ended, greeting]
+    [messages, isLoading, conversationId, ended, greeting, context]
   );
 
   return { messages, isLoading, error, ended, conversationId, send };
@@ -157,14 +160,19 @@ function MessageBubble({ message }: { message: Message }) {
         <ReactMarkdown
           remarkPlugins={[remarkGfm]}
           components={{
-            a: ({ ...props }) => (
-              <a
-                {...props}
-                className="text-lime-400 underline hover:text-lime-300"
-                target="_blank"
-                rel="noopener noreferrer"
-              />
-            ),
+            a: ({ href, ...props }) => {
+              // On-site links (#enquire, /purple-team) stay in this tab so they
+              // scroll or navigate; everything else opens a new one.
+              const internal = typeof href === 'string' && /^[#/](?!\/)/.test(href);
+              return (
+                <a
+                  {...props}
+                  href={href}
+                  className="text-lime-400 underline hover:text-lime-300"
+                  {...(internal ? {} : { target: '_blank', rel: 'noopener noreferrer' })}
+                />
+              );
+            },
             p: ({ ...props }) => <p {...props} className="mb-2 last:mb-0" />,
             ul: ({ ...props }) => (
               <ul {...props} className="mb-2 list-disc space-y-1 pl-5 last:mb-0" />
@@ -227,6 +235,8 @@ interface ConversationPanelProps {
   setInput: (value: string) => void;
   /** Sallie's opening line, shown as the first bubble. */
   greeting: string;
+  /** Chips shown before the first message; a page context brings its own. */
+  suggestionList?: readonly string[];
   className?: string;
   listClassName?: string;
 }
@@ -239,6 +249,7 @@ function ConversationPanel({
   input,
   setInput,
   greeting,
+  suggestionList = SUGGESTIONS,
   className,
   listClassName,
 }: ConversationPanelProps) {
@@ -273,7 +284,7 @@ function ConversationPanel({
 
   const suggestions = (
     <div className="flex flex-wrap gap-2">
-      {SUGGESTIONS.map((s) => (
+      {suggestionList.map((s) => (
         <button
           key={s}
           type="button"
@@ -447,9 +458,17 @@ function SpeechBubble({
  * corner with the same conversation. She talks only to the public
  * `/api/chat` and `/api/speak` endpoints — no internal systems are wired in.
  */
-export default function SallieAssistant({ dockOnly = false }: { dockOnly?: boolean } = {}) {
-  const [opener] = useState(() => pickGreeting());
-  const conversation = useSallieConversation(opener);
+export default function SallieAssistant({
+  dockOnly = false,
+  context,
+}: {
+  dockOnly?: boolean;
+  /** Keep her on this page's topic: her opener and her instructions. */
+  context?: SallieContext;
+} = {}) {
+  const [opener] = useState(() => pickGreeting(Math.random, context));
+  const suggestionList = context ? SALLIE_CONTEXTS[context].suggestions : SUGGESTIONS;
+  const conversation = useSallieConversation(opener, context);
   const tts = useSallieVoice();
   const [input, setInput] = useState('');
   const greeting = useTypewriter(opener.text);
@@ -611,6 +630,7 @@ export default function SallieAssistant({ dockOnly = false }: { dockOnly?: boole
             input={input}
             setInput={setInput}
             greeting={opener.text}
+            suggestionList={suggestionList}
             className="min-h-0 flex-1 px-4 pb-4 pt-3"
           />
         </div>
@@ -703,6 +723,7 @@ export default function SallieAssistant({ dockOnly = false }: { dockOnly?: boole
           input={input}
           setInput={setInput}
           greeting={greeting}
+          suggestionList={suggestionList}
           className="w-full"
           listClassName="max-h-[min(460px,55vh)]"
         />

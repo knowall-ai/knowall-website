@@ -547,6 +547,16 @@ export default function PurpleTeamPage() {
                 ))}
               </ul>
               <p className="mt-8 text-gray-300">
+                Want the full picture first?{' '}
+                <a
+                  href="/presentations/purple-team.html"
+                  className="font-semibold text-white underline decoration-violet-400 underline-offset-4 hover:text-violet-200"
+                >
+                  View the Purple Team presentation
+                </a>
+                .
+              </p>
+              <p className="mt-3 text-gray-300">
                 Or just email us at{' '}
                 <a
                   href="mailto:hello@knowall.ai?subject=Purple%20Team%20enquiry"
@@ -565,7 +575,7 @@ export default function PurpleTeamPage() {
       </section>
 
       <Footer />
-      <SallieAssistant dockOnly />
+      <SallieAssistant dockOnly context="purple-team" />
     </main>
   );
 }

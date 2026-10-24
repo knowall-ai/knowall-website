@@ -1,6 +1,8 @@
 import { OpenAI } from 'openai';
 import { isRateLimited, resolveChatProvider } from './provider';
 import { systemPrompt } from './system-prompt';
+import { parseSallieContext } from '@/lib/sallie-context';
+import { CONTEXT_BRIEFS } from './context-briefs';
 import { logChat } from './logger';
 import { clientIp, consume, LIMITS } from '@/lib/rate-limit';
 import { signOffMessage } from '@/lib/sallie-signoff';
@@ -54,6 +56,8 @@ export async function POST(req: Request) {
     // Which opening line this visit started with — logged so we can learn what works.
     const greetingId =
       typeof body.greetingId === 'string' ? body.greetingId.slice(0, 40) : undefined;
+    // Page focus, e.g. 'purple-team'. Unknown values are ignored.
+    const context = parseSallieContext(body.context);
 
     // Cost guards: a visitor's allowance, the day's budget, and the length of
     // one conversation. When any is hit Sallie signs off gracefully instead
@@ -112,7 +116,8 @@ export async function POST(req: Request) {
     const messages: Array<{ role: 'system' | 'user' | 'assistant'; content: string }> = [
       {
         role: 'system',
-        content: systemPrompt,
+        // A page context is appended after the shared prompt, so the cacheable prefix stays the same.
+        content: context ? `${systemPrompt}\n\n${CONTEXT_BRIEFS[context]}` : systemPrompt,
       },
     ];
 
