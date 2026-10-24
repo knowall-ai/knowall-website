@@ -167,7 +167,7 @@ export default function ExampleDashboard() {
     <div className="rounded-2xl border border-violet-500/30 bg-gray-900/80 p-6 shadow-2xl shadow-violet-500/10">
       <div className="mb-6 flex items-center justify-between gap-4">
         <div>
-          <p className="text-sm text-gray-400">security.knowall.ai</p>
+          <p className="text-sm text-gray-400">Purple Team Portal</p>
           <h3 className="text-xl font-semibold text-white">Your security score</h3>
         </div>
         <span className="rounded-full border border-gray-600 px-3 py-1 text-xs uppercase tracking-wide text-gray-300">
