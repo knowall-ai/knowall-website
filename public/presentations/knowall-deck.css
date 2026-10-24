@@ -994,11 +994,13 @@ section > .logo-light--left {
   padding-bottom: 30px;
 }
 
+/* Same spot and size as the header-band logo (49px down, 84px in, 112px
+   tall), so it doesn't jump when the closing slide comes in (Ben, 2026-10-24). */
 .cta-top .logo-dark {
   position: absolute;
-  top: 70px;
-  right: 96px;
-  height: 150px;
+  top: 49px;
+  right: 84px;
+  height: 112px;
   filter: brightness(0) invert(1);
   opacity: 0.9;
 }
