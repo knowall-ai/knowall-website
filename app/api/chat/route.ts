@@ -1,7 +1,8 @@
 import { OpenAI } from 'openai';
 import { isRateLimited, resolveChatProvider } from './provider';
 import { systemPrompt } from './system-prompt';
-import { SALLIE_CONTEXTS, parseSallieContext } from '@/lib/sallie-context';
+import { parseSallieContext } from '@/lib/sallie-context';
+import { CONTEXT_BRIEFS } from './context-briefs';
 import { logChat } from './logger';
 import { clientIp, consume, LIMITS } from '@/lib/rate-limit';
 import { signOffMessage } from '@/lib/sallie-signoff';
@@ -116,7 +117,7 @@ export async function POST(req: Request) {
       {
         role: 'system',
         // A page context is appended after the shared prompt, so the cacheable prefix stays the same.
-        content: context ? `${systemPrompt}\n\n${SALLIE_CONTEXTS[context].prompt}` : systemPrompt,
+        content: context ? `${systemPrompt}\n\n${CONTEXT_BRIEFS[context]}` : systemPrompt,
       },
     ];
 

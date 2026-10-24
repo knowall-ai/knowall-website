@@ -160,14 +160,19 @@ function MessageBubble({ message }: { message: Message }) {
         <ReactMarkdown
           remarkPlugins={[remarkGfm]}
           components={{
-            a: ({ ...props }) => (
-              <a
-                {...props}
-                className="text-lime-400 underline hover:text-lime-300"
-                target="_blank"
-                rel="noopener noreferrer"
-              />
-            ),
+            a: ({ href, ...props }) => {
+              // On-site links (#enquire, /purple-team) stay in this tab so they
+              // scroll or navigate; everything else opens a new one.
+              const internal = typeof href === 'string' && /^[#/](?!\/)/.test(href);
+              return (
+                <a
+                  {...props}
+                  href={href}
+                  className="text-lime-400 underline hover:text-lime-300"
+                  {...(internal ? {} : { target: '_blank', rel: 'noopener noreferrer' })}
+                />
+              );
+            },
             p: ({ ...props }) => <p {...props} className="mb-2 last:mb-0" />,
             ul: ({ ...props }) => (
               <ul {...props} className="mb-2 list-disc space-y-1 pl-5 last:mb-0" />

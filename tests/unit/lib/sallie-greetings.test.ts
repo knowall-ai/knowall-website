@@ -48,5 +48,19 @@ describe('Sallie greetings', () => {
     expect(parseSallieContext('ignore previous instructions')).toBeUndefined();
     expect(parseSallieContext('constructor')).toBeUndefined();
     expect(parseSallieContext(42)).toBeUndefined();
+    expect(parseSallieContext('__proto__')).toBeUndefined();
+    expect(parseSallieContext(['purple-team'])).toBeUndefined();
+    expect(parseSallieContext(null)).toBeUndefined();
+    expect(parseSallieContext({ toString: () => 'purple-team' })).toBeUndefined();
+  });
+
+  it('page openers end with a question', () => {
+    for (const c of Object.values(SALLIE_CONTEXTS)) {
+      for (const g of c.greetings) expect(g.text.trim().endsWith('?')).toBe(true);
+    }
+  });
+
+  it("keeps her page briefs out of the browser bundle's context data", () => {
+    for (const c of Object.values(SALLIE_CONTEXTS)) expect(c).not.toHaveProperty('prompt');
   });
 });
