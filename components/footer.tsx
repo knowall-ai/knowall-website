@@ -76,6 +76,14 @@ export default function Footer({ darkMode = false }: FooterProps) {
                   Bitcoin Integration
                 </Link>
               </li>
+              <li>
+                <Link
+                  href="/purple-team"
+                  className="text-gray-400 hover:text-white transition-colors"
+                >
+                  Purple Team
+                </Link>
+              </li>
             </ul>
           </div>
 

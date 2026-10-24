@@ -447,7 +447,7 @@ function SpeechBubble({
  * corner with the same conversation. She talks only to the public
  * `/api/chat` and `/api/speak` endpoints — no internal systems are wired in.
  */
-export default function SallieAssistant() {
+export default function SallieAssistant({ dockOnly = false }: { dockOnly?: boolean } = {}) {
   const [opener] = useState(() => pickGreeting());
   const conversation = useSallieConversation(opener);
   const tts = useSallieVoice();
@@ -562,7 +562,8 @@ export default function SallieAssistant() {
     };
   }, [unlock]);
 
-  const docked = mounted && !heroOnScreen;
+  // Pages without a hero spot for her (e.g. /purple-team) keep her docked.
+  const docked = mounted && (dockOnly || !heroOnScreen);
   const showDockBubble = docked && !dockOpen && !dockBubbleDismissed;
 
   const dock = (
@@ -632,26 +633,34 @@ export default function SallieAssistant() {
         </div>
       )}
 
-      <button
-        type="button"
-        onClick={() => setDockOpen((o) => !o)}
-        aria-label={dockOpen ? 'Close chat with Sallie' : 'Chat with Sallie'}
-        aria-expanded={dockOpen}
-        tabIndex={docked ? 0 : -1}
-        className="cursor-pointer group relative rounded-full ring-2 ring-lime-500/60 shadow-[0_0_40px_rgba(157,254,10,0.35)] transition-transform hover:scale-105 focus:outline-none focus-visible:ring-4 motion-reduce:transition-none motion-reduce:hover:scale-100"
-      >
-        <SallieStage
-          shape="circle"
-          busy={conversation.isLoading}
-          waveform
-          className="w-16 md:w-20"
-        />
-        <span className="absolute -bottom-1 -right-1 flex h-7 w-7 items-center justify-center rounded-full bg-lime-500 text-gray-950 shadow">
-          {dockOpen ? <X className="h-4 w-4" /> : <MessageCircle className="h-4 w-4" />}
-        </span>
-      </button>
+      <div className="flex items-center gap-3">
+        {/* Keep the voice option visible while the chat is closed. */}
+        {!dockOpen && (
+          <VoiceToggle voice={voice} className="bg-gray-950/90 shadow-lg backdrop-blur" />
+        )}
+        <button
+          type="button"
+          onClick={() => setDockOpen((o) => !o)}
+          aria-label={dockOpen ? 'Close chat with Sallie' : 'Chat with Sallie'}
+          aria-expanded={dockOpen}
+          tabIndex={docked ? 0 : -1}
+          className="cursor-pointer group relative rounded-full ring-2 ring-lime-500/60 shadow-[0_0_40px_rgba(157,254,10,0.35)] transition-transform hover:scale-105 focus:outline-none focus-visible:ring-4 motion-reduce:transition-none motion-reduce:hover:scale-100"
+        >
+          <SallieStage
+            shape="circle"
+            busy={conversation.isLoading}
+            waveform
+            className="w-16 md:w-20"
+          />
+          <span className="absolute -bottom-1 -right-1 flex h-7 w-7 items-center justify-center rounded-full bg-lime-500 text-gray-950 shadow">
+            {dockOpen ? <X className="h-4 w-4" /> : <MessageCircle className="h-4 w-4" />}
+          </span>
+        </button>
+      </div>
     </div>
   );
+
+  if (dockOnly) return mounted ? createPortal(dock, document.body) : null;
 
   return (
     <>

@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import {
   Zap,
   Bot,
@@ -129,6 +130,50 @@ export default function Home() {
               darkMode={true}
               showLearnMore={false}
             />
+          </div>
+        </div>
+      </section>
+
+      {/* Purple Team teaser — the full offering lives on /purple-team */}
+      <section
+        id="purple-team"
+        className="relative overflow-hidden py-20 px-4 bg-gray-950 text-white"
+      >
+        <div
+          className="absolute inset-0 bg-[radial-gradient(ellipse_at_left,rgba(220,38,38,0.18),transparent_55%),radial-gradient(ellipse_at_right,rgba(37,99,235,0.18),transparent_55%)]"
+          aria-hidden="true"
+        ></div>
+        <div className="container relative max-w-6xl mx-auto flex flex-col lg:flex-row items-center gap-12">
+          <div className="flex-1">
+            <Image
+              src="/images/purple-team/team.jpg"
+              alt="Pennie, Poppie and Ollie, the KnowAll Purple Team agents"
+              width={1536}
+              height={1024}
+              className="rounded-2xl border border-violet-500/30 shadow-2xl shadow-violet-500/20"
+            />
+          </div>
+          <div className="flex-1">
+            <p className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-violet-300">
+              New: continuous security
+            </p>
+            <h2 className="text-3xl md:text-4xl font-bold mb-6">
+              The <span className="text-red-400">Pur</span>
+              <span className="text-violet-400">ple</span>{' '}
+              <span className="text-blue-400">Team</span>
+            </h2>
+            <p className="text-lg text-gray-300 mb-8">
+              Hundreds of new vulnerabilities are published every day, and attackers use AI to find
+              them. Our agents do too: Pennie attacks, Ollie defends and fixes with pull requests
+              your developers approve, and Poppie runs the loop and reports your security score.
+            </p>
+            <Link
+              href="/purple-team"
+              className="inline-flex items-center gap-2 bg-violet-600 hover:bg-violet-700 text-white px-6 py-3 rounded-md transition-colors font-medium shadow-lg shadow-violet-500/20"
+            >
+              <ShieldCheck className="h-5 w-5" />
+              <span>Meet the Purple Team</span>
+            </Link>
           </div>
         </div>
       </section>

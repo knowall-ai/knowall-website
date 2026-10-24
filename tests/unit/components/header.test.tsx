@@ -44,6 +44,10 @@ describe('Header', () => {
     expect(screen.getByRole('link', { name: 'Home' })).toHaveAttribute('href', '/#');
     expect(screen.getByRole('link', { name: 'Services' })).toHaveAttribute('href', '/#services');
     expect(screen.getByRole('link', { name: 'Copilots' })).toHaveAttribute('href', '/#copilots');
+    expect(screen.getByRole('link', { name: 'Purple Team' })).toHaveAttribute(
+      'href',
+      '/purple-team'
+    );
     // The individual products (Zaplie, Zapdesk, …) now live under a Products dropdown.
     expect(screen.getByRole('button', { name: 'Products' })).toBeInTheDocument();
   });
