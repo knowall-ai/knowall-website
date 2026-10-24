@@ -92,13 +92,63 @@ const standards = [
   { name: 'MITRE ATT&CK', text: 'The catalogue of real attacker techniques' },
 ];
 
-const platforms = [
-  'GitHub',
-  'Azure DevOps',
-  'GitHub Advanced Security',
-  'Microsoft Defender for Cloud',
-  'Microsoft Sentinel',
-  'CodeRabbit',
+/** What the team plugs into, grouped by job. Names only: no logos or endorsements implied. */
+const integrations = [
+  {
+    group: 'Code and delivery',
+    items: [
+      { name: 'GitHub', role: 'repos, issues, pull requests, security advisories' },
+      { name: 'Azure DevOps', role: 'repos, pipelines, Boards work items' },
+      { name: 'Dependabot and Renovate', role: 'routine dependency upgrades' },
+      { name: 'CodeRabbit', role: 'AI review on each fix, in repos where you use it' },
+    ],
+  },
+  {
+    group: 'Security scanning',
+    items: [
+      {
+        name: 'GitHub Advanced Security',
+        role: 'code, secret and dependency scanning, on GitHub or Azure DevOps',
+      },
+      { name: 'ZAP (Zed Attack Proxy)', role: 'non-destructive web app scans' },
+      { name: 'Nuclei', role: 'checks for known CVEs on your public sites' },
+    ],
+  },
+  {
+    group: 'Microsoft security',
+    items: [
+      { name: 'Microsoft Defender for Cloud', role: 'posture, Secure Score, workload alerts' },
+      { name: 'Microsoft Sentinel', role: 'detections Ollie adds after each test' },
+      { name: 'Azure Lighthouse', role: 'delegated, revocable access to your Azure' },
+    ],
+  },
+  {
+    group: 'Identity and access',
+    items: [
+      {
+        name: 'Microsoft Entra ID',
+        role: 'your sign-in; agents as named guests or agent identities you can switch off',
+      },
+    ],
+  },
+  {
+    group: 'AI models',
+    items: [
+      {
+        name: 'Microsoft Foundry',
+        role: 'OpenAI and Claude models, optionally in your own Azure tenant',
+      },
+    ],
+  },
+  {
+    group: 'Time and billing',
+    items: [
+      {
+        name: 'Thyme and Business Central',
+        role: 'agents log the real hours they work to your support plan',
+      },
+    ],
+  },
 ];
 
 const faqs = [
@@ -112,7 +162,7 @@ const faqs = [
   },
   {
     q: 'Will the agents change our code without asking?',
-    a: 'No. Every fix arrives as a pull request with a test that proves it. Your developers review and merge it, with a CodeRabbit review alongside.',
+    a: 'No. Every fix arrives as a pull request with a test that proves it. Your developers review and merge it, with an AI review (such as CodeRabbit) alongside where you use one.',
   },
   {
     q: 'Could testing break production?',
@@ -206,14 +256,18 @@ export default function PurpleTeamPage() {
             <h1 className="mb-6 text-5xl font-bold leading-[1.05] md:text-7xl">
               Break it
               <br />
-              before <span className="text-red-400">they</span> do.
+              before{' '}
+              <span className="text-red-500 [text-shadow:0_0_22px_rgba(239,68,68,0.5)]">
+                they
+              </span>{' '}
+              do.
             </h1>
             <p className="mb-8 text-xl text-white/90">
               Attackers now use AI to find holes around the clock. So does the KnowAll{' '}
-              <span className="font-semibold text-red-400">Pur</span>
-              <span className="font-semibold text-violet-400">ple</span>{' '}
-              <span className="font-semibold text-blue-400">Team</span>: Pennie attacks, Ollie
-              defends and fixes, and Poppie runs the loop between them.
+              <span className="font-semibold text-purple-400 [text-shadow:0_0_18px_rgba(168,85,247,0.6)]">
+                Purple Team
+              </span>
+              : Pennie attacks, Ollie defends and fixes, and Poppie runs the loop between them.
             </p>
             <div className="flex flex-wrap gap-4">
               <Button
@@ -420,18 +474,30 @@ export default function PurpleTeamPage() {
               </div>
             ))}
           </div>
-          <div className="mt-12">
-            <p className="mb-4 text-xs uppercase tracking-[0.25em] text-gray-400">Works with</p>
-            <ul className="flex flex-wrap gap-3">
-              {platforms.map((p) => (
-                <li
-                  key={p}
-                  className="rounded-full border border-gray-700 px-4 py-2 text-sm text-gray-200"
-                >
-                  {p}
-                </li>
+          <div className="mt-16">
+            <h3 className="mb-2 text-2xl font-bold">Works with what you already run</h3>
+            <p className="mb-8 max-w-2xl text-gray-300">
+              Nothing new to install: the team works inside your code hosting, security tools and
+              Microsoft tenant, and bills as hours on a KnowAll support plan (CISP), new or
+              existing.
+            </p>
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3" data-testid="integrations">
+              {integrations.map((g) => (
+                <div key={g.group} className="rounded-xl border border-gray-800 bg-gray-900 p-5">
+                  <h4 className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-violet-300">
+                    {g.group}
+                  </h4>
+                  <ul className="space-y-3">
+                    {g.items.map((it) => (
+                      <li key={it.name}>
+                        <p className="font-medium text-white">{it.name}</p>
+                        <p className="text-sm text-gray-400">{it.role}</p>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               ))}
-            </ul>
+            </div>
           </div>
         </div>
       </section>

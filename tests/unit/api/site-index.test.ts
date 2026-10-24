@@ -16,6 +16,7 @@ const DECKS = [
   'agentic-delivery',
   'cisp',
   'agentic-ai-solutions',
+  'purple-team',
 ];
 
 describe('site index', () => {
