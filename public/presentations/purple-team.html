@@ -35,6 +35,25 @@
         --deck-hero: url('images/close-purple-team.jpg');
       }
 
+      /* The trio stands close to camera on this cover, so the title takes a
+         little less height to leave their faces clear. */
+      .cover-copy h1 {
+        font-size: 100px;
+        max-width: 1000px;
+      }
+
+      /* The trio's faces sit mid-frame on the close, so the foot gradient starts
+         a little lower than the house default before it goes solid. */
+      .cta-bottom {
+        background: linear-gradient(
+          180deg,
+          rgba(15, 18, 22, 0) 0%,
+          rgba(15, 18, 22, 0.55) 26%,
+          rgba(15, 18, 22, 0.9) 42%,
+          var(--charcoal) 58%
+        );
+      }
+
       /* --- Recurring agent motif on statement slides (as in the flagship deck) --- */
       .dark-inner.with-agent {
         background: var(--charcoal);
@@ -57,6 +76,19 @@
           var(--charcoal);
       }
 
+      /* Wider copy column: the fade reaches further right before the art shows. */
+      .dark-inner.with-agent.with-agent--wide::before {
+        background:
+          linear-gradient(
+            90deg,
+            var(--charcoal) 40%,
+            rgba(15, 18, 22, 0.82) 58%,
+            rgba(15, 18, 22, 0) 84%
+          ),
+          var(--deck-agent) right center / cover no-repeat,
+          var(--charcoal);
+      }
+
       .dark-inner.with-agent > * {
         position: relative;
         z-index: 1;
@@ -70,6 +102,15 @@
         gap: 34px;
       }
 
+      .dark-inner.with-agent .col--wide {
+        max-width: 1180px;
+        gap: 30px;
+      }
+
+      .dark-inner.with-agent h2 {
+        font-size: 80px;
+      }
+
       .dark-inner.with-agent .checks {
         grid-template-columns: 1fr;
         gap: 30px;
@@ -78,6 +119,38 @@
       .dark-inner.with-agent .cards-2 {
         grid-template-columns: 1fr;
         gap: 34px;
+      }
+
+      /* Six integrations in two columns beside Ollie and Poppie's ops room. */
+      .col--wide .cards-2 {
+        grid-template-columns: 1fr 1fr;
+        gap: 26px 48px;
+      }
+
+      .col--wide .card {
+        padding: 2px 0 2px 24px;
+        gap: 20px;
+      }
+
+      .col--wide .card h4 {
+        font-size: 28px;
+        margin-bottom: 6px;
+      }
+
+      .col--wide .card p {
+        font-size: 22px;
+      }
+
+      .col--wide .chip {
+        width: 52px;
+        height: 52px;
+        font-size: 42px;
+      }
+
+      .col--wide .chip-white {
+        width: 60px;
+        height: 60px;
+        border-radius: 16px;
       }
 
       /* --- The flood: big numbers over the data city ---------------------------- */
@@ -141,6 +214,55 @@
         max-width: 1000px;
       }
 
+      /* --- Meet the team: three members beside the trio's hero portrait ----------- */
+      .members {
+        display: flex;
+        flex-direction: column;
+        gap: 26px;
+      }
+
+      .member {
+        display: flex;
+        gap: 28px;
+        align-items: center;
+      }
+
+      .member .agent-av--photo {
+        flex: none;
+        width: 132px;
+        height: 132px;
+        border-width: 3px;
+      }
+
+      .member .agent-name {
+        font-size: 30px;
+      }
+
+      .member .agent-role {
+        font-size: 17px;
+        margin-top: 2px;
+      }
+
+      .member .agent-role.red {
+        color: #ff6b6b;
+      }
+
+      .member .agent-role.blue {
+        color: #6cb6ff;
+      }
+
+      .member .agent-role.purple {
+        color: #c4a4ff;
+      }
+
+      .member p {
+        font-size: 22px;
+        line-height: 1.45;
+        color: var(--mist);
+        margin-top: 8px;
+        max-width: 820px;
+      }
+
       /* --- The loop: four stills, one per step ------------------------------------ */
       .loop {
         display: grid;
@@ -194,84 +316,79 @@
         color: var(--mist);
       }
 
-      /* --- Meet the team: three portraits, so they get room ----------------------- */
-      .agent-row--trio {
-        gap: 56px;
-        margin-top: 0;
-      }
-
-      .agent-row--trio .agent {
+      /* --- Patch fast: five numbered steps down the dark side of Ollie's wall ----- */
+      .steps {
+        display: flex;
+        flex-direction: column;
         gap: 18px;
       }
 
-      .agent-row--trio .agent-av--photo {
-        width: 230px;
-        height: 230px;
-        border-width: 3px;
+      .steps .step-row {
+        display: flex;
+        gap: 22px;
+        align-items: baseline;
       }
 
-      .agent-row--trio .agent-name {
-        font-size: 32px;
+      .steps .n {
+        flex: none;
+        width: 54px;
+        font-family: 'Playfair Display', Georgia, serif;
+        font-weight: 900;
+        font-size: 36px;
+        line-height: 1;
+        color: var(--lime);
       }
 
-      .agent-row--trio .agent-role {
-        font-size: 18px;
-        margin-top: 4px;
-      }
-
-      .agent-row--trio .agent-role.red {
-        color: #ff6b6b;
-      }
-
-      .agent-row--trio .agent-role.blue {
-        color: #6cb6ff;
-      }
-
-      .agent-row--trio .agent-role.purple {
-        color: #c4a4ff;
-      }
-
-      .agent-row--trio .agent-text {
-        font-size: 23px;
-        line-height: 1.45;
+      .steps p {
+        font-size: 25px;
+        line-height: 1.4;
         color: var(--mist);
-        max-width: 460px;
-        margin-top: 8px;
       }
 
-      /* --- Patch fast: five points on the line ------------------------------------ */
-      .timeline.timeline-5 {
-        grid-template-columns: repeat(5, 1fr);
-        gap: 36px;
-        margin-top: 48px;
+      .steps p strong {
+        color: #ffffff;
+        font-weight: 800;
       }
 
-      .timeline-5 .timeline-point h4 {
-        font-size: 30px;
+      .with-agent .kpi-row {
+        margin-top: 10px;
       }
 
-      .timeline-5 .timeline-point p {
-        font-size: 22px;
+      .with-agent .kpi-val {
+        font-size: 36px;
       }
 
-      /* --- The portal: copy beside the example screen ----------------------------- */
+      /* --- The portal: four points beside the example screen ---------------------- */
       .portal-split {
         display: grid;
-        grid-template-columns: 1fr 1.08fr;
-        gap: 64px;
+        grid-template-columns: 1fr 1180px;
+        gap: 56px;
         align-items: center;
+      }
+
+      .portal-split .checks {
+        grid-template-columns: 1fr;
+        gap: 30px;
+        margin-top: 0;
+      }
+
+      .portal-split .check {
+        font-size: 23px;
+        gap: 20px;
+      }
+
+      .portal-split .check .ic {
+        font-size: 34px;
       }
 
       .portal-shot {
         position: relative;
-        justify-self: end;
       }
 
       .portal-shot img {
         display: block;
-        max-height: 640px;
-        width: auto;
-        max-width: 100%;
+        width: 100%;
+        height: auto;
         border-radius: 16px;
         border: 1px solid var(--line);
         box-shadow: var(--shadow-hi);
@@ -291,21 +408,55 @@
         text-transform: uppercase;
       }
 
-      /* --- How you pay: three numbered stages ------------------------------------- */
-      .cards-3.stages {
-        gap: 56px;
+      /* --- How you pay: three numbered stages beside Poppie's report -------------- */
+      .pay-split {
+        display: grid;
+        grid-template-columns: 1fr 600px;
+        gap: 72px;
+        align-items: center;
       }
 
-      .stages .stage {
-        padding-top: 110px;
+      .pay-split .stages {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
       }
 
-      .stages .stage h4 {
-        letter-spacing: 0.06em;
+      .pay-split .stage {
+        display: flex;
+        gap: 26px;
+        align-items: flex-start;
+        border: 0;
+        border-left: 3px solid var(--lime);
+        padding: 4px 0 4px 28px;
       }
 
-      .stages .stage p {
-        font-size: 24px;
+      .pay-split .stage .step {
+        position: static;
+        flex: none;
+        width: 76px;
+        font-size: 48px;
+        line-height: 1;
+        margin-top: 4px;
+      }
+
+      .pay-split .stage h4 {
+        font-size: 32px;
+        letter-spacing: 0.02em;
+        margin-bottom: 8px;
+      }
+
+      .pay-split .stage p {
+        font-size: 23px;
+      }
+
+      .pay-split > img {
+        width: 600px;
+        height: 600px;
+        object-fit: cover;
+        border-radius: 22px;
+        border: 1px solid var(--line);
+        box-shadow: var(--shadow-hi);
       }
     </style>
   </head>
@@ -318,14 +469,14 @@
           <div
             class="cover-hero"
             role="img"
-            aria-label="Pennie, Poppie and Ollie, three robots, on a night rooftop looking out over a city skyline, lit red, purple and blue"
+            aria-label="Pennie, Poppie and Ollie, three robots, close to camera in front of a neon city skyline, lit red, purple and blue"
           ></div>
           <div class="cover-scrim" aria-hidden="true"></div>
-          <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
+          <img class="logo-light logo-light--left" src="/images/logo.png" alt="KnowAll.ai" />
           <div class="cover-copy">
             <p class="kicker">KnowAll AI &middot; Continuous AI security</p>
-            <h1>The Purple Team:<br /><em>break it</em> before they do.</h1>
-            <p class="lead">
+            <h1>The Purple Team:<br /><em>break it</em><br />before they do.</h1>
+            <p class="lead" style="max-width: 1000px">
               Attackers now use AI to find holes around the clock. So does the KnowAll Purple Team:
               Pennie attacks, Ollie defends and fixes, and Poppie runs the loop between them.
             </p>
@@ -371,133 +522,113 @@
         </section>
 
         <!-- Slide 3: Attackers use AI, so do we -->
-        <section class="scene" style="--scene: url('images/scene-beacons.jpg')" role="region" aria-label="Slide 3 of 12: Attackers use AI, so do we">
-          <div class="band">
-            <div>
-              <h2>Attackers use AI. So do we.</h2>
-              <p class="band-sub">Frontier AI on defence</p>
-            </div>
-            <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
-          </div>
-          <div class="content content-top">
-            <p class="lead">
-              The judgement comes from frontier models. The never-sleeping part comes from plain
-              software. Each does what it is good at.
-            </p>
-            <div class="cards-2">
-              <div class="card">
-                <div class="chip" aria-hidden="true">
-                  <svg class="ic"><use href="icons.svg#i-network" /></svg>
+        <section role="region" aria-label="Slide 3 of 12: Attackers use AI, so do we">
+          <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" style="top: 70px" />
+          <div
+            class="dark-inner with-agent"
+            style="--deck-agent: url('images/divider-purple-team-core.jpg')"
+          >
+            <div class="col">
+              <p class="kicker">Frontier AI on defence</p>
+              <h2>Attackers use AI.<br />So do we.</h2>
+              <div class="cards-2">
+                <div class="card">
+                  <div class="chip" aria-hidden="true">
+                    <svg class="ic"><use href="icons.svg#i-network" /></svg>
+                  </div>
+                  <div>
+                    <h4>Frontier models do the reasoning</h4>
+                    <p>
+                      Models from Anthropic and OpenAI, via Microsoft Foundry in KnowAll&rsquo;s
+                      Azure or yours, read your code, judge whether a flaw is really exploitable and
+                      write the fix.
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h4>Frontier models do the reasoning</h4>
-                  <p>
-                    Models from Anthropic and OpenAI, via Microsoft Foundry in KnowAll&rsquo;s Azure
-                    or yours, read your code, judge whether a flaw is really exploitable and write
-                    the fix.
-                  </p>
-                </div>
-              </div>
-              <div class="card">
-                <div class="chip" aria-hidden="true">
-                  <svg class="ic"><use href="icons.svg#i-refresh-cw" /></svg>
-                </div>
-                <div>
-                  <h4>Plain software does the matching</h4>
-                  <p>
-                    Every new advisory is matched continuously against the exact packages you use,
-                    around the clock, so the models only ever look at what touches you.
-                  </p>
+                <div class="card">
+                  <div class="chip" aria-hidden="true">
+                    <svg class="ic"><use href="icons.svg#i-refresh-cw" /></svg>
+                  </div>
+                  <div>
+                    <h4>Plain software does the matching</h4>
+                    <p>
+                      Every new advisory is matched continuously against the exact packages you
+                      use, around the clock, so the models only ever look at what touches you.
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div class="pill-row" role="list" aria-label="AI platforms">
-              <span class="pill" role="listitem">Anthropic</span>
-              <span class="pill" role="listitem">OpenAI</span>
-              <span class="pill pill-logo" role="listitem"
-                ><img src="images/logos/ai-foundry.svg" alt="" />Microsoft Foundry</span
-              >
-              <span class="pill pill-logo" role="listitem"
-                ><img src="images/logos/azure.svg" alt="" />KnowAll&rsquo;s Azure, or your own</span
-              >
+              <div class="pill-row" role="list" aria-label="AI platforms">
+                <span class="pill" role="listitem">Anthropic</span>
+                <span class="pill" role="listitem">OpenAI</span>
+                <span class="pill pill-logo" role="listitem"
+                  ><img src="images/logos/ai-foundry.svg" alt="" />Microsoft Foundry</span
+                >
+                <span class="pill pill-logo" role="listitem"
+                  ><img src="images/logos/azure.svg" alt="" />KnowAll&rsquo;s Azure, or your own</span
+                >
+              </div>
             </div>
           </div>
         </section>
 
         <!-- Slide 4: Meet the team -->
-        <section class="scene" style="--scene: url('images/scene-studio-rim.jpg')" role="region" aria-label="Slide 4 of 12: Meet the team">
-          <div class="band">
-            <div>
-              <h2>Meet the team</h2>
-              <p class="band-sub">Red attacks. Blue defends. Purple makes them one team.</p>
-            </div>
-            <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
-          </div>
-          <div class="content content-top">
-            <div class="agent-row agent-row--trio">
-              <div class="agent" tabindex="0">
-                <div class="agent-skills">
-                  <h5>Pennie &middot; Red team</h5>
-                  <span>OWASP Top 10</span><span>OWASP LLM Top 10</span><span>MITRE ATT&amp;CK</span>
+        <section role="region" aria-label="Slide 4 of 12: Meet the team">
+          <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" style="top: 70px" />
+          <div
+            class="dark-inner with-agent"
+            style="--deck-agent: url('images/purple-team-hero.jpg')"
+          >
+            <div class="col">
+              <p class="kicker">Meet the team</p>
+              <h2 style="font-size: 70px">Red attacks. Blue defends.<br />Purple makes them one team.</h2>
+              <div class="members">
+                <div class="member">
+                  <div class="agent-av agent-av--photo">
+                    <img src="images/purple-team/pennie-portrait.jpg" alt="" />
+                  </div>
+                  <div>
+                    <div class="agent-name">Pennie the Pen Tester</div>
+                    <div class="agent-role red">Red team</div>
+                    <p>
+                      Attacks like a real adversary, mapped to the OWASP Top 10, the OWASP LLM Top
+                      10 and MITRE ATT&amp;CK.
+                    </p>
+                  </div>
                 </div>
-                <div class="agent-av agent-av--photo">
-                  <img src="images/purple-team/pennie-portrait.jpg" alt="" />
+                <div class="member">
+                  <div class="agent-av agent-av--photo">
+                    <img src="images/purple-team/ollie-portrait.jpg" alt="" />
+                  </div>
+                  <div>
+                    <div class="agent-name">Ollie the Operator</div>
+                    <div class="agent-role blue">Blue team</div>
+                    <p>
+                      Filters the daily CVE flood down to what affects you using CISA KEV and EPSS,
+                      then defends and patches.
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <div class="agent-name">Pennie the Pen Tester</div>
-                  <div class="agent-role red">Red team</div>
-                  <p class="agent-text">
-                    Attacks like a real adversary, mapped to the OWASP Top 10, the OWASP LLM Top 10
-                    and MITRE ATT&amp;CK.
-                  </p>
-                </div>
-              </div>
-              <div class="agent" tabindex="0">
-                <div class="agent-skills">
-                  <h5>Ollie &middot; Blue team</h5>
-                  <span>CISA KEV &amp; EPSS</span><span>Defender &amp; Sentinel</span
-                  ><span>Fix pull requests</span>
-                </div>
-                <div class="agent-av agent-av--photo">
-                  <img src="images/purple-team/ollie-portrait.jpg" alt="" />
-                </div>
-                <div>
-                  <div class="agent-name">Ollie the Operator</div>
-                  <div class="agent-role blue">Blue team</div>
-                  <p class="agent-text">
-                    Filters the daily CVE flood down to what affects you using CISA KEV and EPSS,
-                    then defends and patches.
-                  </p>
-                </div>
-              </div>
-              <div class="agent" tabindex="0">
-                <div class="agent-skills">
-                  <h5>Poppie &middot; Purple lead</h5>
-                  <span>Scope &amp; authorisation</span><span>Risks, issues, tasks</span
-                  ><span>Monthly score &amp; report</span>
-                </div>
-                <div class="agent-av agent-av--photo">
-                  <img src="images/agents/poppie.jpg" alt="" />
-                </div>
-                <div>
-                  <div class="agent-name">Poppie the Planner</div>
-                  <div class="agent-role purple">Purple lead</div>
-                  <p class="agent-text">
-                    Runs the attack, detect and fix loop between them, so red and blue work as one
-                    team.
-                  </p>
+                <div class="member">
+                  <div class="agent-av agent-av--photo">
+                    <img src="images/agents/poppie.jpg" alt="" />
+                  </div>
+                  <div>
+                    <div class="agent-name">Poppie the Planner</div>
+                    <div class="agent-role purple">Purple lead</div>
+                    <p>
+                      Runs the attack, detect and fix loop between them, so red and blue work as one
+                      team.
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div class="pill-row" role="list" aria-label="Where the team works">
-              <span class="pill" role="listitem">Works in your GitHub or Azure DevOps</span>
-              <span class="pill" role="listitem">Every change goes through your own review</span>
             </div>
           </div>
         </section>
 
         <!-- Slide 5: How it works -->
-        <section class="scene" style="--scene: url('images/scene-opsfloor.jpg')" role="region" aria-label="Slide 5 of 12: How it works">
+        <section class="scene" style="--scene: url('images/scene-datacenter.jpg')" role="region" aria-label="Slide 5 of 12: How it works">
           <div class="band">
             <div>
               <h2>How it works</h2>
@@ -560,55 +691,53 @@
         </section>
 
         <!-- Slide 6: Patch fast -->
-        <section class="scene" style="--scene: url('images/scene-highway.jpg')" role="region" aria-label="Slide 6 of 12: Patch fast">
-          <div class="band">
-            <div>
-              <h2>Patch fast</h2>
-              <p class="band-sub">From advisory to merged fix</p>
-            </div>
-            <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
-          </div>
-          <div class="content content-top">
-            <div class="timeline timeline-5">
-              <div class="timeline-point">
-                <h4>Matched</h4>
-                <p>Every new advisory is checked continuously against the packages you run.</p>
+        <section role="region" aria-label="Slide 6 of 12: Patch fast">
+          <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" style="top: 70px" />
+          <div
+            class="dark-inner with-agent"
+            style="--deck-agent: url('images/divider-purple-team-patch.jpg')"
+          >
+            <div class="col">
+              <p class="kicker">Patch fast</p>
+              <h2>From advisory<br />to merged fix.</h2>
+              <div class="steps">
+                <div class="step-row">
+                  <div class="n" aria-hidden="true">1</div>
+                  <p><strong>Matched.</strong> Every new advisory is checked continuously against the packages you run.</p>
+                </div>
+                <div class="step-row">
+                  <div class="n" aria-hidden="true">2</div>
+                  <p><strong>Prioritised.</strong> CISA KEV and EPSS put the actively exploited and the likely-next first.</p>
+                </div>
+                <div class="step-row">
+                  <div class="n" aria-hidden="true">3</div>
+                  <p><strong>Fixed.</strong> Ollie opens a pull request with the fix and a test that proves it.</p>
+                </div>
+                <div class="step-row">
+                  <div class="n" aria-hidden="true">4</div>
+                  <p><strong>Merged.</strong> Your developers review and merge. Nothing lands without you.</p>
+                </div>
+                <div class="step-row">
+                  <div class="n" aria-hidden="true">5</div>
+                  <p><strong>Re-tested.</strong> Pennie attacks again to confirm the fix holds.</p>
+                </div>
               </div>
-              <div class="timeline-point">
-                <h4>Prioritised</h4>
-                <p>CISA KEV and EPSS put the actively exploited and the likely-next first.</p>
-              </div>
-              <div class="timeline-point">
-                <h4>Fixed</h4>
-                <p>Ollie opens a pull request with the fix and a test that proves it.</p>
-              </div>
-              <div class="timeline-point">
-                <h4>Merged</h4>
-                <p>Your developers review and merge. Nothing lands without you.</p>
-              </div>
-              <div class="timeline-point">
-                <h4>Re-tested</h4>
-                <p>Pennie attacks again to confirm the fix holds.</p>
-              </div>
-            </div>
-            <div class="kpi-row" role="list" aria-label="What we measure">
-              <div class="kpi" role="listitem">
-                <div class="kpi-val">Time to fix</div>
-                <div class="kpi-label">From advisory published to merged fix</div>
-              </div>
-              <div class="kpi" role="listitem">
-                <div class="kpi-val">Exploited, still open</div>
-                <div class="kpi-label">Actively exploited issues open right now</div>
+              <div class="kpi-row" role="list" aria-label="What we measure">
+                <div class="kpi" role="listitem">
+                  <div class="kpi-val">Time to fix</div>
+                  <div class="kpi-label">From advisory published to merged fix</div>
+                </div>
+                <div class="kpi" role="listitem">
+                  <div class="kpi-val">Exploited, still open</div>
+                  <div class="kpi-label">Actively exploited issues open right now</div>
+                </div>
               </div>
             </div>
           </div>
         </section>
 
         <!-- Slide 7: Safe by design -->
-        <section
-          role="region"
-          aria-label="Slide 7 of 12: Safe by design"
-        >
+        <section role="region" aria-label="Slide 7 of 12: Safe by design">
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" style="top: 70px" />
           <div
             class="dark-inner with-agent"
@@ -616,7 +745,7 @@
           >
             <div class="col">
               <p class="kicker">Safe by design</p>
-              <h2 style="font-size: 80px">Attacked on purpose.<br />Never by surprise.</h2>
+              <h2>Attacked on purpose.<br />Never by surprise.</h2>
               <div class="checks">
                 <div class="check">
                   <svg class="ic" aria-hidden="true"><use href="icons.svg#i-scroll-text" /></svg>
@@ -652,83 +781,84 @@
         </section>
 
         <!-- Slide 8: Works with what you already run -->
-        <section class="scene" style="--scene: url('images/scene-controlroom.jpg')" role="region" aria-label="Slide 8 of 12: Works with what you already run">
-          <div class="band">
-            <div>
-              <h2>Works with what you already run</h2>
-              <p class="band-sub">Nothing new to install</p>
-            </div>
-            <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
-          </div>
-          <div class="content content-top">
-            <div class="cards-3">
-              <div class="card">
-                <div class="chip" aria-hidden="true">
-                  <svg class="ic"><use href="icons.svg#i-github" /></svg>
+        <section role="region" aria-label="Slide 8 of 12: Works with what you already run">
+          <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" style="top: 70px" />
+          <div
+            class="dark-inner with-agent with-agent--wide"
+            style="--deck-agent: url('images/divider-purple-team-ops.jpg')"
+          >
+            <div class="col col--wide">
+              <p class="kicker">Nothing new to install</p>
+              <h2>Works with what<br />you already run.</h2>
+              <div class="cards-2">
+                <div class="card">
+                  <div class="chip" aria-hidden="true">
+                    <svg class="ic"><use href="icons.svg#i-github" /></svg>
+                  </div>
+                  <div>
+                    <h4>Code and delivery</h4>
+                    <p>GitHub, Azure DevOps, Dependabot and Renovate, CodeRabbit where you use it.</p>
+                  </div>
                 </div>
-                <div>
-                  <h4>Code and delivery</h4>
-                  <p>GitHub, Azure DevOps, Dependabot and Renovate, CodeRabbit where you use it.</p>
+                <div class="card">
+                  <div class="chip" aria-hidden="true">
+                    <svg class="ic"><use href="icons.svg#i-search" /></svg>
+                  </div>
+                  <div>
+                    <h4>Security scanning</h4>
+                    <p>GitHub Advanced Security, ZAP (Zed Attack Proxy), Nuclei.</p>
+                  </div>
+                </div>
+                <div class="card">
+                  <div class="chip" aria-hidden="true">
+                    <svg class="ic"><use href="icons.svg#i-shield-check" /></svg>
+                  </div>
+                  <div>
+                    <h4>Microsoft security</h4>
+                    <p>Microsoft Defender for Cloud, Microsoft Sentinel, Azure Lighthouse.</p>
+                  </div>
+                </div>
+                <div class="card">
+                  <div class="chip" aria-hidden="true">
+                    <svg class="ic"><use href="icons.svg#i-key-round" /></svg>
+                  </div>
+                  <div>
+                    <h4>Identity and access</h4>
+                    <p>Microsoft Entra ID: agents as named guests or identities you can switch off.</p>
+                  </div>
+                </div>
+                <div class="card">
+                  <div class="chip chip-white" aria-hidden="true">
+                    <img
+                      src="images/logos/ai-foundry.svg"
+                      alt=""
+                      style="width: 38px; height: 38px; object-fit: contain"
+                    />
+                  </div>
+                  <div>
+                    <h4>AI models</h4>
+                    <p>Microsoft Foundry: OpenAI and Claude models, optionally in your own tenant.</p>
+                  </div>
+                </div>
+                <div class="card">
+                  <div class="chip" aria-hidden="true">
+                    <svg class="ic"><use href="icons.svg#i-clock" /></svg>
+                  </div>
+                  <div>
+                    <h4>Time and billing</h4>
+                    <p>Thyme and Business Central: agents log the real hours they work.</p>
+                  </div>
                 </div>
               </div>
-              <div class="card">
-                <div class="chip" aria-hidden="true">
-                  <svg class="ic"><use href="icons.svg#i-search" /></svg>
-                </div>
-                <div>
-                  <h4>Security scanning</h4>
-                  <p>GitHub Advanced Security, ZAP (Zed Attack Proxy), Nuclei.</p>
-                </div>
+              <div class="pill-row" role="list" aria-label="Where it runs">
+                <span class="pill pill-logo" role="listitem"
+                  ><img src="images/logos/azure-devops.svg" alt="" />Azure DevOps</span
+                >
+                <span class="pill pill-logo" role="listitem"
+                  ><img src="images/logos/azure.svg" alt="" />Microsoft Azure</span
+                >
+                <span class="pill" role="listitem">Bills as hours on a KnowAll support plan (CISP), new or existing</span>
               </div>
-              <div class="card">
-                <div class="chip" aria-hidden="true">
-                  <svg class="ic"><use href="icons.svg#i-shield-check" /></svg>
-                </div>
-                <div>
-                  <h4>Microsoft security</h4>
-                  <p>Microsoft Defender for Cloud, Microsoft Sentinel, Azure Lighthouse.</p>
-                </div>
-              </div>
-              <div class="card">
-                <div class="chip" aria-hidden="true">
-                  <svg class="ic"><use href="icons.svg#i-key-round" /></svg>
-                </div>
-                <div>
-                  <h4>Identity and access</h4>
-                  <p>Microsoft Entra ID: agents as named guests or identities you can switch off.</p>
-                </div>
-              </div>
-              <div class="card">
-                <div class="chip chip-white" aria-hidden="true">
-                  <img
-                    src="images/logos/ai-foundry.svg"
-                    alt=""
-                    style="width: 46px; height: 46px; object-fit: contain"
-                  />
-                </div>
-                <div>
-                  <h4>AI models</h4>
-                  <p>Microsoft Foundry: OpenAI and Claude models, optionally in your own tenant.</p>
-                </div>
-              </div>
-              <div class="card">
-                <div class="chip" aria-hidden="true">
-                  <svg class="ic"><use href="icons.svg#i-clock" /></svg>
-                </div>
-                <div>
-                  <h4>Time and billing</h4>
-                  <p>Thyme and Business Central: agents log the real hours they work.</p>
-                </div>
-              </div>
-            </div>
-            <div class="pill-row" role="list" aria-label="Where it runs">
-              <span class="pill pill-logo" role="listitem"
-                ><img src="images/logos/azure-devops.svg" alt="" />Azure DevOps</span
-              >
-              <span class="pill pill-logo" role="listitem"
-                ><img src="images/logos/azure.svg" alt="" />Microsoft Azure</span
-              >
-              <span class="pill" role="listitem">Bills as hours on a KnowAll support plan (CISP), new or existing</span>
             </div>
           </div>
         </section>
@@ -744,7 +874,7 @@
           </div>
           <div class="content">
             <div class="portal-split">
-              <div class="checks checks-stacked" style="margin-top: 0; gap: 34px">
+              <div class="checks">
                 <div class="check">
                   <svg class="ic" aria-hidden="true"><use href="icons.svg#i-gauge" /></svg>
                   <div><strong>Your security score,</strong> and how it moves month by month.</div>
@@ -765,7 +895,7 @@
               <div class="portal-shot">
                 <img
                   src="images/purple-team-portal.png"
-                  alt="The Purple Team Portal dashboard for a fictional company, Contoso: security score, open findings by severity, score trend and the advisories to fix first"
+                  alt="The Purple Team Portal dashboard for a fictional company, Contoso: security score, score trend and the month's key figures"
                 />
                 <span class="tag">Example</span>
               </div>
@@ -774,10 +904,7 @@
         </section>
 
         <!-- Slide 10: Three ways to run it -->
-        <section
-          role="region"
-          aria-label="Slide 10 of 12: Three ways to run it"
-        >
+        <section role="region" aria-label="Slide 10 of 12: Three ways to run it">
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" style="top: 70px" />
           <div
             class="dark-inner with-agent"
@@ -785,7 +912,7 @@
           >
             <div class="col">
               <p class="kicker">Three ways to run it</p>
-              <h2 style="font-size: 80px">Your data,<br />where you want it.</h2>
+              <h2>Your data,<br />where you want it.</h2>
               <div class="cards-2">
                 <div class="card">
                   <div class="chip" aria-hidden="true">
@@ -828,45 +955,44 @@
             </div>
             <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
           </div>
-          <div class="content content-top">
-            <p class="lead">
-              Start with a Security Discovery. Then the agents bill the real hours they work on a
-              KnowAll support plan, new or existing.
-            </p>
-            <div class="cards-3 stages">
-              <div class="stage">
-                <div class="step" aria-hidden="true">01</div>
-                <div class="chip" aria-hidden="true">
-                  <svg class="ic"><use href="icons.svg#i-compass" /></svg>
+          <div class="content">
+            <div class="pay-split">
+              <div class="stages">
+                <div class="stage">
+                  <div class="step" aria-hidden="true">01</div>
+                  <div>
+                    <h4>Security Discovery</h4>
+                    <p>
+                      Measures your estate: the repositories, cloud and apps in scope, and what is
+                      already exposed. Sets your starting score.
+                    </p>
+                  </div>
                 </div>
-                <h4>Security Discovery</h4>
-                <p>
-                  Measures your estate: the repositories, cloud and apps in scope, and what is
-                  already exposed. Sets your starting score.
-                </p>
-              </div>
-              <div class="stage">
-                <div class="step" aria-hidden="true">02</div>
-                <div class="chip" aria-hidden="true">
-                  <svg class="ic"><use href="icons.svg#i-timer" /></svg>
+                <div class="stage">
+                  <div class="step" aria-hidden="true">02</div>
+                  <div>
+                    <h4>Hours on a CISP</h4>
+                    <p>
+                      Agents bill the real hours they work on a Continuous Improvement Service Plan,
+                      new or existing, with a monthly cap Poppie will not exceed without asking you.
+                    </p>
+                  </div>
                 </div>
-                <h4>Hours on a CISP</h4>
-                <p>
-                  Agents bill the real hours they work on a Continuous Improvement Service Plan,
-                  with a monthly cap Poppie will not exceed without asking you.
-                </p>
-              </div>
-              <div class="stage">
-                <div class="step" aria-hidden="true">03</div>
-                <div class="chip" aria-hidden="true">
-                  <svg class="ic"><use href="icons.svg#i-radio-tower" /></svg>
+                <div class="stage">
+                  <div class="step" aria-hidden="true">03</div>
+                  <div>
+                    <h4>Monitoring</h4>
+                    <p>
+                      A flat monthly rate keeps Ollie watching Defender and Sentinel, and the
+                      matching running, around the clock.
+                    </p>
+                  </div>
                 </div>
-                <h4>Monitoring</h4>
-                <p>
-                  A flat monthly rate keeps Ollie watching Defender and Sentinel, and the matching
-                  running, around the clock.
-                </p>
               </div>
+              <img
+                src="images/purple-team/poppie-report.jpg"
+                alt="Poppie, the copper robot, holding a tablet projecting a locked blue padlock and a rising chart"
+              />
             </div>
           </div>
         </section>
@@ -912,5 +1038,14 @@
 
     <script src="vendor/reveal/reveal.js"></script>
     <script src="knowall-deck.js"></script>
+    <script>
+      // This deck's call to action is the Security Discovery, not the generic
+      // working session the shared runtime injects.
+      document.querySelectorAll('.slide-cta').forEach((cta) => {
+        cta.textContent = 'Book a Security Discovery';
+        cta.href = 'https://www.knowall.ai/purple-team#enquire';
+        cta.setAttribute('aria-label', 'Book a Security Discovery with KnowAll AI');
+      });
+    </script>
   </body>
 </html>
