@@ -635,6 +635,12 @@
         font-size: 23px;
       }
 
+      /* "they" (the attackers) in proper red with a soft glow, as on the website */
+      .they {
+        color: #ef4444;
+        text-shadow: 0 0 22px rgba(239, 68, 68, 0.5);
+      }
+
       .pay-split--solo {
         grid-template-columns: 1fr;
       }
@@ -664,7 +670,7 @@
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
           <div class="cover-copy">
             <p class="kicker">KnowAll AI &middot; Continuous AI security</p>
-            <h1>The Purple Team:<br /><em>break it</em><br />before they do.</h1>
+            <h1>The Purple Team:<br /><em>break it</em><br />before <span class="they">they</span> do.</h1>
             <p class="lead" style="max-width: 1000px">
               Attackers now use AI to find holes around the clock. So does the KnowAll Purple Team:
               Pennie attacks, Ollie defends and fixes, and Poppie runs the loop between them.
@@ -1219,7 +1225,7 @@
         <!-- Slide 12: CTA -->
         <section role="region" aria-label="Slide 12 of 12: Book a Security Discovery">
           <div class="cta-top">
-            <h2>Break it before<br />they do.</h2>
+            <h2>Break it before<br /><span class="they">they</span> do.</h2>
             <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
           </div>
           <div class="cta-bottom">
