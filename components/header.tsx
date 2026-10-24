@@ -7,6 +7,8 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuGroup,
+  DropdownMenuLabel,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import Logo from '@/components/logo';
@@ -48,10 +50,13 @@ export default function Header() {
   // that clicking them scrolls to the top when already on the homepage, while
   // still navigating home from other routes. The Story route lives in the
   // right-hand cluster as a BookOpen icon rather than in this text nav.
-  const navLinks = [
-    { name: 'Home', href: '/#' },
-    { name: 'Services', href: '/#services' },
-    { name: 'Team', href: '/#team' },
+  const navLinks = [{ name: 'Home', href: '/#' }];
+
+  // Services and products share one "What we do" menu, as two labelled groups.
+  const serviceLinks = [
+    { name: 'Our Services', href: '/#services' },
+    { name: 'Copilots & Agents', href: '/#copilots' },
+    { name: 'Purple Team', href: '/purple-team' },
   ];
 
   // NOTE: "Allie for Accounts" (#allie) joins this dropdown once PR #7 merges.
@@ -63,7 +68,12 @@ export default function Header() {
     { name: 'Sallie for Sales', href: '/#sallie' },
   ];
 
-  const trailingNavLinks = [{ name: 'Copilots', href: '/#copilots' }];
+  const trailingNavLinks = [{ name: 'Team', href: '/#team' }];
+
+  const menuGroups = [
+    { label: 'Services', links: serviceLinks },
+    { label: 'Products', links: productLinks },
+  ];
 
   // Next 16 no longer resets scroll to the top for the empty '/#' hash (section
   // hashes like '/#services' still scroll to their element). Scroll to the top
@@ -114,21 +124,28 @@ export default function Header() {
 
             <DropdownMenu>
               <DropdownMenuTrigger className="flex items-center gap-1 text-gray-300 hover:text-lime-500 transition-colors rounded-sm outline-hidden focus-visible:ring-2 focus-visible:ring-lime-500 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-950 data-[state=open]:text-lime-500">
-                Products
+                What we do
                 <ChevronDown className="h-4 w-4" />
               </DropdownMenuTrigger>
               <DropdownMenuContent
                 align="start"
-                className="bg-gray-900 border-gray-800 text-gray-300"
+                className="grid grid-cols-2 gap-x-2 bg-gray-900 border-gray-800 text-gray-300 p-2"
               >
-                {productLinks.map((link) => (
-                  <DropdownMenuItem
-                    key={link.name}
-                    asChild
-                    className="focus:bg-gray-800 focus:text-lime-500 cursor-pointer"
-                  >
-                    <Link href={link.href}>{link.name}</Link>
-                  </DropdownMenuItem>
+                {menuGroups.map((group) => (
+                  <DropdownMenuGroup key={group.label} className="min-w-44">
+                    <DropdownMenuLabel className="text-xs font-medium uppercase tracking-wider text-gray-400">
+                      {group.label}
+                    </DropdownMenuLabel>
+                    {group.links.map((link) => (
+                      <DropdownMenuItem
+                        key={link.name}
+                        asChild
+                        className="focus:bg-gray-800 focus:text-lime-500 cursor-pointer"
+                      >
+                        <Link href={link.href}>{link.name}</Link>
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuGroup>
                 ))}
               </DropdownMenuContent>
             </DropdownMenu>
@@ -216,22 +233,23 @@ export default function Header() {
                 </Link>
               ))}
 
-              {/* Products group */}
-              <div>
-                <span className="block text-gray-500 text-sm font-medium uppercase tracking-wider py-2">
-                  Products
-                </span>
-                {productLinks.map((link) => (
-                  <Link
-                    key={link.name}
-                    href={link.href}
-                    className="block pl-4 text-gray-300 hover:text-lime-500 transition-colors py-2"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    {link.name}
-                  </Link>
-                ))}
-              </div>
+              {menuGroups.map((group) => (
+                <div key={group.label}>
+                  <span className="block text-gray-400 text-sm font-medium uppercase tracking-wider py-2">
+                    {group.label}
+                  </span>
+                  {group.links.map((link) => (
+                    <Link
+                      key={link.name}
+                      href={link.href}
+                      className="block pl-4 text-gray-300 hover:text-lime-500 transition-colors py-2"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      {link.name}
+                    </Link>
+                  ))}
+                </div>
+              ))}
 
               {trailingNavLinks.map((link) => (
                 <Link

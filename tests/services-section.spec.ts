@@ -47,7 +47,8 @@ test.describe('Services Section', () => {
   });
 
   test('Services navigation link points at the services section', async ({ page }) => {
-    const servicesLink = page.locator('header nav a', { hasText: 'Services' });
+    await page.getByRole('button', { name: 'What we do' }).click();
+    const servicesLink = page.getByRole('menuitem', { name: 'Our Services' });
     await expect(servicesLink).toHaveAttribute('href', '/#services');
   });
 });

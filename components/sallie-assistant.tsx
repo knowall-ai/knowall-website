@@ -447,7 +447,7 @@ function SpeechBubble({
  * corner with the same conversation. She talks only to the public
  * `/api/chat` and `/api/speak` endpoints — no internal systems are wired in.
  */
-export default function SallieAssistant() {
+export default function SallieAssistant({ dockOnly = false }: { dockOnly?: boolean } = {}) {
   const [opener] = useState(() => pickGreeting());
   const conversation = useSallieConversation(opener);
   const tts = useSallieVoice();
@@ -537,6 +537,9 @@ export default function SallieAssistant() {
   // Say hello once she is on screen (browsers may hold this until the first
   // interaction; `unlock` releases it).
   useEffect(() => {
+    // Docked from load on phones, her greeting bubble is hidden, so don't
+    // speak a line nobody can see.
+    if (dockOnly && !window.matchMedia('(min-width: 640px)').matches) return;
     const timer = setTimeout(() => void speak(opener.text), 600);
     return () => clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -562,7 +565,8 @@ export default function SallieAssistant() {
     };
   }, [unlock]);
 
-  const docked = mounted && !heroOnScreen;
+  // Pages without a hero spot for her (e.g. /purple-team) keep her docked.
+  const docked = mounted && (dockOnly || !heroOnScreen);
   const showDockBubble = docked && !dockOpen && !dockBubbleDismissed;
 
   const dock = (
@@ -613,7 +617,8 @@ export default function SallieAssistant() {
       )}
 
       {showDockBubble && (
-        <div className="relative max-w-[300px]">
+        // Docked from page load, the bubble would cover content on phones.
+        <div className={cn('relative max-w-[300px]', dockOnly && 'hidden sm:block')}>
           <SpeechBubble
             text={
               conversation.messages.length ? 'Still here if you have more questions.' : greeting
@@ -632,26 +637,34 @@ export default function SallieAssistant() {
         </div>
       )}
 
-      <button
-        type="button"
-        onClick={() => setDockOpen((o) => !o)}
-        aria-label={dockOpen ? 'Close chat with Sallie' : 'Chat with Sallie'}
-        aria-expanded={dockOpen}
-        tabIndex={docked ? 0 : -1}
-        className="cursor-pointer group relative rounded-full ring-2 ring-lime-500/60 shadow-[0_0_40px_rgba(157,254,10,0.35)] transition-transform hover:scale-105 focus:outline-none focus-visible:ring-4 motion-reduce:transition-none motion-reduce:hover:scale-100"
-      >
-        <SallieStage
-          shape="circle"
-          busy={conversation.isLoading}
-          waveform
-          className="w-16 md:w-20"
-        />
-        <span className="absolute -bottom-1 -right-1 flex h-7 w-7 items-center justify-center rounded-full bg-lime-500 text-gray-950 shadow">
-          {dockOpen ? <X className="h-4 w-4" /> : <MessageCircle className="h-4 w-4" />}
-        </span>
-      </button>
+      <div className="flex items-center gap-3">
+        {/* Keep the voice option visible while the chat is closed. */}
+        {docked && !dockOpen && (
+          <VoiceToggle voice={voice} className="bg-gray-950/90 shadow-lg backdrop-blur" />
+        )}
+        <button
+          type="button"
+          onClick={() => setDockOpen((o) => !o)}
+          aria-label={dockOpen ? 'Close chat with Sallie' : 'Chat with Sallie'}
+          aria-expanded={dockOpen}
+          tabIndex={docked ? 0 : -1}
+          className="cursor-pointer group relative rounded-full ring-2 ring-lime-500/60 shadow-[0_0_40px_rgba(157,254,10,0.35)] transition-transform hover:scale-105 focus:outline-none focus-visible:ring-4 motion-reduce:transition-none motion-reduce:hover:scale-100"
+        >
+          <SallieStage
+            shape="circle"
+            busy={conversation.isLoading}
+            waveform
+            className="w-16 md:w-20"
+          />
+          <span className="absolute -bottom-1 -right-1 flex h-7 w-7 items-center justify-center rounded-full bg-lime-500 text-gray-950 shadow">
+            {dockOpen ? <X className="h-4 w-4" /> : <MessageCircle className="h-4 w-4" />}
+          </span>
+        </button>
+      </div>
     </div>
   );
+
+  if (dockOnly) return mounted ? createPortal(dock, document.body) : null;
 
   return (
     <>

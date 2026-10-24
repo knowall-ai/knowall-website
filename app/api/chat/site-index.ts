@@ -6,6 +6,7 @@ export const siteIndex = `Website guide (https://www.knowall.ai). Link to these 
 
 Home page sections:
 - Our Services (/#services): AI Consultancy — expert guidance on implementing AI solutions tailored to the business; Microsoft Copilot Development — custom Copilots that enhance productivity and automate workflows; Value-for-Value Transactions — peer-to-peer Bitcoin transfers between autonomous AI agents.
+- The Purple Team (/#purple-team, full page at /purple-team): continuous AI security testing. Pennie the Pen Tester (red team) attacks with written authorisation, Ollie the Operator (blue team) monitors with Microsoft Defender for Cloud and Sentinel and fixes via pull requests the client approves, Poppie the Planner runs the loop and reports a monthly security score. Works with GitHub and Azure DevOps.
 - Building AI Agents & Microsoft Copilots (/#copilots): custom Copilot development and orchestrated multi-agent teams (AutoGen).
 - Zaplie (/#zaplie, code at https://github.com/knowall-ai/zaplie-webapp): open-source platform that integrates Microsoft Teams with Bitcoin Lightning microtransactions and AI agents on a value-for-value model — instant Lightning payments reward teammates, clients and AI agents in proportion to the value they deliver.
 - Zapdesk (/#zapdesk, https://zapdesk.knowall.ai): Azure DevOps-powered support ticketing.
@@ -17,6 +18,7 @@ Home page sections:
 - Get In Touch (/#contact): email, WhatsApp and Nostr.
 
 Other pages:
+- Purple Team (/purple-team): the security offering in full: how the attack, defend, fix and report loop works, CVE and exploited-vulnerability numbers, an example client dashboard, the standards we map to (CVE, CVSS, CISA KEV, EPSS, CWE, OWASP Top 10, OWASP LLM Top 10, MITRE ATT&CK), an FAQ, and an enquiry form.
 - Our Story (/story): the company's story and updates, straight from our Nostr feed.
 - Shop (/shop): our products and merchandise, listed on Nostr and paid for with Bitcoin over Lightning. Policies: shipping (/shop/policies/shipping), refunds (/shop/policies/refunds), privacy (/shop/policies/privacy), terms (/shop/policies/terms).
 

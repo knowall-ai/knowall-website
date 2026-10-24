@@ -42,10 +42,30 @@ describe('Header', () => {
 
     // Section links are prefixed with '/' so they resolve from other routes too.
     expect(screen.getByRole('link', { name: 'Home' })).toHaveAttribute('href', '/#');
-    expect(screen.getByRole('link', { name: 'Services' })).toHaveAttribute('href', '/#services');
-    expect(screen.getByRole('link', { name: 'Copilots' })).toHaveAttribute('href', '/#copilots');
-    // The individual products (Zaplie, Zapdesk, …) now live under a Products dropdown.
-    expect(screen.getByRole('button', { name: 'Products' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Team' })).toHaveAttribute('href', '/#team');
+    // Services and products (Zaplie, Zapdesk, …) share one "What we do" dropdown.
+    expect(screen.getByRole('button', { name: 'What we do' })).toBeInTheDocument();
+  });
+
+  it('groups services and products in the mobile menu', () => {
+    renderHeader();
+    fireEvent.click(screen.getByRole('button', { name: 'Toggle menu' }));
+
+    expect(screen.getByText('Services')).toBeInTheDocument();
+    expect(screen.getByText('Products')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Our Services' })).toHaveAttribute(
+      'href',
+      '/#services'
+    );
+    expect(screen.getByRole('link', { name: 'Copilots & Agents' })).toHaveAttribute(
+      'href',
+      '/#copilots'
+    );
+    expect(screen.getByRole('link', { name: 'Purple Team' })).toHaveAttribute(
+      'href',
+      '/purple-team'
+    );
+    expect(screen.getByRole('link', { name: 'Zaplie' })).toHaveAttribute('href', '/#zaplie');
   });
 
   it('renders Our Story and Shop route links', () => {
@@ -165,9 +185,9 @@ describe('Header', () => {
     renderHeader();
 
     fireEvent.click(screen.getByRole('button', { name: 'Toggle menu' }));
-    const mobileLinks = screen.getAllByRole('link', { name: 'Services' });
+    const mobileLinks = screen.getAllByRole('link', { name: 'Team' });
     fireEvent.click(mobileLinks[1]);
 
-    expect(screen.getAllByRole('link', { name: 'Services' })).toHaveLength(1);
+    expect(screen.getAllByRole('link', { name: 'Team' })).toHaveLength(1);
   });
 });
