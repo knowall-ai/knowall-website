@@ -503,6 +503,95 @@
         text-transform: uppercase;
       }
 
+      /* --- Portal carousel: six screens, cross-fading; controls sit inside the
+         frame so they never collide with the deck's own arrows --------------- */
+      .portal-carousel .pc-track {
+        position: relative;
+        aspect-ratio: 1440 / 800;
+        border-radius: 16px;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        box-shadow: var(--shadow-hi);
+        background: #0b0d10;
+      }
+      .portal-carousel .pc-slide {
+        position: absolute;
+        inset: 0;
+        margin: 0;
+        opacity: 0;
+        transition: opacity 0.6s ease;
+      }
+      .portal-carousel .pc-slide.is-active {
+        opacity: 1;
+      }
+      .portal-carousel .pc-slide img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: top left;
+        border: 0;
+        border-radius: 0;
+        box-shadow: none;
+      }
+      .portal-carousel figcaption {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        padding: 46px 28px 58px;
+        background: linear-gradient(transparent, rgba(8, 10, 13, 0.92) 45%);
+        color: #dbe3ea;
+        font-size: 21px;
+      }
+      .portal-carousel figcaption strong {
+        color: #fff;
+      }
+      .portal-carousel .pc-nav {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 54px;
+        height: 54px;
+        border-radius: 50%;
+        border: 1px solid rgba(157, 254, 10, 0.6);
+        background: rgba(8, 10, 13, 0.75);
+        color: var(--lime);
+        font-size: 36px;
+        line-height: 1;
+        cursor: pointer;
+      }
+      .portal-carousel .pc-prev {
+        left: 16px;
+      }
+      .portal-carousel .pc-next {
+        right: 16px;
+      }
+      .portal-carousel .pc-dots {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 20px;
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+      }
+      .portal-carousel .pc-dot {
+        width: 12px;
+        height: 12px;
+        padding: 0;
+        border-radius: 50%;
+        border: 0;
+        background: rgba(255, 255, 255, 0.35);
+        cursor: pointer;
+      }
+      .portal-carousel .pc-dot.is-active {
+        background: var(--lime);
+      }
+      .portal-carousel button:focus-visible {
+        outline: 3px solid var(--lime);
+        outline-offset: 3px;
+      }
+
       /* --- How you pay: three numbered stages beside Poppie's report -------------- */
       .pay-split {
         display: grid;
@@ -971,7 +1060,7 @@
           <div class="band">
             <div>
               <h2>Your Purple Team Portal</h2>
-              <p class="band-sub">security.knowall.ai &mdash; what you see each month</p>
+              <p class="band-sub">What you see, every month</p>
             </div>
             <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
           </div>
@@ -995,12 +1084,37 @@
                   <div><strong>Time spent per case,</strong> so every hour billed is accounted for.</div>
                 </div>
               </div>
-              <div class="portal-shot">
-                <img
-                  src="images/purple-team-portal.png"
-                  alt="The Purple Team Portal dashboard for a fictional company, Contoso: security score, score trend and the month's key figures"
-                />
+              <div class="portal-shot portal-carousel" aria-roledescription="carousel" aria-label="Purple Team Portal screens">
+                <div class="pc-track">
+                  <figure class="pc-slide is-active" aria-hidden="false">
+                    <img src="images/portal-dashboard.jpg" alt="Purple Team Portal, Dashboard page, for the fictional company Contoso: Security score, its trend and the month's key figures" />
+                    <figcaption><strong>Dashboard</strong> &middot; Security score, its trend and the month&rsquo;s key figures</figcaption>
+                  </figure>
+                  <figure class="pc-slide" aria-hidden="true">
+                    <img src="images/portal-advisories.jpg" alt="Purple Team Portal, Advisories page, for the fictional company Contoso: Every advisory that affects you, scored and matched to your repositories" />
+                    <figcaption><strong>Advisories</strong> &middot; Every advisory that affects you, scored and matched to your repositories</figcaption>
+                  </figure>
+                  <figure class="pc-slide" aria-hidden="true">
+                    <img src="images/portal-advisory.jpg" alt="Purple Team Portal, Advisory detail page, for the fictional company Contoso: Why it matters to you, the evidence, and what the team did about it" />
+                    <figcaption><strong>Advisory detail</strong> &middot; Why it matters to you, the evidence, and what the team did about it</figcaption>
+                  </figure>
+                  <figure class="pc-slide" aria-hidden="true">
+                    <img src="images/portal-repos.jpg" alt="Purple Team Portal, Repositories page, for the fictional company Contoso: Each repository's open findings and the scanners watching it" />
+                    <figcaption><strong>Repositories</strong> &middot; Each repository&rsquo;s open findings and the scanners watching it</figcaption>
+                  </figure>
+                  <figure class="pc-slide" aria-hidden="true">
+                    <img src="images/portal-owasp.jpg" alt="Purple Team Portal, OWASP checklists page, for the fictional company Contoso: The OWASP Top 10 and LLM Top 10, item by item, with Pennie's results" />
+                    <figcaption><strong>OWASP checklists</strong> &middot; The OWASP Top 10 and LLM Top 10, item by item, with Pennie&rsquo;s results</figcaption>
+                  </figure>
+                  <figure class="pc-slide" aria-hidden="true">
+                    <img src="images/portal-usage.jpg" alt="Purple Team Portal, Usage and hours page, for the fictional company Contoso: Time spent per case, by agent and by job, against your plan" />
+                    <figcaption><strong>Usage and hours</strong> &middot; Time spent per case, by agent and by job, against your plan</figcaption>
+                  </figure>
+                </div>
                 <span class="tag">Example</span>
+                <button type="button" class="pc-nav pc-prev" aria-label="Previous screen">&lsaquo;</button>
+                <button type="button" class="pc-nav pc-next" aria-label="Next screen">&rsaquo;</button>
+                <div class="pc-dots"><button type="button" class="pc-dot is-active" aria-label="Show Dashboard"></button><button type="button" class="pc-dot" aria-label="Show Advisories"></button><button type="button" class="pc-dot" aria-label="Show Advisory detail"></button><button type="button" class="pc-dot" aria-label="Show Repositories"></button><button type="button" class="pc-dot" aria-label="Show OWASP checklists"></button><button type="button" class="pc-dot" aria-label="Show Usage and hours"></button></div>
               </div>
             </div>
           </div>
@@ -1149,6 +1263,34 @@
         cta.href = 'https://www.knowall.ai/purple-team#enquire';
         cta.setAttribute('aria-label', 'Book a Security Discovery with KnowAll AI');
       });
+    </script>
+    <script>
+      // Portal carousel: auto-advances only while its slide is on screen, and
+      // never under prefers-reduced-motion; the arrows and dots always work.
+      (() => {
+        const root = document.querySelector('.portal-carousel');
+        if (!root) return;
+        const slides = [...root.querySelectorAll('.pc-slide')];
+        const dots = [...root.querySelectorAll('.pc-dot')];
+        const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+        let i = 0, timer = null;
+        const show = (n) => {
+          i = (n + slides.length) % slides.length;
+          slides.forEach((s, k) => { s.classList.toggle('is-active', k === i); s.setAttribute('aria-hidden', String(k !== i)); });
+          dots.forEach((d, k) => d.classList.toggle('is-active', k === i));
+        };
+        const stop = () => { clearInterval(timer); timer = null; };
+        const start = () => { if (!still && !timer) timer = setInterval(() => show(i + 1), 4500); };
+        const onSlide = () => (Reveal.getCurrentSlide()?.contains(root) ? start() : stop());
+        root.querySelector('.pc-prev').addEventListener('click', () => { stop(); show(i - 1); });
+        root.querySelector('.pc-next').addEventListener('click', () => { stop(); show(i + 1); });
+        dots.forEach((d, k) => d.addEventListener('click', () => { stop(); show(k); }));
+        // keep the deck's own keyboard and swipe handling away from the controls
+        root.querySelectorAll('button').forEach((b) => b.addEventListener('keydown', (e) => e.stopPropagation()));
+        Reveal.on('ready', onSlide);
+        Reveal.on('slidechanged', onSlide);
+        if (Reveal.isReady()) onSlide();
+      })();
     </script>
   </body>
 </html>
