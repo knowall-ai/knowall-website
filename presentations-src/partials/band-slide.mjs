@@ -14,13 +14,3 @@ ${body}          </div>
         </section>
 `;
 }
-
-/** Throw on a variant the include doesn't know, so a typo can't ship silently. */
-export function pick(variants, variant, include) {
-  if (!(variant in variants)) {
-    throw new Error(
-      `@include ${include}: unknown variant "${variant}" (expected ${Object.keys(variants).join(' or ')})`
-    );
-  }
-  return variants[variant];
-}

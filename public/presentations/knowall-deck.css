@@ -427,42 +427,6 @@ section > .logo-light,
   font-size: 15px;
   line-height: 1.75;
 }
-.team-notes {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 36px 64px;
-  margin-top: 60px;
-}
-.team-note {
-  display: flex;
-  gap: 20px;
-  align-items: flex-start;
-  background: none;
-  border: 0;
-  border-left: 3px solid var(--lime);
-  border-radius: 0;
-  box-shadow: none;
-  padding: 6px 0 6px 28px;
-}
-.team-note .ic {
-  flex: none;
-  width: 30px;
-  height: 30px;
-  color: var(--lime);
-  margin-top: 4px;
-}
-.team-note p {
-  color: var(--mist);
-  font-size: 20px;
-  line-height: 1.5;
-}
-.team-note strong {
-  color: #fff;
-  display: block;
-  font-size: 21px;
-  margin-bottom: 4px;
-}
-
 /* thin lime accent rule where the lime chevron notch used to be */
 .band::after {
   content: '';
@@ -643,14 +607,6 @@ section > .logo-light,
   justify-content: center;
   color: var(--lime);
   font-size: 52px;
-}
-
-/* logo artwork still needs a white plate to sit on */
-.chip-white {
-  width: 78px;
-  height: 78px;
-  border-radius: 20px;
-  background: #ffffff;
 }
 
 /* stacked (icon above text) card variant */
@@ -836,24 +792,6 @@ section > .logo-light,
   color: #ffffff;
   font-size: 28px;
   font-weight: 800;
-}
-
-/* --- Stats -------------------------------------------------------------- */
-.stat {
-  text-align: left;
-}
-
-.stat .stat-num {
-  font-family: 'Playfair Display', Georgia, serif;
-  font-weight: 900;
-  font-size: 108px;
-  line-height: 1;
-  color: var(--lime);
-  margin-bottom: 18px;
-}
-
-.stat h4 {
-  color: #ffffff;
 }
 
 /* --- Timeline ------------------------------------------------------------ */
@@ -1552,37 +1490,8 @@ a.partner-link:focus-visible {
   width: 100%;
 }
 
-/* --- Cards: opt-in modifiers ---------------------------------------------- */
-/* The link belongs to its product, so it sits at the foot of that product's
-   card rather than in a separate row underneath. */
-.cards--linked > .card {
-  display: flex;
-  flex-direction: column;
-}
-
-.cards--linked > .card > div {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-}
-
-.card-link {
-  display: block;
-  margin: 18px 0 0;
-  margin-top: auto;
-  width: max-content;
-  padding: 9px 0 0;
-  border: 0;
-  border-top: 1px solid rgba(157, 254, 10, 0.45);
-  border-radius: 0;
-  background: none;
-  color: var(--mist);
-  font-size: 19px;
-  font-weight: 700;
-}
-
 /* --- Shared slides (presentations-src/partials) -------------------------- */
-/* Security, brief variant: four short points, larger type */
+/* Security: four short points, larger type */
 .cards-2.security {
   gap: 64px 96px;
 }
@@ -1593,45 +1502,6 @@ a.partner-link:focus-visible {
 
 .cards-2.security .card p {
   font-size: 27px;
-}
-
-/* Partners, flat variant: the sectors line under the logos */
-.partner-sectors .pill {
-  gap: 16px;
-}
-
-.partner-sectors .ic {
-  font-size: 30px;
-  color: var(--lime);
-}
-
-/* Products, shots variant: real product screenshots, not icons: these are
-   shipping products and showing them is more persuasive than describing them
-   (Ben, 2026-07-28). Cropped to a consistent band so three different apps
-   still read as one row. */
-.product-shot {
-  display: block;
-  width: 100%;
-  height: 210px;
-  object-fit: cover;
-  object-position: top center;
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  margin: 0 0 14px;
-  background: #0b0d10;
-}
-
-/* On KPI cards the number is the message, so the icon moves out of its way
-   to the top-right corner (Ben, 2026-07-29). */
-.card--stat {
-  position: relative;
-}
-
-.card--stat > .chip {
-  position: absolute;
-  top: 22px;
-  right: 22px;
-  margin: 0;
 }
 
 .agent:focus-visible {
@@ -1652,15 +1522,6 @@ a.partner-link:focus-visible {
   max-height: 270px;
   height: auto;
   display: block;
-}
-
-/* shorter loop with air beneath it, for slides with cards under it */
-.cycle--short {
-  margin: 0 0 26px;
-}
-
-.cycle--short svg {
-  max-height: 240px;
 }
 
 .cyc-line,
@@ -1706,13 +1567,6 @@ a.partner-link:focus-visible {
   align-items: center;
 }
 
-/* graph-led variant: the graph takes more of the row and squares off */
-.memory-split--graph-led {
-  grid-template-columns: 1.35fr 1fr;
-  gap: 32px;
-  align-items: start;
-}
-
 .memory-graph {
   margin: 0;
   padding: 18px 16px 10px;
@@ -1720,21 +1574,11 @@ a.partner-link:focus-visible {
   border-radius: 18px;
 }
 
-.memory-split--graph-led .memory-graph {
-  border-radius: 0;
-}
-
 .memory-graph svg {
   width: 100%;
   max-height: 470px;
   height: auto;
   display: block;
-}
-
-/* Capped: an uncapped 560x400 graph overflowed UPWARD through the header
-   (2026-07-28). */
-.memory-split--graph-led .memory-graph svg {
-  max-height: 520px;
 }
 
 .memory-graph figcaption {
@@ -1773,10 +1617,6 @@ a.partner-link:focus-visible {
   text-anchor: middle;
 }
 
-.memory-split--graph-led .mg-nodes text {
-  letter-spacing: 0.02em;
-}
-
 @media (prefers-reduced-motion: no-preference) {
   .reveal .mg-new path {
     animation: mg-draw 1.6s ease-out both;
@@ -1794,28 +1634,10 @@ a.partner-link:focus-visible {
   }
 }
 
-/* the points beside the graph: stacked checks, or compact cards */
+/* the points beside the graph */
 .memory-points {
   margin-top: 0;
   gap: 34px;
-}
-
-.memory-cards {
-  display: grid;
-  gap: 10px;
-}
-
-.memory-cards .card {
-  padding: 18px 22px;
-}
-
-.memory-cards .card h4 {
-  font-size: 26px;
-}
-
-.memory-cards .card p {
-  font-size: 20px;
-  line-height: 1.35;
 }
 
 /* GitHub link with a large mark and a light second line */
