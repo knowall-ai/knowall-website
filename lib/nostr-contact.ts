@@ -63,7 +63,14 @@ export async function sendContactMessage(
   opts: ContactOptions = {}
 ): Promise<ContactChannel> {
   if (opts.nostrPubkey && nip07SupportsGiftWrap()) {
-    await sendNostrDm(msg, opts.nostrPubkey);
+    try {
+      await sendNostrDm(msg, opts.nostrPubkey);
+    } catch (err) {
+      // Declined signing, unreachable relays, a blocked websocket: email instead.
+      console.warn('Contact form: Nostr DM failed, sending by email', err);
+      await sendEmail(msg);
+      return 'email';
+    }
     // Email a copy too, in case nobody is watching the DMs. The DM already
     // arrived, so a failed copy doesn't fail the send.
     try {
@@ -108,14 +115,37 @@ async function sendNostrDm(msg: ContactMessage, senderPubkey: string): Promise<v
   const signed: Event = { ...wrap, sig: wrap.sig };
 
   const pool = new SimplePool();
+  const relays = await dmRelays(pool, recipient);
   try {
     // Succeed as soon as one relay accepts the event.
-    await Promise.any(pool.publish(CONTACT_RELAYS, signed));
+    await Promise.any(pool.publish(relays, signed));
   } catch {
     throw new Error('Could not reach any Nostr relay. Please try again or email hello@knowall.ai.');
   } finally {
-    pool.close(CONTACT_RELAYS);
+    pool.close([...new Set([...relays, ...CONTACT_RELAYS])]);
   }
+}
+
+/**
+ * NIP-17: deliver to the relays the recipient lists for DMs (kind 10050), so
+ * their client actually sees it. Falls back to CONTACT_RELAYS if none is found.
+ */
+async function dmRelays(pool: SimplePool, recipient: string): Promise<string[]> {
+  try {
+    const list = await pool.get(
+      CONTACT_RELAYS,
+      { kinds: [10050], authors: [recipient] },
+      { maxWait: 3000 }
+    );
+    const urls = (list?.tags ?? [])
+      .filter((t) => t[0] === 'relay' && /^wss:\/\//.test(t[1] ?? ''))
+      .map((t) => t[1])
+      .slice(0, 6);
+    if (urls.length) return urls;
+  } catch {
+    // fall through to the defaults
+  }
+  return CONTACT_RELAYS;
 }
 
 async function sendEmail(msg: ContactMessage & { nostrNpub?: string }): Promise<void> {

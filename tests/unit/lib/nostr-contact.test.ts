@@ -17,6 +17,7 @@ const VISITOR_HEX = 'a'.repeat(64);
 const wrapRumor = vi.fn();
 const supportsGiftWrap = vi.fn();
 const publish = vi.fn();
+const getEvent = vi.fn();
 
 vi.mock('@/lib/nip17', () => ({
   wrapRumor: (...args: unknown[]) => wrapRumor(...args),
@@ -25,6 +26,7 @@ vi.mock('@/lib/nip17', () => ({
 vi.mock('nostr-tools/pool', () => ({
   SimplePool: class {
     publish = (...args: unknown[]) => publish(...args);
+    get = (...args: unknown[]) => getEvent(...args);
     close() {}
   },
 }));
@@ -40,6 +42,7 @@ beforeEach(() => {
     .mockResolvedValue({ id: 'x', sig: 'sig', kind: 1059, tags: [], content: '' });
   publish.mockReset().mockReturnValue([Promise.resolve('ok')]);
   supportsGiftWrap.mockReset();
+  getEvent.mockReset().mockResolvedValue(null);
 });
 
 afterEach(() => {
@@ -78,6 +81,29 @@ describe('sendContactMessage', () => {
     vi.spyOn(console, 'warn').mockImplementation(() => {});
     const { sendContactMessage } = await import('@/lib/nostr-contact');
     await expect(sendContactMessage(msg, { nostrPubkey: VISITOR_HEX })).resolves.toBe('nostr-only');
+  });
+
+  it("delivers to the recipient's NIP-17 DM relays (kind 10050) when listed", async () => {
+    supportsGiftWrap.mockReturnValue(true);
+    getEvent.mockResolvedValue({
+      tags: [
+        ['relay', 'wss://inbox.example'],
+        ['relay', 'http://not-a-relay.example'],
+      ],
+    });
+    const { sendContactMessage } = await import('@/lib/nostr-contact');
+    await sendContactMessage(msg, { nostrPubkey: VISITOR_HEX });
+    expect(getEvent.mock.calls[0][1]).toEqual({ kinds: [10050], authors: [KNOWALL_HEX] });
+    expect(publish.mock.calls[0][0]).toEqual(['wss://inbox.example']);
+  });
+
+  it('emails instead when the DM fails (declined, relays down)', async () => {
+    supportsGiftWrap.mockReturnValue(true);
+    wrapRumor.mockRejectedValue(new Error('User rejected'));
+    vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const { sendContactMessage } = await import('@/lib/nostr-contact');
+    await expect(sendContactMessage(msg, { nostrPubkey: VISITOR_HEX })).resolves.toBe('email');
+    expect(emailBody()).toEqual(msg);
   });
 
   it('falls back to email when the extension cannot encrypt DMs', async () => {

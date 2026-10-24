@@ -31,6 +31,23 @@ async function readBody(req: Request, limit: number): Promise<string | null> {
 }
 
 /**
+ * The page the visitor wrote from, as a path on this site. Referer is
+ * client-controlled, so anything off-site (or malformed) is dropped rather
+ * than shown in the email as a link.
+ */
+function sourcePage(req: Request): string | undefined {
+  const referer = req.headers.get('referer');
+  const host = req.headers.get('host');
+  if (!referer || !host) return undefined;
+  try {
+    const url = new URL(referer);
+    return url.host === host ? url.pathname.slice(0, 200) : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+/**
  * Enquiries emailed to hello@ from Sallie's mailbox, with Reply-To set to the
  * visitor: every guest message, plus a copy of each signed-in visitor's Nostr
  * DM (whose npub the email marks as unverified).
@@ -43,7 +60,7 @@ export async function POST(req: Request) {
   const limit = consume('contact', clientIp(req));
   if (!limit.ok) {
     return NextResponse.json(
-      { error: 'Too many messages. Please try again later.' },
+      { error: 'Too many messages right now. Please email hello@knowall.ai instead.' },
       { status: 429, headers: { 'Retry-After': String(limit.retryAfter ?? 600) } }
     );
   }
@@ -75,7 +92,7 @@ export async function POST(req: Request) {
     );
   }
 
-  const { subject, text } = enquiryEmail(parsed.data, req.headers.get('referer') ?? undefined);
+  const { subject, text } = enquiryEmail(parsed.data, sourcePage(req));
   try {
     await sendMail(config, {
       subject,

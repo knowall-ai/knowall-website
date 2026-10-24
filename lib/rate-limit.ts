@@ -55,10 +55,20 @@ export interface LimitResult {
   reason?: 'ip' | 'day';
 }
 
-/** Best-effort client address: App Service and most proxies set x-forwarded-for. */
+/**
+ * Best-effort client address. App Service appends the real client as the LAST
+ * x-forwarded-for entry (as ip:port); anything before it was sent by the
+ * client and can be forged, so it's ignored.
+ */
 export function clientIp(req: Request): string {
   const forwarded = req.headers.get('x-forwarded-for');
-  if (forwarded) return forwarded.split(',')[0].trim();
+  if (forwarded) {
+    const last = forwarded.split(',').at(-1)!.trim();
+    const v6 = /^\[([^\]]+)\](?::\d+)?$/.exec(last);
+    if (v6) return v6[1];
+    // Strip a port from IPv4 (one colon); leave bare IPv6 untouched.
+    return /^[^:]+:\d+$/.test(last) ? last.slice(0, last.lastIndexOf(':')) : last;
+  }
   return req.headers.get('x-real-ip') || 'unknown';
 }
 

@@ -81,7 +81,8 @@ describe('POST /api/contact', () => {
     });
     expect(body.subject).toBe('Website enquiry (Purple Team) from Ada Lovelace');
     expect(body.body.content).toContain('Email: ada@example.com');
-    expect(body.body.content).toContain('Page: http://localhost/purple-team');
+    // Only the path, and only for this site.
+    expect(body.body.content).toContain('Page: /purple-team');
     expect(body.body.content).toContain('We would like a Purple Team scoping call.');
   });
 
@@ -104,6 +105,53 @@ describe('POST /api/contact', () => {
     const res = await post({ ...valid, padding: 'x'.repeat(20_000) });
     expect(res.status).toBe(413);
     expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it('rejects posts with no Origin or Referer', async () => {
+    const res = await POST(
+      new Request('http://localhost/api/contact', {
+        method: 'POST',
+        headers: { host: 'localhost', 'Content-Type': 'application/json' },
+        body: JSON.stringify(valid),
+      })
+    );
+    expect(res.status).toBe(403);
+  });
+
+  it('rejects a spoofed x-forwarded-host', async () => {
+    const res = await post(valid, { ...SITE, 'x-forwarded-host': 'evil.example' });
+    expect(res.status).toBe(403);
+  });
+
+  it('caps a streamed body with no Content-Length', async () => {
+    const big = new TextEncoder().encode(JSON.stringify({ ...valid, pad: 'x'.repeat(40_000) }));
+    const stream = new ReadableStream<Uint8Array>({
+      start(c) {
+        for (let i = 0; i < big.length; i += 4096) c.enqueue(big.slice(i, i + 4096));
+        c.close();
+      },
+    });
+    const res = await POST(
+      new Request('http://localhost/api/contact', {
+        method: 'POST',
+        headers: { ...SITE, 'Content-Type': 'application/json' },
+        body: stream,
+        // @ts-expect-error Node's fetch needs duplex for a streamed body
+        duplex: 'half',
+      })
+    );
+    expect(res.status).toBe(413);
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it('drops an off-site Referer instead of putting it in the email', async () => {
+    await post(valid, { ...SITE, referer: 'https://knowall-login.example/verify' });
+    expect(sentMessage().body.body.content).not.toContain('Page:');
+  });
+
+  it('rejects a name with line breaks', async () => {
+    const res = await post({ ...valid, name: 'Ada\nBcc: spam@example.com' });
+    expect(res.status).toBe(400);
   });
 
   it('rejects invalid input', async () => {
@@ -135,10 +183,13 @@ describe('POST /api/contact', () => {
     expect(res.status).toBe(502);
   });
 
-  it('rate limits a visitor after five messages', async () => {
-    for (let i = 0; i < 5; i++) expect((await post(valid)).status).toBe(200);
-    const res = await post(valid);
+  it('rate limits a visitor after five messages, however they spoof x-forwarded-for', async () => {
+    const as = (fake: string) =>
+      post(valid, { ...SITE, 'x-forwarded-for': `${fake}, 203.0.113.9:4000` });
+    for (let i = 0; i < 5; i++) expect((await as(`10.0.0.${i}`)).status).toBe(200);
+    const res = await as('10.0.0.99');
     expect(res.status).toBe(429);
     expect(res.headers.get('Retry-After')).toBeTruthy();
+    expect((await res.json()).error).toContain('hello@knowall.ai');
   });
 });

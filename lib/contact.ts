@@ -5,11 +5,21 @@ export const KNOWALL_NPUB = 'npub1kue7etfxtkxlv0s4u2xjf9epgxj7hssmlhc4x2k66tn8q8
 
 /** What a guest enquiry carries to /api/contact (shared by the form and the route). */
 export const enquiryPayloadSchema = z.object({
-  name: z.string().trim().min(2).max(100),
+  name: z
+    .string()
+    .trim()
+    .min(2)
+    .max(100)
+    .regex(/^[^\r\n]+$/),
   email: z.string().trim().email().max(200),
   message: z.string().trim().min(10).max(5000),
   /** Optional label for the subject line, e.g. "Purple Team". */
-  topic: z.string().trim().max(40).optional(),
+  topic: z
+    .string()
+    .trim()
+    .max(40)
+    .regex(/^[^\r\n]*$/)
+    .optional(),
   /**
    * Set by the browser when the visitor is signed in with Nostr and also sent a
    * DM. Visitor-supplied and unverified: the email says so.
