@@ -391,7 +391,8 @@ export default function PurpleTeamPage() {
             </ul>
             <p className="mt-8 flex items-center gap-2 text-gray-300">
               <Check className="h-5 w-5 shrink-0 text-violet-400" aria-hidden="true" />
-              Works in your GitHub or Azure DevOps, and every change goes through your own review.
+              Works in your GitHub or Azure DevOps, and every change goes through your existing
+              review process.
             </p>
           </div>
           <div className="relative">
@@ -538,7 +539,7 @@ export default function PurpleTeamPage() {
                 {[
                   'GitHub or Azure DevOps',
                   'Nothing is tested without written authorisation',
-                  'Every fix goes through your own code review',
+                  'Every fix goes through your existing review process',
                 ].map((t) => (
                   <li key={t} className="flex items-center gap-2">
                     <Check className="h-5 w-5 shrink-0 text-violet-400" aria-hidden="true" />
