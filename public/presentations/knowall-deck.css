@@ -1581,6 +1581,46 @@ a.partner-link:focus-visible {
   font-weight: 700;
 }
 
+/* --- Shared slides (presentations-src/partials) -------------------------- */
+/* Security, brief variant: four short points, larger type */
+.cards-2.security {
+  gap: 64px 96px;
+}
+
+.cards-2.security .card h4 {
+  font-size: 36px;
+}
+
+.cards-2.security .card p {
+  font-size: 27px;
+}
+
+/* Partners, flat variant: the sectors line under the logos */
+.partner-sectors .pill {
+  gap: 16px;
+}
+
+.partner-sectors .ic {
+  font-size: 30px;
+  color: var(--lime);
+}
+
+/* Products, shots variant: real product screenshots, not icons: these are
+   shipping products and showing them is more persuasive than describing them
+   (Ben, 2026-07-28). Cropped to a consistent band so three different apps
+   still read as one row. */
+.product-shot {
+  display: block;
+  width: 100%;
+  height: 210px;
+  object-fit: cover;
+  object-position: top center;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  margin: 0 0 14px;
+  background: #0b0d10;
+}
+
 /* On KPI cards the number is the message, so the icon moves out of its way
    to the top-right corner (Ben, 2026-07-29). */
 .card--stat {
