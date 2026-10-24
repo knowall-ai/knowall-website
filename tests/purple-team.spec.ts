@@ -38,6 +38,11 @@ test.describe('Purple Team Page', () => {
       numbers.getByRole('link', { name: "CISA's Known Exploited Vulnerabilities catalogue" })
     ).toHaveAttribute('href', 'https://www.cisa.gov/known-exploited-vulnerabilities-catalog');
 
+    // Integrations, grouped by job.
+    const integrations = page.getByTestId('integrations');
+    await expect(integrations.getByText('Microsoft Foundry')).toBeVisible();
+    await expect(integrations.getByText('Thyme and Business Central')).toBeVisible();
+
     await page.getByRole('button', { name: 'Is it legal to attack our systems?' }).click();
     await expect(page.getByText('Only with your written permission.')).toBeVisible();
   });
