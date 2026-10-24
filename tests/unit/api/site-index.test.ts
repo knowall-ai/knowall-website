@@ -43,10 +43,13 @@ describe('site index', () => {
       'https://github.com/knowall-ai/nodie',
       'https://github.com/knowall-ai/zendesk-zapdesk',
       'https://github.com/knowall-ai/thyme-bc-extension',
+      'https://github.com/knowall-ai/devops-bc-timetracker',
     ]) {
       expect(siteIndex).toContain(url);
     }
     expect(siteIndex).toContain('Agent Presence');
+    // The DevOps time tracker isn't built yet; Sallie must not offer it as available.
+    expect(siteIndex).toMatch(/devops-bc-timetracker\) is planned but not available yet/);
   });
 
   it('tells her to refer visitors to the decks for more depth', () => {
