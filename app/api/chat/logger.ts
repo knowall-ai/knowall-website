@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import { type ChatTurn, trackChatTurn } from '@/lib/analytics/track';
 
 // Define the log directory and file
 const LOG_DIR = path.join(process.cwd(), 'logs');
@@ -40,6 +41,11 @@ function initializeLogFile() {
 export interface ChatLogMeta {
   greetingId?: string;
   endedReason?: 'conversation' | 'ip' | 'day';
+  /** For the App Insights event: the page's Sallie context, path and turn number */
+  context?: string;
+  page?: string;
+  turn?: number;
+  outcome?: ChatTurn['outcome'];
 }
 
 // Log a chat conversation
@@ -50,6 +56,19 @@ export async function logChat(
   request?: Request,
   meta: ChatLogMeta = {}
 ): Promise<boolean> {
+  // Also one App Insights event per turn, for the sales portal's Website page.
+  // Never throws or blocks for long; the file log below is kept as it was.
+  await trackChatTurn(request, {
+    conversationId,
+    userMessage,
+    reply: assistantResponse,
+    greetingId: meta.greetingId,
+    context: meta.context,
+    page: meta.page,
+    turn: meta.turn,
+    outcome: meta.outcome ?? (meta.endedReason ? 'ended' : 'ok'),
+    endedReason: meta.endedReason,
+  });
   try {
     // Initialize log file if it doesn't exist
     const initialized = initializeLogFile();

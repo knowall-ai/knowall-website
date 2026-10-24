@@ -55,6 +55,31 @@ export default function PrivacyPolicyPage() {
         visible network-wide.
       </p>
 
+      <h2 className="text-2xl font-semibold text-white">Website visits and Sallie</h2>
+      <p>
+        Across www.knowall.ai we count visits without cookies or anything else stored on your
+        device, so there is no consent banner. When a page loads, your browser tells our own server
+        which page it was and, on arrival, which site linked you here (without its query string).
+        The server turns your IP address and browser into an anonymous code that changes every day,
+        so a visit can be counted once but you can&apos;t be followed from day to day. Your full IP
+        address is never stored or sent on: only its network part goes to Microsoft Azure
+        Application Insights, in the UK, to work out the country and city, and Application Insights
+        then discards it. Records are kept for 90 days.
+      </p>
+      <p>
+        If your browser sends <strong className="text-white">Do Not Track</strong> or{' '}
+        <strong className="text-white">Global Privacy Control</strong>, your visits aren&apos;t
+        counted at all.
+      </p>
+      <p>
+        Conversations with Sallie, our AI assistant, are kept so we can follow up and improve her:
+        what you wrote and her replies, the page you were on and the country you were in. Only the
+        website server&apos;s own chat log, which we use to stop abuse, notes your IP address.
+        Please don&apos;t share anything sensitive with her. With Do Not Track or Global Privacy
+        Control on, the conversation is kept without a location or visitor code. Email
+        hello@knowall.ai to have a conversation deleted.
+      </p>
+
       <h2 className="text-2xl font-semibold text-white">Questions</h2>
       <p>
         <MessageUsLink>Message us on Nostr</MessageUsLink> or email{' '}

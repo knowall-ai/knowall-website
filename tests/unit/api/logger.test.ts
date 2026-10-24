@@ -128,3 +128,59 @@ describe('getChatLogById', () => {
     expect(log).toBeNull();
   });
 });
+
+describe('App Insights chat event', () => {
+  // Requirements: site-analytics - one SallieChatTurn event per turn, never with an IP
+  it('emits one event per turn, with the conversation and no IP address', async () => {
+    vi.stubEnv(
+      'APPLICATIONINSIGHTS_CONNECTION_STRING',
+      'InstrumentationKey=00000000-0000-0000-0000-000000000000;IngestionEndpoint=https://example.in.applicationinsights.azure.com/'
+    );
+    const sent: string[] = [];
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (_url: unknown, init?: RequestInit) => {
+        sent.push(String(init?.body));
+        return new Response(null, { status: 200 });
+      })
+    );
+    const req = new Request('http://localhost/api/chat', {
+      method: 'POST',
+      headers: { 'x-forwarded-for': '198.51.100.23:40000', 'user-agent': 'Mozilla/5.0' },
+    });
+
+    await logger.logChat('Do you work with SMEs?', 'Yes, mostly.', 'conv-ai', req, {
+      greetingId: 'g-1',
+      context: 'purple-team',
+      page: '/purple-team',
+      turn: 2,
+    });
+
+    expect(sent).toHaveLength(1);
+    const [envelope] = JSON.parse(sent[0]);
+    expect(envelope.data.baseData.name).toBe('SallieChatTurn');
+    expect(envelope.data.baseData.properties).toMatchObject({
+      conversationId: 'conv-ai',
+      userMessage: 'Do you work with SMEs?',
+      reply: 'Yes, mostly.',
+      greetingId: 'g-1',
+      page: '/purple-team',
+      turn: '2',
+    });
+    expect(sent[0]).not.toContain('198.51.100.23');
+    // The file log is kept as before
+    expect(JSON.parse(fs.readFileSync(logFilePath(), 'utf-8'))).toHaveLength(1);
+    vi.unstubAllGlobals();
+    vi.unstubAllEnvs();
+  });
+
+  it('sends nothing when App Insights is not configured', async () => {
+    vi.stubEnv('APPLICATIONINSIGHTS_CONNECTION_STRING', '');
+    const fetchMock = vi.fn();
+    vi.stubGlobal('fetch', fetchMock);
+    await logger.logChat('Hi', 'Hello', 'conv-none');
+    expect(fetchMock).not.toHaveBeenCalled();
+    vi.unstubAllGlobals();
+    vi.unstubAllEnvs();
+  });
+});

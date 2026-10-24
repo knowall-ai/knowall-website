@@ -48,6 +48,8 @@ Required for development (`.env.local`):
 - `AZURE_OPENAI_ENDPOINT` + `AZURE_OPENAI_API_KEY` - For chat (preferred); `AZURE_OPENAI_DEPLOYMENT` optional
 - `OPENAI_API_KEY` - Voice routes (`/api/speak`, `/api/listen`), and the chat fallback when the Azure settings are absent
 - `ADMIN_API_KEY` - For `/admin/logs` access
+- `APPLICATIONINSIGHTS_CONNECTION_STRING` - Optional locally (set on App Service). Cookieless page views (`/api/collect`, from `components/page-view-beacon.tsx`) and one `SallieChatTurn` event per chat turn go to the `knowall-website` App Insights resource via `lib/analytics/` (no SDK, no IPs: only a truncated network for geolocation). Read by the sales portal's Website page (knowall-ai/sallie `web/`)
+- `ANALYTICS_SALT` - Secret for the daily-rotating anonymous visitor hash; without it each process uses a random one
 - `CONTACT_MAIL_TENANT_ID` + `CONTACT_MAIL_CLIENT_ID` + `CONTACT_MAIL_CLIENT_SECRET` - Contact form email (Sallie → hello@ via Graph); without them `/api/contact` returns 503. See `docs/CONTACT.adoc`
 
 ## CI/CD

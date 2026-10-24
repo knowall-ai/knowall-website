@@ -7,6 +7,7 @@ import { logChat } from './logger';
 import { clientIp, consume, LIMITS } from '@/lib/rate-limit';
 import { signOffMessage } from '@/lib/sallie-signoff';
 import { parseChatRequest } from './validate';
+import { cleanPath } from '@/lib/analytics/privacy';
 
 // Set to force-dynamic to ensure the route is always server-rendered
 export const dynamic = 'force-dynamic';
@@ -62,12 +63,15 @@ export async function POST(req: Request) {
       typeof body.greetingId === 'string' ? body.greetingId.slice(0, 40) : undefined;
     // Page focus, e.g. 'purple-team'. Unknown values are ignored.
     const context = parseSallieContext(body.context);
+    // The path the visitor is chatting from, for analytics only (never sent to the model)
+    const page = cleanPath(body.page) ?? undefined;
 
     // Cost guards: a visitor's allowance, the day's budget, and the length of
     // one conversation. When any is hit Sallie signs off gracefully instead
     // of erroring, and the exchange is still logged so email can continue it.
     const history = clientMessages;
     const visitorTurns = history.filter((m) => m.role === 'user').length;
+    const turnMeta = { greetingId, context: context ?? undefined, page, turn: visitorTurns };
     // Check the conversation cap first so over-cap requests don't spend the day's budget.
     const overCap = visitorTurns > LIMITS.messagesPerConversation();
     const limit = overCap
@@ -77,7 +81,11 @@ export async function POST(req: Request) {
       const lastUser = [...history].reverse().find((m) => m.role === 'user')?.content ?? '';
       const content = signOffMessage(conversationId);
       const endedReason = overCap ? 'conversation' : (limit.reason ?? 'ip');
-      await logChat(String(lastUser), content, conversationId, req, { greetingId, endedReason });
+      await logChat(String(lastUser), content, conversationId, req, {
+        ...turnMeta,
+        endedReason,
+        outcome: 'ended',
+      });
       return new Response(
         JSON.stringify({
           id: Date.now().toString(),
@@ -152,7 +160,7 @@ export async function POST(req: Request) {
       }
 
       // Log the successful conversation
-      await logChat(userMessage, responseContent, conversationId, req, { greetingId });
+      await logChat(userMessage, responseContent, conversationId, req, turnMeta);
     } catch (apiError) {
       console.error('OpenAI API error:', apiError);
 
@@ -168,7 +176,8 @@ export async function POST(req: Request) {
         }
       }
 
-      if (isRateLimited(apiError)) {
+      const busy = isRateLimited(apiError);
+      if (busy) {
         // HTTP 429 from whichever provider is in use: on Azure that is the
         // deployment's tokens-per-minute cap (a deliberate spend ceiling), on
         // OpenAI a rate or quota limit. Either way ask the visitor to retry
@@ -182,7 +191,10 @@ export async function POST(req: Request) {
       }
 
       // Log the fallback conversation
-      await logChat(userMessage, responseContent, conversationId, req, { greetingId });
+      await logChat(userMessage, responseContent, conversationId, req, {
+        ...turnMeta,
+        outcome: busy ? 'busy' : 'fallback',
+      });
     }
 
     // Create a response in the format expected by our custom implementation
