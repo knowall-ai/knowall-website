@@ -118,10 +118,20 @@
         padding: 18px 24px 40px;
       }
 
+      /* Five decks: three on top, two centred underneath. A six-column track
+         with every card spanning two lets the second row sit centred. */
       .presentations-grid {
         display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-template-columns: repeat(6, minmax(0, 1fr));
         gap: 22px;
+      }
+
+      .presentations-grid > .presentation-card {
+        grid-column: span 2;
+      }
+
+      .presentations-grid > .presentation-card:nth-child(4) {
+        grid-column: 2 / span 2;
       }
 
       /* the whole card is the link */
@@ -240,9 +250,14 @@
         .presentations-grid {
           grid-template-columns: repeat(2, minmax(0, 1fr));
         }
+
+        .presentations-grid > .presentation-card,
+        .presentations-grid > .presentation-card:nth-child(4) {
+          grid-column: auto;
+        }
       }
 
-      /* shorter laptop screens: keep all six decks above the fold */
+      /* shorter laptop screens: keep all five decks above the fold */
       @media (min-width: 1081px) and (max-height: 860px) {
         .band {
           padding: 22px 24px 10px;
@@ -366,7 +381,7 @@
           </div>
           <div class="card-body">
             <h2>Company Overview</h2>
-            <p>The full corporate overview &mdash; who we are, mission and vision, the complete service offerings, case studies, T-Minus-15, Zaplie and how we build AI agents and Microsoft Copilots.</p>
+            <p>The full corporate overview &mdash; who we are, how we deliver from workshop to project, case studies, our products and agents, Presence, Reverie memory and the Purple Team.</p>
             <span class="cta" aria-hidden="true">View presentation &rarr;</span>
           </div>
         </a>
@@ -383,22 +398,6 @@
           <div class="card-body">
             <h2>AI Discovery Workshop</h2>
             <p>A focused one-day workshop to uncover where automation and AI can transform your organisation &mdash; pre-work surveys, on-site workshop, 1-to-1 interviews and a prioritised report.</p>
-            <span class="cta" aria-hidden="true">View presentation &rarr;</span>
-          </div>
-        </a>
-        <a
-          class="presentation-card"
-          href="agentic-delivery.html"
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="Agentic Delivery Workshop presentation (opens in a new tab)"
-        >
-          <div class="thumb">
-            <img src="images/thumbs/agentic-delivery.jpg" alt="" width="720" height="405" />
-          </div>
-          <div class="card-body">
-            <h2>Agentic Delivery Workshop</h2>
-            <p>From requirements to production, fast &mdash; a 4-day Proto-Sprint to prove the concept and phased Projects to scale it, delivered with our open-source T-Minus-15 methodology.</p>
             <span class="cta" aria-hidden="true">View presentation &rarr;</span>
           </div>
         </a>

@@ -14,7 +14,6 @@ export const decks = [
   'agentic-ai-solutions',
   'company-overview',
   'ai-discovery',
-  'agentic-delivery',
   'cisp',
   'purple-team',
 ];
