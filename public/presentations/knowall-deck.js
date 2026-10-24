@@ -152,17 +152,21 @@ Reveal.on('resize', () => guardWhenSettled(Reveal.getCurrentSlide()));
 // --- Carousels (opt-in) ---------------------------------------------------
 // Markup and styles: see "Carousel" in knowall-deck.css. Each .carousel
 // auto-advances (every data-carousel-interval ms, default 4500) only while
-// its slide is on screen, never under prefers-reduced-motion, and pauses
-// while the visitor hovers or focuses it (WCAG 2.2.2). The arrows and dots
-// always work, and never move the deck.
+// its slide is on screen. Once the visitor pauses it with the .carousel-toggle,
+// uses an arrow or dot, or focuses one of those, it stays stopped until they
+// press play (WCAG 2.2.2); hovering pauses it only while the pointer is over
+// it, and under prefers-reduced-motion it starts paused. The controls never
+// move the deck.
 document.querySelectorAll('.carousel').forEach((root) => {
   const slides = [...root.querySelectorAll('.carousel-slide')];
   const dots = [...root.querySelectorAll('.carousel-dot')];
   if (!slides.length) return;
-  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const toggle = root.querySelector('.carousel-toggle');
   const interval = Number(root.dataset.carouselInterval) || 4500;
   let i = 0;
   let timer = null;
+  let hovering = false;
+  let userStopped = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const show = (n) => {
     i = (n + slides.length) % slides.length;
     slides.forEach((s, k) => {
@@ -179,32 +183,48 @@ document.querySelectorAll('.carousel').forEach((root) => {
     timer = null;
   };
   const start = () => {
-    if (!still && !timer) timer = setInterval(() => show(i + 1), interval);
+    if (!userStopped && !hovering && !timer) timer = setInterval(() => show(i + 1), interval);
   };
   const onSlide = () => (Reveal.getCurrentSlide()?.contains(root) ? start() : stop());
+  const setStopped = (value) => {
+    userStopped = value;
+    toggle?.setAttribute('aria-pressed', String(value));
+    if (value) stop();
+    else onSlide();
+  };
+  setStopped(userStopped);
+  toggle?.addEventListener('click', () => setStopped(!userStopped));
   root.querySelector('.carousel-prev')?.addEventListener('click', () => {
-    stop();
+    setStopped(true);
     show(i - 1);
   });
   root.querySelector('.carousel-next')?.addEventListener('click', () => {
-    stop();
+    setStopped(true);
     show(i + 1);
   });
   dots.forEach((d, k) =>
     d.addEventListener('click', () => {
-      stop();
+      setStopped(true);
       show(k);
     })
   );
+  // focusing an arrow or dot stops it for good; the toggle is how to resume
+  root.addEventListener('focusin', (e) => {
+    if (e.target !== toggle) setStopped(true);
+  });
   // keep the deck's own keyboard and swipe handling away from the controls
   root
     .querySelectorAll('button')
     .forEach((b) => b.addEventListener('keydown', (e) => e.stopPropagation()));
+  root.addEventListener('mouseenter', () => {
+    hovering = true;
+    stop();
+  });
+  root.addEventListener('mouseleave', () => {
+    hovering = false;
+    onSlide();
+  });
   Reveal.on('ready', onSlide);
-  // Pause while the visitor is looking at or using it (WCAG 2.2.2).
-  root.addEventListener('mouseenter', stop);
-  root.addEventListener('focusin', stop);
-  root.addEventListener('mouseleave', onSlide);
   Reveal.on('slidechanged', onSlide);
   if (Reveal.isReady()) onSlide();
 });
