@@ -47,9 +47,24 @@ describe('site index', () => {
     ]) {
       expect(siteIndex).toContain(url);
     }
-    expect(siteIndex).toContain('Agent Presence');
+    // Agent Presence is internal: offered as a custom project, not a product.
+    expect(siteIndex).toMatch(/join Teams calls.*custom AI agent project/);
     // The DevOps time tracker isn't built yet; Sallie must not offer it as available.
     expect(siteIndex).toMatch(/devops-bc-timetracker\) is planned but not available yet/);
+  });
+
+  it('never links private repos or domains that do not resolve', () => {
+    for (const hidden of [
+      'agent-presence',
+      'agents-portal',
+      'sammie-website',
+      'sammie-bot',
+      'wardie',
+      'zapdesk-msteams',
+      'getbook.ie',
+    ]) {
+      expect(siteIndex).not.toContain(hidden);
+    }
   });
 
   it('tells her to refer visitors to the decks for more depth', () => {
