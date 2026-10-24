@@ -29,3 +29,19 @@ export const CVES_LAST_30_DAYS = 16966;
 
 /** CISA Known Exploited Vulnerabilities catalogue entries with a 2025 `dateAdded`. */
 export const KEV_ADDED_LAST_YEAR = 245;
+
+/** Where the figures come from, linked under each chart and number on the page. */
+export const SOURCES = {
+  nvd: {
+    label: 'NIST National Vulnerability Database',
+    url: 'https://nvd.nist.gov/vuln/search',
+  },
+  nvdApi: {
+    label: 'NVD CVE API 2.0',
+    url: 'https://nvd.nist.gov/developers/vulnerabilities',
+  },
+  kev: {
+    label: "CISA's Known Exploited Vulnerabilities catalogue",
+    url: 'https://www.cisa.gov/known-exploited-vulnerabilities-catalog',
+  },
+} as const;

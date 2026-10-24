@@ -29,6 +29,15 @@ test.describe('Purple Team Page', () => {
     ).toBeVisible();
     await expect(page.getByRole('img', { name: /Security score \d+ out of 100/ })).toBeVisible();
 
+    // Every real figure links to its public source.
+    const numbers = page.locator('#numbers');
+    await expect(
+      numbers.getByRole('link', { name: 'NIST National Vulnerability Database' })
+    ).toHaveAttribute('href', 'https://nvd.nist.gov/vuln/search');
+    await expect(
+      numbers.getByRole('link', { name: "CISA's Known Exploited Vulnerabilities catalogue" })
+    ).toHaveAttribute('href', 'https://www.cisa.gov/known-exploited-vulnerabilities-catalog');
+
     await page.getByRole('button', { name: 'Is it legal to attack our systems?' }).click();
     await expect(page.getByText('Only with your written permission.')).toBeVisible();
   });

@@ -19,6 +19,7 @@ import {
   KEV_ADDED_LAST_YEAR,
   CVES_LAST_30_DAYS,
   CVES_AS_OF,
+  SOURCES,
 } from '@/components/purple-team/data';
 
 export const metadata: Metadata = {
@@ -129,6 +130,26 @@ const faqs = [
 
 const fmt = (n: number) => n.toLocaleString('en-GB');
 
+const asOfLabel = new Date(`${CVES_AS_OF}T00:00:00Z`).toLocaleDateString('en-GB', {
+  day: 'numeric',
+  month: 'short',
+  year: 'numeric',
+  timeZone: 'UTC',
+});
+
+function SourceLink({ source }: { source: { label: string; url: string } }) {
+  return (
+    <a
+      href={source.url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="underline decoration-gray-600 underline-offset-2 hover:text-violet-300"
+    >
+      {source.label}
+    </a>
+  );
+}
+
 function Eyebrow({ children }: { children: React.ReactNode }) {
   return (
     <p className="mb-4 text-xs font-semibold uppercase tracking-[0.25em] text-violet-300">
@@ -237,6 +258,10 @@ export default function PurpleTeamPage() {
           No person can read every advisory. The skill is knowing which handful affect <em>your</em>{' '}
           code and are being exploited, and fixing those first.
         </p>
+        <p className="mx-auto mt-3 max-w-2xl text-center text-xs text-gray-500">
+          Sources: <SourceLink source={SOURCES.nvd} /> (CVEs published in the 30 days to {asOfLabel}
+          ) and <SourceLink source={SOURCES.kev} /> (entries added in 2025).
+        </p>
       </section>
 
       {/* How it works: big illustrated steps */}
@@ -343,7 +368,8 @@ export default function PurpleTeamPage() {
             <div className="flex flex-col rounded-2xl border border-gray-800 bg-gray-950 p-6">
               <h3 className="text-xl font-semibold">New CVEs published per year</h3>
               <p className="mb-6 text-sm text-gray-400">
-                Source: NIST National Vulnerability Database. *Year to date.
+                Source: <SourceLink source={SOURCES.nvd} />, counted by publish date via the{' '}
+                <SourceLink source={SOURCES.nvdApi} />. *1 January to {asOfLabel}.
               </p>
               <CveTrendChart data={CVES_PER_YEAR} asOf={CVES_AS_OF} />
               <KevCallout />
@@ -486,7 +512,7 @@ function KevCallout() {
         <p className="text-3xl font-bold text-red-400">{fmt(KEV_ADDED_LAST_YEAR)}</p>
         <p className="text-sm text-gray-400">
           CVEs CISA confirmed as exploited in the wild in {last.year}. Those are the ones to fix
-          first.
+          first. Source: <SourceLink source={SOURCES.kev} />.
         </p>
       </div>
     </div>
