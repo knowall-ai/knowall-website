@@ -668,6 +668,15 @@ section > .logo-light--left {
   color: var(--mist);
 }
 
+/* A short label under the stage title, e.g. the acronym a client knows it by. */
+.stage .stage-sub {
+  margin: -4px 0 12px;
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--lime);
+}
+
 /* --- T-Minus-15 lifecycle ribbon (brand asset) --------------------------
    The faceted lime infinity ribbon from the T-Minus-15 book artwork,
    with the five stage descriptions stacked beside it. */
