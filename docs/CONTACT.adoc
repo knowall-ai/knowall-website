@@ -1,0 +1,58 @@
+= Contact form routing
+:toc:
+
+How enquiries from the "Message us" panel (and the Purple Team form) reach us.
+
+== Routes
+
+[cols="1,3"]
+|===
+| Visitor | What happens
+
+| Guest (not signed in with Nostr)
+| `POST /api/contact` emails *hello@knowall.ai* from *sallie@knowall.ai* through Microsoft Graph. Reply-To is the visitor, so replying in Outlook answers them directly.
+
+| Signed in with a Nostr extension that supports NIP-44
+| The browser sends a NIP-17 private DM from the visitor's own key to the KnowAll AI npub (`npub1kue7…322ar`), then posts a copy to `/api/contact` so it also lands in hello@ with their npub. If the copy fails, the DM still counts as sent.
+
+| Signed in, but the extension can't encrypt
+| Falls back to the guest email route.
+|===
+
+Nobody needs a Nostr identity to contact us, and the site no longer creates throwaway keys. Both forms also show a plain `mailto:hello@knowall.ai` link.
+
+== Protections on `/api/contact`
+
+* Same-origin only (`isSameOrigin`).
+* Rate limited per IP: `CONTACT_LIMIT_PER_IP` (default 5 per `SALLIE_LIMIT_WINDOW_MINUTES`, 10 minutes), and `CONTACT_BUDGET_PER_DAY` overall (default 200).
+* Zod validation and length caps; a hidden `website` honeypot field. Bots that fill it get a 200 and no email.
+* If the mail settings are missing, the route returns 503 and tells the visitor to email hello@knowall.ai.
+
+== One-off setup (Entra + Exchange + App Service)
+
+. *Entra app registration* `knowall-website-contact` (single tenant). Add the *Microsoft Graph → Application → Mail.Send* permission and grant admin consent. Create a client secret and note its expiry.
+. *Restrict it to Sallie's mailbox.* Without this, Mail.Send lets the app send as anyone. In Exchange Online PowerShell, use RBAC for Applications:
++
+[source,powershell]
+----
+New-ServicePrincipal -AppId <client-id> -ObjectId <enterprise-app-object-id> -DisplayName "knowall-website-contact"
+New-ManagementScope -Name "Sallie mailbox only" -RecipientRestrictionFilter "PrimarySmtpAddress -eq 'sallie@knowall.ai'"
+New-ManagementRoleAssignment -App <client-id> -Role "Application Mail.Send" -CustomResourceScope "Sallie mailbox only"
+----
++
+Then remove the tenant-wide Graph Mail.Send grant from the app, so the scoped role is the only route. Check with `Test-ServicePrincipalAuthorization -Identity <client-id> -Resource sallie@knowall.ai`.
+. *App Service settings* (`KnowAllAIRG` / `knowall-website`):
++
+[cols="1,2"]
+|===
+| Setting | Value
+
+| `CONTACT_MAIL_TENANT_ID` | KnowAll tenant ID
+| `CONTACT_MAIL_CLIENT_ID` | the app's client ID
+| `CONTACT_MAIL_CLIENT_SECRET` | the client secret
+| `CONTACT_MAIL_FROM` | optional, defaults to `sallie@knowall.ai`
+| `CONTACT_MAIL_TO` | optional, defaults to `hello@knowall.ai`
+|===
+. Send a test enquiry from production as a guest, and one signed in with Nostr. Check both arrive in hello@, and the DM in the KnowAll AI Nostr inbox.
+
+Rotate the secret before it expires, the same way as the deploy credentials.

@@ -1,14 +1,12 @@
 import { SimplePool } from 'nostr-tools/pool';
-import { finalizeEvent, generateSecretKey, getPublicKey } from 'nostr-tools/pure';
-import * as nip04 from 'nostr-tools/nip04';
+import type { Event } from 'nostr-tools/core';
 import * as nip19 from 'nostr-tools/nip19';
+import { KNOWALL_NPUB } from '@/lib/contact';
+import { nip07SupportsGiftWrap, wrapRumor } from '@/lib/nip17';
 
-// Production contact npub (default). Overridable via NEXT_PUBLIC_NOSTR_CONTACT_NPUB
-// so the form can be pointed at a throwaway test identity during development.
-// Mirrors the merchant-npub pattern used on the Robotechy website.
-const PRODUCTION_CONTACT_NPUB = 'npub1jutptdc2m8kgjmudtws095qk2tcale0eemvp4j2xnjnl4nh6669slrf04x';
-
-const CONTACT_NPUB: string = process.env.NEXT_PUBLIC_NOSTR_CONTACT_NPUB || PRODUCTION_CONTACT_NPUB;
+// Where signed-in visitors' DMs go: the KnowAll AI company npub. Overridable
+// via NEXT_PUBLIC_NOSTR_CONTACT_NPUB so development can point at a test identity.
+const CONTACT_NPUB: string = process.env.NEXT_PUBLIC_NOSTR_CONTACT_NPUB || KNOWALL_NPUB;
 
 // Same relay set as the Robotechy storefront.
 export const CONTACT_RELAYS = [
@@ -18,75 +16,117 @@ export const CONTACT_RELAYS = [
 ];
 
 /**
- * Decode an npub to a hex pubkey, falling back to the production contact npub if
- * the value is malformed. NEXT_PUBLIC_NOSTR_CONTACT_NPUB is user-overridable, so
- * a bad value must not throw at module init and crash the page.
+ * Decode an npub to a hex pubkey, falling back to the KnowAll npub if the value
+ * is malformed. NEXT_PUBLIC_NOSTR_CONTACT_NPUB is user-overridable, so a bad
+ * value must not throw and break the form.
  */
 function decodeContactPubkey(npub: string): string {
   try {
     const decoded = nip19.decode(npub);
     if (decoded.type === 'npub') return decoded.data;
   } catch {
-    // fall through to the production default
+    // fall through to the company default
   }
-  console.warn('Invalid NEXT_PUBLIC_NOSTR_CONTACT_NPUB; falling back to the production npub.');
-  return nip19.decode(PRODUCTION_CONTACT_NPUB).data as string;
+  console.warn('Invalid NEXT_PUBLIC_NOSTR_CONTACT_NPUB; falling back to the KnowAll npub.');
+  return nip19.decode(KNOWALL_NPUB).data as string;
 }
 
 export interface ContactMessage {
   name: string;
   email: string;
   message: string;
+  /** Optional subject label, e.g. "Purple Team". */
+  topic?: string;
 }
 
-/**
- * Send a contact-form message as a NIP-04 encrypted Nostr DM (kind 4) to the
- * KnowAll AI contact pubkey, published to public relays.
- *
- * Website visitors don't have a Nostr identity, so a throwaway (ephemeral)
- * keypair is generated per submission and used to encrypt and sign the DM. The
- * visitor's reply details travel inside the encrypted message body.
- *
- * Resolves when at least one relay accepts the event; rejects if all fail.
- */
-export async function sendContactMessage({ name, email, message }: ContactMessage): Promise<void> {
-  const recipientPubkey = decodeContactPubkey(CONTACT_NPUB);
+export interface ContactOptions {
+  /** The visitor's pubkey (hex) when they're signed in with a Nostr extension. */
+  nostrPubkey?: string | null;
+}
 
-  const content = [
-    'KnowAll AI website contact form:',
+export type ContactChannel = 'nostr' | 'email';
+
+/**
+ * Send a contact-form message.
+ *
+ * - Signed in with a Nostr extension that can encrypt (NIP-44): a NIP-17
+ *   private DM from the visitor's own key to the KnowAll AI npub, so we can
+ *   reply to them on Nostr.
+ * - Everyone else: an email to hello@knowall.ai from Sallie's mailbox, sent by
+ *   /api/contact with Reply-To set to the visitor. No throwaway keys.
+ *
+ * Resolves with the channel used; rejects with a message fit to show the visitor.
+ */
+export async function sendContactMessage(
+  msg: ContactMessage,
+  opts: ContactOptions = {}
+): Promise<ContactChannel> {
+  if (opts.nostrPubkey && nip07SupportsGiftWrap()) {
+    await sendNostrDm(msg, opts.nostrPubkey);
+    // Email a copy too, in case nobody is watching the DMs. The DM already
+    // arrived, so a failed copy doesn't fail the send.
+    await sendEmail({ ...msg, nostrNpub: nip19.npubEncode(opts.nostrPubkey) }).catch((err) =>
+      console.warn('Contact form: DM sent but the email copy failed', err)
+    );
+    return 'nostr';
+  }
+  await sendEmail(msg);
+  return 'email';
+}
+
+function messageText({ name, email, message, topic }: ContactMessage): string {
+  return [
+    `KnowAll AI website enquiry${topic ? ` (${topic})` : ''}:`,
     '',
     `Name: ${name}`,
     `Email: ${email}`,
     '',
     message,
   ].join('\n');
+}
 
-  // Ephemeral sender identity — one keypair per submission.
-  const secretKey = generateSecretKey();
-  const encryptedContent = nip04.encrypt(secretKey, recipientPubkey, content);
-
-  const event = finalizeEvent(
+async function sendNostrDm(msg: ContactMessage, senderPubkey: string): Promise<void> {
+  const recipient = decodeContactPubkey(CONTACT_NPUB);
+  // NIP-17: a kind-14 chat message, sealed by the visitor's extension and
+  // gift-wrapped so relays see neither sender nor content.
+  const wrap = await wrapRumor(
     {
-      kind: 4,
+      kind: 14,
       created_at: Math.floor(Date.now() / 1000),
-      tags: [['p', recipientPubkey]],
-      content: encryptedContent,
+      tags: [['p', recipient]],
+      content: messageText(msg),
     },
-    secretKey
+    { pubkey: senderPubkey, kind: 'nip07' },
+    recipient
   );
 
-  // Sanity check: the event must verify against the ephemeral pubkey.
-  if (event.pubkey !== getPublicKey(secretKey)) {
-    throw new Error('Failed to sign contact message');
-  }
+  if (!wrap.sig) throw new Error('Could not sign your message. Please email hello@knowall.ai.');
+  const signed: Event = { ...wrap, sig: wrap.sig };
 
   const pool = new SimplePool();
   try {
     // Succeed as soon as one relay accepts the event.
-    await Promise.any(pool.publish(CONTACT_RELAYS, event));
+    await Promise.any(pool.publish(CONTACT_RELAYS, signed));
   } catch {
-    throw new Error('Could not reach any Nostr relay. Please try again or email us directly.');
+    throw new Error('Could not reach any Nostr relay. Please try again or email hello@knowall.ai.');
   } finally {
     pool.close(CONTACT_RELAYS);
+  }
+}
+
+async function sendEmail(msg: ContactMessage & { nostrNpub?: string }): Promise<void> {
+  let res: Response;
+  try {
+    res = await fetch('/api/contact', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(msg),
+    });
+  } catch {
+    throw new Error('Could not send your message. Please email hello@knowall.ai.');
+  }
+  if (!res.ok) {
+    const body = (await res.json().catch(() => null)) as { error?: string } | null;
+    throw new Error(body?.error || 'Could not send your message. Please email hello@knowall.ai.');
   }
 }

@@ -16,7 +16,8 @@ import {
   SheetTitle,
   SheetDescription,
 } from '@/components/ui/sheet';
-import { sendContactMessage } from '@/lib/nostr-contact';
+import { sendContactMessage, type ContactChannel } from '@/lib/nostr-contact';
+import { useNostrAuth } from '@/components/auth/nostr-auth-provider';
 
 // KnowAll AI's public Nostr profile, kept discoverable in the panel footer.
 const NOSTR_PROFILE_URL =
@@ -98,7 +99,11 @@ type ContactFormData = z.infer<typeof contactSchema>;
  */
 function ContactPanel() {
   const { isOpen, setIsOpen, prefillMessage } = useContactPanel();
+  const { user } = useNostrAuth();
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [channel, setChannel] = useState<ContactChannel>('email');
+  // Honeypot: hidden from people; bots that fill it are dropped by /api/contact.
+  const [website, setWebsite] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -136,7 +141,12 @@ function ContactPanel() {
     setError(null);
 
     try {
-      await sendContactMessage(data);
+      setChannel(
+        await sendContactMessage(
+          { ...data, ...(website ? { website } : {}) },
+          { nostrPubkey: user?.pubkey }
+        )
+      );
       setIsSubmitted(true);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to send message. Please try again.');
@@ -170,7 +180,10 @@ function ContactPanel() {
               <CheckCircle className="mx-auto mb-4 h-12 w-12 text-lime-500" aria-hidden="true" />
               <h3 className="mb-2 text-xl font-semibold text-white">Message Sent!</h3>
               <p className="text-gray-300">
-                Thank you for getting in touch. We&apos;ll get back to you as soon as possible.
+                Thank you for getting in touch.{' '}
+                {channel === 'nostr'
+                  ? 'Your message went to KnowAll AI as a private Nostr DM, with a copy to our inbox.'
+                  : 'It has gone to our inbox and we’ll reply by email as soon as we can.'}
               </p>
             </div>
           ) : (
@@ -248,8 +261,28 @@ function ContactPanel() {
                 <Send className="ml-2 h-4 w-4" aria-hidden="true" />
               </Button>
 
+              <input
+                type="text"
+                name="website"
+                tabIndex={-1}
+                autoComplete="off"
+                aria-hidden="true"
+                className="hidden"
+                value={website}
+                onChange={(e) => setWebsite(e.target.value)}
+              />
+
               <p className="text-center text-xs text-gray-400">
-                Your message is sent as an encrypted Nostr DM — no email servers involved.
+                {user
+                  ? 'Signed in with Nostr: sent as a private DM to KnowAll AI, with an email copy.'
+                  : 'Sent to our inbox by email.'}{' '}
+                Prefer email?{' '}
+                <a
+                  href="mailto:hello@knowall.ai"
+                  className="text-lime-500 underline-offset-4 hover:underline"
+                >
+                  hello@knowall.ai
+                </a>
               </p>
             </form>
           )}
