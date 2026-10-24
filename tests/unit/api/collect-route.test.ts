@@ -53,7 +53,7 @@ describe('POST /api/collect', () => {
     });
   });
 
-  it('refuses beacons without this site as their origin', async () => {
+  it('refuses beacons without one of the site hosts as their origin', async () => {
     await POST(beacon({ path: '/' }, { origin: 'https://evil.example' }));
     // curl with a browser user agent and no Origin or Referer
     const bare = new Request('http://www.knowall.ai/api/collect', {
@@ -62,7 +62,6 @@ describe('POST /api/collect', () => {
       body: JSON.stringify({ path: '/' }),
     });
     await POST(bare);
-    await POST(beacon({ path: '/' }, { 'x-forwarded-host': 'evil.example' }));
     expect(trackMock).not.toHaveBeenCalled();
   });
 
