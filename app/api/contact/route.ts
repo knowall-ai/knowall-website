@@ -3,10 +3,37 @@ import { enquiryEmail, enquiryPayloadSchema } from '@/lib/contact';
 import { mailConfig, sendMail } from '@/lib/graph-mail';
 import { clientIp, consume, isSameOrigin } from '@/lib/rate-limit';
 
+/** Largest request we'll read: the form's caps fit comfortably inside this. */
+const MAX_BODY_BYTES = 16 * 1024;
+
 /**
- * Guest enquiries (visitors not signed in with Nostr): emailed to hello@ from
- * Sallie's mailbox, with Reply-To set to the visitor. Signed-in visitors DM
- * the KnowAll AI npub from the browser instead and never reach this route.
+ * Read the body as text, giving up (null) once it passes `limit` bytes, so an
+ * oversized post never gets buffered or parsed in full.
+ */
+async function readBody(req: Request, limit: number): Promise<string | null> {
+  const declared = Number(req.headers.get('content-length'));
+  if (Number.isFinite(declared) && declared > limit) return null;
+  if (!req.body) return '';
+  const reader = req.body.getReader();
+  const chunks: Uint8Array[] = [];
+  let size = 0;
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    size += value.byteLength;
+    if (size > limit) {
+      await reader.cancel();
+      return null;
+    }
+    chunks.push(value);
+  }
+  return new TextDecoder().decode(Buffer.concat(chunks));
+}
+
+/**
+ * Enquiries emailed to hello@ from Sallie's mailbox, with Reply-To set to the
+ * visitor: every guest message, plus a copy of each signed-in visitor's Nostr
+ * DM (whose npub the email marks as unverified).
  */
 export async function POST(req: Request) {
   if (!isSameOrigin(req)) {
@@ -21,7 +48,17 @@ export async function POST(req: Request) {
     );
   }
 
-  const parsed = enquiryPayloadSchema.safeParse(await req.json().catch(() => null));
+  const raw = await readBody(req, MAX_BODY_BYTES);
+  if (raw === null) {
+    return NextResponse.json({ error: 'Message too long.' }, { status: 413 });
+  }
+  let json: unknown = null;
+  try {
+    json = JSON.parse(raw);
+  } catch {
+    // falls through to the validation error below
+  }
+  const parsed = enquiryPayloadSchema.safeParse(json);
   if (!parsed.success) {
     return NextResponse.json({ error: 'Please check the form and try again.' }, { status: 400 });
   }

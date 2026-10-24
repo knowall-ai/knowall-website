@@ -10,7 +10,10 @@ export const enquiryPayloadSchema = z.object({
   message: z.string().trim().min(10).max(5000),
   /** Optional label for the subject line, e.g. "Purple Team". */
   topic: z.string().trim().max(40).optional(),
-  /** Set when the visitor also sent this as a Nostr DM (signed in), so the email is a copy. */
+  /**
+   * Set by the browser when the visitor is signed in with Nostr and also sent a
+   * DM. Visitor-supplied and unverified: the email says so.
+   */
   nostrNpub: z
     .string()
     .regex(/^npub1[02-9ac-hj-np-z]{58}$/)
@@ -29,12 +32,12 @@ export function enquiryEmail(p: EnquiryPayload, page?: string) {
     '',
     `Name: ${p.name}`,
     `Email: ${p.email}`,
-    ...(p.nostrNpub ? [`Nostr: ${p.nostrNpub}`] : []),
+    ...(p.nostrNpub ? [`Nostr (given by the visitor, not verified): ${p.nostrNpub}`] : []),
     ...(page ? [`Page: ${page}`] : []),
     '',
     ...(p.nostrNpub
       ? [
-          'They are signed in with Nostr, so this was also sent as a private DM to the KnowAll AI npub. Reply on Nostr or by email.',
+          'Their browser says they are signed in with Nostr and also sent this as a private DM to the KnowAll AI npub. Check the Nostr inbox before treating that npub as theirs.',
           '',
         ]
       : []),

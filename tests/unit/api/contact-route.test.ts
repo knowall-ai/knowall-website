@@ -88,13 +88,21 @@ describe('POST /api/contact', () => {
   it('marks the email as a copy of a Nostr DM when an npub is given', async () => {
     await post({ ...valid, nostrNpub: NPUB });
     const { body } = sentMessage();
-    expect(body.body.content).toContain(`Nostr: ${NPUB}`);
-    expect(body.body.content).toContain('also sent as a private DM');
+    expect(body.body.content).toContain(`Nostr (given by the visitor, not verified): ${NPUB}`);
+    expect(body.body.content).toContain('also sent this as a private DM');
+    // Anyone can post an npub, so the email mustn't vouch for it.
+    expect(body.body.content).toContain('before treating that npub as theirs');
   });
 
   it('rejects posts from other sites', async () => {
     const res = await post(valid, { host: 'localhost', origin: 'https://evil.example' });
     expect(res.status).toBe(403);
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it('refuses oversized posts before parsing them', async () => {
+    const res = await post({ ...valid, padding: 'x'.repeat(20_000) });
+    expect(res.status).toBe(413);
     expect(fetchMock).not.toHaveBeenCalled();
   });
 

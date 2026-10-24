@@ -183,7 +183,9 @@ function ContactPanel() {
                 Thank you for getting in touch.{' '}
                 {channel === 'nostr'
                   ? 'Your message went to KnowAll AI as a private Nostr DM, with a copy to our inbox.'
-                  : 'It has gone to our inbox and we’ll reply by email as soon as we can.'}
+                  : channel === 'nostr-only'
+                    ? 'Your message went to KnowAll AI as a private Nostr DM.'
+                    : 'It has gone to our inbox and we’ll reply by email as soon as we can.'}
               </p>
             </div>
           ) : (
@@ -272,17 +274,20 @@ function ContactPanel() {
                 onChange={(e) => setWebsite(e.target.value)}
               />
 
-              <p className="text-center text-xs text-gray-400">
-                {user
-                  ? 'Signed in with Nostr: sent as a private DM to KnowAll AI, with an email copy.'
-                  : 'Sent to our inbox by email.'}{' '}
+              <p className="flex items-center justify-center gap-2 text-sm text-gray-300">
+                <Mail className="h-4 w-4 shrink-0 text-lime-500" aria-hidden="true" />
                 Prefer email?{' '}
                 <a
                   href="mailto:hello@knowall.ai"
-                  className="text-lime-500 underline-offset-4 hover:underline"
+                  className="font-medium text-white underline decoration-lime-500 underline-offset-4 hover:text-lime-300"
                 >
                   hello@knowall.ai
                 </a>
+              </p>
+              <p className="text-center text-xs text-gray-400">
+                {user
+                  ? 'Signed in with Nostr: sent as a private DM to KnowAll AI, with an email copy.'
+                  : 'Sent to our inbox by email.'}
               </p>
             </form>
           )}

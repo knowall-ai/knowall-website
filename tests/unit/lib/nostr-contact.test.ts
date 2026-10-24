@@ -72,12 +72,12 @@ describe('sendContactMessage', () => {
     expect(emailBody().nostrNpub).toMatch(/^npub1/);
   });
 
-  it('keeps a delivered DM a success when the email copy fails', async () => {
+  it('keeps a delivered DM a success, but says so, when the email copy fails', async () => {
     supportsGiftWrap.mockReturnValue(true);
     fetchMock.mockResolvedValue(new Response(null, { status: 503 }));
     vi.spyOn(console, 'warn').mockImplementation(() => {});
     const { sendContactMessage } = await import('@/lib/nostr-contact');
-    await expect(sendContactMessage(msg, { nostrPubkey: VISITOR_HEX })).resolves.toBe('nostr');
+    await expect(sendContactMessage(msg, { nostrPubkey: VISITOR_HEX })).resolves.toBe('nostr-only');
   });
 
   it('falls back to email when the extension cannot encrypt DMs', async () => {

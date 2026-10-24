@@ -44,7 +44,8 @@ export interface ContactOptions {
   nostrPubkey?: string | null;
 }
 
-export type ContactChannel = 'nostr' | 'email';
+/** 'nostr' = DM and email copy both sent; 'nostr-only' = DM sent, copy failed. */
+export type ContactChannel = 'nostr' | 'nostr-only' | 'email';
 
 /**
  * Send a contact-form message.
@@ -65,10 +66,13 @@ export async function sendContactMessage(
     await sendNostrDm(msg, opts.nostrPubkey);
     // Email a copy too, in case nobody is watching the DMs. The DM already
     // arrived, so a failed copy doesn't fail the send.
-    await sendEmail({ ...msg, nostrNpub: nip19.npubEncode(opts.nostrPubkey) }).catch((err) =>
-      console.warn('Contact form: DM sent but the email copy failed', err)
-    );
-    return 'nostr';
+    try {
+      await sendEmail({ ...msg, nostrNpub: nip19.npubEncode(opts.nostrPubkey) });
+      return 'nostr';
+    } catch (err) {
+      console.warn('Contact form: DM sent but the email copy failed', err);
+      return 'nostr-only';
+    }
   }
   await sendEmail(msg);
   return 'email';
