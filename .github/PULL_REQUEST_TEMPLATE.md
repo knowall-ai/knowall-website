@@ -37,3 +37,7 @@ For pure-refactor / docs / CI / deps PRs with no user-visible change, replace th
 ## Screenshots (if applicable)
 
 <!-- Add screenshots for visual changes. -->
+
+## Checklist
+
+- [ ] No confidential company-specific or personal information (real names, addresses, clients, IDs, prices) in code, docs, tests, screenshots, the PR title, the PR description or commit messages — see CONTRIBUTING.md
