@@ -147,6 +147,36 @@ describe('SallieAssistant', () => {
     expect(screen.queryByPlaceholderText('Type your message...')).not.toBeInTheDocument();
   });
 
+  it('tells the visitor to tap when the browser holds back her voice, even when docked', async () => {
+    // A wide screen, so the docked Sallie speaks and shows her bubble.
+    window.matchMedia = vi.fn().mockImplementation((query: string) => ({
+      matches: query.includes('prefers-reduced-motion') || query.includes('min-width'),
+      media: query,
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      dispatchEvent: vi.fn(),
+      onchange: null,
+    }));
+    // Autoplay blocked: the audio context stays suspended after resume().
+    class SuspendedAudioContext {
+      state = 'suspended';
+      resume = vi.fn(async () => {});
+      close = vi.fn(async () => {});
+    }
+    vi.stubGlobal('AudioContext', SuspendedAudioContext);
+    fetchMock.mockImplementation(async () => ({
+      ok: true,
+      arrayBuffer: async () => new ArrayBuffer(8),
+      json: async () => ({}),
+    }));
+    render(<SallieAssistant dockOnly context="purple-team" />);
+    expect(
+      await screen.findByText('Click or tap anywhere to hear Sallie', {}, { timeout: 3000 })
+    ).toBeInTheDocument();
+  });
+
   it('hides the mic where speech recognition is unsupported', () => {
     mockApis();
     render(<SallieAssistant />);
