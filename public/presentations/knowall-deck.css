@@ -1241,7 +1241,7 @@ section > .logo-light--left {
 /* Denser content rhythm so KPI-heavy slides stay inside the frame. */
 .content {
   padding: 62px 96px calc(16px + var(--ctl-band));
-  gap: 26px;
+  gap: 48px;
 }
 
 /* Sparse slides: centring short content mid-frame left a dead band of
