@@ -4,6 +4,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Commands
 
+Requires Node 22.22 or newer (`.nvmrc` pins `22`; jsdom and Vitest 5 need `^22.22.2`).
+
 ```bash
 npm run dev          # Start development server (port 3000)
 npm run build        # Build for production
