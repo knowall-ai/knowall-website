@@ -15,13 +15,20 @@ export const BUNKER = {
   secret: '',
 };
 
-/** Relays listings are published to and read from. */
+/**
+ * Relays listings are published to and read from. relay.plebeian.market (a
+ * Market relay) is the durable copy:
+ * public relays can silently prune kind-30402 events — in October 2026 every
+ * listing vanished from nos.lol/damus, and relay.primal.net never stored them.
+ */
 export const PUBLISH_RELAYS = [
+  'wss://relay.plebeian.market',
   'wss://relay.damus.io',
   'wss://nos.lol',
   'wss://relay.primal.net',
-  'wss://purplepag.es',
 ];
+// purplepag.es rejects kind 30402 ("kind 30402 is not allowed"); relay.plebeian.market
+// rejects content with bare npub/nevent references — write them as nostr:npub1….
 
 /** Blossom media server for image uploads. */
 export const BLOSSOM_URL = 'https://blossom.primal.net';
