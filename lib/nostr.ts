@@ -9,4 +9,12 @@ export const KNOWALL_NPUB = 'npub1kue7etfxtkxlv0s4u2xjf9epgxj7hssmlhc4x2k66tn8q8
  * Relays queried for shop listings (same set as the story feed). Shared by the
  * shop grid, the product detail page, and naddr relay hints.
  */
-export const SHOP_RELAYS = ['wss://relay.damus.io', 'wss://nos.lol', 'wss://relay.primal.net'];
+// Our own relay and a Market relay first: they keep listings durably, while
+// public relays may prune kind-30402 events (see tools/nostr-listings config).
+export const SHOP_RELAYS = [
+  'wss://relay.weeksfamily.me',
+  'wss://relay.plebeian.market',
+  'wss://relay.damus.io',
+  'wss://nos.lol',
+  'wss://relay.primal.net',
+];

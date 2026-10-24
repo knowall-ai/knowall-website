@@ -1,9 +1,8 @@
-# KnowAll AI sticker pack listing (d: knowall-sticker-pack) — not yet published.
-# The image entries are local paths, resolved relative to this YAML file: the CLI
-# uploads each to Blossom automatically (one Amber approval per file) and puts the
-# hosted URLs in the event. Drop the sticker artwork into an images/ folder next to
-# this file (or point the entries wherever it lives — ideally photographs of the
-# printed sheets) before publishing.
+# KnowAll AI sticker pack listing (d: knowall-sticker-pack) — published 2026-10-15.
+# The images are already hosted on Blossom (uploaded by the CLI), so republishing
+# needs only the one Amber approval for the listing itself. To replace artwork,
+# swap an entry for a local path (resolved relative to this file) and the CLI will
+# upload it first — one extra Amber approval per file.
 # Publish with:
 #   node tools/nostr-listings/cli.mjs publish tools/nostr-listings/examples/knowall-sticker-pack.yaml --yes
 d: knowall-sticker-pack
@@ -21,13 +20,13 @@ tags:
   - bitcoin
   - nostr
 images:
-  - ./images/sticker-hero.png
-  - ./images/bitcoin-nostr.png
-  - ./images/mascot-humour-1.png
-  - ./images/mascot-humour-2.png
-  - ./images/logo-centric.png
-  - ./images/presentation-art.png
-  - ./images/teams-emojis.png
+  - https://blossom.primal.net/92edf61cc83d699fd45d477ef346c7f025127e6cc2123c678029bd33d4396f42.png
+  - https://blossom.primal.net/4e6c456f93b20414b0a1b62e88ba4e07ab769a0ef76058828e6382157390db09.png
+  - https://blossom.primal.net/a534bf0e7342a313b81918d7a2bc8830b341a2817fceac3b5cc51c78e08576fc.png
+  - https://blossom.primal.net/c8854a76fc1cd9e7aa19ef245a8909fdb180b4db9e9e0e2f8c2e447b6464dc7e.png
+  - https://blossom.primal.net/a423e921b9cb0327bfd39142a20f1e169b26e55d79c1402b21f5dd6b3c31e0d2.png
+  - https://blossom.primal.net/4337f4e781383e3775020edb738f1041af0baedfa4ae8175e329aa2c37ddef3f.png
+  - https://blossom.primal.net/234d720cd796b0e47aa0a26fd034990b20d265456ff94eafb3b7c070defa9d2c.png
 location: Ships from UK
 content: |-
   **KnowAll AI Sticker Pack** — six 8.5×11″ (216×279mm) kiss-cut vinyl sticker sheets featuring our lime robot in all his moods:
@@ -40,6 +39,6 @@ content: |-
 
   **Price: 10,000 sats** + P&P (UK £2.50 / EU £4.50 / Worldwide £7.50, paid in sats at the day’s rate)
 
-  **To order:** DM npub1kue7etfxtkxlv0s4u2xjf9epgxj7hssmlhc4x2k66tn8q8598zfqj322ar with your shipping address and we’ll send a Lightning invoice.
+  **To order:** DM nostr:npub1kue7etfxtkxlv0s4u2xjf9epgxj7hssmlhc4x2k66tn8q8598zfqj322ar with your shipping address and we’ll send a Lightning invoice.
 
   Fresh from the printers — shipping from late August 2026.
