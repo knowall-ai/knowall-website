@@ -54,16 +54,34 @@ body {
    inside .reveal, so they stay on the slide whatever the window's shape
    (instead of drifting out into the black bars). Slides are 1920x1080 with no
    margin, so they fill this box edge to edge. */
-html.reveal-full-page body.reveal-viewport {
+/* Not in print mode (?print-pdf): reveal sizes .reveal to auto there, and a
+   flex parent would shrink it to nothing, exporting blank pages.
+   --vh is reveal's measure of the visible height (iOS Safari's 100vh includes
+   the toolbar, which would clip the controls). */
+html.reveal-full-page:not(.print-pdf) body.reveal-viewport {
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-html.reveal-full-page body.reveal-viewport > .reveal {
-  width: min(100vw, calc(100vh * 16 / 9));
-  height: min(100vh, calc(100vw * 9 / 16));
+html.reveal-full-page:not(.print-pdf) body.reveal-viewport > .reveal {
+  width: min(100vw, calc(var(--vh, 1vh) * 100 * 16 / 9));
+  height: min(calc(var(--vh, 1vh) * 100), calc(100vw * 9 / 16));
   flex: none;
+}
+
+/* Phones in portrait: the 16:9 slide is a thin strip, and reveal's fixed-size
+   controls would cover its content. Let .reveal fill the screen again so the
+   arrows, number and progress bar sit in the letterbox below the slide. */
+@media (max-width: 640px) and (orientation: portrait) {
+  html.reveal-full-page:not(.print-pdf) body.reveal-viewport {
+    display: block;
+  }
+
+  html.reveal-full-page:not(.print-pdf) body.reveal-viewport > .reveal {
+    width: 100%;
+    height: 100%;
+  }
 }
 
 .reveal {
