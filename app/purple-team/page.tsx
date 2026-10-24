@@ -50,7 +50,7 @@ const steps = [
   },
   {
     image: '/images/purple-team/poppie-report.jpg',
-    alt: 'Poppie, the copper robot, holding a tablet projecting a rising purple chart',
+    alt: 'Poppie, the copper robot, holding a tablet projecting a locked blue padlock and a rising chart',
     title: 'Poppie reports',
     text: 'Poppie scopes the work, tracks every finding as a risk, issue or task, and shows your score, time to detect and time to fix each month.',
     accent: 'bg-violet-500',
