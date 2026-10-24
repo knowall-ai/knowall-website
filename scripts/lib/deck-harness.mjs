@@ -16,6 +16,7 @@ export const decks = [
   'ai-discovery',
   'agentic-delivery',
   'cisp',
+  'purple-team',
 ];
 
 const MIME = {
