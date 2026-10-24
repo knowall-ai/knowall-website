@@ -635,6 +635,10 @@
         font-size: 23px;
       }
 
+      .pay-split--solo {
+        grid-template-columns: 1fr;
+      }
+
       .pay-split > img {
         width: 600px;
         height: 600px;
@@ -1165,24 +1169,24 @@
         </section>
 
         <!-- Slide 11: How you pay -->
-        <section class="scene" style="--scene: url('images/scene-blocks.jpg')" role="region" aria-label="Slide 11 of 12: How you pay">
-          <div class="band">
-            <div>
-              <h2>How you pay</h2>
-              <p class="band-sub">Real hours, a cap you set, no surprises</p>
-            </div>
-            <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
-          </div>
-          <div class="content">
-            <div class="pay-split">
-              <div class="stages">
+        <section role="region" aria-label="Slide 11 of 12: How you pay">
+          <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
+          <div
+            class="dark-inner with-agent with-agent--wide"
+            style="--deck-agent: url('images/divider-purple-team-pay.jpg')"
+          >
+            <div class="col">
+              <p class="kicker">How you pay</p>
+              <h2>Real hours.<br />A cap you set.</h2>
+              <div class="pay-split pay-split--solo">
+                <div class="stages">
                 <div class="stage">
                   <div class="step" aria-hidden="true">01</div>
                   <div>
                     <h4>Security Discovery</h4>
                     <p>
                       Measures your estate: the repositories, cloud and apps in scope, and what is
-                      already exposed. Sets your starting score.
+                      already exposed. Sets your starting score and proposes a monthly budget.
                     </p>
                   </div>
                 </div>
@@ -1207,10 +1211,7 @@
                   </div>
                 </div>
               </div>
-              <img
-                src="images/purple-team/poppie-report.jpg"
-                alt="Poppie, the copper robot, holding a tablet projecting a locked blue padlock and a rising chart"
-              />
+              </div>
             </div>
           </div>
         </section>
