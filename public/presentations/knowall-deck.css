@@ -42,6 +42,13 @@ body {
   background: var(--charcoal);
 }
 
+/* reveal.js paints its viewport (on <body>) white. On screens wider or taller
+   than 16:9 that shows as white bars either side of the slide, with the lime
+   arrows almost invisible on them. Black letterboxing, like a projector. */
+.reveal-viewport {
+  background: #000;
+}
+
 .reveal {
   font-family: 'Mulish', 'Segoe UI', sans-serif;
   font-size: 30px;
