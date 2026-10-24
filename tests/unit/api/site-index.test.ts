@@ -10,7 +10,7 @@ import { systemPrompt } from '@/app/api/chat/system-prompt';
  *   deck with its public URL, so she can refer visitors on for more depth
  */
 
-const DECKS = ['company-overview', 'ai-discovery', 'cisp', 'agentic-ai-solutions', 'purple-team'];
+const DECKS = ['company-overview', 'ai-discovery', 'cisp', 'purple-team'];
 
 describe('site index', () => {
   it('is part of the system prompt', () => {

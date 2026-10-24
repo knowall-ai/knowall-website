@@ -394,6 +394,67 @@
         color: #c4a4ff;
         border-color: rgba(196, 164, 255, 0.55);
       }
+      /* The challenge (folded in from the retired Agentic AI Solutions deck):
+         a CONTRAST, not a list of complaints: what most organisations think
+         advanced AI is, against what it can actually do. */
+      .versus {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        gap: 34px;
+        align-items: stretch;
+      }
+      .versus-side {
+        padding: 10px 0 10px 38px;
+        border-left: 3px solid rgba(255, 255, 255, 0.28);
+      }
+      .versus-side-strong {
+        border-left-color: var(--lime);
+      }
+      .versus-tag {
+        font-size: 20px;
+        font-weight: 800;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--mist);
+        margin-bottom: 14px;
+      }
+      .versus-side-strong .versus-tag {
+        color: var(--lime);
+      }
+      .reveal .versus-big {
+        font-family: 'Playfair Display', Georgia, serif;
+        font-size: 62px;
+        font-weight: 700;
+        line-height: 1.1;
+        margin: 0 0 18px;
+        color: #fff;
+      }
+      .versus-side-strong .versus-big {
+        color: var(--lime);
+      }
+      .versus-sub {
+        font-size: 29px;
+        line-height: 1.5;
+        color: var(--mist);
+        margin: 0;
+      }
+      .versus-arrow {
+        align-self: center;
+        font-size: 56px;
+        color: var(--lime);
+        opacity: 0.75;
+      }
+      .reveal .versus-punch {
+        margin: 76px 0 0;
+        font-size: 33px;
+        line-height: 1.45;
+        color: #e8eef4;
+        max-width: 1500px;
+      }
+      .versus-punch em {
+        color: var(--lime);
+        font-style: italic;
+      }
     </style>
   </head>
   <body>
@@ -401,7 +462,7 @@
     <div class="reveal">
       <div class="slides">
         <!-- Slide 1: Title -->
-        <section role="region" aria-label="Slide 1 of 31: Company overview">
+        <section role="region" aria-label="Slide 1 of 32: Company overview">
           <div
             class="cover-hero"
             role="img"
@@ -420,7 +481,7 @@
         </section>
 
         <!-- Slide 2: About KnowAll AI -->
-        <section class="scene" style="--scene: url('images/cyber-bridge-bluehour-landscape.jpg')" role="region" aria-label="Slide 2 of 31: About KnowAll AI">
+        <section class="scene" style="--scene: url('images/cyber-bridge-bluehour-landscape.jpg')" role="region" aria-label="Slide 2 of 32: About KnowAll AI">
           <div class="band">
             <div>
               <h2>About KnowAll AI</h2>
@@ -479,7 +540,7 @@
         </section>
 
                 <!-- Slide 3: The shift -->
-        <section class="scene" style="--scene: url('images/scene-summit.jpg')" role="region" aria-label="Slide 3 of 31: The shift">
+        <section class="scene" style="--scene: url('images/scene-summit.jpg')" role="region" aria-label="Slide 3 of 32: The shift">
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
           <div class="dark-inner shift">
             <p class="kicker">The shift</p>
@@ -488,13 +549,51 @@
             </h2>
             <p class="lead">
               AI has collapsed the cost of writing software. What is scarce now is knowing exactly
-              what to build &mdash; so every engagement starts with the requirements, not the code.
+              what to build &mdash; so every engagement starts with the requirements, not the code,
+              gathered and tested with your stakeholders by Preppie, our AI requirements analyst.
             </p>
           </div>
         </section>
 
-<!-- Slide 4: Who you're working with — humans and the agents that augment them -->
-        <section class="scene" style="--scene: url('images/scene-team-studio.jpg')" role="region" aria-label="Slide 4 of 31: Who you're working with">
+        <!-- Slide 4: The challenge — a better search box, or a better business -->
+        <section class="scene" style="--scene: url('images/scene-atrium.jpg')" role="region" aria-label="Slide 4 of 32: The challenge">
+          <div class="band">
+            <div>
+              <h2>The challenge</h2>
+              <p class="band-sub">Most organisations mistake a search box for a strategy</p>
+            </div>
+            <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
+          </div>
+          <div class="content" style="gap: 0">
+            <div class="versus">
+              <div class="versus-side">
+                <div class="versus-tag">What most organisations do</div>
+                <p class="versus-big">Install Copilot.</p>
+                <p class="versus-sub">
+                  Roll it out, let people ask it questions, search their documents a little faster.
+                  Useful &mdash; but it is a better search box, not a change to how the business runs.
+                </p>
+              </div>
+              <div class="versus-arrow" aria-hidden="true">&rarr;</div>
+              <div class="versus-side versus-side-strong">
+                <div class="versus-tag">What is actually possible</div>
+                <p class="versus-big">Rebuild the work itself.</p>
+                <p class="versus-sub">
+                  Agents that run whole processes end to end, automation that removes the manual
+                  step entirely, and financial innovation that opens revenue nobody was chasing.
+                </p>
+              </div>
+            </div>
+            <p class="versus-punch">
+              The hard part is not the technology. It is understanding a business deeply enough to
+              know <em>what would actually move the needle</em> &mdash; and then building the right
+              tool for that job.
+            </p>
+          </div>
+        </section>
+
+<!-- Slide 5: Who you're working with — humans and the agents that augment them -->
+        <section class="scene" style="--scene: url('images/scene-team-studio.jpg')" role="region" aria-label="Slide 5 of 32: Who you're working with">
           <div class="band">
             <div>
               <h2>Who you&rsquo;re working with</h2>
@@ -654,8 +753,8 @@
           </div>
         </section>
 
-                <!-- Slide 5: Mission and vision -->
-        <section class="scene" style="--scene: url('images/scene-dawn-mist.jpg')" role="region" aria-label="Slide 5 of 31: Mission and vision">
+                <!-- Slide 6: Mission and vision -->
+        <section class="scene" style="--scene: url('images/scene-dawn-mist.jpg')" role="region" aria-label="Slide 6 of 32: Mission and vision">
           <div class="band">
             <div>
               <h2>Mission &amp; vision</h2>
@@ -708,10 +807,10 @@
           </div>
         </section>
 
-        <!-- Slide 6: Incentives -->
+        <!-- Slide 7: Incentives -->
         <section
           role="region"
-          aria-label="Slide 6 of 31: Incentives — teammates, copilots, customers"
+          aria-label="Slide 7 of 32: Incentives — teammates, copilots, customers"
         >
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
           <div class="dark-inner with-agent">
@@ -729,8 +828,8 @@
           </div>
         </section>
 
-        <!-- Slide 7: Our customers -->
-        <section class="scene" style="--scene: url('images/cyber-street-empty-landscape.jpg')" role="region" aria-label="Slide 7 of 31: Our customers">
+        <!-- Slide 8: Our customers -->
+        <section class="scene" style="--scene: url('images/cyber-street-empty-landscape.jpg')" role="region" aria-label="Slide 8 of 32: Our customers">
           <div class="band">
             <div>
               <h2>Our customers</h2>
@@ -798,8 +897,8 @@
           </div>
         </section>
 
-        <!-- Slide 8: Service offerings -->
-        <section class="scene" style="--scene: url('images/scene-five-doors.jpg')" role="region" aria-label="Slide 8 of 31: Service offerings">
+        <!-- Slide 9: Service offerings -->
+        <section class="scene" style="--scene: url('images/scene-five-doors.jpg')" role="region" aria-label="Slide 9 of 32: Service offerings">
           <div class="band">
             <div>
               <h2>Service offerings</h2>
@@ -861,8 +960,8 @@
           </div>
         </section>
 
-        <!-- Slide 9: Service — Discovery Day -->
-        <section class="scene" style="--scene: url('images/scene-dawn-deck.jpg')" role="region" aria-label="Slide 9 of 31: Service — Discovery Day">
+        <!-- Slide 10: Service — Discovery Day -->
+        <section class="scene" style="--scene: url('images/scene-dawn-deck.jpg')" role="region" aria-label="Slide 10 of 32: Service — Discovery Day">
           <div class="band">
             <div>
               <h2>Service &middot; Discovery Day</h2>
@@ -942,8 +1041,8 @@
           </div>
         </section>
 
-                <!-- Slide 10: Two stages, one journey -->
-        <section class="scene" style="--scene: url('images/scene-highway.jpg')" role="region" aria-label="Slide 10 of 31: Two stages, one journey">
+                <!-- Slide 11: Two stages, one journey -->
+        <section class="scene" style="--scene: url('images/scene-highway.jpg')" role="region" aria-label="Slide 11 of 32: Two stages, one journey">
           <div class="band">
             <div>
               <h2>Two stages, one journey</h2>
@@ -980,8 +1079,8 @@
           </div>
         </section>
 
-<!-- Slide 11: Service — Agentic Delivery Workshop -->
-        <section class="scene" style="--scene: url('images/cyber-rooftop-empty-landscape.jpg')" role="region" aria-label="Slide 11 of 31: Service — Agentic Delivery Workshop">
+<!-- Slide 12: Service — Agentic Delivery Workshop -->
+        <section class="scene" style="--scene: url('images/cyber-rooftop-empty-landscape.jpg')" role="region" aria-label="Slide 12 of 32: Service — Agentic Delivery Workshop">
           <div class="band">
             <div>
               <h2>Service &middot; Agentic Delivery Workshop</h2>
@@ -1054,8 +1153,8 @@
           </div>
         </section>
 
-        <!-- Slide 12: Service — Projects -->
-        <section class="scene" style="--scene: url('images/cyber-tower-base-scale-landscape.jpg')" role="region" aria-label="Slide 12 of 31: Service — Projects">
+        <!-- Slide 13: Service — Projects -->
+        <section class="scene" style="--scene: url('images/cyber-tower-base-scale-landscape.jpg')" role="region" aria-label="Slide 13 of 32: Service — Projects">
           <div class="band">
             <div>
               <h2>Service &middot; Projects</h2>
@@ -1135,8 +1234,8 @@
           </div>
         </section>
 
-        <!-- Slide 13: Service — Blended Squads -->
-        <section class="scene" style="--scene: url('images/scene-walkways.jpg')" role="region" aria-label="Slide 13 of 31: Service — Blended Squads">
+        <!-- Slide 14: Service — Blended Squads -->
+        <section class="scene" style="--scene: url('images/scene-walkways.jpg')" role="region" aria-label="Slide 14 of 32: Service — Blended Squads">
           <div class="band">
             <div>
               <h2>Service &middot; Blended Squads</h2>
@@ -1206,10 +1305,10 @@
           </div>
         </section>
 
-        <!-- Slide 14: Service — Continuous Improvement Service Plans -->
+        <!-- Slide 15: Service — Continuous Improvement Service Plans -->
         <section class="scene" style="--scene: url('images/scene-observatory.jpg')"
           role="region"
-          aria-label="Slide 14 of 31: Service — Continuous Improvement Service Plans"
+          aria-label="Slide 15 of 32: Service — Continuous Improvement Service Plans"
         >
           <div class="band">
             <div>
@@ -1282,8 +1381,8 @@
           </div>
         </section>
 
-        <!-- Slide 15: DevOps lifecycle -->
-        <section class="scene" style="--scene: url('images/scene-downpour.jpg')" role="region" aria-label="Slide 15 of 31: The T-Minus-15 lifecycle">
+        <!-- Slide 16: DevOps lifecycle -->
+        <section class="scene" style="--scene: url('images/scene-downpour.jpg')" role="region" aria-label="Slide 16 of 32: The T-Minus-15 lifecycle">
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
           <div class="dark-inner" style="padding: 96px 96px calc(40px + var(--ctl-band)); gap: 48px">
             <div>
@@ -1337,8 +1436,8 @@
           </div>
         </section>
 
-        <!-- Slide 16: Deliverables — what, how and why -->
-        <section class="scene" style="--scene: url('images/scene-datacenter.jpg')" role="region" aria-label="Slide 16 of 31: Deliverables — what, how and why">
+        <!-- Slide 17: Deliverables — what, how and why -->
+        <section class="scene" style="--scene: url('images/scene-datacenter.jpg')" role="region" aria-label="Slide 17 of 32: Deliverables — what, how and why">
           <div class="band">
             <div>
               <h2>Deliverables</h2>
@@ -1393,8 +1492,8 @@
           </div>
         </section>
 
-        <!-- Slide 17: Case study — invoice automation -->
-        <section class="scene" style="--scene: url('images/scene-rain-room.jpg')" role="region" aria-label="Slide 17 of 31: Case study — invoice automation">
+        <!-- Slide 18: Case study — invoice automation -->
+        <section class="scene" style="--scene: url('images/scene-rain-room.jpg')" role="region" aria-label="Slide 18 of 32: Case study — invoice automation">
           <div class="band">
             <div>
               <h2>Case study &middot; Invoice automation</h2>
@@ -1478,10 +1577,10 @@
           </div>
         </section>
 
-        <!-- Slide 18: Case study — health and safety inspection -->
+        <!-- Slide 19: Case study — health and safety inspection -->
         <section class="scene" style="--scene: url('images/scene-catwalk.jpg')"
           role="region"
-          aria-label="Slide 18 of 31: Case study — health and safety inspection"
+          aria-label="Slide 19 of 32: Case study — health and safety inspection"
         >
           <div class="band">
             <div>
@@ -1568,8 +1667,8 @@
           </div>
         </section>
 
-        <!-- Slide 19: Proof of work -->
-        <section class="scene" style="--scene: url('images/scene-pillars.jpg')" role="region" aria-label="Slide 19 of 31: Proof of work — who we have done this for">
+        <!-- Slide 20: Proof of work -->
+        <section class="scene" style="--scene: url('images/scene-pillars.jpg')" role="region" aria-label="Slide 20 of 32: Proof of work — who we have done this for">
           <div class="band">
             <div>
               <h2>Proof of work</h2>
@@ -1631,8 +1730,8 @@
           </div>
         </section>
 
-        <!-- Slide 20: Platforms and partners -->
-        <section class="scene" style="--scene: url('images/scene-boardroom.jpg')" role="region" aria-label="Slide 20 of 31: Platforms and partners">
+        <!-- Slide 21: Platforms and partners -->
+        <section class="scene" style="--scene: url('images/scene-boardroom.jpg')" role="region" aria-label="Slide 21 of 32: Platforms and partners">
           <div class="band">
             <div>
               <h2>Platforms &amp; partners</h2>
@@ -1684,8 +1783,8 @@
           </div>
         </section>
 
-        <!-- Slide 21: T-Minus-15 -->
-        <section class="scene" style="--scene: url('images/cyber-high-vantage-landscape.jpg')" role="region" aria-label="Slide 21 of 31: The T-Minus-15 methodology">
+        <!-- Slide 22: T-Minus-15 -->
+        <section class="scene" style="--scene: url('images/cyber-high-vantage-landscape.jpg')" role="region" aria-label="Slide 22 of 32: The T-Minus-15 methodology">
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
           <div class="dark-inner" style="padding: 108px 96px calc(52px + var(--ctl-band))">
             <div style="display: flex; align-items: center; gap: 56px">
@@ -1723,8 +1822,8 @@
           </div>
         </section>
 
-        <!-- Slide 22: Our products -->
-        <section class="scene" style="--scene: url('images/scene-gallery.jpg')" role="region" aria-label="Slide 22 of 31: Our products">
+        <!-- Slide 23: Our products -->
+        <section class="scene" style="--scene: url('images/scene-gallery.jpg')" role="region" aria-label="Slide 23 of 32: Our products">
           <div class="band">
             <div>
               <h2>Our products</h2>
@@ -1790,8 +1889,8 @@
           </div>
         </section>
 
-        <!-- Slide 23: Our agents -->
-        <section class="scene" style="--scene: url('images/cyber-rooftop-empty-landscape.jpg')" role="region" aria-label="Slide 23 of 31: Our agents">
+        <!-- Slide 24: Our agents -->
+        <section class="scene" style="--scene: url('images/cyber-rooftop-empty-landscape.jpg')" role="region" aria-label="Slide 24 of 32: Our agents">
           <div class="band">
             <div>
               <h2>Our agents</h2>
@@ -1872,12 +1971,13 @@
               <span><span class="agent-tag agent-tag--t15">T-Minus-15</span> Our open-source delivery team, from Prep to Operate</span>
               <span><span class="agent-tag agent-tag--purple">Purple Team</span> Continuous AI security: Pennie attacks, Ollie defends and fixes, Poppie runs the loop</span>
               <span class="agent-legend-plain">No tag: agents that run KnowAll&rsquo;s own business</span>
+              <span class="agent-legend-plain">One definition, many embodiments: the same agents and skills run in Claude Code, Microsoft Foundry and OpenClaw</span>
             </div>
           </div>
         </section>
 
-        <!-- Slide 24: Self-improving agents -->
-        <section class="scene" style="--scene: url('images/scene-interchange.jpg')" role="region" aria-label="Slide 24 of 31: Self-improving agents">
+        <!-- Slide 25: Self-improving agents -->
+        <section class="scene" style="--scene: url('images/scene-interchange.jpg')" role="region" aria-label="Slide 25 of 32: Self-improving agents">
           <div class="band">
             <div>
               <h2>Self-improving agents</h2>
@@ -1925,8 +2025,8 @@
           </div>
         </section>
 
-        <!-- Slide 25: Reverie agent memory -->
-        <section class="scene" style="--scene: url('images/scene-graph-sky.jpg')" role="region" aria-label="Slide 25 of 31: Reverie — agent memory">
+        <!-- Slide 26: Reverie agent memory -->
+        <section class="scene" style="--scene: url('images/scene-graph-sky.jpg')" role="region" aria-label="Slide 26 of 32: Reverie — agent memory">
           <div class="band">
             <div>
               <h2>Reverie: memory that sleeps on it</h2>
@@ -1994,8 +2094,8 @@
           </div>
         </section>
 
-        <!-- Slide 26: Presence -->
-        <section class="scene" style="--scene: url('images/scene-cyber-sky.jpg')" role="region" aria-label="Slide 26 of 31: Presence — agents in the room">
+        <!-- Slide 27: Presence -->
+        <section class="scene" style="--scene: url('images/scene-cyber-sky.jpg')" role="region" aria-label="Slide 27 of 32: Presence — agents in the room">
           <div class="band">
             <div>
               <h2>Presence: agents in the room</h2>
@@ -2035,8 +2135,8 @@
           </div>
         </section>
 
-        <!-- Slide 27: Enterprise-grade security -->
-        <section class="scene" style="--scene: url('images/scene-vault.jpg')" role="region" aria-label="Slide 27 of 31: Enterprise-grade security">
+        <!-- Slide 28: Enterprise-grade security -->
+        <section class="scene" style="--scene: url('images/scene-vault.jpg')" role="region" aria-label="Slide 28 of 32: Enterprise-grade security">
           <div class="band">
             <div>
               <h2>Enterprise-grade security</h2>
@@ -2078,8 +2178,8 @@
           </div>
         </section>
 
-        <!-- Slide 28: Microsoft integration -->
-        <section class="scene" style="--scene: url('images/scene-controlroom.jpg')" role="region" aria-label="Slide 28 of 31: Seamless Microsoft integration">
+        <!-- Slide 29: Microsoft integration -->
+        <section class="scene" style="--scene: url('images/scene-controlroom.jpg')" role="region" aria-label="Slide 29 of 32: Seamless Microsoft integration">
           <div class="band">
             <div>
               <h2>Built on the Microsoft you own</h2>
@@ -2142,8 +2242,8 @@
           </div>
         </section>
 
-        <!-- Slide 29: The Purple Team -->
-        <section class="scene" style="--scene: url('images/divider-purple-team-core.jpg')" role="region" aria-label="Slide 29 of 31: The Purple Team — continuous AI security">
+        <!-- Slide 30: The Purple Team -->
+        <section class="scene" style="--scene: url('images/divider-purple-team-core.jpg')" role="region" aria-label="Slide 30 of 32: The Purple Team — continuous AI security">
           <div class="band">
             <div>
               <h2>The <span class="pt-word">Purple</span> Team</h2>
@@ -2177,8 +2277,8 @@
           </div>
         </section>
 
-        <!-- Slide 30: Zaplie — rewards and incentives -->
-        <section class="scene" style="--scene: url('images/scene-particles.jpg')" role="region" aria-label="Slide 30 of 31: Zaplie — rewards and incentives">
+        <!-- Slide 31: Zaplie — rewards and incentives -->
+        <section class="scene" style="--scene: url('images/scene-particles.jpg')" role="region" aria-label="Slide 31 of 32: Zaplie — rewards and incentives">
           <div class="band">
             <div>
               <h2>Zaplie &middot; Rewards &amp; incentives</h2>
@@ -2242,8 +2342,8 @@
           </div>
         </section>
 
-                <!-- Slide 31: Contact -->
-        <section role="region" aria-label="Slide 31 of 31: Let&rsquo;s build together">
+                <!-- Slide 32: Contact -->
+        <section role="region" aria-label="Slide 32 of 32: Let&rsquo;s build together">
           <div class="cta-top">
             <h2>Let&rsquo;s build,<br />together.</h2>
             <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
