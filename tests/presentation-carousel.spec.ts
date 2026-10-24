@@ -33,7 +33,7 @@ async function openCarouselSlide(page: Page, { reducedMotion = false } = {}) {
 
 const activeIndex = (page: Page) =>
   page.evaluate(() =>
-    [...document.querySelectorAll('.portal-carousel .pc-slide')].findIndex((s) =>
+    [...document.querySelectorAll('.portal-carousel .carousel-slide')].findIndex((s) =>
       s.classList.contains('is-active')
     )
   );
@@ -113,7 +113,7 @@ test.describe('Presentation carousel with reduced motion', () => {
     await moveAway(page);
     await page.clock.runFor(ADVANCE_MS * 3);
     expect(await activeIndex(page)).toBe(0);
-    await expect(carousel.locator('.pc-icon-play')).toBeVisible();
-    await expect(carousel.locator('.pc-icon-pause')).toBeHidden();
+    await expect(carousel.locator('.carousel-icon-play')).toBeVisible();
+    await expect(carousel.locator('.carousel-icon-pause')).toBeHidden();
   });
 });

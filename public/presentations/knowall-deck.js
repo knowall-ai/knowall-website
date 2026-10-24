@@ -3,14 +3,21 @@
 // image drift) live in knowall-deck.css alongside the rest of the house style.
 
 // --- Per-slide call to action -------------------------------------------
-// Every content slide carries a floating "Book a working session" pill; the
-// cover, the slide after it and the closing CTA slide stay clean.
+// Every content slide carries a floating call-to-action pill; the cover, the
+// slide after it and the closing CTA slide stay clean. A deck can change the
+// pill with attributes on <body>:
+//   <body data-cta-label="Book a Security Discovery"
+//         data-cta-href="https://www.knowall.ai/purple-team#enquire">
 const deckSlides = Array.from(document.querySelectorAll('.reveal .slides > section'));
+const ctaLabel = document.body.dataset.ctaLabel || 'Book a working session';
+const ctaHref = document.body.dataset.ctaHref || 'https://www.knowall.ai/#contact';
 deckSlides.slice(2, -1).forEach((slide) => {
-  slide.insertAdjacentHTML(
-    'beforeend',
-    '<a class="slide-cta" href="https://www.knowall.ai/#contact" aria-label="Book a working session with KnowAll AI">Book a working session</a>'
-  );
+  const cta = document.createElement('a');
+  cta.className = 'slide-cta';
+  cta.href = ctaHref;
+  cta.setAttribute('aria-label', `${ctaLabel} with KnowAll AI`);
+  cta.textContent = ctaLabel;
+  slide.append(cta);
 });
 
 // --- Sequenced reveal -------------------------------------------------
@@ -141,3 +148,83 @@ function guardWhenSettled(slide) {
 Reveal.on('ready', (event) => guardWhenSettled(event.currentSlide));
 Reveal.on('slidechanged', (event) => guardWhenSettled(event.currentSlide));
 Reveal.on('resize', () => guardWhenSettled(Reveal.getCurrentSlide()));
+
+// --- Carousels (opt-in) ---------------------------------------------------
+// Markup and styles: see "Carousel" in knowall-deck.css. Each .carousel
+// auto-advances (every data-carousel-interval ms, default 4500) only while
+// its slide is on screen. Once the visitor pauses it with the .carousel-toggle,
+// uses an arrow or dot, or focuses one of those, it stays stopped until they
+// press play (WCAG 2.2.2); hovering pauses it only while the pointer is over
+// it, and under prefers-reduced-motion it starts paused. The controls never
+// move the deck.
+document.querySelectorAll('.carousel').forEach((root) => {
+  const slides = [...root.querySelectorAll('.carousel-slide')];
+  const dots = [...root.querySelectorAll('.carousel-dot')];
+  if (!slides.length) return;
+  const toggle = root.querySelector('.carousel-toggle');
+  const interval = Number(root.dataset.carouselInterval) || 4500;
+  let i = 0;
+  let timer = null;
+  let hovering = false;
+  let userStopped = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const show = (n) => {
+    i = (n + slides.length) % slides.length;
+    slides.forEach((s, k) => {
+      s.classList.toggle('is-active', k === i);
+      s.setAttribute('aria-hidden', String(k !== i));
+    });
+    dots.forEach((d, k) => {
+      d.classList.toggle('is-active', k === i);
+      d.setAttribute('aria-current', String(k === i));
+    });
+  };
+  const stop = () => {
+    clearInterval(timer);
+    timer = null;
+  };
+  const start = () => {
+    if (!userStopped && !hovering && !timer) timer = setInterval(() => show(i + 1), interval);
+  };
+  const onSlide = () => (Reveal.getCurrentSlide()?.contains(root) ? start() : stop());
+  const setStopped = (value) => {
+    userStopped = value;
+    toggle?.setAttribute('aria-pressed', String(value));
+    if (value) stop();
+    else onSlide();
+  };
+  setStopped(userStopped);
+  toggle?.addEventListener('click', () => setStopped(!userStopped));
+  root.querySelector('.carousel-prev')?.addEventListener('click', () => {
+    setStopped(true);
+    show(i - 1);
+  });
+  root.querySelector('.carousel-next')?.addEventListener('click', () => {
+    setStopped(true);
+    show(i + 1);
+  });
+  dots.forEach((d, k) =>
+    d.addEventListener('click', () => {
+      setStopped(true);
+      show(k);
+    })
+  );
+  // focusing an arrow or dot stops it for good; the toggle is how to resume
+  root.addEventListener('focusin', (e) => {
+    if (e.target !== toggle) setStopped(true);
+  });
+  // keep the deck's own keyboard and swipe handling away from the controls
+  root
+    .querySelectorAll('button')
+    .forEach((b) => b.addEventListener('keydown', (e) => e.stopPropagation()));
+  root.addEventListener('mouseenter', () => {
+    hovering = true;
+    stop();
+  });
+  root.addEventListener('mouseleave', () => {
+    hovering = false;
+    onSlide();
+  });
+  Reveal.on('ready', onSlide);
+  Reveal.on('slidechanged', onSlide);
+  if (Reveal.isReady()) onSlide();
+});

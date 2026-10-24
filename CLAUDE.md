@@ -43,6 +43,8 @@ npx vitest run tests/unit/lib/utils.test.ts
 
 **Components:** `components/sallie-assistant.tsx` is Sallie's welcome + chat (band, porthole or dock layouts, chosen in `app/page.tsx`); `components/sallie-stage.tsx` is her animated avatar (static robot rig, animated starfield backdrop). UI components in `components/ui/` are shadcn/ui.
 
+**Presentation decks:** reveal.js HTML. Edit the sources in `presentations-src/` (shared head, closing slide and Security/Partners/Products slides are `<!-- @include name {json} -->` partials in `presentations-src/partials/`), then `npm run decks:build` writes `public/presentations/*.html`, which is committed. `public/presentations/decks.json` lists the decks (gallery cards, QA harness, site-index test). Shared styles and behaviour live in `knowall-deck.css` / `knowall-deck.js`; decks must not redefine shared classes. QA: `node scripts/verify-presentations.mjs`.
+
 ## Environment Variables
 
 Required for development (`.env.local`):
