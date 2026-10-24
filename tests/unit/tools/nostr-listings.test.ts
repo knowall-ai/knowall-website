@@ -226,13 +226,13 @@ describe('example YAML definitions', () => {
     expect(event.content).toContain('https://www.knowall.ai/#tminus15');
   });
 
-  it('knowall-sticker-pack.yaml is valid and lists seven local images for upload', () => {
+  it('knowall-sticker-pack.yaml is valid and lists its seven published Blossom images', () => {
     const def = loadDefinition(join(EXAMPLES, 'knowall-sticker-pack.yaml'));
     expect(validateDefinition(def)).toEqual([]);
     expect(def.d).toBe('knowall-sticker-pack');
     expect(def.price).toEqual({ amount: '10000', currency: 'SATS' });
     expect(def.images).toHaveLength(7);
-    expect(def.images!.every((i: string) => !isRemoteImage(i))).toBe(true);
+    expect(def.images!.every((i: string) => isRemoteImage(i))).toBe(true);
     expect(def.content).toContain('**Price: 10,000 sats**');
   });
 });
