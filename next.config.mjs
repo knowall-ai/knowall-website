@@ -1,21 +1,26 @@
 import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import { baselineHeaders, deckCsp, deckScriptHashes } from './lib/security-headers.mjs';
 
 const packageJson = JSON.parse(readFileSync(new URL('./package.json', import.meta.url), 'utf8'));
 
-const securityHeaders = [
+// Baseline headers on every response; the deck CSP is hashed from the deck
+// HTML at build time. Page CSP (per-request nonce) is set in proxy.ts.
+const deckHeaders = [
   {
     key: 'Content-Security-Policy',
-    value:
-      "upgrade-insecure-requests; default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https: wss:;",
+    value: deckCsp(
+      deckScriptHashes(fileURLToPath(new URL('./public/presentations', import.meta.url)))
+    ),
   },
-  { key: 'Strict-Transport-Security', value: 'max-age=31536000; includeSubDomains' },
 ];
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // CSP/HSTS moved from meta tags in app/layout.tsx: real headers apply to every
-  // response (HSTS in a meta tag is ignored by browsers), and removing the manual
-  // <head> silences React's script-tag warning in dev.
+  // Don't advertise the framework (X-Powered-By: Next.js).
+  poweredByHeader: false,
+  // Real headers, not meta tags: they apply to every response, including
+  // public/ files, and browsers ignore HSTS in a meta tag.
   async headers() {
     // NIP-05 (https://github.com/nostr-protocol/nips/blob/master/05.md) requires
     // /.well-known/nostr.json to be served with Access-Control-Allow-Origin: *
@@ -24,8 +29,11 @@ const nextConfig = {
       source: '/.well-known/nostr.json',
       headers: [{ key: 'Access-Control-Allow-Origin', value: '*' }],
     };
-    if (process.env.NODE_ENV !== 'production') return [nip05CorsHeader];
-    return [{ source: '/:path*', headers: securityHeaders }, nip05CorsHeader];
+    return [
+      { source: '/:path*', headers: baselineHeaders },
+      { source: '/presentations/:path*', headers: deckHeaders },
+      nip05CorsHeader,
+    ];
   },
   env: {
     NEXT_PUBLIC_APP_VERSION: packageJson.version,

@@ -37,6 +37,8 @@ npx vitest run tests/unit/lib/utils.test.ts
 - `app/api/chat/logger.ts` - Logs conversations to `logs/` directory as JSON
 - `app/api/logs/route.ts` - Admin endpoint for viewing chat logs (requires ADMIN_API_KEY)
 
+**Security headers:** `proxy.ts` sets a per-request nonce CSP on pages (so the root layout awaits `connection()` and pages render per request); `next.config.mjs` adds the baseline headers to every response and a hash-based CSP for `/presentations`, built from the decks' inline scripts at build time. Policies live in `lib/security-headers.mjs`.
+
 **Chat flow:** Browser → `/api/chat` (POST) → Azure OpenAI (v1 base URL via the `openai` SDK) → Response logged → JSON response returned (not streaming). HTTP 429 from Azure (deployment TPM cap hit) yields a "busy" reply rather than the outage fallback.
 
 **Components:** `components/sallie-assistant.tsx` is Sallie's welcome + chat (band, porthole or dock layouts, chosen in `app/page.tsx`); `components/sallie-stage.tsx` is her animated avatar (static robot rig, animated starfield backdrop). UI components in `components/ui/` are shadcn/ui.
