@@ -21,7 +21,7 @@
     "prebuild": "npm run decks:build"
   },
   "engines": {
-    "node": ">=22.0.0"
+    "node": ">=22.22"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.9.1",
@@ -96,7 +96,7 @@
     "prettier": "^3.9.10",
     "tailwindcss": "^4.3.3",
     "typescript": "^5.9.3",
-    "vitest": "^4.1.11",
+    "vitest": "^5.0.5",
     "yaml": "^2.9.1"
   },
   "overrides": {
