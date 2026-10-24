@@ -28,7 +28,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 import SallieStage, { Starfield } from '@/components/sallie-stage';
 import { pickGreeting, type Greeting } from '@/lib/sallie-greetings';
-import type { SallieContext } from '@/lib/sallie-context';
+import { SALLIE_CONTEXTS, type SallieContext } from '@/lib/sallie-context';
 import { signOffMailto } from '@/lib/sallie-signoff';
 import { useSallieVoice, useSpeechInput } from '@/components/sallie-voice';
 
@@ -230,6 +230,8 @@ interface ConversationPanelProps {
   setInput: (value: string) => void;
   /** Sallie's opening line, shown as the first bubble. */
   greeting: string;
+  /** Chips shown before the first message; a page context brings its own. */
+  suggestionList?: readonly string[];
   className?: string;
   listClassName?: string;
 }
@@ -242,6 +244,7 @@ function ConversationPanel({
   input,
   setInput,
   greeting,
+  suggestionList = SUGGESTIONS,
   className,
   listClassName,
 }: ConversationPanelProps) {
@@ -276,7 +279,7 @@ function ConversationPanel({
 
   const suggestions = (
     <div className="flex flex-wrap gap-2">
-      {SUGGESTIONS.map((s) => (
+      {suggestionList.map((s) => (
         <button
           key={s}
           type="button"
@@ -459,6 +462,7 @@ export default function SallieAssistant({
   context?: SallieContext;
 } = {}) {
   const [opener] = useState(() => pickGreeting(Math.random, context));
+  const suggestionList = context ? SALLIE_CONTEXTS[context].suggestions : SUGGESTIONS;
   const conversation = useSallieConversation(opener, context);
   const tts = useSallieVoice();
   const [input, setInput] = useState('');
@@ -621,6 +625,7 @@ export default function SallieAssistant({
             input={input}
             setInput={setInput}
             greeting={opener.text}
+            suggestionList={suggestionList}
             className="min-h-0 flex-1 px-4 pb-4 pt-3"
           />
         </div>
@@ -713,6 +718,7 @@ export default function SallieAssistant({
           input={input}
           setInput={setInput}
           greeting={greeting}
+          suggestionList={suggestionList}
           className="w-full"
           listClassName="max-h-[min(460px,55vh)]"
         />

@@ -61,6 +61,11 @@ test.describe('Purple Team Page', () => {
     const dock = page.getByTestId('sallie-dock');
     await expect(dock.getByRole('button', { name: 'Chat with Sallie' })).toBeVisible();
     await expect(dock.getByRole('button', { name: /(Mute|Unmute) Sallie/ })).toBeVisible();
+
+    // Her chips are about the Purple Team here, not the homepage topics.
+    await dock.getByRole('button', { name: 'Chat with Sallie' }).click();
+    await expect(dock.getByRole('button', { name: 'How fast can you patch?' })).toBeVisible();
+    await expect(dock.getByRole('button', { name: 'How does Bitcoin fit in?' })).toHaveCount(0);
     const box = await dock.boundingBox();
     const viewport = page.viewportSize();
     expect(box && viewport && box.x + box.width > viewport.width - 40).toBeTruthy();

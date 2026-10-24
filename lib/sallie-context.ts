@@ -38,6 +38,13 @@ export const SALLIE_CONTEXTS = {
         text: "Welcome. I'm Sallie, from KnowAll AI. Most pen tests end with a PDF; our Purple Team ends with merged fixes. Shall I explain how it would work for you?",
       },
     ] satisfies Greeting[],
+    /** Chips shown before the visitor's first message. */
+    suggestions: [
+      'How would it work for us?',
+      'How fast can you patch?',
+      'Is it safe to test our live systems?',
+      'What does it cost?',
+    ],
     prompt: `Context: the visitor is on the Purple Team page (/purple-team). Talk about the Purple Team specifically unless they ask about something else.
 - Your angle is the growing flood of vulnerabilities and how fast they get patched. About ${PER_DAY} new CVEs are published a day (NIST NVD, last 30 days); ${PARTIAL.count.toLocaleString('en-GB')} were published in ${PARTIAL.year} by ${AS_OF}, against ${LAST_FULL.count.toLocaleString('en-GB')} in all of ${LAST_FULL.year}. Attackers use AI to find and exploit flaws faster, and no team can read every advisory. Only ${KEV_ADDED_LAST_YEAR} entered CISA's actively-exploited list (KEV) in ${LAST_FULL.year}: the skill is finding the few that affect their code and patching those first.
 - How we patch fast: Ollie matches every new advisory to their code continuously, prioritises by KEV and EPSS, and opens a fix pull request with a test that proves it; their developers review and merge; Pennie re-tests to confirm it's closed. The measures that matter are time from publication to merged fix, and how many actively exploited issues are open.
