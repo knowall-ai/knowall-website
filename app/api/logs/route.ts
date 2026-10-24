@@ -1,5 +1,7 @@
+import { createHash, timingSafeEqual } from 'node:crypto';
 import { NextRequest, NextResponse } from 'next/server';
 import { getAllChatLogs, getChatLogById } from '../chat/logger';
+import { clearFailures, clientIp, lockedOutFor, recordFailure } from '@/lib/rate-limit';
 
 // Configure for API route
 export const runtime = 'nodejs';
@@ -20,7 +22,17 @@ function verifyApiKey(request: NextRequest): boolean {
   }
 
   const token = authHeader.substring(7);
-  return token === apiKey;
+  return keysMatch(token, apiKey);
+}
+
+/**
+ * Constant-time comparison. Hashing both sides first gives equal-length
+ * buffers, so neither the key's contents nor its length leak through timing.
+ */
+export function keysMatch(given: string, expected: string): boolean {
+  const a = createHash('sha256').update(given).digest();
+  const b = createHash('sha256').update(expected).digest();
+  return timingSafeEqual(a, b);
 }
 
 // GET handler for retrieving all logs or a specific log
@@ -34,13 +46,25 @@ export async function GET(request: NextRequest) {
       );
     }
 
+    // Too many wrong keys from this address: refuse before checking another.
+    const attemptKey = `logs:${clientIp(request)}`;
+    const retryAfter = lockedOutFor(attemptKey);
+    if (retryAfter) {
+      return NextResponse.json(
+        { error: 'Too many failed attempts. Try again later.' },
+        { status: 429, headers: { 'Retry-After': String(retryAfter) } }
+      );
+    }
+
     // Verify API key
     if (!verifyApiKey(request)) {
+      recordFailure(attemptKey);
       return NextResponse.json(
         { error: 'Unauthorized: Invalid or missing API key' },
         { status: 401 }
       );
     }
+    clearFailures(attemptKey);
 
     // Check if a specific log ID is requested
     const url = new URL(request.url);

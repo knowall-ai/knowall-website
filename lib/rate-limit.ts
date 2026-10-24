@@ -131,6 +131,46 @@ export function isSameOrigin(req: Request): boolean {
   }
 }
 
+/**
+ * Failed-attempt lock-out, for credential checks (the admin logs key).
+ * Unlike `consume`, only failures count: after `max` failures inside the
+ * window the key is locked until the oldest of them ages out.
+ */
+const failures = new Map<string, number[]>();
+export const FAILED_ATTEMPTS = { max: 10, windowMs: 15 * 60 * 1000 } as const;
+
+function liveFailures(key: string, now: number): number[] {
+  const hits = (failures.get(key) ?? []).filter((t) => now - t < FAILED_ATTEMPTS.windowMs);
+  if (hits.length) failures.set(key, hits);
+  else failures.delete(key);
+  return hits;
+}
+
+/** Seconds until `key` may try again, or 0 when it isn't locked out. */
+export function lockedOutFor(key: string, now = Date.now()): number {
+  const hits = liveFailures(key, now);
+  if (hits.length < FAILED_ATTEMPTS.max) return 0;
+  return Math.max(1, Math.ceil((hits[0] + FAILED_ATTEMPTS.windowMs - now) / 1000));
+}
+
+export function recordFailure(key: string, now = Date.now()) {
+  const hits = liveFailures(key, now);
+  hits.push(now);
+  // Re-insert so Map order tracks the most recent failure.
+  failures.delete(key);
+  failures.set(key, hits);
+  // Bounded like `windows`: drop the least recently failing keys past the cap.
+  if (failures.size > MAX_TRACKED_KEYS) {
+    for (const k of [...failures.keys()].slice(0, failures.size - MAX_TRACKED_KEYS)) {
+      failures.delete(k);
+    }
+  }
+}
+
+export function clearFailures(key: string) {
+  failures.delete(key);
+}
+
 /** For tests. */
 export function trackedKeys() {
   return windows.size;
@@ -140,4 +180,5 @@ export function trackedKeys() {
 export function resetRateLimits() {
   windows.clear();
   daily.clear();
+  failures.clear();
 }

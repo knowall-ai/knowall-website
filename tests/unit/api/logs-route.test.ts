@@ -113,6 +113,65 @@ describe('GET /api/logs authentication', () => {
   });
 });
 
+describe('GET /api/logs key comparison', () => {
+  it('matches only the exact key, whatever the length', async () => {
+    const { keysMatch } = await import('@/app/api/logs/route');
+
+    expect(keysMatch(TEST_ADMIN_KEY, TEST_ADMIN_KEY)).toBe(true);
+    expect(keysMatch('test-admin-kez', TEST_ADMIN_KEY)).toBe(false);
+    expect(keysMatch('test-admin-key-longer', TEST_ADMIN_KEY)).toBe(false);
+    expect(keysMatch('t', TEST_ADMIN_KEY)).toBe(false);
+    expect(keysMatch('', TEST_ADMIN_KEY)).toBe(false);
+  });
+});
+
+describe('GET /api/logs failed-attempt lock-out', () => {
+  function fromIp(key: string | undefined, ip: string): NextRequest {
+    const headers: Record<string, string> = { 'x-forwarded-for': ip };
+    if (key) headers.authorization = `Bearer ${key}`;
+    return new NextRequest('http://localhost:3000/api/logs', { headers });
+  }
+
+  it('returns 429 after 10 wrong keys from one IP, even for the right key', async () => {
+    getAllChatLogsMock.mockResolvedValue(sampleLogs);
+    for (let i = 0; i < 10; i++) {
+      expect((await GET(fromIp('wrong', '203.0.113.7'))).status).toBe(401);
+    }
+
+    const locked = await GET(fromIp(TEST_ADMIN_KEY, '203.0.113.7'));
+    expect(locked.status).toBe(429);
+    expect(Number(locked.headers.get('Retry-After'))).toBeGreaterThan(0);
+    expect(getAllChatLogsMock).not.toHaveBeenCalled();
+
+    // Another address is unaffected.
+    expect((await GET(fromIp(TEST_ADMIN_KEY, '198.51.100.1'))).status).toBe(200);
+  });
+
+  it('counts a missing key as a failure', async () => {
+    for (let i = 0; i < 10; i++) await GET(fromIp(undefined, '203.0.113.8'));
+
+    expect((await GET(fromIp(TEST_ADMIN_KEY, '203.0.113.8'))).status).toBe(429);
+  });
+
+  it('clears the count after a successful key', async () => {
+    getAllChatLogsMock.mockResolvedValue(sampleLogs);
+    for (let i = 0; i < 9; i++) await GET(fromIp('wrong', '203.0.113.9'));
+    expect((await GET(fromIp(TEST_ADMIN_KEY, '203.0.113.9'))).status).toBe(200);
+
+    for (let i = 0; i < 9; i++) await GET(fromIp('wrong', '203.0.113.9'));
+    expect((await GET(fromIp(TEST_ADMIN_KEY, '203.0.113.9'))).status).toBe(200);
+  });
+
+  it('unlocks once the 15-minute window passes', async () => {
+    const { lockedOutFor, recordFailure } = await import('@/lib/rate-limit');
+    const t0 = 1_000_000;
+    for (let i = 0; i < 10; i++) recordFailure('k', t0);
+
+    expect(lockedOutFor('k', t0 + 1000)).toBeGreaterThan(0);
+    expect(lockedOutFor('k', t0 + 15 * 60 * 1000)).toBe(0);
+  });
+});
+
 describe('GET /api/logs data retrieval', () => {
   it('returns all logs when no id is specified', async () => {
     getAllChatLogsMock.mockResolvedValue(sampleLogs);
