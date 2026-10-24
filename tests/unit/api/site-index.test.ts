@@ -30,6 +30,25 @@ describe('site index', () => {
     }
   });
 
+  it('links our other products, sites and open-source projects', () => {
+    for (const url of [
+      'https://getzapl.ie',
+      'https://sergeantsamm.ie',
+      'https://github.com/knowall-ai/bookie',
+      'https://agents.knowall.ai',
+      'https://github.com/knowall-ai/agent-pulse',
+      'https://github.com/knowall-ai/mcp-reverie',
+      'https://github.com/knowall-ai/mcp-business-central',
+      'https://github.com/knowall-ai/ms-365-mcp-server',
+      'https://github.com/knowall-ai/nodie',
+      'https://github.com/knowall-ai/zendesk-zapdesk',
+      'https://github.com/knowall-ai/thyme-bc-extension',
+    ]) {
+      expect(siteIndex).toContain(url);
+    }
+    expect(siteIndex).toContain('Agent Presence');
+  });
+
   it('tells her to refer visitors to the decks for more depth', () => {
     expect(siteIndex).toMatch(/presentation/i);
     expect(siteIndex).toMatch(/for more (detail|depth|information)/i);
