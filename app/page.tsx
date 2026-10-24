@@ -819,7 +819,7 @@ export default function Home() {
                         <div className="flex gap-2">
                           <dt className="text-gray-400">Engagement:</dt>
                           <dd className="font-medium text-gray-200">
-                            Copilot Implementation (CISP)
+                            Continuous Improvement (CISP)
                           </dd>
                         </div>
                         <div className="flex gap-2">

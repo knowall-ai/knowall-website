@@ -10,14 +10,7 @@ export const root = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 export const publicDir = join(root, 'public');
 
 // Single source of truth for which decks exist (file name without .html).
-export const decks = [
-  'agentic-ai-solutions',
-  'company-overview',
-  'ai-discovery',
-  'agentic-delivery',
-  'cisp',
-  'purple-team',
-];
+export const decks = ['company-overview', 'ai-discovery', 'cisp', 'purple-team'];
 
 const MIME = {
   '.html': 'text/html',

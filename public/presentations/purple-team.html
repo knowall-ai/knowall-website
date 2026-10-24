@@ -108,10 +108,92 @@
 
       /* Statement slides keep their copy on the dark left half of the art. */
       .dark-inner.with-agent .col {
-        max-width: 1010px;
+        /* narrow enough that copy wraps before it reaches the agent art */
+        max-width: 820px;
         display: flex;
         flex-direction: column;
         gap: 34px;
+      }
+
+      /* --- Works with what you already run: a logo wall, explained on hover --- */
+      .tool-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 26px 16px;
+        max-width: 1040px;
+      }
+      .tool {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        text-align: center;
+        outline: none;
+      }
+      .tool-plate {
+        width: 100%;
+        height: 92px;
+        border-radius: 16px;
+        background: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 10px 26px rgba(0, 0, 0, 0.45);
+        transition: transform 0.16s ease, box-shadow 0.16s ease;
+      }
+      .tool-plate img {
+        width: 52px;
+        height: 52px;
+        object-fit: contain;
+      }
+      .tool:hover .tool-plate,
+      .tool:focus-visible .tool-plate {
+        transform: translateY(-4px);
+        box-shadow: 0 0 0 3px var(--lime), 0 14px 30px rgba(0, 0, 0, 0.55);
+      }
+      .tool-name {
+        font-size: 16px;
+        font-weight: 700;
+        line-height: 1.25;
+        color: #dbe3ea;
+      }
+      .tool-tip {
+        position: absolute;
+        bottom: calc(100% + 12px);
+        left: 50%;
+        width: 250px;
+        transform: translateX(-50%) translateY(8px);
+        background: #14140f;
+        border: 1px solid var(--lime);
+        border-radius: 14px;
+        padding: 14px 16px;
+        font-size: 17px;
+        line-height: 1.45;
+        color: #e6e9de;
+        text-align: left;
+        opacity: 0;
+        pointer-events: none;
+        transition: 0.18s ease;
+        box-shadow: 0 22px 44px rgba(0, 0, 0, 0.65);
+        z-index: 6;
+      }
+      .tool:hover .tool-tip,
+      .tool:focus-visible .tool-tip {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+      .tool:nth-child(7n + 1) .tool-tip {
+        left: 0;
+        transform: translateY(8px);
+      }
+      .tool:nth-child(7n + 1):hover .tool-tip,
+      .tool:nth-child(7n + 1):focus-visible .tool-tip {
+        transform: translateY(0);
+      }
+      .tool-hint {
+        font-size: 18px;
+        color: var(--mist);
       }
 
       .dark-inner.with-agent .col--wide {
@@ -194,7 +276,7 @@
       .flood-stat {
         display: flex;
         gap: 30px;
-        align-items: baseline;
+        align-items: center;
         border-left: 3px solid var(--lime);
         padding: 2px 0 2px 28px;
       }
@@ -252,7 +334,7 @@
 
       .member .agent-role {
         font-size: 17px;
-        margin-top: 2px;
+        margin-top: 14px;
       }
 
       .member .agent-role.red {
@@ -267,7 +349,7 @@
         color: #c4a4ff;
       }
 
-      .member p {
+      .reveal .member p {
         font-size: 22px;
         line-height: 1.45;
         color: var(--mist);
@@ -422,6 +504,127 @@
         text-transform: uppercase;
       }
 
+      /* --- Portal carousel: six screens, cross-fading; controls sit inside the
+         frame so they never collide with the deck's own arrows --------------- */
+      .portal-carousel .pc-track {
+        position: relative;
+        aspect-ratio: 1440 / 800;
+        border-radius: 16px;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        box-shadow: var(--shadow-hi);
+        background: #0b0d10;
+      }
+      .portal-carousel .pc-slide {
+        position: absolute;
+        inset: 0;
+        margin: 0;
+        opacity: 0;
+        transition: opacity 0.6s ease;
+      }
+      .portal-carousel .pc-slide.is-active {
+        opacity: 1;
+      }
+      .portal-carousel .pc-slide img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: top left;
+        border: 0;
+        border-radius: 0;
+        box-shadow: none;
+      }
+      .portal-carousel figcaption {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        padding: 46px 28px 58px;
+        background: linear-gradient(transparent, rgba(8, 10, 13, 0.92) 45%);
+        color: #dbe3ea;
+        font-size: 21px;
+      }
+      .portal-carousel figcaption strong {
+        color: #fff;
+      }
+      .portal-carousel .pc-nav {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 54px;
+        height: 54px;
+        border-radius: 50%;
+        border: 1px solid rgba(157, 254, 10, 0.6);
+        background: rgba(8, 10, 13, 0.75);
+        color: var(--lime);
+        font-size: 36px;
+        line-height: 1;
+        cursor: pointer;
+      }
+      .portal-carousel .pc-prev {
+        left: 16px;
+      }
+      .portal-carousel .pc-next {
+        right: 16px;
+      }
+      .portal-carousel .pc-dots {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 20px;
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        /* the row spans the frame; only the dots themselves take the pointer,
+           so it never covers the pause/play toggle */
+        pointer-events: none;
+      }
+      .portal-carousel .pc-dot {
+        pointer-events: auto;
+        width: 12px;
+        height: 12px;
+        padding: 0;
+        border-radius: 50%;
+        border: 0;
+        background: rgba(255, 255, 255, 0.35);
+        cursor: pointer;
+      }
+      .portal-carousel .pc-dot.is-active {
+        background: var(--lime);
+      }
+      /* pause/play: a visitor who stops it stays in control (WCAG 2.2.2) */
+      .portal-carousel .pc-toggle {
+        position: absolute;
+        right: 16px;
+        bottom: 10px;
+        width: 40px;
+        height: 40px;
+        padding: 0;
+        display: grid;
+        place-items: center;
+        border-radius: 50%;
+        border: 1px solid rgba(157, 254, 10, 0.6);
+        background: rgba(8, 10, 13, 0.75);
+        color: var(--lime);
+        cursor: pointer;
+      }
+      .portal-carousel .pc-toggle svg {
+        width: 16px;
+        height: 16px;
+        fill: currentColor;
+      }
+      .portal-carousel .pc-toggle .pc-icon-play,
+      .portal-carousel .pc-toggle[aria-pressed='true'] .pc-icon-pause {
+        display: none;
+      }
+      .portal-carousel .pc-toggle[aria-pressed='true'] .pc-icon-play {
+        display: block;
+      }
+      .portal-carousel button:focus-visible {
+        outline: 3px solid var(--lime);
+        outline-offset: 3px;
+      }
+
       /* --- How you pay: three numbered stages beside Poppie's report -------------- */
       .pay-split {
         display: grid;
@@ -464,6 +667,16 @@
         font-size: 23px;
       }
 
+      /* "they" (the attackers) in proper red with a soft glow, as on the website */
+      .they {
+        color: #ef4444;
+        text-shadow: 0 0 22px rgba(239, 68, 68, 0.5);
+      }
+
+      .pay-split--solo {
+        grid-template-columns: 1fr;
+      }
+
       .pay-split > img {
         width: 600px;
         height: 600px;
@@ -486,10 +699,10 @@
             aria-label="Pennie, Poppie and Ollie, three robots, close to camera in front of a neon city skyline, lit red, purple and blue"
           ></div>
           <div class="cover-scrim" aria-hidden="true"></div>
-          <img class="logo-light logo-light--left" src="/images/logo.png" alt="KnowAll.ai" />
+          <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
           <div class="cover-copy">
             <p class="kicker">KnowAll AI &middot; Continuous AI security</p>
-            <h1>The Purple Team:<br /><em>break it</em><br />before they do.</h1>
+            <h1>The Purple Team:<br /><em>break it</em><br />before <span class="they">they</span> do.</h1>
             <p class="lead" style="max-width: 1000px">
               Attackers now use AI to find holes around the clock. So does the KnowAll Purple Team:
               Pennie attacks, Ollie defends and fixes, and Poppie runs the loop between them.
@@ -531,13 +744,17 @@
                 </p>
               </div>
             </div>
-            <p class="source">Sources: NIST NVD; CISA KEV.</p>
+            <p class="source">
+              <strong>CVE</strong> (Common Vulnerabilities and Exposures): the public ID assigned to
+              a publicly disclosed security flaw. <strong>KEV</strong>: CISA&rsquo;s catalogue of
+              flaws attackers are actively exploiting. Sources: NIST NVD; CISA KEV.
+            </p>
           </div>
         </section>
 
         <!-- Slide 3: Attackers use AI, so do we -->
         <section role="region" aria-label="Slide 3 of 12: Attackers use AI, so do we">
-          <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" style="top: 70px" />
+          <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
           <div
             class="dark-inner with-agent"
             style="--deck-agent: url('images/divider-purple-team-core.jpg')"
@@ -553,9 +770,8 @@
                   <div>
                     <h4>Frontier models do the reasoning</h4>
                     <p>
-                      Models from Anthropic and OpenAI, via Microsoft Foundry in KnowAll&rsquo;s
-                      Azure or yours, read your code, judge whether a flaw is really exploitable and
-                      write the fix.
+                      Models from Anthropic and OpenAI, via Microsoft Foundry, read your code,
+                      judge whether a flaw is really exploitable and write the fix.
                     </p>
                   </div>
                 </div>
@@ -564,10 +780,11 @@
                     <svg class="ic"><use href="icons.svg#i-refresh-cw" /></svg>
                   </div>
                   <div>
-                    <h4>Plain software does the matching</h4>
+                    <h4>Automation filters first</h4>
                     <p>
-                      Every new advisory is matched continuously against the exact packages you
-                      use, around the clock, so the models only ever look at what touches you.
+                      Every new advisory is checked automatically, around the clock, against the
+                      exact software your code uses. Only the matches go to the AI, so it never
+                      wastes time on flaws that can&rsquo;t touch you.
                     </p>
                   </div>
                 </div>
@@ -588,7 +805,7 @@
 
         <!-- Slide 4: Meet the team -->
         <section role="region" aria-label="Slide 4 of 12: Meet the team">
-          <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" style="top: 70px" />
+          <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
           <div
             class="dark-inner with-agent with-agent--wide"
             style="--deck-agent: url('images/purple-team-hero.jpg')"
@@ -706,7 +923,7 @@
 
         <!-- Slide 6: Patch fast -->
         <section role="region" aria-label="Slide 6 of 12: Patch fast">
-          <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" style="top: 70px" />
+          <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
           <div
             class="dark-inner with-agent with-agent--wide"
             style="--deck-agent: url('images/divider-purple-team-patch.jpg')"
@@ -752,7 +969,7 @@
 
         <!-- Slide 7: Safe by design -->
         <section role="region" aria-label="Slide 7 of 12: Safe by design">
-          <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" style="top: 70px" />
+          <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
           <div
             class="dark-inner with-agent"
             style="--deck-agent: url('images/divider-purple-team-attack.jpg')"
@@ -778,7 +995,7 @@
                 <div class="check">
                   <svg class="ic" aria-hidden="true"><use href="icons.svg#i-git-pull-request" /></svg>
                   <div>
-                    <strong>Every fix goes through your own code review.</strong> A pull request
+                    <strong>Every fix goes through your existing review process.</strong> A pull request
                     with a proving test; you merge it.
                   </div>
                 </div>
@@ -796,7 +1013,7 @@
 
         <!-- Slide 8: Works with what you already run -->
         <section role="region" aria-label="Slide 8 of 12: Works with what you already run">
-          <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" style="top: 70px" />
+          <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
           <div
             class="dark-inner with-agent with-agent--wide"
             style="--deck-agent: url('images/divider-purple-team-ops.jpg')"
@@ -804,75 +1021,79 @@
             <div class="col col--wide">
               <p class="kicker">Nothing new to install</p>
               <h2>Works with what<br />you already run.</h2>
-              <div class="cards-2">
-                <div class="card">
-                  <div class="chip" aria-hidden="true">
-                    <svg class="ic"><use href="icons.svg#i-github" /></svg>
-                  </div>
-                  <div>
-                    <h4>Code and delivery</h4>
-                    <p>GitHub, Azure DevOps, Dependabot and Renovate, CodeRabbit where you use it.</p>
-                  </div>
+              <div class="tool-grid" role="list" aria-label="Tools it works with; hover or focus a logo for what it does">
+                <div class="tool" role="listitem" tabindex="0">
+                  <div class="tool-plate"><img src="images/logos/github.svg" alt="" /></div>
+                  <div class="tool-name">GitHub</div>
+                  <div class="tool-tip" role="tooltip">Repos, issues and pull requests: where every fix lands for you to review.</div>
                 </div>
-                <div class="card">
-                  <div class="chip" aria-hidden="true">
-                    <svg class="ic"><use href="icons.svg#i-search" /></svg>
-                  </div>
-                  <div>
-                    <h4>Security scanning</h4>
-                    <p>GitHub Advanced Security, ZAP (Zed Attack Proxy), Nuclei.</p>
-                  </div>
+                <div class="tool" role="listitem" tabindex="0">
+                  <div class="tool-plate"><img src="images/logos/azure-devops.svg" alt="" /></div>
+                  <div class="tool-name">Azure DevOps</div>
+                  <div class="tool-tip" role="tooltip">Repos, boards and pipelines, for teams that live in Microsoft.</div>
                 </div>
-                <div class="card">
-                  <div class="chip" aria-hidden="true">
-                    <svg class="ic"><use href="icons.svg#i-shield-check" /></svg>
-                  </div>
-                  <div>
-                    <h4>Microsoft security</h4>
-                    <p>Microsoft Defender for Cloud, Microsoft Sentinel, Azure Lighthouse.</p>
-                  </div>
+                <div class="tool" role="listitem" tabindex="0">
+                  <div class="tool-plate"><img src="images/logos/github.svg" alt="" /></div>
+                  <div class="tool-name">GitHub Advanced Security</div>
+                  <div class="tool-tip" role="tooltip">Code, secret and dependency scanning, in GitHub or Azure DevOps.</div>
                 </div>
-                <div class="card">
-                  <div class="chip" aria-hidden="true">
-                    <svg class="ic"><use href="icons.svg#i-key-round" /></svg>
-                  </div>
-                  <div>
-                    <h4>Identity and access</h4>
-                    <p>Microsoft Entra ID: agents as named guests or identities you can switch off.</p>
-                  </div>
+                <div class="tool" role="listitem" tabindex="0">
+                  <div class="tool-plate"><img src="images/logos/dependabot.svg" alt="" /></div>
+                  <div class="tool-name">Dependabot</div>
+                  <div class="tool-tip" role="tooltip">Automatic pull requests that bump vulnerable dependencies.</div>
                 </div>
-                <div class="card">
-                  <div class="chip chip-white" aria-hidden="true">
-                    <img
-                      src="images/logos/ai-foundry.svg"
-                      alt=""
-                      style="width: 38px; height: 38px; object-fit: contain"
-                    />
-                  </div>
-                  <div>
-                    <h4>AI models</h4>
-                    <p>Microsoft Foundry: OpenAI and Claude models, optionally in your own tenant.</p>
-                  </div>
+                <div class="tool" role="listitem" tabindex="0">
+                  <div class="tool-plate"><img src="images/logos/renovate.svg" alt="" /></div>
+                  <div class="tool-name">Renovate</div>
+                  <div class="tool-tip" role="tooltip">Dependency updates on any platform, grouped and scheduled.</div>
                 </div>
-                <div class="card">
-                  <div class="chip" aria-hidden="true">
-                    <svg class="ic"><use href="icons.svg#i-clock" /></svg>
-                  </div>
-                  <div>
-                    <h4>Time and billing</h4>
-                    <p>Thyme and Business Central: agents log the real hours they work.</p>
-                  </div>
+                <div class="tool" role="listitem" tabindex="0">
+                  <div class="tool-plate"><img src="images/logos/coderabbit.svg" alt="" /></div>
+                  <div class="tool-name">CodeRabbit</div>
+                  <div class="tool-tip" role="tooltip">AI review on every pull request, where you already use it.</div>
+                </div>
+                <div class="tool" role="listitem" tabindex="0">
+                  <div class="tool-plate"><img src="images/logos/zap.svg" alt="" /></div>
+                  <div class="tool-name">ZAP</div>
+                  <div class="tool-tip" role="tooltip">Zed Attack Proxy: Pennie’s scanner for live web apps.</div>
+                </div>
+                <div class="tool" role="listitem" tabindex="0">
+                  <div class="tool-plate"><img src="images/logos/nuclei.jpg" alt="" /></div>
+                  <div class="tool-name">Nuclei</div>
+                  <div class="tool-tip" role="tooltip">Fast, template-based checks for known vulnerabilities.</div>
+                </div>
+                <div class="tool" role="listitem" tabindex="0">
+                  <div class="tool-plate"><img src="images/logos/defender-for-cloud.svg" alt="" /></div>
+                  <div class="tool-name">Defender for Cloud</div>
+                  <div class="tool-tip" role="tooltip">Microsoft’s posture and threat protection across your Azure.</div>
+                </div>
+                <div class="tool" role="listitem" tabindex="0">
+                  <div class="tool-plate"><img src="images/logos/sentinel.svg" alt="" /></div>
+                  <div class="tool-name">Microsoft Sentinel</div>
+                  <div class="tool-tip" role="tooltip">Your SIEM: Ollie reads its alerts and incidents.</div>
+                </div>
+                <div class="tool" role="listitem" tabindex="0">
+                  <div class="tool-plate"><img src="images/logos/lighthouse.svg" alt="" /></div>
+                  <div class="tool-name">Azure Lighthouse</div>
+                  <div class="tool-tip" role="tooltip">We work in your Azure from ours, with your consent and a full audit trail.</div>
+                </div>
+                <div class="tool" role="listitem" tabindex="0">
+                  <div class="tool-plate"><img src="images/logos/entra-id.svg" alt="" /></div>
+                  <div class="tool-name">Microsoft Entra ID</div>
+                  <div class="tool-tip" role="tooltip">Each agent is a named identity you can see and switch off.</div>
+                </div>
+                <div class="tool" role="listitem" tabindex="0">
+                  <div class="tool-plate"><img src="images/logos/ai-foundry.svg" alt="" /></div>
+                  <div class="tool-name">Microsoft Foundry</div>
+                  <div class="tool-tip" role="tooltip">OpenAI and Claude models, optionally in your own tenant.</div>
+                </div>
+                <div class="tool" role="listitem" tabindex="0">
+                  <div class="tool-plate"><img src="images/logos/azure.svg" alt="" /></div>
+                  <div class="tool-name">Microsoft Azure</div>
+                  <div class="tool-tip" role="tooltip">Where the portal and the agents run, ours or yours.</div>
                 </div>
               </div>
-              <div class="pill-row" role="list" aria-label="Where it runs">
-                <span class="pill pill-logo" role="listitem"
-                  ><img src="images/logos/azure-devops.svg" alt="" />Azure DevOps</span
-                >
-                <span class="pill pill-logo" role="listitem"
-                  ><img src="images/logos/azure.svg" alt="" />Microsoft Azure</span
-                >
-                <span class="pill" role="listitem">Bills as hours on a KnowAll support plan (CISP), new or existing</span>
-              </div>
+              <p class="tool-hint">Hover over a logo to see what it does.</p>
             </div>
           </div>
         </section>
@@ -882,7 +1103,7 @@
           <div class="band">
             <div>
               <h2>Your Purple Team Portal</h2>
-              <p class="band-sub">security.knowall.ai &mdash; what you see each month</p>
+              <p class="band-sub">What you see, every month</p>
             </div>
             <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
           </div>
@@ -906,12 +1127,41 @@
                   <div><strong>Time spent per case,</strong> so every hour billed is accounted for.</div>
                 </div>
               </div>
-              <div class="portal-shot">
-                <img
-                  src="images/purple-team-portal.png"
-                  alt="The Purple Team Portal dashboard for a fictional company, Contoso: security score, score trend and the month's key figures"
-                />
+              <div class="portal-shot portal-carousel" role="group" aria-roledescription="carousel" aria-label="Purple Team Portal screens">
+                <div class="pc-track">
+                  <figure class="pc-slide is-active" aria-hidden="false">
+                    <img src="images/portal-dashboard.jpg" alt="Purple Team Portal, Dashboard page, for the fictional company Contoso: Security score, its trend and the month's key figures" />
+                    <figcaption><strong>Dashboard</strong> &middot; Security score, its trend and the month&rsquo;s key figures</figcaption>
+                  </figure>
+                  <figure class="pc-slide" aria-hidden="true">
+                    <img src="images/portal-advisories.jpg" alt="Purple Team Portal, Advisories page, for the fictional company Contoso: Every advisory that affects you, scored and matched to your repositories" />
+                    <figcaption><strong>Advisories</strong> &middot; Every advisory that affects you, scored and matched to your repositories</figcaption>
+                  </figure>
+                  <figure class="pc-slide" aria-hidden="true">
+                    <img src="images/portal-advisory.jpg" alt="Purple Team Portal, Advisory detail page, for the fictional company Contoso: Why it matters to you, the evidence, and what the team did about it" />
+                    <figcaption><strong>Advisory detail</strong> &middot; Why it matters to you, the evidence, and what the team did about it</figcaption>
+                  </figure>
+                  <figure class="pc-slide" aria-hidden="true">
+                    <img src="images/portal-repos.jpg" alt="Purple Team Portal, Repositories page, for the fictional company Contoso: Each repository's open findings and the scanners watching it" />
+                    <figcaption><strong>Repositories</strong> &middot; Each repository&rsquo;s open findings and the scanners watching it</figcaption>
+                  </figure>
+                  <figure class="pc-slide" aria-hidden="true">
+                    <img src="images/portal-owasp.jpg" alt="Purple Team Portal, OWASP checklists page, for the fictional company Contoso: The OWASP Top 10 and LLM Top 10, item by item, with Pennie's results" />
+                    <figcaption><strong>OWASP checklists</strong> &middot; The OWASP Top 10 and LLM Top 10, item by item, with Pennie&rsquo;s results</figcaption>
+                  </figure>
+                  <figure class="pc-slide" aria-hidden="true">
+                    <img src="images/portal-usage.jpg" alt="Purple Team Portal, Usage and hours page, for the fictional company Contoso: Time spent per case, by agent and by job, against your plan" />
+                    <figcaption><strong>Usage and hours</strong> &middot; Time spent per case, by agent and by job, against your plan</figcaption>
+                  </figure>
+                </div>
                 <span class="tag">Example</span>
+                <button type="button" class="pc-nav pc-prev" aria-label="Previous screen">&lsaquo;</button>
+                <button type="button" class="pc-nav pc-next" aria-label="Next screen">&rsaquo;</button>
+                <button type="button" class="pc-toggle" aria-label="Pause screens" aria-pressed="false">
+                  <svg class="pc-icon-pause" viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="2" width="3.5" height="12" rx="1" /><rect x="9.5" y="2" width="3.5" height="12" rx="1" /></svg>
+                  <svg class="pc-icon-play" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2.2v11.6c0 .6.7 1 1.2.6l8.4-5.8a.75.75 0 0 0 0-1.2L5.2 1.6c-.5-.4-1.2 0-1.2.6z" /></svg>
+                </button>
+                <div class="pc-dots"><button type="button" class="pc-dot is-active" aria-label="Show Dashboard"></button><button type="button" class="pc-dot" aria-label="Show Advisories"></button><button type="button" class="pc-dot" aria-label="Show Advisory detail"></button><button type="button" class="pc-dot" aria-label="Show Repositories"></button><button type="button" class="pc-dot" aria-label="Show OWASP checklists"></button><button type="button" class="pc-dot" aria-label="Show Usage and hours"></button></div>
               </div>
             </div>
           </div>
@@ -919,9 +1169,9 @@
 
         <!-- Slide 10: Three ways to run it -->
         <section role="region" aria-label="Slide 10 of 12: Three ways to run it">
-          <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" style="top: 70px" />
+          <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
           <div
-            class="dark-inner with-agent"
+            class="dark-inner with-agent with-agent--wide"
             style="--deck-agent: url('images/divider-purple-team-defend.jpg')"
           >
             <div class="col">
@@ -934,7 +1184,7 @@
                   </div>
                   <div>
                     <h4>Hosted</h4>
-                    <p>The team and your portal run on security.knowall.ai. Fastest to start.</p>
+                    <p>We run the team and your portal for you. Fastest to start.</p>
                   </div>
                 </div>
                 <div class="card">
@@ -943,7 +1193,7 @@
                   </div>
                   <div>
                     <h4>In your tenant</h4>
-                    <p>Your data stays in your Azure; the agents work into it from ours.</p>
+                    <p>Your data stays in your Azure. Our agents work on it.</p>
                   </div>
                 </div>
                 <div class="card">
@@ -952,7 +1202,7 @@
                   </div>
                   <div>
                     <h4>Fully sovereign</h4>
-                    <p>Agents and models run in your Azure too. Nothing leaves your estate.</p>
+                    <p>Agents and models run in your Azure too. Nothing leaves.</p>
                   </div>
                 </div>
               </div>
@@ -961,24 +1211,24 @@
         </section>
 
         <!-- Slide 11: How you pay -->
-        <section class="scene" style="--scene: url('images/scene-blocks.jpg')" role="region" aria-label="Slide 11 of 12: How you pay">
-          <div class="band">
-            <div>
-              <h2>How you pay</h2>
-              <p class="band-sub">Real hours, a cap you set, no surprises</p>
-            </div>
-            <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
-          </div>
-          <div class="content">
-            <div class="pay-split">
-              <div class="stages">
+        <section role="region" aria-label="Slide 11 of 12: How you pay">
+          <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
+          <div
+            class="dark-inner with-agent with-agent--wide"
+            style="--deck-agent: url('images/divider-purple-team-pay.jpg')"
+          >
+            <div class="col">
+              <p class="kicker">How you pay</p>
+              <h2>Real hours.<br />A cap you set.</h2>
+              <div class="pay-split pay-split--solo">
+                <div class="stages">
                 <div class="stage">
                   <div class="step" aria-hidden="true">01</div>
                   <div>
                     <h4>Security Discovery</h4>
                     <p>
                       Measures your estate: the repositories, cloud and apps in scope, and what is
-                      already exposed. Sets your starting score.
+                      already exposed. Sets your starting score and proposes a monthly budget.
                     </p>
                   </div>
                 </div>
@@ -1003,10 +1253,7 @@
                   </div>
                 </div>
               </div>
-              <img
-                src="images/purple-team/poppie-report.jpg"
-                alt="Poppie, the copper robot, holding a tablet projecting a locked blue padlock and a rising chart"
-              />
+              </div>
             </div>
           </div>
         </section>
@@ -1014,7 +1261,7 @@
         <!-- Slide 12: CTA -->
         <section role="region" aria-label="Slide 12 of 12: Book a Security Discovery">
           <div class="cta-top">
-            <h2>Break it before<br />they do.</h2>
+            <h2>Break it before<br /><span class="they">they</span> do.</h2>
             <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
           </div>
           <div class="cta-bottom">
@@ -1060,6 +1307,52 @@
         cta.href = 'https://www.knowall.ai/purple-team#enquire';
         cta.setAttribute('aria-label', 'Book a Security Discovery with KnowAll AI');
       });
+    </script>
+    <script>
+      // Portal carousel: auto-advances only while its slide is on screen. Once the
+      // visitor pauses it, uses an arrow or dot, or focuses one of those, it stays
+      // stopped until they press play (WCAG 2.2.2); hovering pauses it only while
+      // the pointer is over it. Under prefers-reduced-motion it starts paused.
+      (() => {
+        const root = document.querySelector('.portal-carousel');
+        if (!root) return;
+        const slides = [...root.querySelectorAll('.pc-slide')];
+        const dots = [...root.querySelectorAll('.pc-dot')];
+        const toggle = root.querySelector('.pc-toggle');
+        let i = 0, timer = null, hovering = false;
+        let userStopped = matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const show = (n) => {
+          i = (n + slides.length) % slides.length;
+          slides.forEach((s, k) => { s.classList.toggle('is-active', k === i); s.setAttribute('aria-hidden', String(k !== i)); });
+          dots.forEach((d, k) => {
+            d.classList.toggle('is-active', k === i);
+            d.setAttribute('aria-current', String(k === i));
+          });
+        };
+        const stop = () => { clearInterval(timer); timer = null; };
+        const start = () => { if (!userStopped && !hovering && !timer) timer = setInterval(() => show(i + 1), 4500); };
+        const onSlide = () => (Reveal.getCurrentSlide()?.contains(root) ? start() : stop());
+        const setStopped = (value) => {
+          userStopped = value;
+          toggle.setAttribute('aria-pressed', String(value));
+          if (value) stop();
+          else onSlide();
+        };
+        setStopped(userStopped);
+        toggle.addEventListener('click', () => setStopped(!userStopped));
+        root.querySelector('.pc-prev').addEventListener('click', () => { setStopped(true); show(i - 1); });
+        root.querySelector('.pc-next').addEventListener('click', () => { setStopped(true); show(i + 1); });
+        dots.forEach((d, k) => d.addEventListener('click', () => { setStopped(true); show(k); }));
+        // focusing an arrow or dot stops it for good; the toggle is how to resume
+        root.addEventListener('focusin', (e) => { if (e.target !== toggle) setStopped(true); });
+        // keep the deck's own keyboard and swipe handling away from the controls
+        root.querySelectorAll('button').forEach((b) => b.addEventListener('keydown', (e) => e.stopPropagation()));
+        root.addEventListener('mouseenter', () => { hovering = true; stop(); });
+        root.addEventListener('mouseleave', () => { hovering = false; onSlide(); });
+        Reveal.on('ready', onSlide);
+        Reveal.on('slidechanged', onSlide);
+        if (Reveal.isReady()) onSlide();
+      })();
     </script>
   </body>
 </html>

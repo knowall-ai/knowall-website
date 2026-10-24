@@ -47,37 +47,29 @@
 
       body {
         font-family: 'Mulish', 'Segoe UI', sans-serif;
-        background: var(--charcoal);
         color: #f4f6ef;
         min-height: 100vh;
         display: flex;
         flex-direction: column;
+        /* a deck image behind everything, darkened so cards and text stay legible */
+        background:
+          linear-gradient(
+            180deg,
+            rgba(10, 13, 16, 0.55) 0%,
+            rgba(10, 13, 16, 0.82) 45%,
+            rgba(10, 13, 16, 0.95) 100%
+          ),
+          url('images/presentations-bg.jpg') center 30% / cover fixed,
+          var(--charcoal);
       }
 
       .band {
         position: relative;
-        background:
-          radial-gradient(700px 260px at 86% -40%, rgba(157, 254, 10, 0.1), transparent 66%),
-          linear-gradient(180deg, #171d24 0%, var(--charcoal) 100%);
-        border-bottom: 1px solid var(--line);
-        padding: 56px 24px 64px;
-        box-shadow: 0 22px 46px rgba(0, 0, 0, 0.55);
-      }
-
-      /* thin lime accent rule, replacing the lime chevron notch */
-      .band::after {
-        content: '';
-        position: absolute;
-        top: calc(100% - 3px);
-        left: 10%;
-        width: 92px;
-        height: 3px;
-        background: var(--lime);
-        box-shadow: 0 0 20px rgba(157, 254, 10, 0.55);
+        padding: 36px 24px 18px;
       }
 
       .band-inner {
-        max-width: 960px;
+        max-width: 1080px;
         margin: 0 auto;
         display: flex;
         align-items: center;
@@ -88,20 +80,31 @@
       .band h1 {
         font-family: 'Playfair Display', Georgia, serif;
         font-weight: 900;
-        font-size: clamp(2.2rem, 6vw, 3.6rem);
+        font-size: clamp(2rem, 4.4vw, 3rem);
         color: var(--text);
+        line-height: 1.05;
+      }
+
+      .band h1::after {
+        content: '';
+        display: block;
+        width: 72px;
+        height: 3px;
+        margin-top: 14px;
+        background: var(--lime);
+        box-shadow: 0 0 18px rgba(157, 254, 10, 0.55);
       }
 
       .band p {
-        margin-top: 10px;
+        margin-top: 12px;
         font-weight: 600;
-        font-size: 1.15rem;
+        font-size: 1.05rem;
         color: var(--mist);
       }
 
       /* the mark is dark-on-light artwork — invert it for the dark header */
       .band img {
-        height: 92px;
+        height: 72px;
         width: auto;
         filter: brightness(0) invert(1);
         opacity: 0.9;
@@ -110,27 +113,32 @@
       main {
         flex: 1;
         width: 100%;
-        max-width: 960px;
+        /* 1080px of content, matching the header, so the 2×2 grid fits */
+        max-width: 1128px;
         margin: 0 auto;
-        padding: 80px 24px 60px;
+        padding: 18px 24px 40px;
       }
 
+      /* Four decks in a 2×2 grid, sized so both rows sit above the fold. */
       .presentations-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-        gap: 28px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 22px;
       }
 
+      /* the whole card is the link */
       .presentation-card {
-        background: linear-gradient(180deg, var(--panel) 0%, var(--panel-lo) 100%);
-        border: 1px solid var(--line);
-        border-radius: 18px;
-        box-shadow:
-          0 16px 38px rgba(0, 0, 0, 0.5),
-          inset 0 1px 0 rgba(255, 255, 255, 0.07);
-        padding: 34px 36px;
+        position: relative;
         display: flex;
         flex-direction: column;
+        overflow: hidden;
+        text-decoration: none;
+        color: inherit;
+        background: rgba(26, 32, 39, 0.78);
+        backdrop-filter: blur(6px);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        box-shadow: 0 14px 34px rgba(0, 0, 0, 0.5);
         transition:
           transform 0.25s ease,
           border-color 0.25s ease,
@@ -138,59 +146,161 @@
       }
 
       .presentation-card:hover,
-      .presentation-card:focus-within {
-        transform: translateY(-6px);
+      .presentation-card:focus-visible {
+        transform: translateY(-5px);
         border-color: var(--line-lime);
         box-shadow:
-          0 26px 60px rgba(0, 0, 0, 0.62),
-          inset 0 1px 0 rgba(255, 255, 255, 0.07);
+          0 22px 52px rgba(0, 0, 0, 0.6),
+          0 0 0 1px rgba(157, 254, 10, 0.25),
+          0 0 28px rgba(157, 254, 10, 0.18);
+        outline: none;
+      }
+
+      .presentation-card:focus-visible {
+        outline: 3px solid var(--lime);
+        outline-offset: 3px;
+      }
+
+      .thumb {
+        position: relative;
+        aspect-ratio: 16 / 8;
+        overflow: hidden;
+        background: var(--panel-lo);
+      }
+
+      .thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        transition: transform 0.6s ease;
+      }
+
+      .presentation-card:hover .thumb img,
+      .presentation-card:focus-visible .thumb img {
+        transform: scale(1.05);
+      }
+
+      /* fade the image into the card so the title sits cleanly below */
+      .thumb::after {
+        content: '';
+        position: absolute;
+        inset: auto 0 0 0;
+        height: 40%;
+        background: linear-gradient(180deg, transparent, rgba(26, 32, 39, 0.95));
+      }
+
+      .card-body {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        padding: 6px 22px 20px;
       }
 
       .presentation-card h2 {
         color: var(--text);
-        font-size: 1.45rem;
+        font-size: 1.22rem;
         font-weight: 800;
-        margin-bottom: 14px;
+        margin-bottom: 6px;
       }
 
       .presentation-card p {
         color: var(--mist);
-        line-height: 1.6;
-        margin-bottom: 26px;
+        font-size: 0.93rem;
+        line-height: 1.5;
+        margin-bottom: 14px;
         flex-grow: 1;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
       }
 
-      .presentation-card a {
-        display: inline-block;
-        background: var(--lime);
-        color: var(--ink);
-        padding: 12px 28px;
-        border-radius: 999px;
-        text-decoration: none;
-        font-weight: 800;
-        transition:
-          transform 0.2s ease,
-          box-shadow 0.2s ease;
+      .cta {
         align-self: flex-start;
-        box-shadow: 0 8px 24px rgba(157, 254, 10, 0.2);
+        font-weight: 800;
+        font-size: 0.92rem;
+        color: var(--lime);
+        letter-spacing: 0.01em;
       }
 
-      .presentation-card a:hover {
-        transform: scale(1.04);
-        box-shadow: 0 12px 32px rgba(157, 254, 10, 0.35);
-      }
-
-      .presentation-card a:focus-visible {
-        outline: 3px solid var(--lime);
-        outline-offset: 3px;
+      .presentation-card:hover .cta,
+      .presentation-card:focus-visible .cta {
+        text-decoration: underline;
+        text-underline-offset: 4px;
       }
 
       .footer {
         text-align: center;
         color: var(--mist);
-        padding: 28px 24px;
+        padding: 20px 24px;
         border-top: 1px solid var(--line);
-        font-size: 0.95rem;
+        font-size: 0.9rem;
+      }
+
+      /* laptop screens (up to 960px tall): keep all four decks above the fold */
+      @media (min-width: 1081px) and (max-height: 960px) {
+        .band {
+          padding: 22px 24px 10px;
+        }
+
+        .band h1 {
+          font-size: 2.3rem;
+        }
+
+        .band h1::after {
+          margin-top: 10px;
+        }
+
+        .band p {
+          margin-top: 8px;
+        }
+
+        .band img {
+          height: 56px;
+        }
+
+        main {
+          padding-top: 12px;
+        }
+
+        .presentations-grid {
+          gap: 16px;
+        }
+
+        .thumb {
+          aspect-ratio: 16 / 6;
+        }
+
+        .card-body {
+          padding: 4px 20px 14px;
+        }
+
+        .presentation-card p {
+          margin-bottom: 8px;
+        }
+      }
+
+      /* 768px-tall screens: shorter thumbnails still */
+      @media (min-width: 1081px) and (max-height: 780px) {
+        .thumb {
+          aspect-ratio: 16 / 5;
+        }
+      }
+
+      /* touch devices: iOS ignores fixed backgrounds, and scrolling repaints the
+         whole page under the blurred cards elsewhere */
+      @media (hover: none), (pointer: coarse) {
+        body {
+          background-attachment: scroll, scroll, scroll;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .presentation-card,
+        .thumb img {
+          transition: none;
+        }
       }
 
       @media (max-width: 640px) {
@@ -200,7 +310,20 @@
         }
 
         .band img {
-          height: 84px;
+          height: 64px;
+        }
+
+        .band h1::after {
+          margin-left: auto;
+          margin-right: auto;
+        }
+
+        .presentations-grid {
+          grid-template-columns: 1fr;
+        }
+
+        body {
+          background-attachment: scroll, scroll, scroll;
         }
       }
     </style>
@@ -218,68 +341,70 @@
 
     <main>
       <div class="presentations-grid">
-        <div class="presentation-card">
-          <h2>Agentic AI Solutions</h2>
-          <p>
-            A punchy overview of KnowAll AI's agentic AI approach &mdash; agents that work while you
-            sleep, self-improving agents, graph memory, T-Minus-15 and enterprise-grade security.
-          </p>
-          <a href="agentic-ai-solutions.html" target="_blank" rel="noopener noreferrer"
-            >View presentation &rarr;</a
-          >
-        </div>
-        <div class="presentation-card">
-          <h2>Company Overview</h2>
-          <p>
-            The full corporate overview &mdash; who we are, mission and vision, the complete service
-            offerings, case studies, T-Minus-15, Zaplie and how we build AI agents and Microsoft
-            Copilots.
-          </p>
-          <a href="company-overview.html" target="_blank" rel="noopener noreferrer"
-            >View presentation &rarr;</a
-          >
-        </div>
-        <div class="presentation-card">
-          <h2>The AI Discovery</h2>
-          <p>
-            A focused one-day workshop to uncover where automation and AI can transform your
-            organisation &mdash; pre-work surveys, on-site workshop, 1-to-1 interviews and a
-            prioritised report.
-          </p>
-          <a href="ai-discovery.html" target="_blank" rel="noopener noreferrer"
-            >View presentation &rarr;</a
-          >
-        </div>
-        <div class="presentation-card">
-          <h2>The Agentic Delivery</h2>
-          <p>
-            From requirements to production, fast &mdash; a 4-day Proto-Sprint to prove the concept
-            and phased Projects to scale it, delivered with our open-source T-Minus-15 methodology.
-          </p>
-          <a href="agentic-delivery.html" target="_blank" rel="noopener noreferrer"
-            >View presentation &rarr;</a
-          >
-        </div>
-        <div class="presentation-card">
-          <h2>CISP</h2>
-          <p>
-            The Continuous Improvement Service Plan &mdash; proactive, flexible ongoing support via
-            pre-purchased time-and-material blocks that keeps your solutions improving, month after
-            month.
-          </p>
-          <a href="cisp.html" target="_blank" rel="noopener noreferrer">View presentation &rarr;</a>
-        </div>
-        <div class="presentation-card">
-          <h2>The Purple Team</h2>
-          <p>
-            Continuous AI security &mdash; Pennie attacks, Ollie defends and fixes, Poppie runs the
-            loop. From new advisory to merged fix in your GitHub or Azure DevOps, with a portal
-            that shows your score.
-          </p>
-          <a href="purple-team.html" target="_blank" rel="noopener noreferrer"
-            >View presentation &rarr;</a
-          >
-        </div>
+        <a
+          class="presentation-card"
+          href="company-overview.html"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Company Overview presentation (opens in a new tab)"
+        >
+          <div class="thumb">
+            <img src="images/thumbs/company-overview.jpg" alt="" width="720" height="405" />
+          </div>
+          <div class="card-body">
+            <h2>Company Overview</h2>
+            <p>The full corporate overview &mdash; who we are, how we deliver from workshop to project, case studies, our products and agents, Presence, Reverie memory and the Purple Team.</p>
+            <span class="cta" aria-hidden="true">View presentation &rarr;</span>
+          </div>
+        </a>
+        <a
+          class="presentation-card"
+          href="ai-discovery.html"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="AI Discovery Workshop presentation (opens in a new tab)"
+        >
+          <div class="thumb">
+            <img src="images/thumbs/ai-discovery.jpg" alt="" width="720" height="405" />
+          </div>
+          <div class="card-body">
+            <h2>AI Discovery Workshop</h2>
+            <p>A focused one-day workshop to uncover where automation and AI can transform your organisation &mdash; pre-work surveys, on-site workshop, 1-to-1 interviews and a prioritised report.</p>
+            <span class="cta" aria-hidden="true">View presentation &rarr;</span>
+          </div>
+        </a>
+        <a
+          class="presentation-card"
+          href="cisp.html"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Continuous Improvement presentation (opens in a new tab)"
+        >
+          <div class="thumb">
+            <img src="images/thumbs/cisp.jpg" alt="" width="720" height="405" />
+          </div>
+          <div class="card-body">
+            <h2>Continuous Improvement</h2>
+            <p>The Continuous Improvement Service Plan &mdash; proactive, flexible ongoing support via pre-purchased time-and-material blocks that keeps your solutions improving, month after month.</p>
+            <span class="cta" aria-hidden="true">View presentation &rarr;</span>
+          </div>
+        </a>
+        <a
+          class="presentation-card"
+          href="purple-team.html"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="The Purple Team presentation (opens in a new tab)"
+        >
+          <div class="thumb">
+            <img src="images/thumbs/purple-team.jpg" alt="" width="720" height="405" />
+          </div>
+          <div class="card-body">
+            <h2>The Purple Team</h2>
+            <p>Continuous AI security &mdash; Pennie attacks, Ollie defends and fixes, Poppie runs the loop. From new advisory to merged fix in your GitHub or Azure DevOps, with a portal that shows your score.</p>
+            <span class="cta" aria-hidden="true">View presentation &rarr;</span>
+          </div>
+        </a>
       </div>
     </main>
 

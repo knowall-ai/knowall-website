@@ -42,6 +42,48 @@ body {
   background: var(--charcoal);
 }
 
+/* reveal.js paints its viewport (on <body>) white. On screens wider or taller
+   than 16:9 that shows as white bars either side of the slide, with the lime
+   arrows almost invisible on them. Black letterboxing, like a projector. */
+.reveal-viewport {
+  background: #000;
+}
+
+/* Size the deck to exactly 16:9 and centre it, so the letterboxing sits
+   OUTSIDE it. reveal.js positions its arrows, progress bar and slide number
+   inside .reveal, so they stay on the slide whatever the window's shape
+   (instead of drifting out into the black bars). Slides are 1920x1080 with no
+   margin, so they fill this box edge to edge. */
+/* Not in print mode (?print-pdf): reveal sizes .reveal to auto there, and a
+   flex parent would shrink it to nothing, exporting blank pages.
+   --vh is reveal's measure of the visible height (iOS Safari's 100vh includes
+   the toolbar, which would clip the controls). */
+html.reveal-full-page:not(.print-pdf) body.reveal-viewport {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+html.reveal-full-page:not(.print-pdf) body.reveal-viewport > .reveal {
+  width: min(100vw, calc(var(--vh, 1vh) * 100 * 16 / 9));
+  height: min(calc(var(--vh, 1vh) * 100), calc(100vw * 9 / 16));
+  flex: none;
+}
+
+/* Phones in portrait: the 16:9 slide is a thin strip, and reveal's fixed-size
+   controls would cover its content. Let .reveal fill the screen again so the
+   arrows, number and progress bar sit in the letterbox below the slide. */
+@media (max-width: 640px) and (orientation: portrait) {
+  html.reveal-full-page:not(.print-pdf) body.reveal-viewport {
+    display: block;
+  }
+
+  html.reveal-full-page:not(.print-pdf) body.reveal-viewport > .reveal {
+    width: 100%;
+    height: 100%;
+  }
+}
+
 .reveal {
   font-family: 'Mulish', 'Segoe UI', sans-serif;
   font-size: 30px;
@@ -128,25 +170,26 @@ body {
   z-index: 5;
 }
 
-.logo-light {
-  filter: brightness(0) invert(1);
+/* ONE placement for the mark on every slide of every deck — covers, dividers,
+   header-band slides and the closing slide alike — so it never jumps as the
+   slides change (Ben, 2026-10-24). Change it here, nowhere else: no per-deck
+   or inline top/right/height overrides. */
+:root {
+  --logo-top: 49px;
+  --logo-right: 84px;
+  --logo-h: 112px;
 }
 
-section > .logo-light {
+section > .logo-light,
+.band .logo-dark,
+.cta-top .logo-dark {
   position: absolute;
-  top: 54px;
-  right: 80px;
-  height: 132px;
-}
-
-/* Opt-in modifier, not a new default. The white logo normally sits top right,
-   which works because every cover's artwork is dark in that corner — except
-   the Agentic AI Solutions cover, where a bright full moon sits directly
-   behind it and white-on-white reads badly (Ben, 2026-08-26). Move that one
-   logo to the top left, aligned with the cover copy's 96px gutter. */
-section > .logo-light--left {
-  right: auto;
-  left: 96px;
+  top: var(--logo-top);
+  right: var(--logo-right);
+  height: var(--logo-h);
+  /* white mark, with a soft shadow so it stays legible on busy cover art */
+  filter: brightness(0) invert(1) drop-shadow(0 2px 14px rgba(0, 0, 0, 0.75));
+  opacity: 1;
 }
 
 /* --- Header-band slides (house template) --------------------------- */
@@ -446,13 +489,6 @@ section > .logo-light--left {
   color: var(--mist);
 }
 
-/* the mark is dark-on-light artwork — invert it for the dark header */
-.band .logo-dark {
-  height: 112px;
-  filter: brightness(0) invert(1);
-  opacity: 0.9;
-}
-
 .content {
   position: absolute;
   top: var(--band-h);
@@ -624,6 +660,15 @@ section > .logo-light--left {
 .stage p {
   font-size: 23px;
   color: var(--mist);
+}
+
+/* A short label under the stage title, e.g. the acronym a client knows it by. */
+.stage .stage-sub {
+  margin: -4px 0 12px;
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--lime);
 }
 
 /* --- T-Minus-15 lifecycle ribbon (brand asset) --------------------------
@@ -943,15 +988,6 @@ section > .logo-light--left {
   padding-bottom: 30px;
 }
 
-.cta-top .logo-dark {
-  position: absolute;
-  top: 70px;
-  right: 96px;
-  height: 150px;
-  filter: brightness(0) invert(1);
-  opacity: 0.9;
-}
-
 .cta-bottom {
   position: absolute;
   top: 560px;
@@ -1188,7 +1224,7 @@ section > .logo-light--left {
 /* Denser content rhythm so KPI-heavy slides stay inside the frame. */
 .content {
   padding: 62px 96px calc(16px + var(--ctl-band));
-  gap: 26px;
+  gap: 48px;
 }
 
 /* Sparse slides: centring short content mid-frame left a dead band of
@@ -1354,4 +1390,69 @@ section > .logo-light--left {
 }
 .logo-plate--eir img {
   max-height: 64px;
+}
+
+/* --- Our agents: every agent, tagged by the team(s) it belongs to ------- */
+.agent-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 34px 26px;
+}
+.agent-tile {
+  width: 236px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+}
+.agent-tile .agent-av--photo {
+  width: 132px;
+  height: 132px;
+  margin-bottom: 4px;
+}
+.agent-tile--purple .agent-av--photo {
+  border-color: #c4a4ff;
+  box-shadow: 0 0 26px rgba(196, 164, 255, 0.45);
+}
+.agent-tags {
+  display: flex;
+  gap: 6px;
+  min-height: 26px;
+}
+.agent-tag {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.agent-tag--t15 {
+  color: var(--lime);
+  border: 1px solid rgba(157, 254, 10, 0.6);
+}
+.agent-tag--purple {
+  color: #c4a4ff;
+  border: 1px solid rgba(196, 164, 255, 0.7);
+}
+.agent-legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px 40px;
+  margin-top: 40px;
+  font-size: 20px;
+  color: var(--mist);
+}
+.agent-legend > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+.agent-legend-plain {
+  font-style: italic;
 }

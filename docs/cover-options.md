@@ -1,5 +1,8 @@
 # Cover options — Agentic AI Solutions deck
 
+> **Retired (2026-10-24):** the Agentic AI Solutions deck was folded into the Company Overview;
+> `agentic-ai-solutions.html` is now a redirect. Kept for the record.
+
 ## Why we are changing it
 
 The cover of `public/presentations/agentic-ai-solutions.html` currently reads:
