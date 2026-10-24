@@ -103,7 +103,7 @@ export default function Footer({ darkMode = false }: FooterProps) {
             <ul className="space-y-2">
               <li>
                 <a
-                  href="https://github.com/knowall-ai/zaplie-webapp"
+                  href="https://getzapl.ie"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-gray-400 hover:text-white transition-colors"
