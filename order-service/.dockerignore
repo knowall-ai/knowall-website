@@ -1,0 +1,9 @@
+# Never send secrets, local state or dev files to the build context.
+.env
+.env.*
+data/
+node_modules/
+test/
+*.md
+Dockerfile
+.dockerignore
