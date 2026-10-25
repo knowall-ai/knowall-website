@@ -12,10 +12,65 @@ IMPORTANT: The order service deploys separately from the website. Changes under 
 
 The order service is *not part of the Next.js site deploy* — `server.js` / the Azure App Service deployment workflow serve the website only. Run the daemon as its own long-lived process:
 
-* *Azure Container Apps* (or App Service custom container): build a small Node 22 image running `node index.js`, and mount a persistent volume (Azure Files) at `order-service/data/` so the dedup store survives container rebuilds — without it, a rebuild re-fetches up to 2 days of gift wraps and could re-invoice delivered orders.
+* *Azure Container Apps* (the production host, see below; App Service custom container also works): the `order-service/Dockerfile` builds a small Node 22 image running `node index.js` as a non-root user, and mount a persistent volume (Azure Files) at `order-service/data/` so the dedup store survives container rebuilds — without it, a rebuild re-fetches up to 2 days of gift wraps and could re-invoice delivered orders.
 * *VM + systemd*: a `systemd` unit with `Restart=always` and an `EnvironmentFile` for the settings below; the dedup store then lives on the VM's disk.
 
 Whichever host is chosen must inject `ORDER_SERVICE_KEY` from a secret store (an Azure Key Vault reference in Container Apps / App Service settings) — never bake it into an image or commit it.
+
+=== Production (Azure Container Apps)
+
+The service runs on Azure Container Apps in resource group `KnowAllAIRG` (`uksouth`), deployed 2026-10-25:
+
+[cols="1,2", options="header"]
+|===
+| Resource | Name / setting
+
+| Container registry (Basic, admin user disabled)
+| `knowallshopacr` (`knowallshopacr.azurecr.io`), repository `order-service`, tagged with the git commit (for example `order-service:04b68cc`)
+
+| Container Apps environment (Consumption)
+| `knowall-shop-env`, logs to the Log Analytics workspace `knowall-shop-logs` (30-day retention, 0.1 GB/day cap)
+
+| Container app
+| `knowall-order-service`: 0.25 vCPU / 0.5 Gi, *min 1 / max 1 replica*, single revision mode, no ingress (outbound connections only)
+
+| Identity
+| System-assigned managed identity with `AcrPull` on `knowallshopacr` and `Key Vault Secrets User` on the single secret `kv-knowall-shop/secrets/order-service-key`
+
+| Secret
+| Container Apps secret `order-service-key` = Key Vault reference (`identityref:system`), exposed to the container as `ORDER_SERVICE_KEY`. The value never appears in app settings, the image or the logs.
+
+| Persistent store
+| Storage account `knowallshopdata` (Standard LRS, TLS 1.2 minimum, HTTPS only, no public blob access), file share `order-service-data`, registered on the environment as `orderdata` and mounted at `/app/data` (`PROCESSED_STORE_PATH=/app/data/.processed.json`, mounted as the image's `node` user, uid 1000)
+|===
+
+Environment variables: `LIGHTNING_ADDRESS=shop@bank.knowall.ai`; `RELAYS` and `CATALOG_RELAYS` are both set to the website's `SHOP_RELAYS` (`wss://relay.plebeian.market,wss://relay.damus.io,wss://nos.lol,wss://relay.primal.net`). `RELAYS` is the *fallback* set: at startup the service reads the company's NIP-65 relay list (kind 10002) and listens on those relays when the list exists.
+
+IMPORTANT: Never raise the replica count above 1. The service is a single relay listener, and two replicas would double-process orders.
+
+==== Redeploy
+
+Build the image in the cloud from the `order-service/` directory (no local Docker needed), then roll the app onto it:
+
+[source,bash]
+----
+TAG=$(git rev-parse --short HEAD)
+az acr build -r knowallshopacr -t order-service:$TAG order-service
+az containerapp update -g KnowAllAIRG -n knowall-order-service \
+  --image knowallshopacr.azurecr.io/order-service:$TAG
+----
+
+Then check the startup log for `✓ Lightning Address is valid`, `✓ Key verified: service runs as the KnowAll AI npub` and `✓ Service ready - listening for orders`, and confirm a single replica:
+
+[source,bash]
+----
+az containerapp logs show -g KnowAllAIRG -n knowall-order-service --tail 50 --format text
+az containerapp revision list -g KnowAllAIRG -n knowall-order-service -o table
+----
+
+WARNING: In single revision mode Container Apps starts the new revision before stopping the old one, so for a short window two copies run. An order arriving inside that window could be invoiced twice. Redeploy when the shop is quiet, and once the new revision is running deactivate any old revision that is still active (`az containerapp revision deactivate -g KnowAllAIRG -n knowall-order-service --revision <old>`).
+
+To rotate the key, set a new version of `order-service-key` in Key Vault and restart the revision (`az containerapp revision restart`). Container Apps also picks up new Key Vault versions on its own within about 30 minutes.
 
 == Configuration
 

@@ -67,6 +67,8 @@ npm test             # node --test (hermetic — no relays, no keys, no network)
 
 The service is **not part of the Next.js deployment** — `server.js`/App Service serve the website only. Run the order service as its own long-lived process. On Azure the natural fits are a container (Azure Container Apps / App Service container with a volume or Azure Files mount at `order-service/data/` so the dedup store survives rebuilds) or a small VM with a systemd unit; whichever host is chosen must inject `ORDER_SERVICE_KEY` from a secret store (e.g. Key Vault reference) rather than baking it into an image.
 
+Production runs on Azure Container Apps (`knowall-order-service`, built from `order-service/Dockerfile`); see `docs/ORDER-SERVICE.adoc` for the resources and the redeploy steps.
+
 ## Tests
 
 - `test/orderParser.test.js` — receipt parsing + stable dedup key
