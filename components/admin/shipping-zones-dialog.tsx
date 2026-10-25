@@ -324,7 +324,8 @@ export function ShippingZonesDialog({ open, onOpenChange }: ShippingZonesDialogP
             <Button
               onClick={handleSave}
               disabled={saving}
-              className="bg-brand font-semibold text-gray-950 hover:bg-brand-hover"
+              variant="brand"
+              className="font-semibold"
             >
               {saving ? (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />

@@ -269,7 +269,8 @@ function ContactPanel() {
               <Button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full bg-brand font-semibold text-gray-950 hover:bg-brand-hover"
+                variant="brand"
+                className="w-full font-semibold"
               >
                 {isSubmitting ? 'Sending...' : 'Send Message'}
                 <Send className="ml-2 h-4 w-4" aria-hidden="true" />

@@ -228,7 +228,7 @@ function ProductNotFound() {
         <p className="text-sm leading-relaxed text-gray-400">
           This product may have been removed or doesn&apos;t exist.
         </p>
-        <Button asChild className="mt-6 bg-brand hover:bg-brand-hover text-gray-950">
+        <Button asChild variant="brand" className="mt-6">
           <Link href="/shop">Back to Shop</Link>
         </Button>
       </div>
@@ -331,7 +331,7 @@ function ProductView({ naddr, listing, onOwnerSaved, onOwnerDeleted }: ProductVi
             ) : (
               <>
                 {listing.visibility === 'pre-order' && (
-                  <Badge className="bg-brand/10 text-brand hover:bg-brand/10">Pre-order</Badge>
+                  <Badge variant="brand-outline">Pre-order</Badge>
                 )}
                 {listing.stock !== null && <span>{listing.stock} available</span>}
               </>
@@ -386,10 +386,7 @@ function ProductView({ naddr, listing, onOwnerSaved, onOwnerDeleted }: ProductVi
                 />
               </div>
               <div className="flex flex-col gap-2 sm:flex-row">
-                <Button
-                  onClick={handleAddToCart}
-                  className="flex-1 bg-brand font-semibold text-gray-950 hover:bg-brand-hover"
-                >
+                <Button onClick={handleAddToCart} variant="brand" className="flex-1 font-semibold">
                   <ShoppingCart className="mr-1.5 h-4 w-4" aria-hidden="true" />
                   Add to Cart
                 </Button>

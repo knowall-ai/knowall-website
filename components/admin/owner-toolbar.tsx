@@ -35,7 +35,8 @@ export function OwnerToolbar({ onCatalogChanged }: OwnerToolbarProps) {
           <Button
             size="sm"
             onClick={() => setAddOpen(true)}
-            className="bg-brand font-semibold text-gray-950 hover:bg-brand-hover"
+            variant="brand"
+            className="font-semibold"
           >
             <PackagePlus className="mr-2 h-4 w-4" />
             Add product

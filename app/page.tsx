@@ -29,7 +29,7 @@ import {
 } from 'lucide-react';
 import EmailIcon from '@/components/email-icon';
 import GithubIcon from '@/components/github-icon';
-import { Button } from '@/components/ui/button';
+import { Button, buttonVariants } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import SallieAssistant from '@/components/sallie-assistant';
 import Header from '@/components/header';
@@ -67,10 +67,7 @@ export default function Home() {
             <span> using Zaplie</span>.
           </p>
           <div className="flex flex-wrap gap-4">
-            <Button
-              className="bg-brand text-gray-950 hover:bg-brand-hover shadow-lg shadow-brand/30"
-              asChild
-            >
+            <Button variant="brand" glow asChild>
               <a href="#services">Our Services</a>
             </Button>
             <Button variant="outline" className="border-white text-white hover:bg-white/10" asChild>
@@ -219,7 +216,7 @@ export default function Home() {
                   href="https://getzapl.ie"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 bg-brand hover:bg-brand-hover text-gray-950 px-6 py-3 rounded-md transition-colors font-medium shadow-lg shadow-brand/20"
+                  className={buttonVariants({ variant: 'brand', size: 'lg', glow: true })}
                 >
                   <ExternalLink className="h-5 w-5" />
                   <span>Visit getzapl.ie</span>
@@ -326,7 +323,7 @@ export default function Home() {
                 href="https://zapdesk.knowall.ai"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 bg-brand hover:bg-brand-hover text-gray-950 px-6 py-3 rounded-md transition-colors font-medium shadow-lg shadow-brand/20"
+                className={buttonVariants({ variant: 'brand', size: 'lg', glow: true })}
               >
                 <ExternalLink className="h-5 w-5" />
                 <span>Visit zapdesk.knowall.ai</span>
@@ -383,7 +380,7 @@ export default function Home() {
                 href="https://getthyme.ai"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 bg-brand hover:bg-brand-hover text-gray-950 px-6 py-3 rounded-md transition-colors font-medium shadow-lg shadow-brand/20"
+                className={buttonVariants({ variant: 'brand', size: 'lg', glow: true })}
               >
                 <ExternalLink className="h-5 w-5" />
                 <span>Visit getthyme.ai</span>
@@ -484,7 +481,7 @@ export default function Home() {
                   href="https://github.com/T-Minus-15/book"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 bg-brand hover:bg-brand-hover text-gray-950 px-6 py-3 rounded-md transition-colors font-medium shadow-lg shadow-brand/20"
+                  className={buttonVariants({ variant: 'brand', size: 'lg', glow: true })}
                 >
                   <BookOpen className="h-5 w-5" />
                   <span>Read the book</span>
@@ -836,10 +833,7 @@ export default function Home() {
                 </div>
               </Card>
               <div className="text-center">
-                <Button
-                  className="bg-brand text-gray-950 hover:bg-brand-hover shadow-lg shadow-brand/30"
-                  asChild
-                >
+                <Button variant="brand" glow asChild>
                   <a href="#contact">Book a Sallie demo</a>
                 </Button>
               </div>
@@ -865,7 +859,7 @@ export default function Home() {
               </p>
 
               <div className="flex flex-col md:flex-row gap-4 justify-center">
-                <Button className="bg-brand text-gray-950 hover:bg-brand-hover" asChild>
+                <Button variant="brand" asChild>
                   <a href="mailto:info@knowall.ai">
                     Email <EmailIcon className="ml-2 h-4 w-4" />
                   </a>

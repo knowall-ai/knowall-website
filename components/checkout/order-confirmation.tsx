@@ -82,7 +82,7 @@ export function OrderConfirmation({ orderId, onClose }: OrderConfirmationProps) 
         </ul>
       </div>
 
-      <Button className="bg-brand text-gray-950 hover:bg-brand-hover" onClick={onClose}>
+      <Button variant="brand" onClick={onClose}>
         Continue Shopping
       </Button>
     </div>

@@ -32,7 +32,7 @@ function CartButton() {
       {totalItems > 0 && (
         <span
           data-testid="cart-count"
-          className="absolute -right-2 -top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-brand px-1 text-[10px] font-semibold text-black"
+          className="absolute -right-2 -top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-brand px-1 text-[10px] font-semibold text-brand-foreground"
         >
           {totalItems}
         </span>

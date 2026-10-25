@@ -152,7 +152,7 @@ function MessageBubble({ message }: { message: Message }) {
       className={cn(
         'max-w-[85%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed',
         isUser
-          ? 'ml-auto rounded-br-sm bg-brand text-gray-950'
+          ? 'ml-auto rounded-br-sm bg-brand text-brand-foreground'
           : 'mr-auto rounded-bl-sm bg-gray-800/90 text-gray-100'
       )}
     >
@@ -287,15 +287,16 @@ function ConversationPanel({
   const suggestions = (
     <div className="flex flex-wrap gap-2">
       {suggestionList.map((s) => (
-        <button
+        <Button
           key={s}
           type="button"
           onClick={() => ask(s)}
           disabled={isLoading}
-          className="cursor-pointer rounded-full border border-brand/40 bg-brand/10 px-3 py-1.5 text-xs font-medium text-brand transition-colors hover:bg-brand/20 hover:text-brand-hover disabled:opacity-50"
+          variant="brand-outline"
+          size="chip"
         >
           {s}
-        </button>
+        </Button>
       ))}
     </div>
   );
@@ -305,7 +306,7 @@ function ConversationPanel({
       <div
         className={cn(
           'flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto pr-1',
-          '[scrollbar-width:thin] [scrollbar-color:rgba(157,255,10,0.35)_transparent]',
+          '[scrollbar-width:thin] [scrollbar-color:color-mix(in_srgb,var(--color-brand)_35%,transparent)_transparent]',
           listClassName
         )}
         aria-live="polite"
@@ -344,7 +345,7 @@ function ConversationPanel({
 
       {ended ? (
         <div className="mt-3 flex flex-wrap items-center gap-3" data-testid="sallie-ended">
-          <Button asChild className="bg-brand text-gray-950 hover:bg-brand-hover">
+          <Button asChild variant="brand">
             <a href={signOffMailto(conversationId)}>
               <Mail className="h-4 w-4" />
               Email Sallie to continue
@@ -367,8 +368,7 @@ function ConversationPanel({
               disabled={voice.transcribing}
               className={cn(
                 'h-12 w-12 shrink-0 border-gray-700 bg-gray-800/90 p-0 text-gray-200 hover:bg-gray-700 hover:text-white',
-                voice.micOn &&
-                  'border-brand bg-brand/20 text-brand shadow-[0_0_18px_rgba(157,255,10,0.45)]',
+                voice.micOn && 'border-brand bg-brand/20 text-brand shadow-glow-sm',
                 voice.listening && 'animate-pulse motion-reduce:animate-none'
               )}
             >
@@ -397,7 +397,8 @@ function ConversationPanel({
             type="submit"
             aria-label="Send message"
             disabled={isLoading || voice.listening || voice.transcribing || !input.trim()}
-            className="h-12 w-12 shrink-0 bg-brand p-0 text-gray-950 hover:bg-brand-hover"
+            variant="brand"
+            className="h-12 w-12 shrink-0 p-0"
           >
             {isLoading ? (
               <Loader2 className="h-5 w-5 animate-spin motion-reduce:animate-none" />
@@ -652,7 +653,7 @@ export default function SallieAssistant({
           aria-label={dockOpen ? 'Close chat with Sallie' : 'Chat with Sallie'}
           aria-expanded={dockOpen}
           tabIndex={docked ? 0 : -1}
-          className="cursor-pointer group relative shrink-0 rounded-full ring-2 ring-brand/60 shadow-[0_0_40px_rgba(157,255,10,0.35)] transition-transform hover:scale-105 focus:outline-none focus-visible:ring-4 motion-reduce:transition-none motion-reduce:hover:scale-100"
+          className="cursor-pointer group relative shrink-0 rounded-full ring-2 ring-brand shadow-glow transition-transform hover:scale-105 focus:outline-none focus-visible:ring-4 motion-reduce:transition-none motion-reduce:hover:scale-100"
         >
           <SallieStage
             shape="circle"
@@ -660,7 +661,7 @@ export default function SallieAssistant({
             waveform
             className="w-16 md:w-20"
           />
-          <span className="absolute -bottom-1 -right-1 flex h-7 w-7 items-center justify-center rounded-full bg-brand text-gray-950 shadow">
+          <span className="absolute -bottom-1 -right-1 flex h-7 w-7 items-center justify-center rounded-full bg-brand text-brand-foreground shadow">
             {dockOpen ? <X className="h-4 w-4" /> : <MessageCircle className="h-4 w-4" />}
           </span>
         </button>
@@ -706,7 +707,7 @@ export default function SallieAssistant({
                   disabled={transcribing}
                   data-testid="sallie-dock-mic"
                   className={cn(
-                    'cursor-pointer relative inline-flex h-11 w-11 shrink-0 items-center justify-center gap-2 rounded-full bg-brand text-sm font-semibold text-gray-950 shadow-lg shadow-brand/30 transition-colors hover:bg-brand-hover focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand/60 disabled:opacity-70 sm:w-auto sm:px-4',
+                    'cursor-pointer relative inline-flex h-11 w-11 shrink-0 items-center justify-center gap-2 rounded-full bg-brand text-sm font-semibold text-brand-foreground shadow-lg shadow-brand/30 transition-colors hover:bg-brand-hover focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand/60 disabled:opacity-70 sm:w-auto sm:px-4',
                     micOn && 'bg-brand-hover ring-2 ring-white/80'
                   )}
                 >
@@ -749,7 +750,7 @@ export default function SallieAssistant({
               shape="circle"
               busy={conversation.isLoading}
               className="relative z-10 w-12 shrink-0"
-              frameClassName="ring-2 ring-brand/50"
+              frameClassName="ring-2 ring-brand"
             />
             <div className="relative z-10">
               <p className="font-semibold leading-tight">Sallie</p>
@@ -812,7 +813,7 @@ export default function SallieAssistant({
           priority
           waveform
           className="w-44 shrink-0 md:w-56"
-          frameClassName="ring-4 ring-brand/60 shadow-[0_0_80px_rgba(157,255,10,0.35)]"
+          frameClassName="ring-4 ring-brand shadow-glow-lg"
         />
         <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
           <h3 className="text-2xl font-bold">Sallie</h3>

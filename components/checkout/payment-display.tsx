@@ -225,7 +225,8 @@ export function PaymentDisplay({
           <Button
             onClick={handlePayWithWebLN}
             disabled={isPaying}
-            className="w-full bg-brand text-gray-950 hover:bg-brand-hover"
+            variant="brand"
+            className="w-full"
             size="lg"
           >
             {isPaying ? (

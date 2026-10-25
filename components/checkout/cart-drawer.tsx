@@ -214,10 +214,7 @@ function CartSummary({ onCheckout }: { onCheckout: () => void }) {
       </div>
       <p className="mt-2 text-xs text-gray-500">Shipping is added at checkout.</p>
 
-      <Button
-        className="mt-4 w-full bg-brand font-semibold text-gray-950 hover:bg-brand-hover"
-        onClick={onCheckout}
-      >
+      <Button variant="brand" className="mt-4 w-full font-semibold" onClick={onCheckout}>
         Proceed to Checkout
       </Button>
     </div>

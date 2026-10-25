@@ -507,7 +507,8 @@ export function ProductFormDialog({ open, onOpenChange, event, onSaved }: Produc
             // Block publishing while an image upload is still in flight so the
             // event can't ship without the uploaded URL.
             disabled={saving || uploadingIndex !== null}
-            className="bg-brand font-semibold text-gray-950 hover:bg-brand-hover"
+            variant="brand"
+            className="font-semibold"
           >
             {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             {uploadingIndex !== null

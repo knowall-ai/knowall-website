@@ -74,8 +74,12 @@ export default function DieHero({ children }: { children: React.ReactNode }) {
               <defs>
                 <radialGradient id="die-eye-signal">
                   <stop offset="0" stopColor="#d8ff8a" stopOpacity="0.95" />
-                  <stop offset="0.45" stopColor="#9dff0a" stopOpacity="0.45" />
-                  <stop offset="1" stopColor="#9dff0a" stopOpacity="0" />
+                  <stop
+                    offset="0.45"
+                    className="[stop-color:var(--color-brand)]"
+                    stopOpacity="0.45"
+                  />
+                  <stop offset="1" className="[stop-color:var(--color-brand)]" stopOpacity="0" />
                 </radialGradient>
                 <radialGradient id="die-eye-ollie">
                   <stop offset="0" stopColor="#c8fbff" stopOpacity="0.9" />

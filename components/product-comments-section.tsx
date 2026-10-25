@@ -274,12 +274,7 @@ function CommentComposer({
       )}
       <div className="flex justify-end">
         {user ? (
-          <Button
-            type="submit"
-            size="sm"
-            disabled={isPosting || !content.trim()}
-            className="bg-brand text-gray-950 hover:bg-brand-hover"
-          >
+          <Button type="submit" size="sm" disabled={isPosting || !content.trim()} variant="brand">
             <Send className="mr-2 h-4 w-4" aria-hidden="true" />
             {isPosting ? 'Posting…' : reply ? 'Reply' : 'Comment'}
           </Button>

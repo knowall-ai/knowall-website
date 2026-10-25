@@ -420,7 +420,8 @@ export function ShippingForm({
 
       <Button
         type="submit"
-        className="w-full bg-brand font-semibold text-gray-950 hover:bg-brand-hover"
+        variant="brand"
+        className="w-full font-semibold"
         disabled={!isValid || !selectedOption || isSubmitting || optionsLoading || submitDisabled}
       >
         {isSubmitting ? 'Processing...' : 'Place Order'}

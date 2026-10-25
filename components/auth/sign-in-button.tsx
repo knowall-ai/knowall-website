@@ -21,6 +21,7 @@ import {
 import { useNostrAuth, type NostrUser } from '@/components/auth/nostr-auth-provider';
 import { cn } from '@/lib/utils';
 import NostrLogo from '@/components/nostr-logo';
+import { InitialChip } from '@/components/initial-chip';
 
 // Recommended NIP-07 extensions, linked from the sign-in dialog for
 // visitors who don't have one installed yet.
@@ -101,12 +102,7 @@ export default function SignInButton({
                 onError={() => setBrokenPictureSrc(picture ?? null)}
               />
             ) : (
-              <span
-                aria-hidden="true"
-                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand text-sm font-semibold text-gray-950"
-              >
-                {name.charAt(0).toUpperCase()}
-              </span>
+              <InitialChip name={name} aria-hidden="true" />
             )}
             <span className="max-w-40 truncate text-sm font-medium">{name}</span>
             <ChevronDown className="h-4 w-4" aria-hidden="true" />
@@ -139,10 +135,7 @@ export default function SignInButton({
 
   return (
     <>
-      <Button
-        onClick={() => handleOpenChange(true)}
-        className={cn('bg-brand text-gray-950 hover:bg-brand-hover', className)}
-      >
+      <Button onClick={() => handleOpenChange(true)} variant="brand" className={className}>
         <NostrLogo className="h-4 w-4" />
         {label}
       </Button>
@@ -167,7 +160,8 @@ export default function SignInButton({
             <Button
               onClick={handleExtensionSignIn}
               disabled={isSigningIn}
-              className="w-full bg-brand font-semibold text-gray-950 hover:bg-brand-hover"
+              variant="brand"
+              className="w-full font-semibold"
             >
               <Puzzle className="mr-2 h-4 w-4" aria-hidden="true" />
               {isSigningIn ? 'Waiting for extension...' : 'Sign in with extension'}

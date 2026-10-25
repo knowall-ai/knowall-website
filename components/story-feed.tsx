@@ -26,6 +26,7 @@ import {
   timeAgo,
 } from '@/lib/story-notes';
 import { isVerifiedEvent } from '@/lib/nostr-verify';
+import { Badge } from '@/components/ui/badge';
 
 const RELAYS = SOCIAL_RELAYS;
 const MAX_NOTES = 50;
@@ -287,7 +288,7 @@ export default function StoryFeed({ pubkey = KNOWALL_PUBKEY }: StoryFeedProps) {
           the UK and KnowAll AI SAS de CV, incorporated in El Salvador in 2025. Everything we
           publish lands here first, straight from our Nostr feed.
         </p>
-        <Button asChild className="mt-6 bg-brand hover:bg-brand-hover text-gray-950">
+        <Button asChild variant="brand" className="mt-6">
           <a href={`https://njump.me/${KNOWALL_NPUB}`} target="_blank" rel="noopener noreferrer">
             Follow us on Nostr
           </a>
@@ -304,9 +305,9 @@ export default function StoryFeed({ pubkey = KNOWALL_PUBKEY }: StoryFeedProps) {
           data-testid="story-tag-filter"
         >
           <span className="text-sm text-gray-400">Filtering by:</span>
-          <span className="rounded bg-brand/10 px-2 py-0.5 text-sm font-medium text-brand">
+          <Badge variant="brand-outline" className="rounded px-2 text-sm font-medium">
             #{activeTag}
-          </span>
+          </Badge>
           <button
             type="button"
             onClick={() => setActiveTag(null)}

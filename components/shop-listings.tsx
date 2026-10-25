@@ -222,7 +222,7 @@ export default function ShopListings({
           Bitcoin over Lightning — follow us and you&apos;ll see them here (and in your Nostr
           client) the moment they drop.
         </p>
-        <Button asChild className="mt-6 bg-brand hover:bg-brand-hover text-gray-950">
+        <Button asChild variant="brand" className="mt-6">
           <a href={`https://njump.me/${KNOWALL_NPUB}`} target="_blank" rel="noopener noreferrer">
             Follow us on Nostr
           </a>
@@ -422,11 +422,7 @@ function ProductCard({ listing, onOwnerDeleted, onOwnerSaved }: ProductCardProps
 
         {/* Actions: open the on-site product page (where Buy lives), or message us. */}
         <div className="mt-auto flex gap-2 pt-2">
-          <Button
-            asChild
-            size="sm"
-            className="flex-1 bg-brand font-semibold text-gray-950 hover:bg-brand-hover"
-          >
+          <Button asChild size="sm" variant="brand" className="flex-1 font-semibold">
             <Link href={productPath(listing)}>
               View details
               <ArrowRight className="ml-1.5 h-4 w-4" aria-hidden="true" />

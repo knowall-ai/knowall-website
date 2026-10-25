@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import { Card } from '@/components/ui/card';
 import { EmbodimentIcon, EMBODIMENT_LABELS, type Embodiment } from '@/components/embodiment-icons';
+import { Badge } from '@/components/ui/badge';
 
 interface Agent {
   name: string;
@@ -133,9 +134,12 @@ export default function AgentsSection() {
               />
               <h3 className="text-xl font-semibold">{agent.name}</h3>
               <p className="text-gray-400 mt-1">{agent.role}</p>
-              <span className="mt-3 inline-block rounded-full bg-brand/10 px-3 py-1 text-xs font-medium uppercase tracking-wide text-brand">
+              <Badge
+                variant="brand-outline"
+                className="mt-3 px-3 py-1 font-medium uppercase tracking-wide"
+              >
                 {agent.phase}
-              </span>
+              </Badge>
               <span
                 className="mt-3 flex items-center gap-2"
                 data-testid={`${agent.name.toLowerCase()}-embodiments`}
