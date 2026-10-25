@@ -54,7 +54,7 @@ export default function FeedbackAuthor({
             className="h-8 w-8 rounded-full border border-gray-800 bg-gray-800 object-cover"
           />
         ) : (
-          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-lime-600 text-sm font-semibold text-white">
+          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-lime-600 text-sm font-semibold text-gray-950">
             {name.charAt(0).toUpperCase()}
           </span>
         )}

@@ -287,7 +287,7 @@ export default function StoryFeed({ pubkey = KNOWALL_PUBKEY }: StoryFeedProps) {
           the UK and KnowAll AI SAS de CV, incorporated in El Salvador in 2025. Everything we
           publish lands here first, straight from our Nostr feed.
         </p>
-        <Button asChild className="mt-6 bg-lime-600 hover:bg-lime-700 text-white">
+        <Button asChild className="mt-6 bg-lime-600 hover:bg-lime-400 text-gray-950">
           <a href={`https://njump.me/${KNOWALL_NPUB}`} target="_blank" rel="noopener noreferrer">
             Follow us on Nostr
           </a>

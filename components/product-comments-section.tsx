@@ -278,7 +278,7 @@ function CommentComposer({
             type="submit"
             size="sm"
             disabled={isPosting || !content.trim()}
-            className="bg-lime-600 text-white hover:bg-lime-700"
+            className="bg-lime-600 text-gray-950 hover:bg-lime-400"
           >
             <Send className="mr-2 h-4 w-4" aria-hidden="true" />
             {isPosting ? 'Posting…' : reply ? 'Reply' : 'Comment'}

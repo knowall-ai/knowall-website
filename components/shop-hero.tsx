@@ -53,7 +53,7 @@ export default function ShopHero() {
         </div>
 
         <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2">
-          <Button asChild size="sm" className="bg-lime-600 hover:bg-lime-700 text-white">
+          <Button asChild size="sm" className="bg-lime-600 hover:bg-lime-400 text-gray-950">
             <a href={`https://njump.me/${KNOWALL_NPUB}`} target="_blank" rel="noopener noreferrer">
               View us on Nostr
             </a>

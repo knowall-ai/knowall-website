@@ -76,7 +76,7 @@ export default function Home() {
               </p>
               <div className="flex flex-wrap gap-4">
                 <Button
-                  className="bg-lime-500 text-white hover:bg-lime-600 shadow-lg shadow-lime-500/30"
+                  className="bg-lime-500 text-gray-950 hover:bg-lime-400 shadow-lg shadow-lime-500/30"
                   asChild
                 >
                   <a href="#services">Our Services</a>
@@ -238,7 +238,7 @@ export default function Home() {
                   href="https://getzapl.ie"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 bg-lime-600 hover:bg-lime-700 text-white px-6 py-3 rounded-md transition-colors font-medium shadow-lg shadow-lime-500/20"
+                  className="inline-flex items-center gap-2 bg-lime-600 hover:bg-lime-400 text-gray-950 px-6 py-3 rounded-md transition-colors font-medium shadow-lg shadow-lime-500/20"
                 >
                   <ExternalLink className="h-5 w-5" />
                   <span>Visit getzapl.ie</span>
@@ -345,7 +345,7 @@ export default function Home() {
                 href="https://zapdesk.knowall.ai"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 bg-lime-600 hover:bg-lime-700 text-white px-6 py-3 rounded-md transition-colors font-medium shadow-lg shadow-lime-500/20"
+                className="inline-flex items-center gap-2 bg-lime-600 hover:bg-lime-400 text-gray-950 px-6 py-3 rounded-md transition-colors font-medium shadow-lg shadow-lime-500/20"
               >
                 <ExternalLink className="h-5 w-5" />
                 <span>Visit zapdesk.knowall.ai</span>
@@ -402,7 +402,7 @@ export default function Home() {
                 href="https://getthyme.ai"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 bg-lime-600 hover:bg-lime-700 text-white px-6 py-3 rounded-md transition-colors font-medium shadow-lg shadow-lime-500/20"
+                className="inline-flex items-center gap-2 bg-lime-600 hover:bg-lime-400 text-gray-950 px-6 py-3 rounded-md transition-colors font-medium shadow-lg shadow-lime-500/20"
               >
                 <ExternalLink className="h-5 w-5" />
                 <span>Visit getthyme.ai</span>
@@ -503,7 +503,7 @@ export default function Home() {
                   href="https://github.com/T-Minus-15/book"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 bg-lime-600 hover:bg-lime-700 text-white px-6 py-3 rounded-md transition-colors font-medium shadow-lg shadow-lime-500/20"
+                  className="inline-flex items-center gap-2 bg-lime-600 hover:bg-lime-400 text-gray-950 px-6 py-3 rounded-md transition-colors font-medium shadow-lg shadow-lime-500/20"
                 >
                   <BookOpen className="h-5 w-5" />
                   <span>Read the book</span>
@@ -862,7 +862,7 @@ export default function Home() {
               </Card>
               <div className="text-center">
                 <Button
-                  className="bg-lime-500 text-white hover:bg-lime-600 shadow-lg shadow-lime-500/30"
+                  className="bg-lime-500 text-gray-950 hover:bg-lime-400 shadow-lg shadow-lime-500/30"
                   asChild
                 >
                   <a href="#contact">Book a Sallie demo</a>
@@ -890,7 +890,7 @@ export default function Home() {
               </p>
 
               <div className="flex flex-col md:flex-row gap-4 justify-center">
-                <Button className="bg-lime-600 text-white hover:bg-lime-700" asChild>
+                <Button className="bg-lime-600 text-gray-950 hover:bg-lime-400" asChild>
                   <a href="mailto:info@knowall.ai">
                     Email <EmailIcon className="ml-2 h-4 w-4" />
                   </a>

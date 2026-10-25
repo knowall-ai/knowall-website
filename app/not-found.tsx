@@ -23,7 +23,7 @@ export default function NotFound() {
             The page you&apos;re looking for doesn&apos;t exist or may have moved.
           </p>
           <div className="mt-6 flex flex-wrap justify-center gap-3">
-            <Button asChild className="bg-lime-600 hover:bg-lime-700 text-white">
+            <Button asChild className="bg-lime-600 hover:bg-lime-400 text-gray-950">
               <Link href="/">Go home</Link>
             </Button>
             <Button

@@ -228,7 +228,7 @@ function ProductNotFound() {
         <p className="text-sm leading-relaxed text-gray-400">
           This product may have been removed or doesn&apos;t exist.
         </p>
-        <Button asChild className="mt-6 bg-lime-600 hover:bg-lime-700 text-white">
+        <Button asChild className="mt-6 bg-lime-600 hover:bg-lime-400 text-gray-950">
           <Link href="/shop">Back to Shop</Link>
         </Button>
       </div>
@@ -390,7 +390,7 @@ function ProductView({ naddr, listing, onOwnerSaved, onOwnerDeleted }: ProductVi
               <div className="flex flex-col gap-2 sm:flex-row">
                 <Button
                   onClick={handleAddToCart}
-                  className="flex-1 bg-lime-600 font-semibold text-white hover:bg-lime-700"
+                  className="flex-1 bg-lime-600 font-semibold text-gray-950 hover:bg-lime-400"
                 >
                   <ShoppingCart className="mr-1.5 h-4 w-4" aria-hidden="true" />
                   Add to Cart
