@@ -288,3 +288,142 @@
     @apply bg-background text-foreground;
   }
 }
+
+/*
+ * Home hero: the die-city scene ("Intelligence is processing power").
+ * The stage is a 3:2 box sized to cover its container (a size container), so
+ * the photo and the SVG light-pulse layer share one box and stay aligned at
+ * every crop. --fx/--fy pick which part of the plate stays in view.
+ */
+.die-hero {
+  --zoom: 2;
+  --fx: 0.97;
+  --fy: 0.45;
+}
+@media (width >= 48rem) {
+  .die-hero {
+    --zoom: 1.5;
+    --fx: 0.85;
+    --fy: 0.45;
+  }
+}
+.die-stage {
+  --sw: max(100cqw, calc(var(--zoom) * 100cqh));
+  position: absolute;
+  width: var(--sw);
+  aspect-ratio: 3 / 2;
+  left: calc((100cqw - var(--sw)) * var(--fx));
+  top: calc((100cqh - var(--sw) / 1.5) * var(--fy));
+  transform: translate3d(0, calc(var(--p, 0) * 18%), 0);
+  will-change: transform;
+}
+.die-camera {
+  transform-origin: 72% 45%;
+  transform: scale(1.03);
+  animation: die-drift 30s ease-in-out infinite alternate;
+}
+/* The copy lifts and fades as you scroll, where the hero is one screen tall.
+   On phones the copy sits below the scene and is still being read, so it stays put. */
+@media (width >= 48rem) {
+  .die-copy {
+    transform: translate3d(0, calc(var(--p, 0) * -70px), 0);
+    opacity: calc(1 - var(--p, 0) * 1.5);
+  }
+}
+.die-bokeh {
+  transform: translate3d(0, calc(var(--p, 0) * var(--speed, 1) * -140px), 0);
+  animation: die-float 14s ease-in-out infinite alternate;
+}
+.die-pulse path {
+  fill: none;
+  stroke-linecap: round;
+  stroke-dasharray: 8 200;
+  /* Static frame (reduced motion): each pulse rests partway along its trace */
+  stroke-dashoffset: -46;
+  animation: die-run var(--dur, 5s) linear var(--delay, 0s) infinite;
+}
+.die-pulse[data-tone='signal'] {
+  stroke: #9dfe0a;
+}
+.die-pulse[data-tone='value'] {
+  stroke: #f7931a;
+}
+.die-pulse[data-tone='signal'] .die-core {
+  stroke: #f2ffd6;
+}
+.die-pulse[data-tone='value'] .die-core {
+  stroke: #ffe4bf;
+}
+.die-eye {
+  transform-box: fill-box;
+  transform-origin: center;
+  opacity: 0.45;
+}
+.die-eye[data-kind='arrive'] {
+  animation: die-arrive 5.2s ease-out infinite;
+}
+.die-eye[data-kind='breathe'] {
+  animation: die-breathe 3.4s ease-in-out infinite alternate;
+}
+/* Off screen, the scene stops animating (MotionScope sets data-inview). */
+.die-scope[data-inview='false'] * {
+  animation-play-state: paused !important;
+}
+
+@keyframes die-drift {
+  to {
+    transform: scale(1.09) translate3d(-1.4%, -0.9%, 0);
+  }
+}
+@keyframes die-float {
+  to {
+    translate: 3% -6%;
+  }
+}
+@keyframes die-run {
+  0% {
+    stroke-dashoffset: 8;
+  }
+  70%,
+  100% {
+    stroke-dashoffset: -100;
+  }
+}
+@keyframes die-arrive {
+  0%,
+  64% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  71% {
+    opacity: 1;
+    transform: scale(1.35);
+  }
+  90%,
+  100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+}
+@keyframes die-breathe {
+  from {
+    opacity: 0.2;
+  }
+  to {
+    opacity: 0.75;
+  }
+}
+
+/* Reduced motion: a static frame, no drift, pulses or parallax. */
+@media (prefers-reduced-motion: reduce) {
+  .die-scope,
+  .die-scope * {
+    animation: none !important;
+  }
+  .die-stage,
+  .die-copy,
+  .die-bokeh {
+    transform: none !important;
+    opacity: 1;
+  }
+}

@@ -39,6 +39,7 @@ import WhatsAppButton from '@/components/whatsapp-button';
 import NostrButton from '@/components/nostr-button';
 import BitcoinLogo from '@/components/bitcoin-logo';
 import BackgroundImage from '@/components/background-image';
+import DieHero from '@/components/home/die-hero';
 import AutoGenLogo from '@/components/autogen-logo';
 import ZaplieCarousel from '@/components/zaplie-carousel';
 import ZaplieShowcase from '@/components/zaplie-showcase';
@@ -46,58 +47,38 @@ import TeamSection from '@/components/team-section';
 import AgentsSection from '@/components/agents-section';
 import TMinus15Book from '@/components/tminus15-book';
 
-/** Homepage: hero, services, agents, products, Sallie for Sales and contact sections. */
+/** Homepage: die-city hero, services, agents, products, Sallie for Sales and contact sections. */
 export default function Home() {
   return (
     <main className="flex min-h-screen flex-col bg-gray-950">
       <Header />
 
-      {/* Hero Section with Sallie */}
-      <BackgroundImage
-        src="/images/green-bg.png"
-        className="flex flex-col items-center justify-center px-4 py-10 md:py-16 overflow-hidden"
-      >
-        <div
-          className="absolute inset-x-0 top-0 bottom-0 bg-black/30"
-          style={{ height: 'auto' }}
-        ></div>
-
-        <div className="container relative z-10 max-w-6xl mx-auto">
-          <div className="flex flex-col lg:flex-row items-center gap-12">
-            <div className="flex-1 text-white">
-              <h1 className="text-4xl md:text-6xl font-bold mb-6">
-                Intelligence is <span className="text-lime-300">processing power</span>
-              </h1>
-              <p className="text-xl md:text-2xl mb-8 text-white/90">
-                We build intelligent AI systems that transform businesses through custom Microsoft
-                Copilots, multi-agent teams, and integrating incentivizing best practices through
-                value-for-value micro-Bitcoin transactions between people, customers, and AI agents
-                <span> using Zaplie</span>.
-              </p>
-              <div className="flex flex-wrap gap-4">
-                <Button
-                  className="bg-lime-500 text-gray-950 hover:bg-lime-400 shadow-lg shadow-lime-500/30"
-                  asChild
-                >
-                  <a href="#services">Our Services</a>
-                </Button>
-                <Button
-                  variant="outline"
-                  className="border-white text-white hover:bg-white/10"
-                  asChild
-                >
-                  <a href="#zaplie">Find out more about Zaplie</a>
-                </Button>
-              </div>
-            </div>
-
-            {/* Sallie welcomes visitors and answers questions about what we do */}
-            <div className="flex-1 w-full flex justify-center lg:justify-end">
-              <SallieAssistant />
-            </div>
+      {/* Hero: KnowAll's agents at work on a silicon die. Sallie is docked bottom-right. */}
+      <DieHero>
+        {/* max-w-xl keeps the copy on the shaded left, clear of the agents */}
+        <div className="max-w-xl text-white">
+          <h1 className="text-4xl md:text-6xl font-bold mb-6">
+            Intelligence is <span className="text-lime-300">processing power</span>
+          </h1>
+          <p className="text-lg md:text-xl mb-8 text-white/90">
+            We build intelligent AI systems that transform businesses through custom Microsoft
+            Copilots, multi-agent teams, and integrating incentivizing best practices through
+            value-for-value micro-Bitcoin transactions between people, customers, and AI agents
+            <span> using Zaplie</span>.
+          </p>
+          <div className="flex flex-wrap gap-4">
+            <Button
+              className="bg-lime-500 text-gray-950 hover:bg-lime-400 shadow-lg shadow-lime-500/30"
+              asChild
+            >
+              <a href="#services">Our Services</a>
+            </Button>
+            <Button variant="outline" className="border-white text-white hover:bg-white/10" asChild>
+              <a href="#zaplie">Find out more about Zaplie</a>
+            </Button>
           </div>
         </div>
-      </BackgroundImage>
+      </DieHero>
 
       {/* Services Section */}
       <section id="services" className="py-20 px-4 bg-gray-900">
@@ -904,6 +885,8 @@ export default function Home() {
       </section>
 
       <Footer darkMode={true} />
+      {/* Sallie is docked bottom-left from page load. */}
+      <SallieAssistant dockOnly />
     </main>
   );
 }
