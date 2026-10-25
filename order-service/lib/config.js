@@ -82,6 +82,18 @@ export const config = {
     .split(',')
     .map((r) => r.trim())
     .filter(Boolean),
+
+  // Relays the service reads KnowAll's catalog (kind-30402 listings, kind-30406
+  // shipping options) from when pricing an order. Defaults to the website's
+  // SHOP_RELAYS (lib/nostr.ts) — the Plebeian Market relay keeps listings
+  // durably while public relays may prune them.
+  catalogRelays: getEnv(
+    'CATALOG_RELAYS',
+    'wss://relay.plebeian.market,wss://relay.damus.io,wss://nos.lol,wss://relay.primal.net'
+  )
+    .split(',')
+    .map((r) => r.trim())
+    .filter(Boolean),
 };
 
 export default config;

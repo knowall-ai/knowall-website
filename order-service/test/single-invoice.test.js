@@ -18,9 +18,9 @@
  * invariant in so it cannot silently regress.
  *
  * Hermetic: the Lightning provider (`generateInvoice`) is injected as a spy, the
- * relay/publish layer is a fake `nostrClient`, and the dedup store is an in-memory
- * stub — so no network is touched and the on-disk `.processed.json` is never read
- * or written.
+ * catalog loader returns a fixed in-memory catalog, the relay/publish layer is a
+ * fake `nostrClient`, and the dedup store is an in-memory stub — so no network is
+ * touched and the on-disk `.processed.json` is never read or written.
  *
  * Runs on Node's built-in test runner (no extra deps): `node --test`.
  */
@@ -38,11 +38,40 @@ process.env.LIGHTNING_ADDRESS ||= 'shop@example.com';
 
 const { handleOrder } = await import('../index.js');
 const { ORDER_MESSAGE_TYPE } = await import('../lib/orderParser.js');
+const { KNOWALL_PUBKEY } = await import('../lib/config.js');
+const { encodeTestInvoice } = await import('./helpers/bolt11.js');
+
+// The catalog the injected loader serves: one sats-priced KnowAll listing, no
+// shipping options (so no shipping tag is needed). The loader stands in for
+// lib/catalog.js, whose signature filtering is covered in pricing.test.js.
+const BOOK_REF = `30402:${KNOWALL_PUBKEY}:tminus15-book`;
+const CATALOG = {
+  listings: new Map([
+    [
+      BOOK_REF,
+      {
+        kind: 30402,
+        pubkey: KNOWALL_PUBKEY,
+        tags: [
+          ['d', 'tminus15-book'],
+          ['title', 'T-Minus-15'],
+          ['price', '5000', 'SATS'],
+        ],
+      },
+    ],
+  ]),
+  shippingOptions: new Map(),
+};
+const loadCatalog = async () => CATALOG;
+const noRates = async () => {
+  throw new Error('a sats-only order must not need exchange rates');
+};
 
 // A recognisable BOLT11 the injected provider returns. The test asserts THIS
 // exact string is the one embedded in the payment-request event (the invoice the
 // website displays) — i.e. there is only one invoice, end to end.
-const FAKE_BOLT11 = 'lnbc50u1pregress0nlysingleinvoiceeverpay1tothiswebsiteinvoiceandnodmcopy';
+const FAKE_HASH = 'ab'.repeat(32);
+const FAKE_BOLT11 = encodeTestInvoice({ amountSats: 5000, paymentHash: FAKE_HASH });
 
 /** A 32-byte hex pubkey (buyer identity for the order rumor). */
 function randomPubkey() {
@@ -64,7 +93,7 @@ function buildOrderRumor({ buyerPubkey = randomPubkey(), amount = 5000 } = {}) {
       ['type', ORDER_MESSAGE_TYPE.ORDER_CREATION],
       ['order', orderId],
       ['amount', String(amount)],
-      ['item', '30402:somepubkey:tminus15-book', '1'],
+      ['item', BOOK_REF, '1'],
       ['address', '123 Maker St'],
       ['email', 'buyer@example.com'],
     ],
@@ -126,17 +155,24 @@ function giftWrapsOfKind(client, kind) {
 function buildInMemoryStore() {
   const orders = new Set();
   const receipts = new Set();
+  const invoices = new Map();
   return {
+    invoices,
     hasOrder: (id) => orders.has(id),
     addOrder: (id) => orders.add(id),
     hasReceipt: (id) => receipts.has(id),
     addReceipt: (id) => receipts.add(id),
+    getInvoice: (id) => invoices.get(id),
+    addInvoice: (id, record) => invoices.set(id, record),
   };
 }
 
 let nostrClient;
 let generateInvoiceSpy;
 let store;
+
+/** handleOrder deps: the shared test catalog/store plus per-test overrides. */
+const deps = (overrides) => ({ store, loadCatalog, getRates: noRates, ...overrides });
 
 beforeEach(() => {
   nostrClient = buildFakeNostrClient();
@@ -146,7 +182,7 @@ beforeEach(() => {
 
 test('generateInvoice is called exactly once for a single order', async () => {
   const order = buildOrderRumor();
-  await handleOrder(order, nostrClient, { generateInvoice: generateInvoiceSpy, store });
+  await handleOrder(order, nostrClient, deps({ generateInvoice: generateInvoiceSpy }));
 
   assert.equal(
     generateInvoiceSpy.calls.length,
@@ -161,7 +197,7 @@ test('generateInvoice is called exactly once for a single order', async () => {
 
 test('the kind-16 card and the kind-14 note both carry the IDENTICAL invoice generateInvoice returned', async () => {
   const order = buildOrderRumor();
-  await handleOrder(order, nostrClient, { generateInvoice: generateInvoiceSpy, store });
+  await handleOrder(order, nostrClient, deps({ generateInvoice: generateInvoiceSpy }));
 
   // The kind-16 Type 2 payment-request card.
   const cards = giftWrapsOfKind(nostrClient, 16);
@@ -200,7 +236,7 @@ test('the kind-16 card and the kind-14 note both carry the IDENTICAL invoice gen
 
 test('the kind-14 note carries the SAME ["order", id] tag as the kind-16 card (correlatable/dedupable)', async () => {
   const order = buildOrderRumor();
-  await handleOrder(order, nostrClient, { generateInvoice: generateInvoiceSpy, store });
+  await handleOrder(order, nostrClient, deps({ generateInvoice: generateInvoiceSpy }));
 
   const card = giftWrapsOfKind(nostrClient, 16)[0].rumor;
   const note = giftWrapsOfKind(nostrClient, 14)[0].rumor;
@@ -219,7 +255,7 @@ test('the kind-14 note carries the SAME ["order", id] tag as the kind-16 card (c
 test('exactly two gift wraps (one kind-16, one kind-14) go to the buyer, and NO kind-4 NIP-04 DM is used', async () => {
   const buyerPubkey = randomPubkey();
   const order = buildOrderRumor({ buyerPubkey });
-  await handleOrder(order, nostrClient, { generateInvoice: generateInvoiceSpy, store });
+  await handleOrder(order, nostrClient, deps({ generateInvoice: generateInvoiceSpy }));
 
   assert.equal(
     nostrClient.giftWraps.length,
@@ -238,10 +274,10 @@ test('exactly two gift wraps (one kind-16, one kind-14) go to the buyer, and NO 
 
 test('a duplicate order is skipped — no second invoice and no further gift wraps', async () => {
   const order = buildOrderRumor();
-  await handleOrder(order, nostrClient, { generateInvoice: generateInvoiceSpy, store });
+  await handleOrder(order, nostrClient, deps({ generateInvoice: generateInvoiceSpy }));
   // Replay the exact same order (same order id) — the persistent dedup store
   // must short-circuit it, so no further invoice is generated and nothing resent.
-  await handleOrder(order, nostrClient, { generateInvoice: generateInvoiceSpy, store });
+  await handleOrder(order, nostrClient, deps({ generateInvoice: generateInvoiceSpy }));
 
   assert.equal(
     generateInvoiceSpy.calls.length,
@@ -262,12 +298,12 @@ test('a transient invoice failure leaves the order retryable — nothing persist
     throw new Error('LNURL 502');
   };
 
-  await handleOrder(order, nostrClient, { generateInvoice: failingInvoice, store });
+  await handleOrder(order, nostrClient, deps({ generateInvoice: failingInvoice }));
   assert.equal(nostrClient.giftWraps.length, 0, 'nothing is sent when the invoice fails');
   assert.equal(store.hasOrder(orderId), false, 'a failed order must NOT be marked processed');
 
   // The next re-delivery retries from scratch and succeeds.
-  await handleOrder(order, nostrClient, { generateInvoice: generateInvoiceSpy, store });
+  await handleOrder(order, nostrClient, deps({ generateInvoice: generateInvoiceSpy }));
   assert.equal(generateInvoiceSpy.calls.length, 1, 'retry generates the (one) invoice');
   assert.equal(nostrClient.giftWraps.length, 2, 'retry delivers card + note');
   assert.equal(store.hasOrder(orderId), true, 'only a delivered order is marked processed');
@@ -291,11 +327,82 @@ test('a failed kind-14 note is non-fatal — the delivered card marks the order 
     },
   };
 
-  await handleOrder(order, flakyClient, { generateInvoice: generateInvoiceSpy, store });
+  await handleOrder(order, flakyClient, deps({ generateInvoice: generateInvoiceSpy }));
   assert.equal(flakyClient.giftWraps.length, 1, 'the kind-16 card was delivered');
   assert.equal(store.hasOrder(orderId), true, 'card delivery marks the order processed');
 
   // A re-delivery must NOT regenerate the invoice (divergence protection).
-  await handleOrder(order, flakyClient, { generateInvoice: generateInvoiceSpy, store });
+  await handleOrder(order, flakyClient, deps({ generateInvoice: generateInvoiceSpy }));
   assert.equal(generateInvoiceSpy.calls.length, 1, 'no second invoice after a note-only failure');
+});
+
+/* ------------------------------------------------- server-side pricing */
+
+/** The status updates (kind 16 type 3) sent to the buyer. */
+function statusUpdates(client) {
+  return giftWrapsOfKind(client, 16).filter(
+    (g) => tagValue(g.rumor, 'type') === ORDER_MESSAGE_TYPE.STATUS_UPDATE
+  );
+}
+
+test('the invoice and payment request use the SERVER-computed total and record the invoice', async () => {
+  const order = buildOrderRumor({ amount: 5000 });
+  await handleOrder(order, nostrClient, deps({ generateInvoice: generateInvoiceSpy }));
+
+  assert.equal(generateInvoiceSpy.calls[0][1], 5000);
+  const card = giftWrapsOfKind(nostrClient, 16)[0].rumor;
+  assert.equal(tagValue(card, 'amount'), '5000');
+  assert.deepEqual(store.invoices.get(tagValue(order, 'order')), {
+    invoice: FAKE_BOLT11,
+    paymentHash: FAKE_HASH,
+    amountSats: 5000,
+    buyerPubkey: order.pubkey,
+    verifyUrl: undefined,
+  });
+});
+
+test('an order whose amount does not match the catalog is cancelled, never invoiced', async () => {
+  const order = buildOrderRumor({ amount: 1 });
+  await handleOrder(order, nostrClient, deps({ generateInvoice: generateInvoiceSpy }));
+
+  assert.equal(generateInvoiceSpy.calls.length, 0, 'no invoice for a mispriced order');
+  const updates = statusUpdates(nostrClient);
+  assert.equal(updates.length, 1);
+  assert.equal(tagValue(updates[0].rumor, 'status'), 'cancelled');
+  assert.match(updates[0].rumor.content, /does not match/);
+  assert.equal(store.hasOrder(tagValue(order, 'order')), true, 'rejection is final');
+});
+
+test('an order for an unknown item is cancelled', async () => {
+  const order = buildOrderRumor();
+  order.tags = order.tags.map((t) =>
+    t[0] === 'item' ? ['item', `30402:${KNOWALL_PUBKEY}:nope`, '1'] : t
+  );
+  await handleOrder(order, nostrClient, deps({ generateInvoice: generateInvoiceSpy }));
+  assert.equal(generateInvoiceSpy.calls.length, 0);
+  assert.equal(tagValue(statusUpdates(nostrClient)[0].rumor, 'status'), 'cancelled');
+});
+
+test('a catalog outage leaves the order retryable — nothing sent', async () => {
+  const order = buildOrderRumor();
+  const down = async () => {
+    throw new Error('Catalog unavailable');
+  };
+  await handleOrder(
+    order,
+    nostrClient,
+    deps({ generateInvoice: generateInvoiceSpy, loadCatalog: down })
+  );
+  assert.equal(nostrClient.giftWraps.length, 0);
+  assert.equal(store.hasOrder(tagValue(order, 'order')), false);
+});
+
+test('an invoice for the wrong amount from the provider is not sent', async () => {
+  const order = buildOrderRumor();
+  const wrongAmount = buildGenerateInvoiceSpy(
+    encodeTestInvoice({ amountSats: 1, paymentHash: FAKE_HASH })
+  );
+  await handleOrder(order, nostrClient, deps({ generateInvoice: wrongAmount }));
+  assert.equal(nostrClient.giftWraps.length, 0);
+  assert.equal(store.hasOrder(tagValue(order, 'order')), false, 'still retryable');
 });

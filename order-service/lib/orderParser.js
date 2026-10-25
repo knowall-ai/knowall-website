@@ -33,9 +33,23 @@ export function parseSatAmount(raw) {
 }
 
 /**
+ * Strictly parse an untrusted item quantity: plain digits, a safe positive
+ * integer. Returns null otherwise (the pricing step rejects such an order with a
+ * reason, and also enforces the per-line cap). parseInt would read "2abc" as 2
+ * and the old `|| 1` turned junk into a quantity of one.
+ * @param {unknown} raw
+ * @returns {number | null}
+ */
+export function parseQuantity(raw) {
+  if (typeof raw !== 'string' || !/^\d+$/.test(raw)) return null;
+  const value = Number(raw);
+  return Number.isSafeInteger(value) && value > 0 ? value : null;
+}
+
+/**
  * Parse a Kind 16 Type 1 order event
  * @param {import('nostr-tools').Event} event
- * @returns {{orderId: string, buyerPubkey: string, amount: number, items: Array<{ref: string, quantity: number}>, address: string, email: string, phone?: string, message?: string} | null}
+ * @returns {{orderId: string, buyerPubkey: string, amount: number, items: Array<{ref: string, quantity: number | null}>, shippingRef?: string, address: string, email: string, phone?: string, message?: string} | null}
  */
 export function parseOrderEvent(event) {
   if (event.kind !== ORDER_PROCESS_KIND) {
@@ -52,6 +66,7 @@ export function parseOrderEvent(event) {
   const addressTag = event.tags.find((t) => t[0] === 'address');
   const emailTag = event.tags.find((t) => t[0] === 'email');
   const phoneTag = event.tags.find((t) => t[0] === 'phone');
+  const shippingTag = event.tags.find((t) => t[0] === 'shipping' && typeof t[1] === 'string');
 
   if (!orderTag?.[1] || !amountTag) {
     console.warn('[OrderParser] Missing required order or amount tag');
@@ -66,11 +81,12 @@ export function parseOrderEvent(event) {
     return null;
   }
 
-  // Parse item tags: ['item', 'product_ref', 'quantity']
+  // Parse item tags: ['item', 'product_ref', 'quantity']. A null quantity is
+  // kept (not defaulted) so pricing can reject the order with a reason.
   const itemTags = event.tags.filter((t) => t[0] === 'item');
   const items = itemTags.map((t) => ({
     ref: t[1], // e.g., "30402:pubkey:d-tag"
-    quantity: parseInt(t[2], 10) || 1,
+    quantity: parseQuantity(t[2]),
   }));
 
   return {
@@ -78,6 +94,8 @@ export function parseOrderEvent(event) {
     buyerPubkey: event.pubkey,
     amount,
     items,
+    // Chosen shipping option per the Gamma spec: "30406:<pubkey>:<d-tag>".
+    shippingRef: shippingTag?.[1] || undefined,
     address: addressTag?.[1] || '',
     email: emailTag?.[1] || '',
     phone: phoneTag?.[1],
@@ -99,7 +117,7 @@ export function parsePaymentReceipt(event) {
   const paymentTag = event.tags.find((t) => t[0] === 'payment');
   const amountTag = event.tags.find((t) => t[0] === 'amount');
 
-  if (!orderTag || !paymentTag) {
+  if (typeof orderTag?.[1] !== 'string' || !orderTag[1] || !paymentTag) {
     console.warn('[OrderParser] Missing required order or payment tag');
     return null;
   }

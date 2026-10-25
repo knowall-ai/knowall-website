@@ -173,3 +173,58 @@ test('drops zero-coercing timestamps even when pruning is disabled (maxAgeSecond
     rmSync(dir, { recursive: true, force: true });
   }
 });
+
+test('issued invoices (and the paid flag) survive a restart; malformed records are dropped', () => {
+  const { path, dir } = tmpFile();
+  try {
+    const store = new ProcessedStore(path, 0);
+    store.addInvoice('order-1', {
+      invoice: 'lnbc1...',
+      paymentHash: 'ab'.repeat(32),
+      amountSats: 4200,
+      buyerPubkey: 'cd'.repeat(32),
+      verifyUrl: 'https://ln.example.com/verify/1',
+    });
+    store.markPaid('order-1');
+
+    const reloaded = new ProcessedStore(path, 0);
+    const record = reloaded.getInvoice('order-1');
+    assert.equal(record.amountSats, 4200);
+    assert.equal(record.paymentHash, 'ab'.repeat(32));
+    assert.equal(record.verifyUrl, 'https://ln.example.com/verify/1');
+    assert.ok(record.paidAt > 0);
+
+    writeFileSync(
+      path,
+      JSON.stringify({ invoices: { bad: { invoice: 'x', paymentHash: 'nothex', amountSats: 1 } } })
+    );
+    assert.equal(new ProcessedStore(path, 0).getInvoice('bad'), undefined);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('invoice records are pruned after the invoice retention window', () => {
+  const { path, dir } = tmpFile();
+  try {
+    const old = Math.floor(Date.now() / 1000) - 100;
+    writeFileSync(
+      path,
+      JSON.stringify({
+        invoices: {
+          stale: {
+            invoice: 'x',
+            paymentHash: 'ab'.repeat(32),
+            amountSats: 1,
+            buyerPubkey: 'p',
+            createdAt: old,
+          },
+        },
+      })
+    );
+    assert.equal(new ProcessedStore(path, 0, 50).getInvoice('stale'), undefined);
+    assert.ok(new ProcessedStore(path, 0, 500).getInvoice('stale'));
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});

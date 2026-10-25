@@ -4,10 +4,14 @@
  *
  * Listens for NIP-17 gift-wrapped (kind 1059) commerce messages and:
  * 1. Unwraps each gift wrap to its inner Gamma Markets rumor (kind 16/17)
- * 2. Generates Lightning invoices via LNURL-pay for incoming orders
- * 3. Sends gift-wrapped Kind 16 Type 2 payment requests back to the buyer
- * 4. On gift-wrapped Kind 17 payment receipts, sends a gift-wrapped thank-you
- *    status update (Kind 16 Type 3)
+ * 2. Prices each order itself from KnowAll's signed catalog (the buyer's
+ *    `amount` is only checked, never invoiced) and cancels orders that don't
+ *    match (lib/pricing.js)
+ * 3. Generates a Lightning invoice via LNURL-pay for the server-computed total,
+ *    records it, and sends a gift-wrapped Kind 16 Type 2 payment request
+ * 4. On gift-wrapped Kind 17 payment receipts, verifies the payment against the
+ *    recorded invoice (preimage, plus LUD-21 verify when available) before
+ *    sending a gift-wrapped "paid" status update (Kind 16 Type 3)
  *
  * All commerce traffic is NIP-17 end-to-end: customer PII rides inside the
  * encrypted wrap, never in plaintext public events.
@@ -34,6 +38,10 @@ import { isIgnorableRelayError } from './lib/relayErrors.js';
 import { NostrClient, decodeServiceKey, assertServiceKey } from './lib/nostr.js';
 import { ProcessedStore } from './lib/processedStore.js';
 import { generateInvoice, validateLightningAddress } from './lib/lightning.js';
+import { loadCatalog } from './lib/catalog.js';
+import { getSatsRates } from './lib/exchangeRate.js';
+import { needsExchangeRates, priceOrder } from './lib/pricing.js';
+import { decodeInvoice, verifyPayment } from './lib/payment.js';
 import {
   parseOrderEvent,
   parsePaymentReceipt,
@@ -64,6 +72,10 @@ const processedStore = new ProcessedStore(undefined, TWO_DAYS_IN_SECONDS);
 // retryable on the next re-delivery instead of being dropped for the whole
 // lookback window.
 const inFlightOrders = new Set();
+
+// Receipts currently being verified (LUD-21 polling can take a few seconds), so
+// a duplicate gift wrap can't race the first through to a second confirmation.
+const inFlightReceipts = new Set();
 
 /**
  * Format a human-readable note to ride inside the gift-wrapped payment request
@@ -99,7 +111,78 @@ function formatThankYouNote(orderId) {
 }
 
 /**
+ * Buyer-readable note for an order the service won't invoice.
+ */
+function formatCancelNote(orderId, reason) {
+  const orderIdShort = orderId.slice(0, 8);
+  return `❌ We couldn't accept order #${orderIdShort}: ${reason}. You have not been charged — please refresh the shop and place the order again.`;
+}
+
+/**
+ * Neutral note when a receipt arrived but the Lightning provider hasn't
+ * confirmed settlement (yet). Never claims the order is paid.
+ */
+function formatUnconfirmedNote(orderId) {
+  const orderIdShort = orderId.slice(0, 8);
+  return `⏳ We received your payment receipt for order #${orderIdShort}, but we couldn't confirm the payment yet. We'll check and follow up here.`;
+}
+
+/**
+ * Tell the buyer an order was refused (gift-wrapped Kind 16 Type 3 'cancelled'
+ * status plus a readable kind-14 copy), then mark it processed so a re-delivery
+ * isn't re-evaluated. No invoice exists for it.
+ */
+async function cancelOrder(order, reason, nostrClient, store) {
+  console.warn(`[Order] ✗ Rejecting order ${order.orderId.slice(0, 8)}: ${reason}`);
+  const note = formatCancelNote(order.orderId, reason);
+  const statusRumor = createStatusUpdateEvent(order.orderId, order.buyerPubkey, 'cancelled', note);
+  try {
+    await nostrClient.sendGiftWrap(order.buyerPubkey, statusRumor);
+  } catch (error) {
+    // Not persisted: a later re-delivery retries the (invoice-free) rejection.
+    console.error(
+      `[Order] Failed to send cancellation for ${order.orderId.slice(0, 8)}:`,
+      error.message
+    );
+    return;
+  }
+  try {
+    store.addOrder(order.orderId);
+  } catch (persistError) {
+    console.warn(`[Order] Failed to persist rejected order dedup entry:`, persistError.message);
+  }
+  try {
+    await nostrClient.sendGiftWrap(order.buyerPubkey, {
+      kind: 14,
+      content: note,
+      tags: [
+        ['p', order.buyerPubkey],
+        ['order', order.orderId],
+      ],
+    });
+  } catch (noteError) {
+    console.warn(
+      `[Order] Failed to send kind-14 cancellation note (non-fatal):`,
+      noteError.message
+    );
+  }
+}
+
+/** Default catalog loader: the order's listings + all shipping options, verified. */
+function defaultLoadCatalog(order, nostrClient) {
+  return loadCatalog(nostrClient.pool, config.catalogRelays, order, KNOWALL_PUBKEY);
+}
+
+/**
  * Handle incoming order (Kind 16 Type 1)
+ *
+ * The order is priced HERE, from KnowAll's own signed catalog (see
+ * lib/pricing.js): unknown/forged items, items by another author, quantities
+ * over the cap and amounts that don't match the recomputed total are cancelled
+ * with a readable reason instead of invoiced. Accepted orders are invoiced for
+ * the server-computed total — the buyer's `amount` tag is only compared, never
+ * used. The issued invoice (payment hash, amount, LUD-21 verify URL) is
+ * persisted before it is sent, so a later receipt can be checked against it.
  *
  * Generates exactly ONE Lightning invoice for the order and delivers that single
  * BOLT11 two ways, both gift-wrapped to the buyer: a Kind 16 Type 2 payment
@@ -120,12 +203,24 @@ function formatThankYouNote(orderId) {
  *
  * @param {Omit<import('nostr-tools').Event, 'id'|'sig'>} event - inner order rumor
  * @param {NostrClient} nostrClient
- * @param {{ generateInvoice?: typeof generateInvoice, store?: ProcessedStore }} [deps]
+ * @param {{
+ *   generateInvoice?: typeof generateInvoice,
+ *   store?: ProcessedStore,
+ *   loadCatalog?: (order: object, nostrClient: NostrClient) => Promise<{ listings: Map<string, object>, shippingOptions: Map<string, object> }>,
+ *   getRates?: typeof getSatsRates,
+ *   decodeInvoice?: typeof decodeInvoice,
+ * }} [deps]
  */
 export async function handleOrder(
   event,
   nostrClient,
-  { generateInvoice: genInvoice = generateInvoice, store = processedStore } = {}
+  {
+    generateInvoice: genInvoice = generateInvoice,
+    store = processedStore,
+    loadCatalog: loadOrderCatalog = defaultLoadCatalog,
+    getRates = getSatsRates,
+    decodeInvoice: decode = decodeInvoice,
+  } = {}
 ) {
   const order = parseOrderEvent(event);
   if (!order) {
@@ -147,7 +242,7 @@ export async function handleOrder(
   console.log(`[Order] New order received!`);
   console.log(`  Order ID: ${order.orderId.slice(0, 8)}`);
   console.log(`  Buyer: ${order.buyerPubkey.slice(0, 8)}...`);
-  console.log(`  Amount: ${order.amount} sats`);
+  console.log(`  Amount (buyer-stated): ${order.amount} sats`);
   console.log(`  Items: ${order.items.length}`);
   console.log(
     `  Shipping details: address ${order.address ? 'provided' : 'none'}, email ${
@@ -156,9 +251,43 @@ export async function handleOrder(
   );
 
   try {
-    // Generate Lightning invoice
-    console.log(`[Order] Generating invoice for ${order.amount} sats...`);
-    const invoice = await genInvoice(config.lightningAddress, order.amount, order.orderId);
+    // Price the order from the verified catalog. A relay or exchange-rate
+    // outage throws (-> retryable, nothing sent); a bad order is cancelled.
+    const catalog = await loadOrderCatalog(order, nostrClient);
+    const rates = needsExchangeRates(order, catalog) ? await getRates() : undefined;
+    const priced = priceOrder(order, catalog, { merchantPubkey: KNOWALL_PUBKEY, rates });
+    if (!priced.ok) {
+      await cancelOrder(order, priced.reason, nostrClient, store);
+      return;
+    }
+    const amount = priced.totalSats;
+    console.log(
+      `[Order] Priced at ${amount} sats (items ${priced.itemsSats} + shipping ${priced.shippingSats}); buyer stated ${order.amount}`
+    );
+
+    // Generate the Lightning invoice for the SERVER-computed amount.
+    console.log(`[Order] Generating invoice for ${amount} sats...`);
+    const generated = await genInvoice(config.lightningAddress, amount, order.orderId);
+    const { invoice, verify } = typeof generated === 'string' ? { invoice: generated } : generated;
+
+    // Bind the invoice to the order: its payment hash is what a receipt's
+    // preimage must hash to. Refuse an invoice for a different amount (a
+    // misbehaving provider) — nothing has been sent yet, so this stays retryable.
+    const { paymentHash, amountMsat } = decode(invoice);
+    if (amountMsat !== amount * 1000) {
+      throw new Error(
+        `LNURL provider returned an invoice for ${amountMsat} msats, expected ${amount * 1000}`
+      );
+    }
+    // Must be durable BEFORE the buyer can pay it, or their receipt can never
+    // be verified. A failure here throws -> nothing sent, order retryable.
+    store.addInvoice(order.orderId, {
+      invoice,
+      paymentHash,
+      amountSats: amount,
+      buyerPubkey: order.buyerPubkey,
+      verifyUrl: verify,
+    });
 
     // Build the Kind 16 Type 2 payment request rumor and gift-wrap it to the buyer.
     // The structured invoice data lives in the rumor tags; we fold a human-readable
@@ -167,10 +296,10 @@ export async function handleOrder(
     const paymentRequestRumor = createPaymentRequestEvent(
       order.orderId,
       order.buyerPubkey,
-      order.amount,
+      amount,
       invoice
     );
-    paymentRequestRumor.content = formatInvoiceNote(order.orderId, order.amount);
+    paymentRequestRumor.content = formatInvoiceNote(order.orderId, amount);
 
     console.log(`[Order] Sending gift-wrapped payment request to buyer...`);
     await nostrClient.sendGiftWrap(order.buyerPubkey, paymentRequestRumor);
@@ -200,7 +329,7 @@ export async function handleOrder(
     // One BOLT11 settles once; a second pay attempt simply fails.
     const invoiceChatRumor = {
       kind: 14,
-      content: formatInvoiceChatNote(order.orderId, order.amount, invoice),
+      content: formatInvoiceChatNote(order.orderId, amount, invoice),
       tags: [
         ['p', order.buyerPubkey],
         ['order', order.orderId],
@@ -233,8 +362,27 @@ export async function handleOrder(
 
 /**
  * Handle payment receipt (Kind 17)
+ *
+ * A receipt is buyer-supplied, so it is checked against the invoice this
+ * service issued for the order (lib/payment.js verifyPayment) before anything
+ * says "paid":
+ *   - the order must exist with our recorded invoice, from the same buyer
+ *   - the receipt's invoice (when present) must be ours
+ *   - sha256(preimage) must equal the invoice's payment hash
+ *   - when the provider gave a LUD-21 verify URL, it must report settled
+ * Bogus receipts are logged and get no reply. A receipt the provider hasn't
+ * settled yet gets a neutral "couldn't confirm yet" note and is NOT persisted,
+ * so a restart re-checks it.
+ *
+ * @param {Omit<import('nostr-tools').Event, 'id'|'sig'>} event - inner receipt rumor
+ * @param {NostrClient} nostrClient
+ * @param {{ store?: ProcessedStore, verify?: Parameters<typeof verifyPayment>[2] }} [deps]
  */
-async function handlePaymentReceipt(event, nostrClient) {
+export async function handlePaymentReceipt(
+  event,
+  nostrClient,
+  { store = processedStore, verify: verifyDeps } = {}
+) {
   const receipt = parsePaymentReceipt(event);
   if (!receipt) {
     return;
@@ -242,64 +390,120 @@ async function handlePaymentReceipt(event, nostrClient) {
 
   // Dedup on a STABLE key. `event` here is the inner NIP-17 rumor, which is
   // intentionally unsigned (no `id`) - keying on `event.id` would be `undefined`
-  // for every receipt, collapsing all of them to one key so only the first ever
-  // fires a confirmation. Use `${orderId}:${preimage}` instead: it is the payment
-  // identity, so genuinely distinct receipts get distinct keys (never wrongly
-  // skipped) while the same receipt re-fetched within the lookback window - or a
-  // client retry that re-wraps the same payment - is correctly skipped.
+  // for every receipt. `${orderId}:${preimage}` is the payment identity.
   const receiptKey = receiptDedupKey(receipt);
-  if (processedStore.hasReceipt(receiptKey)) {
+  if (store.hasReceipt(receiptKey) || inFlightReceipts.has(receiptKey)) {
     console.log(`[Payment] Skipping duplicate receipt for order ${receipt.orderId.slice(0, 8)}`);
     return;
   }
-  try {
-    processedStore.addReceipt(receiptKey);
-  } catch (persistError) {
-    // Worst case after a restart is a duplicate thank-you note — log and go on.
-    console.warn(`[Payment] Failed to persist receipt dedup entry:`, persistError.message);
-  }
+  inFlightReceipts.add(receiptKey);
 
-  console.log(`[Payment] Payment received!`);
-  console.log(`  Order ID: ${receipt.orderId.slice(0, 8)}`);
-  console.log(`  Buyer: ${receipt.buyerPubkey.slice(0, 8)}...`);
-  console.log(`  Amount: ${receipt.amount} sats`);
-
-  const thankYouText = formatThankYouNote(receipt.orderId);
-
-  // Send a gift-wrapped thank-you as a Kind 16 Type 3 status update (structured,
-  // authoritative - parsed for rich cards). Non-blocking.
-  const statusRumor = createStatusUpdateEvent(
-    receipt.orderId,
-    receipt.buyerPubkey,
-    'confirmed',
-    thankYouText
-  );
-  try {
-    await nostrClient.sendGiftWrap(receipt.buyerPubkey, statusRumor);
-    console.log(
-      `[Payment] ✓ Gift-wrapped status update sent for order ${receipt.orderId.slice(0, 8)}`
-    );
-  } catch (error) {
-    console.warn(`[Payment] Failed to send status gift wrap (non-fatal):`, error.message);
-  }
-
-  // Also send a gift-wrapped readable kind 14 line so the confirmation renders in
-  // generic NIP-17 clients (Damus/Primal). Encrypted; non-blocking copy.
-  const readableRumor = {
-    kind: 14,
-    content: thankYouText,
-    tags: [['p', receipt.buyerPubkey]],
+  const orderShort = receipt.orderId.slice(0, 8);
+  const persistReceipt = () => {
+    try {
+      store.addReceipt(receiptKey);
+    } catch (persistError) {
+      console.warn(`[Payment] Failed to persist receipt dedup entry:`, persistError.message);
+    }
   };
+
   try {
-    await nostrClient.sendGiftWrap(receipt.buyerPubkey, readableRumor);
     console.log(
-      `[Payment] ✓ Gift-wrapped readable thank-you sent for order ${receipt.orderId.slice(0, 8)}`
+      `[Payment] Receipt received for order ${orderShort} from ${receipt.buyerPubkey.slice(0, 8)}...`
     );
-  } catch (error) {
-    console.warn(
-      `[Payment] Failed to send readable thank-you gift wrap (non-fatal):`,
-      error.message
+
+    const record = store.getInvoice(receipt.orderId);
+    if (!record) {
+      console.warn(
+        `[Payment] ✗ Ignoring receipt for order ${orderShort}: no invoice was issued for it`
+      );
+      persistReceipt();
+      return;
+    }
+    if (record.paidAt) {
+      console.log(`[Payment] Order ${orderShort} is already confirmed — ignoring further receipt`);
+      persistReceipt();
+      return;
+    }
+    if (receipt.buyerPubkey !== record.buyerPubkey) {
+      console.warn(`[Payment] ✗ Ignoring receipt for order ${orderShort}: sender is not the buyer`);
+      persistReceipt();
+      return;
+    }
+
+    const result = await verifyPayment(record, receipt, verifyDeps);
+
+    if (result.status === 'invalid') {
+      console.warn(`[Payment] ✗ Ignoring receipt for order ${orderShort}: ${result.reason}`);
+      persistReceipt();
+      return;
+    }
+
+    if (result.status === 'unsettled') {
+      console.warn(
+        `[Payment] Receipt for order ${orderShort} not confirmed: provider reports the invoice unsettled`
+      );
+      try {
+        await nostrClient.sendGiftWrap(receipt.buyerPubkey, {
+          kind: 14,
+          content: formatUnconfirmedNote(receipt.orderId),
+          tags: [
+            ['p', receipt.buyerPubkey],
+            ['order', receipt.orderId],
+          ],
+        });
+      } catch (error) {
+        console.warn(
+          `[Payment] Failed to send unconfirmed-payment note (non-fatal):`,
+          error.message
+        );
+      }
+      return;
+    }
+
+    console.log(
+      `[Payment] ✓ Payment verified (${result.method}) for order ${orderShort}: ${record.amountSats} sats`
     );
+    try {
+      store.markPaid(receipt.orderId);
+    } catch (persistError) {
+      console.warn(`[Payment] Failed to persist paid flag:`, persistError.message);
+    }
+    persistReceipt();
+
+    const thankYouText = formatThankYouNote(receipt.orderId);
+
+    // Gift-wrapped Kind 16 Type 3 status update (structured, authoritative).
+    const statusRumor = createStatusUpdateEvent(
+      receipt.orderId,
+      receipt.buyerPubkey,
+      'confirmed',
+      thankYouText
+    );
+    try {
+      await nostrClient.sendGiftWrap(receipt.buyerPubkey, statusRumor);
+      console.log(`[Payment] ✓ Gift-wrapped status update sent for order ${orderShort}`);
+    } catch (error) {
+      console.warn(`[Payment] Failed to send status gift wrap (non-fatal):`, error.message);
+    }
+
+    // Readable kind-14 copy so the confirmation renders in generic NIP-17 clients.
+    const readableRumor = {
+      kind: 14,
+      content: thankYouText,
+      tags: [['p', receipt.buyerPubkey]],
+    };
+    try {
+      await nostrClient.sendGiftWrap(receipt.buyerPubkey, readableRumor);
+      console.log(`[Payment] ✓ Gift-wrapped readable thank-you sent for order ${orderShort}`);
+    } catch (error) {
+      console.warn(
+        `[Payment] Failed to send readable thank-you gift wrap (non-fatal):`,
+        error.message
+      );
+    }
+  } finally {
+    inFlightReceipts.delete(receiptKey);
   }
 }
 
