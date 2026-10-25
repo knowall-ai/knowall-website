@@ -42,7 +42,7 @@ export default function TMinus15Book() {
           style={{
             width: 'var(--w)',
             height: 'var(--h)',
-            background: 'linear-gradient(#1f2937, #0b0f16)',
+            background: 'linear-gradient(var(--color-gray-800), var(--color-gray-950))',
             transform: 'translate(-50%, -50%) translateZ(calc(-1 * var(--hd))) rotateY(180deg)',
           }}
         ></div>
