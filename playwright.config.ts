@@ -38,6 +38,11 @@ export default defineConfig({
     timeout: 300000,
     env: {
       ...process.env,
+      // Shop specs script unsigned relay events "by" the KnowAll pubkey (the
+      // tests can't sign as the company). This build-time flag lets ONLY
+      // unsigned events through lib/nostr-verify, on localhost only; real
+      // builds never set it. See lib/nostr-verify.ts.
+      NEXT_PUBLIC_E2E_ALLOW_UNSIGNED_RELAY_EVENTS: '1',
       // server.js defaults to port 8080 and dev mode; tests expect a
       // production server on the configured port
       PORT,

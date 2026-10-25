@@ -23,6 +23,7 @@ import {
   type Listing,
   type NostrEvent,
 } from '@/lib/nip99';
+import { isVerifiedEvent } from '@/lib/nostr-verify';
 
 const MAX_LISTINGS = 100;
 const RELAY_TIMEOUT_MS = 8000;
@@ -124,7 +125,9 @@ export default function ShopListings({
           if (
             data[0] === 'EVENT' &&
             data[2]?.kind === CLASSIFIED_LISTING_KIND &&
-            data[2]?.pubkey === pubkey
+            data[2]?.pubkey === pubkey &&
+            // Cheap filters first; then drop forged events (wrong price etc.).
+            isVerifiedEvent(data[2])
           ) {
             events.set(data[2].id, data[2] as NostrEvent);
           } else if (data[0] === 'EOSE') {

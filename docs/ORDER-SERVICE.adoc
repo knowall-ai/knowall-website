@@ -4,7 +4,9 @@
 
 == What it is
 
-The order service (`order-service/`) is a standalone Node daemon — ported from robotechy.com — that answers shop orders automatically: it listens on the shop relays for NIP-17 gift-wrapped Gamma Markets orders addressed to the KnowAll npub, generates exactly one Lightning invoice per order via LNURL-pay, replies with a gift-wrapped payment request (the same event the website checkout renders), and acknowledges payment receipts with a thank-you status update. See `order-service/README.md` for the full behavioural detail (one-invoice-two-surfaces invariant, dedup semantics, tests).
+The order service (`order-service/`) is a standalone Node daemon — ported from robotechy.com — that answers shop orders automatically: it listens on the shop relays for NIP-17 gift-wrapped Gamma Markets orders addressed to the KnowAll npub, prices each order itself from the company's signed catalog (the buyer's stated amount is checked, never invoiced), generates exactly one Lightning invoice per accepted order via LNURL-pay, replies with a gift-wrapped payment request (the same event the website checkout renders), and confirms payment only after verifying the receipt against the invoice it issued (preimage, plus LUD-21 verify where the Lightning provider supports it). See `order-service/README.md` for the full behavioural detail (server-side pricing, payment verification, one-invoice-two-surfaces invariant, dedup semantics, tests).
+
+IMPORTANT: The order service deploys separately from the website. Changes under `order-service/` take effect only once the daemon is rebuilt and restarted on its host.
 
 == Deployment
 
@@ -34,6 +36,10 @@ Environment variables only (a local `.env` is a dev convenience; it is gitignore
 | `RELAYS`
 | no
 | Comma-separated relay URLs. Defaults to the site's shop set: `wss://relay.damus.io,wss://nos.lol,wss://relay.primal.net`.
+
+| `CATALOG_RELAYS`
+| no
+| Relays the company's listings and shipping options are read from when pricing an order. Defaults to the website's `SHOP_RELAYS`: `wss://relay.plebeian.market,wss://relay.damus.io,wss://nos.lol,wss://relay.primal.net`.
 |===
 
 == Key custody and the startup safety stop
@@ -66,6 +72,15 @@ The deployment host holds the company identity key: restrict access to the host 
 | Log noise like `Ignoring relay rejection: ...`
 | Expected: transient relay/network errors are classified by `order-service/lib/relayErrors.js` and swallowed so a flaky relay cannot crash order processing. Anything NOT matched there is treated as a real bug and is fatal (the process exits and the supervisor restarts it).
 
+| A buyer got a `cancelled` status ("couldn't accept order")
+| The service recomputed the order total from the signed catalog and refused the order: an item is unknown, not by the company or sold out, a quantity is outside 1–999 or above the listing's stock, no or an unavailable shipping method was chosen, or the buyer's amount didn't match (sat prices must match exactly; fiat-converted amounts may differ by up to 5%). The log line `Rejecting order <id>: <reason>` gives the reason. A rejected order is final; the buyer re-orders from a refreshed shop page.
+
+| An order sits without an invoice, logs `Catalog unavailable` or `All exchange rate sources failed`
+| Pricing needs the catalog relays and, for fiat prices, at least one of CoinGecko, Kraken or Coinbase. These failures leave the order retryable (no fallback rate is ever used for an invoice).
+
+| A buyer says they paid but got no "paid" confirmation
+| Receipts are verified against the invoice recorded for the order: the preimage must hash to its payment hash and, where the provider supports LUD-21, the provider must report it settled. Look for `Ignoring receipt for order <id>: <reason>` (no reply is sent) or `not confirmed: provider reports the invoice unsettled` (the buyer got a "couldn't confirm yet" note; a restart re-checks it). Orders invoiced before invoice records existed have no record and are confirmed by hand.
+
 | Duplicate invoice worries after restarts/rebuilds
-| The dedup store lives at `order-service/data/.processed.json` (override: `PROCESSED_STORE_PATH`), written atomically and pruned to the 2-day lookback window. Orders are recorded there once the payment request is delivered, so restarts never re-invoice a delivered order — provided the `data/` directory persists (see Deployment). A `CRITICAL: failed to persist dedup entry` log means durability was lost for one order — investigate the volume before the next restart.
+| The dedup store lives at `order-service/data/.processed.json` (override: `PROCESSED_STORE_PATH`), written atomically and pruned to the 2-day lookback window. The same file holds each issued invoice (payment hash, amount, buyer, LUD-21 verify URL; kept 30 days) that receipts are checked against. Orders are recorded there once the payment request is delivered, so restarts never re-invoice a delivered order — provided the `data/` directory persists (see Deployment). A `CRITICAL: failed to persist dedup entry` log means durability was lost for one order — investigate the volume before the next restart.
 |===

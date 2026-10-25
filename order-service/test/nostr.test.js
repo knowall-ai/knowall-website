@@ -6,7 +6,7 @@
 
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { generateSecretKey, getPublicKey, finalizeEvent, nip44 } from 'nostr-tools';
+import { generateSecretKey, getPublicKey, finalizeEvent, nip44, nip59 } from 'nostr-tools';
 import { NostrClient } from '../lib/nostr.js';
 
 const now = () => Math.floor(Date.now() / 1000);
@@ -23,11 +23,11 @@ function encryptTo(senderSk, recipientPk, plaintext) {
  * @param {string} [opts.rumorPubkey] - pubkey written into the inner rumor
  *   (defaults to the sender's pubkey; set differently to forge/spoof)
  * @param {boolean} [opts.tamperSealPubkey] - reassign the seal's `pubkey` to a
- *   different (forged) key after signing. Authentication then fails at step-2
- *   decrypt — the conversation key derived from the forged pubkey doesn't match,
- *   so nip44 decrypt throws — rather than via seal-signature verification.
+ *   different (forged) key after signing (fails seal-signature verification).
+ * @param {'forge' | 'strip'} [opts.sealSig] - 'forge' swaps in another event's
+ *   (well-formed but wrong) signature; 'strip' sends an unsigned seal.
  */
-function buildGiftWrap({ senderSk, merchantPk, rumorPubkey, tamperSealPubkey = false }) {
+function buildGiftWrap({ senderSk, merchantPk, rumorPubkey, tamperSealPubkey = false, sealSig }) {
   const senderPk = getPublicKey(senderSk);
   const rumor = {
     kind: 16,
@@ -45,12 +45,18 @@ function buildGiftWrap({ senderSk, merchantPk, rumorPubkey, tamperSealPubkey = f
   };
   let seal = finalizeEvent(sealTemplate, senderSk);
 
+  // JSON round-trip, as a real seal arrives: drops nostr-tools' cached
+  // "verified" marker so tampering below is actually re-checked.
+  seal = JSON.parse(JSON.stringify(seal));
   if (tamperSealPubkey) {
-    // Reassign the seal's pubkey to a forged key. The seal is no longer
-    // signature-verified, so this is caught at step-2 decrypt: the conversation
-    // key derived from the forged pubkey doesn't match, so nip44 decrypt fails.
     const victimPk = getPublicKey(generateSecretKey());
     seal = { ...seal, pubkey: victimPk };
+  }
+  if (sealSig === 'forge') {
+    const other = finalizeEvent({ ...sealTemplate, content: 'x' }, senderSk);
+    seal = { ...seal, sig: other.sig };
+  } else if (sealSig === 'strip') {
+    delete seal.sig;
   }
 
   const ephemeralSk = generateSecretKey();
@@ -94,7 +100,34 @@ test('unwrapGiftWrap rejects a rumor whose pubkey != seal pubkey (spoofing)', ()
   client.pool.close([]);
 });
 
-test('unwrapGiftWrap rejects a seal whose pubkey was reassigned (step-2 decrypt fails)', () => {
+test('unwrapGiftWrap rejects a seal with a bad signature', () => {
+  const merchantSk = generateSecretKey();
+  const merchantPk = getPublicKey(merchantSk);
+  const senderSk = generateSecretKey();
+  const client = new NostrClient(merchantSk, []);
+  for (const sealSig of ['forge', 'strip']) {
+    const rumor = client.unwrapGiftWrap(buildGiftWrap({ senderSk, merchantPk, sealSig }));
+    assert.equal(rumor, null, `seal signature (${sealSig}) must be rejected`);
+  }
+  client.pool.close([]);
+});
+
+test('unwrapGiftWrap accepts a nostr-tools nip59 wrap (the website and service format)', () => {
+  const merchantSk = generateSecretKey();
+  const senderSk = generateSecretKey();
+  const client = new NostrClient(merchantSk, []);
+  const wrap = nip59.wrapEvent(
+    { kind: 16, content: '', tags: [], created_at: now() },
+    senderSk,
+    getPublicKey(merchantSk)
+  );
+  const rumor = client.unwrapGiftWrap(JSON.parse(JSON.stringify(wrap)));
+  assert.ok(rumor);
+  assert.equal(rumor.pubkey, getPublicKey(senderSk));
+  client.pool.close([]);
+});
+
+test('unwrapGiftWrap rejects a seal whose pubkey was reassigned', () => {
   const merchantSk = generateSecretKey();
   const merchantPk = getPublicKey(merchantSk);
   const senderSk = generateSecretKey();

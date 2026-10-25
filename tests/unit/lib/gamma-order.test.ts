@@ -4,7 +4,10 @@ import {
   createPaymentReceiptTemplate,
   formatAddress,
   formatOrderSummary,
+  interpretMerchantReply,
   ORDER_MESSAGE_TYPE,
+  orderTotalSats,
+  parseOrderCancellation,
   PAYMENT_RECEIPT_KIND,
   parseCommerceAmount,
   parsePaymentRequest,
@@ -268,5 +271,96 @@ describe('formatAddress / formatOrderSummary', () => {
       'GBP'
     );
     expect(summary).toContain('Total: £19.98 + 5,000 sats shipping');
+  });
+});
+
+describe('orderTotalSats', () => {
+  // 1 GBP = 1,250 sats; SATS pass through rounded (mirrors useExchangeRate).
+  const convert = (amount: number, currency: string) =>
+    currency.toUpperCase() === 'SATS' ? Math.round(amount) : Math.round(amount * 1250);
+
+  it('single-currency cart: convertToSats(subtotal) + shipping, as before', () => {
+    // 2 x £9.99 = £19.98 -> 24,975 sats; £2.50 shipping -> 3,125 sats.
+    expect(orderTotalSats([buildItem()], buildShipping(), convert)).toBe(24_975 + 3_125);
+  });
+
+  it('mixed currencies are converted separately, never summed raw', () => {
+    const stickers = buildItem(
+      { dTag: 'stickers', price: { amount: 10_000, currency: 'SATS' } },
+      1
+    );
+    const book = buildItem({}, 1);
+    // 10,000 sats + £9.99 (12,488) + £2.50 shipping (3,125)
+    expect(orderTotalSats([stickers, book], buildShipping(), convert)).toBe(
+      10_000 + 12_488 + 3_125
+    );
+  });
+
+  it('no shipping cost adds nothing; unpriced listings count as 0', () => {
+    const unpriced = buildItem({ dTag: 'free', price: null }, 3);
+    expect(
+      orderTotalSats([unpriced, buildItem({}, 1)], buildShipping({ shippingCost: 0 }), convert)
+    ).toBe(12_488);
+  });
+});
+
+describe('interpretMerchantReply', () => {
+  const ORDER = 'order-1';
+  const paymentRequest = (pubkey: string, orderId = ORDER) => ({
+    kind: 16,
+    pubkey,
+    content: 'Pay me',
+    tags: [
+      ['type', ORDER_MESSAGE_TYPE.PAYMENT_REQUEST],
+      ['order', orderId],
+      ['amount', '5000'],
+      ['payment', 'lightning', 'lnbc50u1invoice'],
+    ],
+  });
+  const cancellation = (pubkey: string, content = 'Price changed.') => ({
+    kind: 16,
+    pubkey,
+    content,
+    tags: [
+      ['type', ORDER_MESSAGE_TYPE.STATUS_UPDATE],
+      ['order', ORDER],
+      ['status', 'cancelled'],
+    ],
+  });
+
+  it('accepts the merchant payment request for this order', () => {
+    expect(interpretMerchantReply(paymentRequest(MERCHANT), ORDER, MERCHANT)).toEqual({
+      type: 'payment-request',
+      paymentRequest: {
+        id: ORDER,
+        type: 2,
+        amount: 5000,
+        message: 'Pay me',
+        payment_options: [{ type: 'ln', link: 'lnbc50u1invoice' }],
+      },
+    });
+  });
+
+  it('ignores a payment request from anyone but the merchant', () => {
+    expect(interpretMerchantReply(paymentRequest('e'.repeat(64)), ORDER, MERCHANT)).toBeNull();
+  });
+
+  it('ignores a payment request for another order', () => {
+    expect(interpretMerchantReply(paymentRequest(MERCHANT, 'other'), ORDER, MERCHANT)).toBeNull();
+  });
+
+  it('surfaces a merchant cancellation, but not a forged one', () => {
+    expect(interpretMerchantReply(cancellation(MERCHANT), ORDER, MERCHANT)).toEqual({
+      type: 'cancelled',
+      message: 'Price changed.',
+    });
+    expect(interpretMerchantReply(cancellation('e'.repeat(64)), ORDER, MERCHANT)).toBeNull();
+  });
+
+  it('parseOrderCancellation defaults an empty reason and caps a long one', () => {
+    expect(parseOrderCancellation(cancellation(MERCHANT, ''))?.message).toMatch(/not been charged/);
+    expect(parseOrderCancellation(cancellation(MERCHANT, 'x'.repeat(1000)))?.message).toHaveLength(
+      400
+    );
   });
 });

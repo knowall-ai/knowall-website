@@ -6,6 +6,16 @@ import { NostrAuthProvider } from '@/components/auth/nostr-auth-provider';
 import { KNOWALL_PUBKEY } from '@/lib/nostr';
 import { CLASSIFIED_LISTING_KIND, type NostrEvent } from '@/lib/nip99';
 
+// Fixtures are authored "by" KnowAll, whose key the tests can't sign with, so
+// the relay signature check is stubbed: every event passes except those marked
+// `sig: 'forged'`. Real Schnorr verification is covered by
+// tests/unit/lib/nostr-verify.test.ts.
+vi.mock('@/lib/nostr-verify', () => ({
+  isVerifiedEvent: (event: { sig?: string } | null) => event?.sig !== 'forged',
+  verifiedEvents: <T extends { sig?: string }>(events: T[]) =>
+    events.filter((event) => event?.sig !== 'forged'),
+}));
+
 /**
  * ShopListings component tests
  *
@@ -116,6 +126,28 @@ describe('ShopListings', () => {
     scenario = 'error';
     renderShop();
     expect(await screen.findByText(/couldn't load the shop/)).toBeInTheDocument();
+  });
+
+  it('drops a forged (bad-signature) listing and keeps the genuine one', async () => {
+    scriptedEvents = [
+      makeListing({ id: 'genuine', dTag: 'book', title: 'Genuine Book' }),
+      // A newer "version" with a bargain price that a relay forged.
+      {
+        ...makeListing({
+          id: 'forged',
+          dTag: 'book',
+          title: 'Forged Book',
+          created_at: 1_800_000_000,
+        }),
+        sig: 'forged',
+      },
+      { ...makeListing({ id: 'forged-2', dTag: 'other', title: 'Forged Only' }), sig: 'forged' },
+    ];
+    renderShop();
+
+    expect(await screen.findByText('Genuine Book')).toBeInTheDocument();
+    expect(screen.queryByText('Forged Book')).not.toBeInTheDocument();
+    expect(screen.queryByText('Forged Only')).not.toBeInTheDocument();
   });
 
   it('renders product cards from kind-30402 events', async () => {

@@ -17,6 +17,8 @@ export interface NostrEvent {
   kind: number;
   content: string;
   tags: string[][];
+  /** Schnorr signature — checked by lib/nostr-verify before a listing is trusted. */
+  sig?: string;
 }
 
 export interface ListingPrice {

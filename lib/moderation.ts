@@ -17,7 +17,7 @@
  * best-effort, never an availability risk.
  */
 
-import { verifyEvent } from 'nostr-tools/pure';
+import { isVerifiedEvent } from './nostr-verify';
 import { KNOWALL_PUBKEY } from './nostr';
 import { SOCIAL_RELAYS, publishToRelays, queryRelaysDetailed } from './relay';
 import type { EventTemplate } from './story-social';
@@ -42,13 +42,7 @@ const EMPTY_BLOCKLIST: Blocklist = { pubkeys: new Set(), eventIds: new Set() };
  * replacement.
  */
 function isAuthentic(event: NostrEvent): boolean {
-  const { sig } = event;
-  if (typeof sig !== 'string') return false;
-  try {
-    return verifyEvent({ ...event, sig });
-  } catch {
-    return false;
-  }
+  return isVerifiedEvent(event);
 }
 
 /**

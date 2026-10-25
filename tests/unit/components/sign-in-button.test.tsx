@@ -4,6 +4,16 @@ import * as nip19 from 'nostr-tools/nip19';
 import SignInButton from '@/components/auth/sign-in-button';
 import { NostrAuthProvider } from '@/components/auth/nostr-auth-provider';
 
+// Fixtures are authored "by" KnowAll, whose key the tests can't sign with, so
+// the relay signature check is stubbed: every event passes except those marked
+// `sig: 'forged'`. Real Schnorr verification is covered by
+// tests/unit/lib/nostr-verify.test.ts.
+vi.mock('@/lib/nostr-verify', () => ({
+  isVerifiedEvent: (event: { sig?: string } | null) => event?.sig !== 'forged',
+  verifiedEvents: <T extends { sig?: string }>(events: T[]) =>
+    events.filter((event) => event?.sig !== 'forged'),
+}));
+
 /**
  * SignInButton tests — the signed-in account chip and its fallback chain.
  *

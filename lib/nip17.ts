@@ -20,6 +20,7 @@
 import * as nip44 from 'nostr-tools/nip44';
 import { wrapEvent } from 'nostr-tools/nip59';
 import { finalizeEvent, generateSecretKey, getEventHash, getPublicKey } from 'nostr-tools/pure';
+import { isVerifiedEvent } from './nostr-verify';
 import type { NostrEvent } from './story-notes';
 import type { EventTemplate } from './story-social';
 
@@ -171,10 +172,11 @@ export async function wrapRumor(
  * Unwrap a kind-1059 gift wrap addressed to the buyer and return the inner
  * rumor, or null when it can't be decrypted / isn't a valid NIP-59 envelope.
  *
- * Sender authentication (ported from robotechy's DMProvider): the seal's
- * author is the authenticated sender — its content only decrypts when keyed
- * to the genuine seal pubkey — and the rumor's pubkey MUST match the seal's,
- * otherwise the rumor's sender was forged and the message is rejected.
+ * Sender authentication (NIP-59): the kind-13 seal is signed by the real
+ * sender, so its signature must verify, and the rumor's pubkey MUST match the
+ * seal's — otherwise the rumor's sender was forged and the message is
+ * rejected. (The seal content also only decrypts when keyed to the genuine
+ * seal pubkey.) Callers still decide WHICH sender they accept.
  */
 export async function unwrapGiftWrap(
   wrap: NostrEvent,
@@ -199,6 +201,7 @@ export async function unwrapGiftWrap(
   try {
     const seal = JSON.parse(await decrypt(wrap.pubkey, wrap.content)) as NostrEvent;
     if (seal.kind !== SEAL_KIND) return null;
+    if (!isVerifiedEvent(seal)) return null; // unsigned or tampered seal — reject
 
     const rumor = JSON.parse(await decrypt(seal.pubkey, seal.content)) as NostrEvent;
     if (rumor.pubkey !== seal.pubkey) return null; // forged sender — reject

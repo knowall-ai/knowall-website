@@ -2,7 +2,9 @@
 // Node environment: these tests exercise noble-hashes crypto via nostr-tools,
 // and jsdom's TextEncoder returns cross-realm Uint8Arrays that noble rejects.
 import { describe, it, expect } from 'vitest';
-import { generateSecretKey, getPublicKey } from 'nostr-tools/pure';
+import { finalizeEvent, generateSecretKey, getPublicKey } from 'nostr-tools/pure';
+import * as nip44 from 'nostr-tools/nip44';
+import type { NostrEvent } from '@/lib/story-notes';
 import { GIFT_WRAP_KIND, localBuyerIdentity, unwrapGiftWrap, wrapRumor } from '@/lib/nip17';
 import { ORDER_PROCESS_KIND } from '@/lib/gamma-order';
 
@@ -75,5 +77,78 @@ describe('wrapRumor (local buyer identity)', () => {
         buyer
       )
     ).toBeNull();
+  });
+});
+
+describe('unwrapGiftWrap seal authentication', () => {
+  /**
+   * Hand-build a NIP-59 wrap so the seal can be tampered with. The seal is
+   * JSON round-tripped (as it would be off the wire), so nostr-tools' cached
+   * "verified" marker can't mask the tampering.
+   */
+  function wrapWithSeal(
+    senderSecret: Uint8Array,
+    recipientPubkey: string,
+    tamper: (seal: Record<string, unknown>) => Record<string, unknown>
+  ) {
+    const rumor = {
+      kind: ORDER_PROCESS_KIND,
+      pubkey: getPublicKey(senderSecret),
+      content: 'Pay this invoice',
+      tags: [['p', recipientPubkey]],
+      created_at: 1_700_000_000,
+    };
+    const seal = JSON.parse(
+      JSON.stringify(
+        finalizeEvent(
+          {
+            kind: 13,
+            content: nip44.v2.encrypt(
+              JSON.stringify(rumor),
+              nip44.v2.utils.getConversationKey(senderSecret, recipientPubkey)
+            ),
+            tags: [],
+            created_at: 1_700_000_000,
+          },
+          senderSecret
+        )
+      )
+    );
+    const wrapSecret = generateSecretKey();
+    return finalizeEvent(
+      {
+        kind: GIFT_WRAP_KIND,
+        content: nip44.v2.encrypt(
+          JSON.stringify(tamper(seal)),
+          nip44.v2.utils.getConversationKey(wrapSecret, recipientPubkey)
+        ),
+        tags: [['p', recipientPubkey]],
+        created_at: 1_700_000_000,
+      },
+      wrapSecret
+    ) as NostrEvent;
+  }
+
+  const buyer = localBuyerIdentity(generateSecretKey());
+  const merchantSecret = generateSecretKey();
+
+  it('accepts a correctly signed seal', async () => {
+    const wrap = wrapWithSeal(merchantSecret, buyer.pubkey, (seal) => seal);
+    const rumor = await unwrapGiftWrap(wrap, buyer);
+    expect(rumor?.pubkey).toBe(getPublicKey(merchantSecret));
+  });
+
+  it('rejects a seal with a bad signature', async () => {
+    const otherSig = finalizeEvent(
+      { kind: 13, content: 'x', tags: [], created_at: 1 },
+      merchantSecret
+    ).sig;
+    const wrap = wrapWithSeal(merchantSecret, buyer.pubkey, (seal) => ({ ...seal, sig: otherSig }));
+    expect(await unwrapGiftWrap(wrap, buyer)).toBeNull();
+  });
+
+  it('rejects an unsigned seal', async () => {
+    const wrap = wrapWithSeal(merchantSecret, buyer.pubkey, ({ sig: _sig, ...seal }) => seal);
+    expect(await unwrapGiftWrap(wrap, buyer)).toBeNull();
   });
 });
