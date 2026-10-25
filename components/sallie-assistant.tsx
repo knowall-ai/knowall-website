@@ -479,6 +479,7 @@ export default function SallieAssistant({
   const heroRef = useRef<HTMLDivElement>(null);
   const heroOnScreen = useOnScreen(heroRef);
   const [dockOpen, setDockOpen] = useState(false);
+  const dockButtonRef = useRef<HTMLButtonElement>(null);
   const [dockBubbleDismissed, setDockBubbleDismissed] = useState(false);
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
@@ -595,7 +596,7 @@ export default function SallieAssistant({
   const dock = (
     <div
       className={cn(
-        'fixed bottom-4 left-4 z-50 flex flex-col items-start gap-3 transition-all duration-300 sm:bottom-5 sm:left-5',
+        'fixed bottom-4 left-4 z-50 flex flex-col-reverse items-start gap-3 transition-all duration-300 sm:bottom-5 sm:left-5',
         docked ? 'translate-y-0 opacity-100' : 'pointer-events-none translate-y-6 opacity-0'
       )}
       data-testid="sallie-dock"
@@ -603,47 +604,13 @@ export default function SallieAssistant({
       onPointerDownCapture={onInteract}
       onKeyDownCapture={onInteract}
     >
-      {docked && dockOpen && (
-        <div className="flex h-[min(600px,calc(100vh-7rem))] w-[min(400px,calc(100vw-2.5rem))] flex-col overflow-hidden rounded-2xl border border-lime-500/30 bg-gray-950/95 text-white shadow-2xl shadow-black/60 backdrop-blur-md animate-sallie-pop motion-reduce:animate-none">
-          <div className="relative flex items-center gap-3 overflow-hidden px-4 py-3">
-            <Starfield />
-            <SallieStage
-              shape="circle"
-              busy={conversation.isLoading}
-              className="relative z-10 w-12 shrink-0"
-              frameClassName="ring-2 ring-lime-500/50"
-            />
-            <div className="relative z-10">
-              <p className="font-semibold leading-tight">Sallie</p>
-              <p className="text-xs text-lime-400">KnowAll AI guide</p>
-            </div>
-            <VoiceToggle voice={voice} className="relative z-10 ml-auto" />
-            <button
-              type="button"
-              onClick={() => setDockOpen(false)}
-              aria-label="Close chat"
-              className="cursor-pointer relative z-10 rounded-full p-1.5 text-gray-400 hover:bg-white/10 hover:text-white"
-            >
-              <X className="h-4 w-4" />
-            </button>
-          </div>
-          <ConversationPanel
-            conversation={conversation}
-            ask={ask}
-            voice={voice}
-            input={input}
-            setInput={setInput}
-            greeting={opener.text}
-            suggestionList={suggestionList}
-            className="min-h-0 flex-1 px-4 pb-4 pt-3"
-          />
-        </div>
-      )}
-
       {/* Sallie in the corner, with her greeting and voice option beside her
-          (not above), so the dock stays low and clear of the page's content. */}
+          (not above), so the dock stays low and clear of the page's content.
+          The open chat comes after her in the DOM (flex-col-reverse shows it
+          above), so Tab moves from her button straight into the chat. */}
       <div className="flex items-end gap-3">
         <button
+          ref={dockButtonRef}
           type="button"
           onClick={() => setDockOpen((o) => !o)}
           aria-label={dockOpen ? 'Close chat with Sallie' : 'Chat with Sallie'}
@@ -698,6 +665,47 @@ export default function SallieAssistant({
           </div>
         )}
       </div>
+
+      {docked && dockOpen && (
+        <div className="flex h-[min(600px,calc(100vh-7rem))] w-[min(400px,calc(100vw-2.5rem))] flex-col overflow-hidden rounded-2xl border border-lime-500/30 bg-gray-950/95 text-white shadow-2xl shadow-black/60 backdrop-blur-md animate-sallie-pop motion-reduce:animate-none">
+          <div className="relative flex items-center gap-3 overflow-hidden px-4 py-3">
+            <Starfield />
+            <SallieStage
+              shape="circle"
+              busy={conversation.isLoading}
+              className="relative z-10 w-12 shrink-0"
+              frameClassName="ring-2 ring-lime-500/50"
+            />
+            <div className="relative z-10">
+              <p className="font-semibold leading-tight">Sallie</p>
+              <p className="text-xs text-lime-400">KnowAll AI guide</p>
+            </div>
+            <VoiceToggle voice={voice} className="relative z-10 ml-auto" />
+            <button
+              type="button"
+              onClick={() => {
+                setDockOpen(false);
+                // Hand focus back to her button rather than dropping it on the page
+                dockButtonRef.current?.focus();
+              }}
+              aria-label="Close chat"
+              className="cursor-pointer relative z-10 rounded-full p-1.5 text-gray-400 hover:bg-white/10 hover:text-white"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          </div>
+          <ConversationPanel
+            conversation={conversation}
+            ask={ask}
+            voice={voice}
+            input={input}
+            setInput={setInput}
+            greeting={opener.text}
+            suggestionList={suggestionList}
+            className="min-h-0 flex-1 px-4 pb-4 pt-3"
+          />
+        </div>
+      )}
     </div>
   );
 

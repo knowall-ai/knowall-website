@@ -60,7 +60,9 @@ export default function DieHero({ children }: { children: React.ReactNode }) {
               loading="eager"
               fetchPriority="high"
               quality={90}
-              sizes="(max-aspect-ratio: 3/2) 150vh, 100vw"
+              // Phones: the stage is twice the scene's height (32svh) wide, at least
+              // the viewport. Wider: it covers the hero, so tall screens crop the sides.
+              sizes="(max-width: 767px) max(100vw, 64vh), (max-aspect-ratio: 3/2) 150vh, 100vw"
               className="object-cover"
             />
             <svg

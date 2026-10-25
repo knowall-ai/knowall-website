@@ -52,6 +52,19 @@ test.describe('Sallie Chat', () => {
     await expect(dock.getByRole('button', { name: 'Send message' })).toBeVisible();
   });
 
+  test('Keyboard users move from her button into the chat and back', async ({ page }) => {
+    const dock = page.getByTestId('sallie-dock');
+    const open = dock.getByRole('button', { name: 'Chat with Sallie' });
+    await open.focus();
+    await page.keyboard.press('Enter');
+    await expect(dock.getByPlaceholder('Type your message...')).toBeVisible();
+    // The open chat follows her button in the tab order
+    await page.keyboard.press('Tab');
+    expect(await dock.evaluate((el) => el.contains(document.activeElement))).toBe(true);
+    await dock.getByRole('button', { name: 'Close chat', exact: true }).click();
+    await expect(open).toBeFocused();
+  });
+
   test('Sending a message shows a fallback reply without a valid API key', async ({ page }) => {
     const dock = page.getByTestId('sallie-dock');
     await dock.getByRole('button', { name: 'Chat with Sallie' }).click();
