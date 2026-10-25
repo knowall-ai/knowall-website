@@ -71,6 +71,30 @@ describe('rate limits', () => {
     expect(clientIp(new Request('http://x'))).toBe('unknown');
   });
 
+  it("behind our Front Door, uses X-Azure-SocketIP, not Front Door's own XFF entry", () => {
+    const fd = (headers: Record<string, string>) => clientIp(new Request('http://x', { headers }));
+    const fdid = 'fb60dca5-e120-45d3-8032-bbf173b06367';
+    // App Service appends Front Door's egress address last; the socket IP is the visitor.
+    expect(
+      fd({
+        'x-azure-fdid': fdid,
+        'x-azure-socketip': '198.51.100.7',
+        'x-forwarded-for': '1.1.1.1, 147.243.0.10:443',
+      })
+    ).toBe('198.51.100.7');
+    // A forged or foreign Front Door ID doesn't make the socket header trusted.
+    expect(
+      fd({
+        'x-azure-fdid': 'not-ours',
+        'x-azure-socketip': '198.51.100.7',
+        'x-forwarded-for': '203.0.113.9',
+      })
+    ).toBe('203.0.113.9');
+    expect(fd({ 'x-azure-socketip': '198.51.100.7', 'x-forwarded-for': '203.0.113.9' })).toBe(
+      '203.0.113.9'
+    );
+  });
+
   it('accepts same-origin requests and rejects others', () => {
     const ok = new Request('http://x', {
       headers: { host: 'www.knowall.ai', origin: 'https://www.knowall.ai' },

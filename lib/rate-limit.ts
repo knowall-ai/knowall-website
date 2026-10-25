@@ -63,19 +63,36 @@ export interface LimitResult {
 }
 
 /**
- * Best-effort client address. App Service appends the real client as the LAST
- * x-forwarded-for entry (as ip:port); anything before it was sent by the
- * client and can be forged, so it's ignored.
+ * Our Azure Front Door profile's ID. App Service only admits requests carrying
+ * it (access restriction), and Front Door overwrites any client-sent copy.
+ */
+const FRONT_DOOR_ID = process.env.FRONT_DOOR_ID || 'fb60dca5-e120-45d3-8032-bbf173b06367';
+
+function stripPort(addr: string): string {
+  const v6 = /^\[([^\]]+)\](?::\d+)?$/.exec(addr);
+  if (v6) return v6[1];
+  // Strip a port from IPv4 (one colon); leave bare IPv6 untouched.
+  return /^[^:]+:\d+$/.test(addr) ? addr.slice(0, addr.lastIndexOf(':')) : addr;
+}
+
+/**
+ * Best-effort client address for rate limiting.
+ *
+ * Behind our Front Door, X-Azure-SocketIP is the address that opened the TCP
+ * connection to Front Door, which a client can't forge (X-Azure-ClientIP and
+ * x-forwarded-for can be). It's trusted only when X-Azure-FDID is ours.
+ * Without Front Door (local dev, tests), App Service appends the real client
+ * as the LAST x-forwarded-for entry; anything before it is client-sent.
+ * (Behind Front Door that last entry is Front Door's own egress address, so
+ * every visitor at one edge would share a bucket.)
  */
 export function clientIp(req: Request): string {
-  const forwarded = req.headers.get('x-forwarded-for');
-  if (forwarded) {
-    const last = forwarded.split(',').at(-1)!.trim();
-    const v6 = /^\[([^\]]+)\](?::\d+)?$/.exec(last);
-    if (v6) return v6[1];
-    // Strip a port from IPv4 (one colon); leave bare IPv6 untouched.
-    return /^[^:]+:\d+$/.test(last) ? last.slice(0, last.lastIndexOf(':')) : last;
+  if (req.headers.get('x-azure-fdid') === FRONT_DOOR_ID) {
+    const socket = req.headers.get('x-azure-socketip')?.trim();
+    if (socket) return stripPort(socket);
   }
+  const forwarded = req.headers.get('x-forwarded-for');
+  if (forwarded) return stripPort(forwarded.split(',').at(-1)!.trim());
   return req.headers.get('x-real-ip') || 'unknown';
 }
 

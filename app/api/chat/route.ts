@@ -12,6 +12,10 @@ import { cleanPath } from '@/lib/analytics/privacy';
 // Set to force-dynamic to ensure the route is always server-rendered
 export const dynamic = 'force-dynamic';
 
+/** Shown when the model can't be reached. Fixed text: no visitor input, no prompt. */
+export const FALLBACK_REPLY =
+  "Sorry, I'm having trouble thinking right now. Please try again in a moment, or email hello@knowall.ai and the team will pick it up.";
+
 // Handle GET requests for diagnostic purposes
 export async function GET(req: Request) {
   // Check if this is a diagnostic request
@@ -28,7 +32,6 @@ export async function GET(req: Request) {
       {
         headers: {
           'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
           'Cache-Control': 'no-store',
         },
       }
@@ -185,9 +188,8 @@ export async function POST(req: Request) {
         console.warn(`Chat provider ${provider.name} returned 429 (rate limited)`);
         responseContent = `I'm rather popular right now and have used up my capacity for the minute. Please give me a moment and send that again, or email sallie@knowall.ai and I'll pick it up from there.`;
       } else {
-        // Create a fallback response that includes the first sentence of the system prompt
-        const firstSentence = systemPrompt.split('.')[0] + '.';
-        responseContent = `I received your message: "${userMessage}". However, I'm currently experiencing some technical difficulties connecting to my knowledge base. ${firstSentence} Please try again later or contact us directly for more information about our services.`;
+        // A fixed reply: never echo the visitor's text or any of the system prompt.
+        responseContent = FALLBACK_REPLY;
       }
 
       // Log the fallback conversation
