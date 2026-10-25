@@ -13,9 +13,11 @@ test.describe('Contact Us', () => {
 
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
-    // The chat input is only rendered once the page has hydrated, so use it
-    // as a signal that click handlers are attached
-    await expect(page.getByPlaceholder('Type your message...')).toBeVisible({ timeout: 60000 });
+    // Sallie's dock is portalled in only once the page has hydrated, so use
+    // it as a signal that click handlers are attached
+    await expect(page.getByRole('button', { name: 'Chat with Sallie' })).toBeVisible({
+      timeout: 60000,
+    });
   });
 
   test('Contact section is present with heading', async ({ page }) => {

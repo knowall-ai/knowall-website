@@ -1,6 +1,5 @@
 import type React from 'react';
 import './globals.css';
-import { preload } from 'react-dom';
 import type { Metadata } from 'next';
 import { connection } from 'next/server';
 import { Inter } from 'next/font/google';
@@ -40,9 +39,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   // The CSP nonce (proxy.ts) is per request, so pages must render per request
   // rather than being prerendered at build time.
   await connection();
-  // Hint the hero background early without hand-writing <head> (which makes React
-  // warn about Next's dev-injected script tags on every page).
-  preload('/images/green-bg.png', { as: 'image' });
   return (
     <html lang="en">
       <body className={inter.className}>

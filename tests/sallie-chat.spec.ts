@@ -4,8 +4,9 @@ import { test, expect } from '@playwright/test';
  * Sallie Chat Tests
  *
  * Based on requirements (sallie-chat):
- * - Sallie's animated avatar renders with her welcome greeting
- * - Sending a message displays a response in the chat interface
+ * - On the homepage Sallie is docked bottom right from load (the hero belongs
+ *   to the processing-power scene), with her animated avatar and greeting
+ * - Opening the dock shows the chat; sending a message displays a response
  * - When the OpenAI API is unavailable (e.g. no valid API key), Sallie replies
  *   with a fallback response instead of an error
  *
@@ -19,47 +20,85 @@ test.describe('Sallie Chat', () => {
 
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
-    // The chat input is only rendered once the page has hydrated
-    await expect(page.getByPlaceholder('Type your message...')).toBeVisible({ timeout: 60000 });
+    // The dock is only portalled in once the page has hydrated
+    await expect(
+      page.getByTestId('sallie-dock').getByRole('button', { name: 'Chat with Sallie' })
+    ).toBeVisible({ timeout: 60000 });
   });
 
-  test('Chat interface renders with Sallie header and greeting', async ({ page }) => {
-    // Scope to the chat card via its test id, so the "Sallie" heading in the
-    // Meet the Agents section (Sallie the Salesperson) can't be matched instead.
-    await expect(
-      page.getByTestId('sallie-chat').getByRole('heading', { name: 'Sallie', exact: true })
-    ).toBeVisible();
-    // Her animated avatar (the robot rig) renders alongside the greeting
-    await expect(
-      page.getByTestId('sallie-chat').getByRole('img', { name: /Sallie, KnowAll's robot/ })
-    ).toBeVisible();
-    // One of several openers is picked per visit and typed out, so allow it time to finish.
-    await expect(page.getByTestId('sallie-greeting')).toContainText(/Sallie/, { timeout: 15000 });
-    await expect(page.getByTestId('sallie-greeting')).toContainText(/\?/, { timeout: 15000 });
+  test('Sallie is docked bottom right from load, not in the hero', async ({ page }) => {
+    const dock = page.getByTestId('sallie-dock');
+    // No hero chat card any more
+    await expect(page.getByTestId('sallie-chat')).toHaveCount(0);
+    // Her animated avatar (the robot rig) is the dock button
+    await expect(dock.getByRole('img', { name: /Sallie, KnowAll's robot/ })).toBeVisible();
+    await expect(dock.getByRole('button', { name: /(Mute|Unmute) Sallie/ })).toBeVisible();
+    // One of several openers is picked per visit and typed into her greeting bubble.
+    await expect(dock.getByText(/Sallie/).first()).toBeVisible({ timeout: 15000 });
+
+    const box = await dock.boundingBox();
+    const viewport = page.viewportSize();
+    expect(box && viewport && box.x + box.width > viewport.width - 40).toBeTruthy();
+    expect(box && viewport && box.y + box.height > viewport.height - 40).toBeTruthy();
     // The conversation ID is used internally (logging/lead follow-up) but is
     // deliberately not surfaced to visitors.
     await expect(page.getByText(/Our conversation will be saved with the ID/)).toHaveCount(0);
   });
 
-  test('Chat input and send button are available', async ({ page }) => {
-    await expect(page.getByPlaceholder('Type your message...')).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Send message' })).toBeVisible();
+  test('Opening the dock shows the chat input and send button', async ({ page }) => {
+    const dock = page.getByTestId('sallie-dock');
+    await dock.getByRole('button', { name: 'Chat with Sallie' }).click();
+    await expect(dock.getByPlaceholder('Type your message...')).toBeVisible();
+    await expect(dock.getByRole('button', { name: 'Send message' })).toBeVisible();
+  });
+
+  test('An obvious "Talk to Sallie" mic button sits beside her in the dock', async ({ page }) => {
+    const mic = page.getByTestId('sallie-dock').getByRole('button', { name: 'Talk to Sallie' });
+    await expect(mic).toBeVisible();
+    await expect(mic).toHaveAttribute('aria-pressed', 'false');
+    // At least a 44px touch target
+    const box = await mic.boundingBox();
+    expect(box && box.height >= 44 && box.width >= 44).toBeTruthy();
+  });
+
+  test('Her greeting shows on arrival and tucks away once you scroll', async ({ page }) => {
+    const dock = page.getByTestId('sallie-dock');
+    await expect(dock.getByRole('button', { name: 'Dismiss greeting' })).toBeVisible();
+    await page.locator('#services').scrollIntoViewIfNeeded();
+    await expect(dock.getByRole('button', { name: 'Dismiss greeting' })).toHaveCount(0);
+    // She stays docked with her voice option
+    await expect(dock.getByRole('button', { name: 'Chat with Sallie' })).toBeVisible();
+  });
+
+  test('Keyboard users move from her button into the chat and back', async ({ page }) => {
+    const dock = page.getByTestId('sallie-dock');
+    const open = dock.getByRole('button', { name: 'Chat with Sallie' });
+    await open.focus();
+    await page.keyboard.press('Enter');
+    await expect(dock.getByPlaceholder('Type your message...')).toBeVisible();
+    // The open chat follows her button in the tab order
+    await page.keyboard.press('Tab');
+    expect(await dock.evaluate((el) => el.contains(document.activeElement))).toBe(true);
+    await dock.getByRole('button', { name: 'Close chat', exact: true }).click();
+    await expect(open).toBeFocused();
   });
 
   test('Sending a message shows a fallback reply without a valid API key', async ({ page }) => {
-    const input = page.getByPlaceholder('Type your message...');
+    const dock = page.getByTestId('sallie-dock');
+    await dock.getByRole('button', { name: 'Chat with Sallie' }).click();
+    const input = dock.getByPlaceholder('Type your message...');
     await input.fill('Hello Sallie');
-    await page.getByRole('button', { name: 'Send message' }).click();
+    await dock.getByRole('button', { name: 'Send message' }).click();
 
     // The user's message appears in the conversation
-    await expect(page.getByText('Hello Sallie', { exact: true })).toBeVisible();
+    await expect(dock.getByText('Hello Sallie', { exact: true })).toBeVisible();
 
     // Sallie replies. Without a valid OPENAI_API_KEY the server responds with
     // its fallback message acknowledging the user's input.
-    await expect(page.getByText(/I received your message: "Hello Sallie"/)).toBeVisible({
+    await expect(dock.getByText(/I received your message: "Hello Sallie"/)).toBeVisible({
       timeout: 25000,
     });
-    await expect(page.getByText(/technical difficulties/)).toBeVisible();
+    await expect(dock.getByText(/technical difficulties/)).toBeVisible();
   });
 
   test('Chat API returns a well-formed fallback response', async ({ request }) => {

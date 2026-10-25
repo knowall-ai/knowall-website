@@ -81,5 +81,6 @@ test.describe('Purple Team Page', () => {
     const box = await dock.boundingBox();
     const viewport = page.viewportSize();
     expect(box && viewport && box.x + box.width > viewport.width - 40).toBeTruthy();
+    expect(box && viewport && box.y + box.height > viewport.height - 40).toBeTruthy();
   });
 });
