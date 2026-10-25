@@ -43,7 +43,7 @@ interface ShippingZonesDialogProps {
 const CURRENCIES = ['SATS', 'GBP', 'USD', 'EUR', 'BTC'];
 
 const inputDark =
-  'border-gray-700 bg-gray-800 text-white placeholder:text-gray-500 focus-visible:ring-lime-500';
+  'border-gray-700 bg-gray-800 text-white placeholder:text-gray-500 focus-visible:ring-brand';
 
 /**
  * Manage shipping zones — full CRUD over the owner's Gamma Markets kind-30406
@@ -142,7 +142,7 @@ export function ShippingZonesDialog({ open, onOpenChange }: ShippingZonesDialogP
       <DialogContent className="max-h-[90vh] overflow-y-auto overflow-x-hidden border-gray-800 bg-gray-900 text-white sm:max-w-2xl">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <Truck className="h-5 w-5 text-lime-500" /> Shipping zones
+            <Truck className="h-5 w-5 text-brand" /> Shipping zones
           </DialogTitle>
           <DialogDescription className="text-gray-400">
             Manage delivery zones, destination countries and costs (Gamma Markets kind 30406).
@@ -181,7 +181,7 @@ export function ShippingZonesDialog({ open, onOpenChange }: ShippingZonesDialogP
                         size="icon"
                         aria-label={`Edit ${zone.title}`}
                         onClick={() => startEdit(event)}
-                        className="text-gray-300 hover:bg-gray-800 hover:text-lime-500"
+                        className="text-gray-300 hover:bg-gray-800 hover:text-brand"
                       >
                         <Pencil className="h-4 w-4" />
                       </Button>
@@ -324,7 +324,8 @@ export function ShippingZonesDialog({ open, onOpenChange }: ShippingZonesDialogP
             <Button
               onClick={handleSave}
               disabled={saving}
-              className="bg-lime-600 font-semibold text-gray-950 hover:bg-lime-400"
+              variant="brand"
+              className="font-semibold"
             >
               {saving ? (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />

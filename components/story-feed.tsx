@@ -26,6 +26,7 @@ import {
   timeAgo,
 } from '@/lib/story-notes';
 import { isVerifiedEvent } from '@/lib/nostr-verify';
+import { Badge } from '@/components/ui/badge';
 
 const RELAYS = SOCIAL_RELAYS;
 const MAX_NOTES = 50;
@@ -56,7 +57,7 @@ function linkify(text: string, onTagClick: (tag: string) => void): ReactNode[] {
           href={url}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-lime-500 hover:underline break-all"
+          className="text-brand hover:underline break-all"
         >
           {url}
         </a>
@@ -69,7 +70,7 @@ function linkify(text: string, onTagClick: (tag: string) => void): ReactNode[] {
           target="_blank"
           rel="noopener noreferrer"
           title={nostrRef}
-          className="text-lime-500 hover:underline"
+          className="text-brand hover:underline"
         >
           {`@${nostrRef.slice(0, 10)}…${nostrRef.slice(-4)}`}
         </a>
@@ -80,7 +81,7 @@ function linkify(text: string, onTagClick: (tag: string) => void): ReactNode[] {
           key={`link-${key++}`}
           type="button"
           onClick={() => onTagClick(hashtag.slice(1))}
-          className="font-medium text-lime-500 hover:underline"
+          className="font-medium text-brand hover:underline"
         >
           {hashtag}
         </button>
@@ -263,7 +264,7 @@ export default function StoryFeed({ pubkey = KNOWALL_PUBKEY }: StoryFeedProps) {
             href={`https://njump.me/${KNOWALL_NPUB}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-lime-500 hover:underline"
+            className="text-brand hover:underline"
           >
             read it on njump
           </a>
@@ -279,7 +280,7 @@ export default function StoryFeed({ pubkey = KNOWALL_PUBKEY }: StoryFeedProps) {
         className="rounded-xl border border-gray-800 bg-gray-900 py-12 px-6 text-center"
         data-testid="story-empty"
       >
-        <BookOpen className="mx-auto mb-4 h-12 w-12 text-lime-600" />
+        <BookOpen className="mx-auto mb-4 h-12 w-12 text-brand" />
         <h2 className="mb-2 text-lg font-semibold text-white">Our story is just beginning</h2>
         <p className="mx-auto max-w-xl text-sm leading-relaxed text-gray-400">
           KnowAll AI was founded by our CEO, Ben Weeks — an open-source developer with deep roots in
@@ -287,7 +288,7 @@ export default function StoryFeed({ pubkey = KNOWALL_PUBKEY }: StoryFeedProps) {
           the UK and KnowAll AI SAS de CV, incorporated in El Salvador in 2025. Everything we
           publish lands here first, straight from our Nostr feed.
         </p>
-        <Button asChild className="mt-6 bg-lime-600 hover:bg-lime-400 text-gray-950">
+        <Button asChild variant="brand" className="mt-6">
           <a href={`https://njump.me/${KNOWALL_NPUB}`} target="_blank" rel="noopener noreferrer">
             Follow us on Nostr
           </a>
@@ -304,9 +305,9 @@ export default function StoryFeed({ pubkey = KNOWALL_PUBKEY }: StoryFeedProps) {
           data-testid="story-tag-filter"
         >
           <span className="text-sm text-gray-400">Filtering by:</span>
-          <span className="rounded bg-lime-500/10 px-2 py-0.5 text-sm font-medium text-lime-500">
+          <Badge variant="brand-outline" className="rounded px-2 text-sm font-medium">
             #{activeTag}
-          </span>
+          </Badge>
           <button
             type="button"
             onClick={() => setActiveTag(null)}
@@ -395,12 +396,12 @@ function StoryNote({
       {/* Timeline spine + node */}
       <div className="flex flex-col items-center">
         <span
-          className="mt-1.5 h-4 w-4 shrink-0 rounded-full bg-lime-500 ring-4 ring-lime-500/20"
+          className="mt-1.5 h-4 w-4 shrink-0 rounded-full bg-brand ring-4 ring-brand/20"
           aria-hidden="true"
         />
         {!isLast && (
           <span
-            className="mt-1 w-0.5 grow bg-linear-to-b from-lime-500/40 to-transparent"
+            className="mt-1 w-0.5 grow bg-linear-to-b from-brand/40 to-transparent"
             aria-hidden="true"
           />
         )}
@@ -418,7 +419,7 @@ function StoryNote({
             <time
               dateTime={timestamp.toISOString()}
               title={timestamp.toLocaleString()}
-              className="text-xs font-medium uppercase tracking-wide text-lime-500 hover:underline"
+              className="text-xs font-medium uppercase tracking-wide text-brand hover:underline"
             >
               {timeAgo(note.created_at)}
             </time>
@@ -469,8 +470,8 @@ function StoryNote({
               onClick={() => setShowComments((value) => !value)}
               aria-expanded={showComments}
               data-testid="story-comments-toggle"
-              className={`flex items-center gap-1.5 text-sm transition-colors hover:text-lime-500 ${
-                showComments ? 'text-lime-500' : 'text-gray-400'
+              className={`flex items-center gap-1.5 text-sm transition-colors hover:text-brand ${
+                showComments ? 'text-brand' : 'text-gray-400'
               }`}
             >
               <MessageSquare className="h-4 w-4" aria-hidden="true" />

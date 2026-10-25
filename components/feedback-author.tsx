@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { VolumeX } from 'lucide-react';
 import { profileDisplayName, type ProfileMetadata } from '@/lib/story-social';
 import { encodeBech32, timeAgo } from '@/lib/story-notes';
+import { InitialChip } from '@/components/initial-chip';
 
 /**
  * Author byline shared by product comments and reviews: avatar + name (kind-0
@@ -54,9 +55,7 @@ export default function FeedbackAuthor({
             className="h-8 w-8 rounded-full border border-gray-800 bg-gray-800 object-cover"
           />
         ) : (
-          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-lime-600 text-sm font-semibold text-gray-950">
-            {name.charAt(0).toUpperCase()}
-          </span>
+          <InitialChip name={name} />
         )}
       </a>
       <div className="flex min-w-0 flex-1 flex-wrap items-center gap-x-2">
@@ -64,7 +63,7 @@ export default function FeedbackAuthor({
           href={`https://njump.me/${npub}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-sm font-medium text-gray-200 hover:text-lime-500"
+          className="text-sm font-medium text-gray-200 hover:text-brand"
         >
           {name}
         </a>

@@ -13,7 +13,7 @@ export function MessageUsLink({ children }: { children: ReactNode }) {
     <button
       type="button"
       onClick={() => openContactPanel()}
-      className="underline text-lime-500 hover:text-lime-400 transition-colors"
+      className="underline text-brand hover:text-brand-hover transition-colors"
     >
       {children}
     </button>

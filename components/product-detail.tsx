@@ -186,7 +186,7 @@ function BackToShop() {
   return (
     <Link
       href="/shop"
-      className="inline-flex items-center gap-2 text-sm font-medium text-gray-400 transition-colors hover:text-lime-500"
+      className="inline-flex items-center gap-2 text-sm font-medium text-gray-400 transition-colors hover:text-brand"
     >
       <ArrowLeft className="h-4 w-4" aria-hidden="true" />
       Back to Shop
@@ -228,7 +228,7 @@ function ProductNotFound() {
         <p className="text-sm leading-relaxed text-gray-400">
           This product may have been removed or doesn&apos;t exist.
         </p>
-        <Button asChild className="mt-6 bg-lime-600 hover:bg-lime-400 text-gray-950">
+        <Button asChild variant="brand" className="mt-6">
           <Link href="/shop">Back to Shop</Link>
         </Button>
       </div>
@@ -248,7 +248,7 @@ function ProductError({ naddr }: { naddr: string }) {
             href={`https://njump.me/${naddr}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-lime-500 hover:underline"
+            className="text-brand hover:underline"
           >
             view it on njump
           </a>
@@ -316,7 +316,7 @@ function ProductView({ naddr, listing, onOwnerSaved, onOwnerDeleted }: ProductVi
             {listing.title}
           </h1>
 
-          <p className="text-2xl font-semibold text-lime-500">{formatPrice(listing.price)}</p>
+          <p className="text-2xl font-semibold text-brand">{formatPrice(listing.price)}</p>
 
           {listing.summary && (
             <p className="text-sm italic leading-relaxed text-gray-400">{listing.summary}</p>
@@ -331,9 +331,7 @@ function ProductView({ naddr, listing, onOwnerSaved, onOwnerDeleted }: ProductVi
             ) : (
               <>
                 {listing.visibility === 'pre-order' && (
-                  <Badge className="bg-lime-500/10 text-lime-500 hover:bg-lime-500/10">
-                    Pre-order
-                  </Badge>
+                  <Badge variant="brand-outline">Pre-order</Badge>
                 )}
                 {listing.stock !== null && <span>{listing.stock} available</span>}
               </>
@@ -384,28 +382,25 @@ function ProductView({ naddr, listing, onOwnerSaved, onOwnerDeleted }: ProductVi
                     const wanted = normalizeQuantity(Number.isNaN(parsed) ? 1 : parsed);
                     setQuantity(listing.stock !== null ? Math.min(wanted, listing.stock) : wanted);
                   }}
-                  className="w-24 border-gray-700 bg-gray-800 text-white focus-visible:ring-lime-500"
+                  className="w-24 border-gray-700 bg-gray-800 text-white focus-visible:ring-brand"
                 />
               </div>
               <div className="flex flex-col gap-2 sm:flex-row">
-                <Button
-                  onClick={handleAddToCart}
-                  className="flex-1 bg-lime-600 font-semibold text-gray-950 hover:bg-lime-400"
-                >
+                <Button onClick={handleAddToCart} variant="brand" className="flex-1 font-semibold">
                   <ShoppingCart className="mr-1.5 h-4 w-4" aria-hidden="true" />
                   Add to Cart
                 </Button>
                 <Button
                   variant="outline"
                   onClick={handleBuyNow}
-                  className="flex-1 border-lime-600 bg-transparent font-semibold text-lime-500 hover:bg-lime-600/10 hover:text-lime-400"
+                  className="flex-1 border-brand bg-transparent font-semibold text-brand hover:bg-brand/10 hover:text-brand-hover"
                 >
                   Buy It Now
                 </Button>
                 <Button
                   variant="outline"
                   onClick={handleMessage}
-                  className="flex-1 border-gray-700 bg-transparent text-gray-300 hover:border-lime-600 hover:bg-gray-800 hover:text-lime-500"
+                  className="flex-1 border-gray-700 bg-transparent text-gray-300 hover:border-brand hover:bg-gray-800 hover:text-brand"
                 >
                   <MessageCircle className="mr-1.5 h-4 w-4" aria-hidden="true" />
                   Message
@@ -420,7 +415,7 @@ function ProductView({ naddr, listing, onOwnerSaved, onOwnerDeleted }: ProductVi
               href={`https://njump.me/${naddr}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="underline underline-offset-2 hover:text-lime-500"
+              className="underline underline-offset-2 hover:text-brand"
             >
               njump
             </a>{' '}
@@ -522,7 +517,7 @@ function ProductGallery({ listing, sold }: { listing: Listing; sold: boolean }) 
               aria-label={`Show image ${index + 1}`}
               aria-pressed={selected === index}
               className={`relative aspect-square overflow-hidden rounded-lg border-2 transition-colors ${
-                selected === index ? 'border-lime-500' : 'border-gray-700 hover:border-gray-500'
+                selected === index ? 'border-brand' : 'border-gray-700 hover:border-gray-500'
               }`}
             >
               {!failed.has(index) ? (

@@ -69,7 +69,7 @@ export function Starfield({ className }: { className?: string }) {
         ))}
       </svg>
       {/* faint nebula haze so the sky isn't flat black */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(157,254,10,0.06),transparent_40%),radial-gradient(circle_at_80%_30%,rgba(157,254,10,0.04),transparent_35%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,color-mix(in_srgb,var(--color-brand)_6%,transparent),transparent_40%),radial-gradient(circle_at_80%_30%,color-mix(in_srgb,var(--color-brand)_4%,transparent),transparent_35%)]" />
     </div>
   );
 }
@@ -120,7 +120,7 @@ export function SallieRig({ busy = false, className, priority = false }: SallieR
       <div
         aria-hidden="true"
         className={cn(
-          'pointer-events-none absolute left-1/2 top-[38%] h-[70%] w-[70%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-lime-400/30 blur-3xl motion-reduce:animate-none',
+          'pointer-events-none absolute left-1/2 top-[38%] h-[70%] w-[70%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand/30 blur-3xl motion-reduce:animate-none',
           busy ? 'animate-sallie-aura-busy' : 'animate-sallie-aura'
         )}
       />
@@ -131,7 +131,7 @@ export function SallieRig({ busy = false, className, priority = false }: SallieR
           width={900}
           height={601}
           priority={priority}
-          className="h-full w-auto max-w-none select-none object-contain object-bottom drop-shadow-[0_0_24px_rgba(157,254,10,0.25)]"
+          className="h-full w-auto max-w-none select-none object-contain object-bottom drop-shadow-glow"
         />
         <svg
           aria-hidden="true"
@@ -157,12 +157,17 @@ export function SallieRig({ busy = false, className, priority = false }: SallieR
             ref={waveRef}
             points={wavePoints(0, 0)}
             fill="none"
-            stroke="#9DFE0A"
+            stroke="currentColor"
+            className="text-brand"
             strokeWidth="1.5"
             strokeLinecap="round"
             strokeLinejoin="round"
             vectorEffect="non-scaling-stroke"
-            style={{ opacity: 0.35, filter: 'drop-shadow(0 0 1px rgba(157,254,10,0.8))' }}
+            style={{
+              opacity: 0.35,
+              filter:
+                'drop-shadow(0 0 1px color-mix(in srgb, var(--color-brand) 80%, transparent))',
+            }}
           />
         </svg>
       </div>
@@ -183,6 +188,8 @@ function WaveformRing({ className }: { className?: string }) {
     const canvas = canvasRef.current;
     const ctx = canvas?.getContext('2d');
     if (!canvas || !ctx) return;
+    // Canvas can't read CSS variables, so resolve the brand token once.
+    const brand = getComputedStyle(canvas).getPropertyValue('--color-brand').trim();
     let alpha = 0;
     let lastFrame: AudioFrame | null = null;
     let raf = 0;
@@ -255,13 +262,16 @@ function WaveformRing({ className }: { className?: string }) {
       // Fill rim → wave (the loop minus the circle), then edge the wave.
       const band = new Path2D(loop);
       band.arc(c, c, base, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(157, 254, 10, ${(0.55 * alpha).toFixed(3)})`;
+      ctx.fillStyle = brand;
+      ctx.globalAlpha = 0.55 * alpha;
       ctx.fill(band, 'evenodd');
       ctx.lineWidth = 2;
-      ctx.strokeStyle = `rgba(157, 254, 10, ${(0.95 * alpha).toFixed(3)})`;
-      ctx.shadowColor = 'rgba(157, 254, 10, 0.9)';
+      ctx.strokeStyle = brand;
+      ctx.globalAlpha = 0.95 * alpha;
+      ctx.shadowColor = brand;
       ctx.shadowBlur = 10;
       ctx.stroke(loop);
+      ctx.globalAlpha = 1;
       if (alpha < 0.99 || frame.level > 0) raf = requestAnimationFrame(draw);
     };
 

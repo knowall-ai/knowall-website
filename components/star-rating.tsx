@@ -143,7 +143,7 @@ export function StarRatingInput({
             onClick={() => setStars(starValue)}
             onMouseEnter={() => !disabled && setHover(starValue)}
             className={cn(
-              'rounded-sm transition-transform focus:outline-none focus-visible:ring-2 focus-visible:ring-lime-500',
+              'rounded-sm transition-transform focus:outline-none focus-visible:ring-2 focus-visible:ring-brand',
               !disabled && 'cursor-pointer hover:scale-110',
               disabled && 'cursor-not-allowed opacity-60'
             )}

@@ -53,7 +53,7 @@ interface ProductFormDialogProps {
 const CURRENCIES = ['SATS', 'GBP', 'USD', 'EUR', 'BTC'];
 
 const inputDark =
-  'border-gray-700 bg-gray-800 text-white placeholder:text-gray-500 focus-visible:ring-lime-500';
+  'border-gray-700 bg-gray-800 text-white placeholder:text-gray-500 focus-visible:ring-brand';
 
 /**
  * Small preview beside each Images row so the owner can tell listings apart
@@ -319,7 +319,7 @@ export function ProductFormDialog({ open, onOpenChange, event, onSaved }: Produc
                       if (file) handleUpload(index, file);
                     }}
                   />
-                  <span className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-gray-700 text-gray-300 hover:border-lime-600 peer-focus-visible:ring-2 peer-focus-visible:ring-lime-500">
+                  <span className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-gray-700 text-gray-300 hover:border-brand peer-focus-visible:ring-2 peer-focus-visible:ring-brand">
                     {uploadingIndex === index ? (
                       <Loader2 className="h-4 w-4 animate-spin" />
                     ) : (
@@ -507,7 +507,8 @@ export function ProductFormDialog({ open, onOpenChange, event, onSaved }: Produc
             // Block publishing while an image upload is still in flight so the
             // event can't ship without the uploaded URL.
             disabled={saving || uploadingIndex !== null}
-            className="bg-lime-600 font-semibold text-gray-950 hover:bg-lime-400"
+            variant="brand"
+            className="font-semibold"
           >
             {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             {uploadingIndex !== null

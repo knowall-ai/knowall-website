@@ -33,7 +33,7 @@ export default function StoryPage() {
           <p className="text-lg text-gray-300 mb-6">
             Want to be part of the next chapter? See what we can build together.
           </p>
-          <Button asChild className="bg-lime-600 hover:bg-lime-400 text-gray-950">
+          <Button asChild variant="brand">
             <Link href="/#services">Explore our services</Link>
           </Button>
         </div>

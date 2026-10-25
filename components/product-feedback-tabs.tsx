@@ -158,7 +158,7 @@ export default function ProductFeedbackTabs({
   const listClass =
     'h-auto w-full justify-start gap-6 rounded-none border-b border-gray-800 bg-transparent p-0 text-gray-400';
   const triggerClass =
-    '-mb-px inline-flex items-center gap-2 rounded-none border-b-2 border-transparent bg-transparent px-1 pb-3 pt-2 font-medium text-gray-400 shadow-none transition-colors hover:text-white data-[state=active]:border-lime-500 data-[state=active]:bg-transparent data-[state=active]:font-semibold data-[state=active]:text-white data-[state=active]:shadow-none';
+    '-mb-px inline-flex items-center gap-2 rounded-none border-b-2 border-transparent bg-transparent px-1 pb-3 pt-2 font-medium text-gray-400 shadow-none transition-colors hover:text-white data-[state=active]:border-brand data-[state=active]:bg-transparent data-[state=active]:font-semibold data-[state=active]:text-white data-[state=active]:shadow-none';
 
   return (
     <section className={className} data-testid="product-feedback">

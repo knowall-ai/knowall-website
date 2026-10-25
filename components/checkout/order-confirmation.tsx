@@ -32,8 +32,8 @@ export function OrderConfirmation({ orderId, onClose }: OrderConfirmationProps) 
       className="flex flex-col items-center space-y-6 py-8 text-center"
       data-testid="order-confirmation"
     >
-      <div className="flex h-16 w-16 items-center justify-center rounded-full bg-lime-500/20">
-        <CheckCircle className="h-10 w-10 text-lime-500" />
+      <div className="flex h-16 w-16 items-center justify-center rounded-full bg-brand/20">
+        <CheckCircle className="h-10 w-10 text-brand" />
       </div>
 
       <div className="space-y-2">
@@ -53,13 +53,13 @@ export function OrderConfirmation({ orderId, onClose }: OrderConfirmationProps) 
             variant="ghost"
             size="sm"
             onClick={handleCopyOrderId}
-            className="h-8 w-8 p-0 text-gray-300 hover:bg-gray-800 hover:text-lime-500"
+            className="h-8 w-8 p-0 text-gray-300 hover:bg-gray-800 hover:text-brand"
             aria-label="Copy order ID"
           >
             <Copy className="h-4 w-4" />
           </Button>
         </div>
-        {copied && <p className="mt-2 text-xs text-lime-500">Copied to clipboard!</p>}
+        {copied && <p className="mt-2 text-xs text-brand">Copied to clipboard!</p>}
       </div>
 
       <div className="space-y-2 text-sm text-gray-400">
@@ -68,21 +68,21 @@ export function OrderConfirmation({ orderId, onClose }: OrderConfirmationProps) 
         </p>
         <ul className="space-y-1 text-left">
           <li className="flex items-start gap-2">
-            <span className="text-lime-500">1.</span>
+            <span className="text-brand">1.</span>
             <span>We&apos;ll process your order shortly</span>
           </li>
           <li className="flex items-start gap-2">
-            <span className="text-lime-500">2.</span>
+            <span className="text-brand">2.</span>
             <span>You&apos;ll receive shipping updates via Nostr DM</span>
           </li>
           <li className="flex items-start gap-2">
-            <span className="text-lime-500">3.</span>
+            <span className="text-brand">3.</span>
             <span>Your item will be on its way!</span>
           </li>
         </ul>
       </div>
 
-      <Button className="bg-lime-600 text-gray-950 hover:bg-lime-400" onClick={onClose}>
+      <Button variant="brand" onClick={onClose}>
         Continue Shopping
       </Button>
     </div>

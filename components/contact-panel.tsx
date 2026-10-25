@@ -175,7 +175,7 @@ function ContactPanel() {
       >
         <SheetHeader className="border-b border-gray-800 p-4">
           <SheetTitle className="flex items-center gap-2 text-white">
-            <Mail className="h-5 w-5 text-lime-500" aria-hidden="true" />
+            <Mail className="h-5 w-5 text-brand" aria-hidden="true" />
             Message us
           </SheetTitle>
           <SheetDescription className="text-gray-400">
@@ -187,9 +187,9 @@ function ContactPanel() {
           {isSubmitted ? (
             <div
               role="status"
-              className="rounded-lg border border-lime-600/40 bg-lime-600/10 p-8 text-center"
+              className="rounded-lg border border-brand/40 bg-brand/10 p-8 text-center"
             >
-              <CheckCircle className="mx-auto mb-4 h-12 w-12 text-lime-500" aria-hidden="true" />
+              <CheckCircle className="mx-auto mb-4 h-12 w-12 text-brand" aria-hidden="true" />
               <h3 className="mb-2 text-xl font-semibold text-white">Message Sent!</h3>
               <p className="text-gray-300">
                 Thank you for getting in touch.{' '}
@@ -211,7 +211,7 @@ function ContactPanel() {
                   autoComplete="name"
                   placeholder="Your name"
                   aria-invalid={!!errors.name}
-                  className="border-gray-700 bg-gray-800 text-white placeholder:text-gray-500 focus-visible:ring-lime-500"
+                  className="border-gray-700 bg-gray-800 text-white placeholder:text-gray-500 focus-visible:ring-brand"
                   {...register('name')}
                 />
                 {errors.name && (
@@ -231,7 +231,7 @@ function ContactPanel() {
                   autoComplete="email"
                   placeholder="you@example.com"
                   aria-invalid={!!errors.email}
-                  className="border-gray-700 bg-gray-800 text-white placeholder:text-gray-500 focus-visible:ring-lime-500"
+                  className="border-gray-700 bg-gray-800 text-white placeholder:text-gray-500 focus-visible:ring-brand"
                   {...register('email')}
                 />
                 {errors.email && (
@@ -250,7 +250,7 @@ function ContactPanel() {
                   rows={6}
                   placeholder="Tell us about your project or the challenge you'd like to solve..."
                   aria-invalid={!!errors.message}
-                  className="border-gray-700 bg-gray-800 text-white placeholder:text-gray-500 focus-visible:ring-lime-500"
+                  className="border-gray-700 bg-gray-800 text-white placeholder:text-gray-500 focus-visible:ring-brand"
                   {...register('message')}
                 />
                 {errors.message && (
@@ -269,7 +269,8 @@ function ContactPanel() {
               <Button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full bg-lime-600 font-semibold text-gray-950 hover:bg-lime-400"
+                variant="brand"
+                className="w-full font-semibold"
               >
                 {isSubmitting ? 'Sending...' : 'Send Message'}
                 <Send className="ml-2 h-4 w-4" aria-hidden="true" />
@@ -287,11 +288,11 @@ function ContactPanel() {
               />
 
               <p className="flex items-center justify-center gap-2 text-sm text-gray-300">
-                <Mail className="h-4 w-4 shrink-0 text-lime-500" aria-hidden="true" />
+                <Mail className="h-4 w-4 shrink-0 text-brand" aria-hidden="true" />
                 Prefer email?{' '}
                 <a
                   href="mailto:hello@knowall.ai"
-                  className="font-medium text-white underline decoration-lime-500 underline-offset-4 hover:text-lime-300"
+                  className="font-medium text-white underline decoration-brand underline-offset-4 hover:text-brand-hover"
                 >
                   hello@knowall.ai
                 </a>
@@ -310,7 +311,7 @@ function ContactPanel() {
             href={NOSTR_PROFILE_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-xs text-gray-400 underline-offset-4 transition-colors hover:text-lime-500 hover:underline"
+            className="text-xs text-gray-400 underline-offset-4 transition-colors hover:text-brand hover:underline"
           >
             View our Nostr profile on njump.me
           </a>

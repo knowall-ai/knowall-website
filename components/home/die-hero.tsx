@@ -31,7 +31,7 @@ const EYES = [
 ];
 
 const BOKEH = [
-  { className: 'left-[6%] bottom-[-6%] h-56 w-56 bg-[#9dfe0a]/25', speed: 1.6 },
+  { className: 'left-[6%] bottom-[-6%] h-56 w-56 bg-brand/25', speed: 1.6 },
   { className: 'left-[38%] bottom-[-12%] h-72 w-72 bg-[#f7931a]/15', speed: 2.2 },
   { className: 'right-[4%] bottom-[2%] h-40 w-40 bg-[#f7931a]/20', speed: 1.3 },
 ];
@@ -74,8 +74,12 @@ export default function DieHero({ children }: { children: React.ReactNode }) {
               <defs>
                 <radialGradient id="die-eye-signal">
                   <stop offset="0" stopColor="#d8ff8a" stopOpacity="0.95" />
-                  <stop offset="0.45" stopColor="#9dfe0a" stopOpacity="0.45" />
-                  <stop offset="1" stopColor="#9dfe0a" stopOpacity="0" />
+                  <stop
+                    offset="0.45"
+                    className="[stop-color:var(--color-brand)]"
+                    stopOpacity="0.45"
+                  />
+                  <stop offset="1" className="[stop-color:var(--color-brand)]" stopOpacity="0" />
                 </radialGradient>
                 <radialGradient id="die-eye-ollie">
                   <stop offset="0" stopColor="#c8fbff" stopOpacity="0.9" />

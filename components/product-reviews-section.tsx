@@ -197,12 +197,7 @@ function ReviewComposer({
       )}
       <div className="flex justify-end">
         {user ? (
-          <Button
-            type="submit"
-            size="sm"
-            disabled={isPosting || stars < 1}
-            className="bg-lime-600 text-gray-950 hover:bg-lime-400"
-          >
+          <Button type="submit" size="sm" disabled={isPosting || stars < 1} variant="brand">
             <Send className="mr-2 h-4 w-4" aria-hidden="true" />
             {isPosting
               ? isEditing

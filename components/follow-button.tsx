@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Check, Loader2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button, buttonVariants } from '@/components/ui/button';
 import { useNostrAuth } from '@/components/auth/nostr-auth-provider';
 import { KNOWALL_NPUB, KNOWALL_PUBKEY } from '@/lib/nostr';
 import { SOCIAL_RELAYS, publishToRelays, queryRelays } from '@/lib/relay';
@@ -119,12 +119,7 @@ export default function FollowButton() {
   // fallback when the user's contact list couldn't be fetched.
   if (!user || fallbackToNjump) {
     return (
-      <Button
-        asChild
-        size="sm"
-        className="bg-lime-600 hover:bg-lime-400 text-gray-950"
-        data-testid="story-follow-button"
-      >
+      <Button asChild size="sm" variant="brand" data-testid="story-follow-button">
         <a
           href={NJUMP_URL}
           target="_blank"
@@ -152,8 +147,8 @@ export default function FollowButton() {
         data-testid="story-follow-button"
         className={
           following
-            ? 'bg-lime-500/15 text-lime-500 hover:bg-lime-500/15 cursor-default'
-            : 'bg-lime-600 hover:bg-lime-400 text-gray-950'
+            ? 'bg-brand/15 text-brand hover:bg-brand/15 cursor-default'
+            : buttonVariants({ variant: 'brand' })
         }
       >
         {isPublishing ? (

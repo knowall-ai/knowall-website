@@ -39,7 +39,7 @@ interface CollectionsDialogProps {
 }
 
 const inputDark =
-  'border-gray-700 bg-gray-800 text-white placeholder:text-gray-500 focus-visible:ring-lime-500';
+  'border-gray-700 bg-gray-800 text-white placeholder:text-gray-500 focus-visible:ring-brand';
 
 /**
  * Manage categories & collections — the shop's Gamma Markets kind-30405
@@ -135,7 +135,7 @@ export function CollectionsDialog({ open, onOpenChange }: CollectionsDialogProps
       <DialogContent className="max-h-[90vh] overflow-y-auto border-gray-800 bg-gray-900 text-white sm:max-w-2xl">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <FolderTree className="h-5 w-5 text-lime-500" /> Categories &amp; collections
+            <FolderTree className="h-5 w-5 text-brand" /> Categories &amp; collections
           </DialogTitle>
           <DialogDescription className="text-gray-400">
             Organise products into collections (Gamma Markets kind 30405). Free-text categories
@@ -166,7 +166,7 @@ export function CollectionsDialog({ open, onOpenChange }: CollectionsDialogProps
                         size="icon"
                         aria-label={`Edit ${collection.title}`}
                         onClick={() => startEdit(event)}
-                        className="text-gray-300 hover:bg-gray-800 hover:text-lime-500"
+                        className="text-gray-300 hover:bg-gray-800 hover:text-brand"
                       >
                         <Pencil className="h-4 w-4" />
                       </Button>
@@ -274,7 +274,8 @@ export function CollectionsDialog({ open, onOpenChange }: CollectionsDialogProps
             <Button
               onClick={handleSave}
               disabled={saving}
-              className="bg-lime-600 font-semibold text-gray-950 hover:bg-lime-400"
+              variant="brand"
+              className="font-semibold"
             >
               {saving ? (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />

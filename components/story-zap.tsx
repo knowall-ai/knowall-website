@@ -190,7 +190,7 @@ export default function StoryZapButton({ note, totals }: { note: NostrEvent; tot
         type="button"
         onClick={() => handleOpenChange(true)}
         data-testid="story-zap-button"
-        className="flex items-center gap-1.5 text-sm text-gray-400 transition-colors hover:text-lime-500"
+        className="flex items-center gap-1.5 text-sm text-gray-400 transition-colors hover:text-brand"
         aria-label={`Zap this post${totalSats > 0 ? ` (${totalSats.toLocaleString()} sats so far)` : ''}`}
       >
         <Zap className="h-4 w-4" aria-hidden="true" />
@@ -217,7 +217,7 @@ export default function StoryZapButton({ note, totals }: { note: NostrEvent; tot
             <>
               <DialogHeader>
                 <DialogTitle className="flex items-center gap-2 text-white">
-                  <Zap className="h-5 w-5 text-lime-500" aria-hidden="true" />
+                  <Zap className="h-5 w-5 text-brand" aria-hidden="true" />
                   Zap sent
                 </DialogTitle>
                 <DialogDescription className="text-gray-400">
@@ -225,10 +225,7 @@ export default function StoryZapButton({ note, totals }: { note: NostrEvent; tot
                   support!
                 </DialogDescription>
               </DialogHeader>
-              <Button
-                onClick={() => handleOpenChange(false)}
-                className="w-full bg-lime-600 text-gray-950 hover:bg-lime-400"
-              >
+              <Button onClick={() => handleOpenChange(false)} variant="brand" className="w-full">
                 Done
               </Button>
             </>
@@ -264,7 +261,7 @@ export default function StoryZapButton({ note, totals }: { note: NostrEvent; tot
                   className="shrink-0 border-gray-700 bg-gray-950 text-gray-300 hover:bg-gray-800 hover:text-white"
                 >
                   {copied ? (
-                    <Check className="h-4 w-4 text-lime-500" aria-hidden="true" />
+                    <Check className="h-4 w-4 text-brand" aria-hidden="true" />
                   ) : (
                     <Copy className="h-4 w-4" aria-hidden="true" />
                   )}
@@ -302,7 +299,7 @@ export default function StoryZapButton({ note, totals }: { note: NostrEvent; tot
                       }}
                       className={`rounded-lg border px-3 py-2 text-sm font-semibold transition-colors ${
                         !customAmount && amount === preset
-                          ? 'border-lime-500 bg-lime-500/10 text-lime-500'
+                          ? 'border-brand bg-brand/10 text-brand'
                           : 'border-gray-700 bg-gray-950 text-gray-300 hover:border-gray-500'
                       }`}
                     >
@@ -333,7 +330,8 @@ export default function StoryZapButton({ note, totals }: { note: NostrEvent; tot
                 <Button
                   onClick={handleZap}
                   disabled={isWorking || effectiveAmount <= 0}
-                  className="w-full bg-lime-600 font-semibold text-gray-950 hover:bg-lime-400"
+                  variant="brand"
+                  className="w-full font-semibold"
                 >
                   <Zap className="mr-2 h-4 w-4" aria-hidden="true" />
                   {isWorking

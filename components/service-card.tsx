@@ -31,7 +31,7 @@ export default function ServiceCard({
         <CardFooter className="pt-0">
           <Button
             variant="link"
-            className={`p-0 ${darkMode ? 'text-lime-500 hover:text-lime-400' : 'text-lime-600 hover:text-lime-700'}`}
+            className={`p-0 ${darkMode ? 'text-brand hover:text-brand-hover' : 'text-brand-on-light hover:text-[color-mix(in_srgb,var(--color-brand-on-light)_75%,black)]'}`}
           >
             Learn more <ChevronRight className="ml-1 h-4 w-4" />
           </Button>

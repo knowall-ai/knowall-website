@@ -55,7 +55,7 @@ export function CartDrawer() {
         >
           <SheetHeader className="border-b border-gray-800 p-4">
             <SheetTitle className="flex items-center gap-2 text-white">
-              <ShoppingBag className="h-5 w-5 text-lime-500" aria-hidden="true" />
+              <ShoppingBag className="h-5 w-5 text-brand" aria-hidden="true" />
               Shopping Cart
               {totalItems > 0 && (
                 <span className="text-sm font-normal text-gray-400">
@@ -74,7 +74,7 @@ export function CartDrawer() {
               <Button
                 variant="outline"
                 onClick={() => setIsOpen(false)}
-                className="border-gray-700 bg-transparent text-gray-300 hover:bg-gray-800 hover:text-lime-500"
+                className="border-gray-700 bg-transparent text-gray-300 hover:bg-gray-800 hover:text-brand"
               >
                 Continue Shopping
               </Button>
@@ -148,7 +148,7 @@ function CartLine({ item }: { item: CartItem }) {
         </div>
 
         <div className="text-right">
-          <p className="text-sm font-medium text-lime-500">
+          <p className="text-sm font-medium text-brand">
             {lineTotal ? formatPrice(lineTotal) : '—'}
           </p>
         </div>
@@ -209,15 +209,12 @@ function CartSummary({ onCheckout }: { onCheckout: () => void }) {
         <Separator className="bg-gray-800" />
         <div className="flex justify-between text-base font-semibold">
           <span>Total</span>
-          <span className="text-lime-500">{formatPrice({ amount: totalPrice, currency })}</span>
+          <span className="text-brand">{formatPrice({ amount: totalPrice, currency })}</span>
         </div>
       </div>
       <p className="mt-2 text-xs text-gray-500">Shipping is added at checkout.</p>
 
-      <Button
-        className="mt-4 w-full bg-lime-600 font-semibold text-gray-950 hover:bg-lime-400"
-        onClick={onCheckout}
-      >
+      <Button variant="brand" className="mt-4 w-full font-semibold" onClick={onCheckout}>
         Proceed to Checkout
       </Button>
     </div>

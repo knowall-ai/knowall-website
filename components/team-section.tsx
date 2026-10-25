@@ -174,12 +174,12 @@ export default function TeamSection({ children }: { children?: ReactNode } = {})
                 <img
                   src={pictures[member.pubkey]}
                   alt={member.name}
-                  className="h-32 w-32 rounded-full object-cover mb-4 ring-2 ring-lime-500/50"
+                  className="h-32 w-32 rounded-full object-cover mb-4 ring-2 ring-brand/50"
                   onError={() => setBroken((prev) => ({ ...prev, [member.pubkey]: true }))}
                 />
               ) : (
                 <div
-                  className="h-32 w-32 rounded-full mb-4 ring-2 ring-lime-500/50 bg-gray-700 flex items-center justify-center"
+                  className="h-32 w-32 rounded-full mb-4 ring-2 ring-brand/50 bg-gray-700 flex items-center justify-center"
                   aria-hidden="true"
                 >
                   <UserRound className="h-20 w-20 text-gray-400" strokeWidth={1.25} />
@@ -191,7 +191,7 @@ export default function TeamSection({ children }: { children?: ReactNode } = {})
                 href={`https://njump.me/${member.npub}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 mt-4 text-sm text-lime-500 hover:text-lime-400 transition-colors"
+                className="inline-flex items-center gap-1 mt-4 text-sm text-brand hover:text-brand-hover transition-colors"
               >
                 Nostr profile <ExternalLink className="h-4 w-4" />
               </a>

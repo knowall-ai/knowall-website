@@ -30,10 +30,7 @@ const face = 'absolute left-1/2 top-1/2';
 export default function TMinus15Book() {
   return (
     <div className="relative perspective-[1600px]">
-      <div
-        className="absolute -inset-8 rounded-3xl bg-lime-500/10 blur-2xl"
-        aria-hidden="true"
-      ></div>
+      <div className="absolute -inset-8 rounded-3xl bg-brand/10 blur-2xl" aria-hidden="true"></div>
       <div
         className="relative transition-transform duration-500 transform-3d transform-[rotateX(5deg)_rotateY(-25deg)] hover:transform-[rotateX(3deg)_rotateY(-12deg)]"
         style={bookVars}
@@ -108,7 +105,7 @@ export default function TMinus15Book() {
             width={533}
             height={800}
             loading="eager"
-            className="h-full w-full rounded-l-sm rounded-r-md border border-l-0 border-gray-700 shadow-2xl shadow-lime-500/20"
+            className="h-full w-full rounded-l-sm rounded-r-md border border-l-0 border-gray-700 shadow-2xl shadow-brand/20"
           />
         </div>
       </div>

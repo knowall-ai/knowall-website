@@ -12,6 +12,7 @@ import { SOCIAL_RELAYS, publishToRelays } from '@/lib/relay';
 import { fetchProfiles } from '@/lib/nostr-profiles';
 import { buildReplyTags, profileDisplayName, type ProfileMetadata } from '@/lib/story-social';
 import { encodeBech32, timeAgo, type NostrEvent } from '@/lib/story-notes';
+import { InitialChip } from '@/components/initial-chip';
 
 /** Comments longer than this are clamped behind a "Show more" toggle. */
 const CLAMP_LENGTH = 320;
@@ -156,12 +157,7 @@ export default function StoryComments({
         )}
         <div className="flex justify-end">
           {user ? (
-            <Button
-              type="submit"
-              size="sm"
-              disabled={isPosting || !content.trim()}
-              className="bg-lime-600 text-gray-950 hover:bg-lime-400"
-            >
+            <Button type="submit" size="sm" disabled={isPosting || !content.trim()} variant="brand">
               <Send className="mr-2 h-4 w-4" aria-hidden="true" />
               {isPosting ? 'Posting…' : 'Comment'}
             </Button>
@@ -217,9 +213,7 @@ function StoryComment({
             className="h-8 w-8 rounded-full border border-gray-800 bg-gray-800 object-cover"
           />
         ) : (
-          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-lime-600 text-sm font-semibold text-gray-950">
-            {name.charAt(0).toUpperCase()}
-          </span>
+          <InitialChip name={name} />
         )}
       </a>
       <div className="min-w-0 flex-1">
@@ -228,7 +222,7 @@ function StoryComment({
             href={`https://njump.me/${npub}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-sm font-medium text-gray-200 hover:text-lime-500"
+            className="text-sm font-medium text-gray-200 hover:text-brand"
           >
             {name}
           </a>
@@ -255,7 +249,7 @@ function StoryComment({
           <button
             type="button"
             onClick={() => setExpanded((value) => !value)}
-            className="mt-1 text-xs font-medium text-lime-500 hover:underline"
+            className="mt-1 text-xs font-medium text-brand hover:underline"
           >
             {expanded ? 'Show less' : 'Show more'}
           </button>

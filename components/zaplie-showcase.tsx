@@ -16,7 +16,7 @@ export default function ZaplieShowcase() {
     <div className="relative w-full">
       {/* Brand-lime bloom behind the fan */}
       <div
-        className="absolute left-1/2 top-1/2 h-[85%] w-[92%] -translate-x-1/2 -translate-y-1/2 rounded-[45%] bg-lime-500/20 blur-3xl"
+        className="absolute left-1/2 top-1/2 h-[85%] w-[92%] -translate-x-1/2 -translate-y-1/2 rounded-[45%] bg-brand/20 blur-3xl"
         aria-hidden="true"
       ></div>
 
@@ -51,7 +51,7 @@ export default function ZaplieShowcase() {
 
         {/* Centre screen — forward */}
         <div
-          className={`absolute left-1/2 top-0 w-[80%] -translate-x-1/2 ${frame} shadow-lime-500/20`}
+          className={`absolute left-1/2 top-0 w-[80%] -translate-x-1/2 ${frame} shadow-brand/20`}
         >
           <Image
             src="/images/zaplie/02-feed.png"
