@@ -199,7 +199,7 @@ export default function ShopListings({
             href={`https://njump.me/${KNOWALL_NPUB}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-lime-500 hover:underline"
+            className="text-brand hover:underline"
           >
             find us on njump
           </a>
@@ -215,14 +215,14 @@ export default function ShopListings({
         className="rounded-xl border border-gray-800 bg-gray-900 py-16 px-6 text-center"
         data-testid="shop-empty"
       >
-        <ShoppingBag className="mx-auto mb-4 h-12 w-12 text-lime-600" />
+        <ShoppingBag className="mx-auto mb-4 h-12 w-12 text-brand" />
         <h2 className="mb-2 text-lg font-semibold text-white">Shop opening soon</h2>
         <p className="mx-auto max-w-xl text-sm leading-relaxed text-gray-400">
           We&apos;re stocking the shelves. Our products are listed on Nostr and purchasable with
           Bitcoin over Lightning — follow us and you&apos;ll see them here (and in your Nostr
           client) the moment they drop.
         </p>
-        <Button asChild className="mt-6 bg-lime-600 hover:bg-lime-400 text-gray-950">
+        <Button asChild className="mt-6 bg-brand hover:bg-brand-hover text-gray-950">
           <a href={`https://njump.me/${KNOWALL_NPUB}`} target="_blank" rel="noopener noreferrer">
             Follow us on Nostr
           </a>
@@ -246,7 +246,7 @@ export default function ShopListings({
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search products..."
             aria-label="Search products"
-            className="border-gray-700 bg-gray-800 pl-9 text-white placeholder:text-gray-500 focus-visible:ring-lime-500"
+            className="border-gray-700 bg-gray-800 pl-9 text-white placeholder:text-gray-500 focus-visible:ring-brand"
           />
         </div>
 
@@ -257,7 +257,7 @@ export default function ShopListings({
               aria-pressed={activeTag === null}
               className={`rounded-full border px-3 py-1 text-xs font-medium transition-colors ${
                 activeTag === null
-                  ? 'border-lime-500 bg-lime-500/10 text-lime-500'
+                  ? 'border-brand bg-brand/10 text-brand'
                   : 'border-gray-700 text-gray-400 hover:border-gray-500 hover:text-gray-200'
               }`}
             >
@@ -270,7 +270,7 @@ export default function ShopListings({
                 aria-pressed={activeTag === tag}
                 className={`rounded-full border px-3 py-1 text-xs font-medium transition-colors ${
                   activeTag === tag
-                    ? 'border-lime-500 bg-lime-500/10 text-lime-500'
+                    ? 'border-brand bg-brand/10 text-brand'
                     : 'border-gray-700 text-gray-400 hover:border-gray-500 hover:text-gray-200'
                 }`}
               >
@@ -294,7 +294,7 @@ export default function ShopListings({
                 setQuery('');
                 setActiveTag(null);
               }}
-              className="text-lime-500 hover:underline"
+              className="text-brand hover:underline"
             >
               Clear filters
             </button>
@@ -376,11 +376,11 @@ function ProductCard({ listing, onOwnerDeleted, onOwnerSaved }: ProductCardProps
       <div className="flex flex-1 flex-col gap-3 p-5">
         <div className="flex items-start justify-between gap-3">
           <h3 className="font-semibold leading-snug text-white">
-            <Link href={productPath(listing)} className="transition-colors hover:text-lime-500">
+            <Link href={productPath(listing)} className="transition-colors hover:text-brand">
               {listing.title}
             </Link>
           </h3>
-          <span className="shrink-0 text-sm font-semibold text-lime-500">
+          <span className="shrink-0 text-sm font-semibold text-brand">
             {formatPrice(listing.price)}
           </span>
         </div>
@@ -425,7 +425,7 @@ function ProductCard({ listing, onOwnerDeleted, onOwnerSaved }: ProductCardProps
           <Button
             asChild
             size="sm"
-            className="flex-1 bg-lime-600 font-semibold text-gray-950 hover:bg-lime-400"
+            className="flex-1 bg-brand font-semibold text-gray-950 hover:bg-brand-hover"
           >
             <Link href={productPath(listing)}>
               View details
@@ -436,7 +436,7 @@ function ProductCard({ listing, onOwnerDeleted, onOwnerSaved }: ProductCardProps
             size="sm"
             variant="outline"
             onClick={handleMessage}
-            className="flex-1 border-gray-700 bg-transparent text-gray-300 hover:border-lime-600 hover:bg-gray-800 hover:text-lime-500"
+            className="flex-1 border-gray-700 bg-transparent text-gray-300 hover:border-brand hover:bg-gray-800 hover:text-brand"
           >
             <MessageCircle className="mr-1.5 h-4 w-4" aria-hidden="true" />
             Message

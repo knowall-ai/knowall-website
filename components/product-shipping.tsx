@@ -67,7 +67,7 @@ export default function ProductShipping({ pubkey, zoneIds }: ProductShippingProp
   return (
     <section data-testid="product-shipping" className="rounded-lg border border-gray-800 p-4">
       <h2 className="mb-2 flex items-center gap-2 text-sm font-semibold text-white">
-        <Truck className="h-4 w-4 text-lime-500" aria-hidden="true" />
+        <Truck className="h-4 w-4 text-brand" aria-hidden="true" />
         Shipping
       </h2>
       {zones === null ? (

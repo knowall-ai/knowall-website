@@ -133,7 +133,7 @@ export function CheckoutPanel({ open, onOpenChange }: CheckoutPanelProps) {
       >
         <SheetHeader className="border-b border-gray-800 p-4">
           <SheetTitle className="flex items-center gap-2 text-white">
-            <ShoppingBag className="h-5 w-5 text-lime-500" aria-hidden="true" />
+            <ShoppingBag className="h-5 w-5 text-brand" aria-hidden="true" />
             {titles[step]}
           </SheetTitle>
           <SheetDescription className="text-gray-400">{descriptions[step]}</SheetDescription>

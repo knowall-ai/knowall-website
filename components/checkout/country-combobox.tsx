@@ -84,7 +84,7 @@ export function CountryCombobox({
                     onChange(country.code);
                     setOpen(false);
                   }}
-                  className="text-gray-200 aria-selected:bg-gray-800 aria-selected:text-lime-500"
+                  className="text-gray-200 aria-selected:bg-gray-800 aria-selected:text-brand"
                 >
                   <Check
                     className={cn(

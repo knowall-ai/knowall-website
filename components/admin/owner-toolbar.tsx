@@ -28,17 +28,14 @@ export function OwnerToolbar({ onCatalogChanged }: OwnerToolbarProps) {
   if (!isOwner) return null;
 
   return (
-    <div
-      data-testid="owner-toolbar"
-      className="mb-8 rounded-xl border border-lime-600/40 bg-lime-600/10"
-    >
+    <div data-testid="owner-toolbar" className="mb-8 rounded-xl border border-brand/40 bg-brand/10">
       <div className="flex flex-wrap items-center gap-3 px-4 py-3">
-        <span className="text-sm font-semibold text-lime-500">Store owner tools</span>
+        <span className="text-sm font-semibold text-brand">Store owner tools</span>
         <div className="flex flex-wrap gap-2">
           <Button
             size="sm"
             onClick={() => setAddOpen(true)}
-            className="bg-lime-600 font-semibold text-gray-950 hover:bg-lime-400"
+            className="bg-brand font-semibold text-gray-950 hover:bg-brand-hover"
           >
             <PackagePlus className="mr-2 h-4 w-4" />
             Add product
@@ -47,7 +44,7 @@ export function OwnerToolbar({ onCatalogChanged }: OwnerToolbarProps) {
             size="sm"
             variant="outline"
             onClick={() => setShippingOpen(true)}
-            className="border-gray-700 bg-transparent text-gray-300 hover:border-lime-600 hover:bg-gray-800 hover:text-lime-500"
+            className="border-gray-700 bg-transparent text-gray-300 hover:border-brand hover:bg-gray-800 hover:text-brand"
           >
             <Truck className="mr-2 h-4 w-4" />
             Shipping zones
@@ -56,7 +53,7 @@ export function OwnerToolbar({ onCatalogChanged }: OwnerToolbarProps) {
             size="sm"
             variant="outline"
             onClick={() => setCollectionsOpen(true)}
-            className="border-gray-700 bg-transparent text-gray-300 hover:border-lime-600 hover:bg-gray-800 hover:text-lime-500"
+            className="border-gray-700 bg-transparent text-gray-300 hover:border-brand hover:bg-gray-800 hover:text-brand"
           >
             <FolderTree className="mr-2 h-4 w-4" />
             Categories &amp; collections

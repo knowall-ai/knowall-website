@@ -29,7 +29,7 @@ import type { ShippingInfo } from '@/lib/gamma-order';
 import { formatPrice } from '@/lib/nip99';
 
 const inputDark =
-  'border-gray-700 bg-gray-800 text-white placeholder:text-gray-500 focus-visible:ring-lime-500';
+  'border-gray-700 bg-gray-800 text-white placeholder:text-gray-500 focus-visible:ring-brand';
 
 // Legacy fallback zones, used ONLY when the merchant has no kind-30406
 // options at all. Their costs are charged like real options; `countries`
@@ -420,7 +420,7 @@ export function ShippingForm({
 
       <Button
         type="submit"
-        className="w-full bg-lime-600 font-semibold text-gray-950 hover:bg-lime-400"
+        className="w-full bg-brand font-semibold text-gray-950 hover:bg-brand-hover"
         disabled={!isValid || !selectedOption || isSubmitting || optionsLoading || submitDisabled}
       >
         {isSubmitting ? 'Processing...' : 'Place Order'}

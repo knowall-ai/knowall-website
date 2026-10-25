@@ -88,7 +88,7 @@ export default function SignInButton({
           <button
             data-testid="nostr-account-menu"
             className={cn(
-              'flex items-center gap-2 rounded-full py-1 pl-1 pr-2 text-gray-300 transition-colors hover:bg-gray-800 hover:text-lime-500',
+              'flex items-center gap-2 rounded-full py-1 pl-1 pr-2 text-gray-300 transition-colors hover:bg-gray-800 hover:text-brand',
               className
             )}
           >
@@ -103,7 +103,7 @@ export default function SignInButton({
             ) : (
               <span
                 aria-hidden="true"
-                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-lime-600 text-sm font-semibold text-gray-950"
+                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand text-sm font-semibold text-gray-950"
               >
                 {name.charAt(0).toUpperCase()}
               </span>
@@ -141,7 +141,7 @@ export default function SignInButton({
     <>
       <Button
         onClick={() => handleOpenChange(true)}
-        className={cn('bg-lime-600 text-gray-950 hover:bg-lime-400', className)}
+        className={cn('bg-brand text-gray-950 hover:bg-brand-hover', className)}
       >
         <NostrLogo className="h-4 w-4" />
         {label}
@@ -167,7 +167,7 @@ export default function SignInButton({
             <Button
               onClick={handleExtensionSignIn}
               disabled={isSigningIn}
-              className="w-full bg-lime-600 font-semibold text-gray-950 hover:bg-lime-400"
+              className="w-full bg-brand font-semibold text-gray-950 hover:bg-brand-hover"
             >
               <Puzzle className="mr-2 h-4 w-4" aria-hidden="true" />
               {isSigningIn ? 'Waiting for extension...' : 'Sign in with extension'}
@@ -182,7 +182,7 @@ export default function SignInButton({
                     href={extension.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-lime-500 underline-offset-4 hover:underline"
+                    className="text-brand underline-offset-4 hover:underline"
                   >
                     {extension.name}
                   </a>

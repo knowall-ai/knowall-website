@@ -160,7 +160,7 @@ export default function StoryComments({
               type="submit"
               size="sm"
               disabled={isPosting || !content.trim()}
-              className="bg-lime-600 text-gray-950 hover:bg-lime-400"
+              className="bg-brand text-gray-950 hover:bg-brand-hover"
             >
               <Send className="mr-2 h-4 w-4" aria-hidden="true" />
               {isPosting ? 'Posting…' : 'Comment'}
@@ -217,7 +217,7 @@ function StoryComment({
             className="h-8 w-8 rounded-full border border-gray-800 bg-gray-800 object-cover"
           />
         ) : (
-          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-lime-600 text-sm font-semibold text-gray-950">
+          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-brand text-sm font-semibold text-gray-950">
             {name.charAt(0).toUpperCase()}
           </span>
         )}
@@ -228,7 +228,7 @@ function StoryComment({
             href={`https://njump.me/${npub}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-sm font-medium text-gray-200 hover:text-lime-500"
+            className="text-sm font-medium text-gray-200 hover:text-brand"
           >
             {name}
           </a>
@@ -255,7 +255,7 @@ function StoryComment({
           <button
             type="button"
             onClick={() => setExpanded((value) => !value)}
-            className="mt-1 text-xs font-medium text-lime-500 hover:underline"
+            className="mt-1 text-xs font-medium text-brand hover:underline"
           >
             {expanded ? 'Show less' : 'Show more'}
           </button>

@@ -21,7 +21,7 @@ export default function StoryHero() {
     <div data-testid="story-hero">
       {/* Banner: live profile banner (or the static export of it), over a
           brand gradient that shows through while the image loads. */}
-      <div className="relative h-40 w-full sm:h-48 bg-linear-to-r from-lime-900/40 via-gray-900 to-gray-800">
+      <div className="relative h-40 w-full sm:h-48 bg-linear-to-r from-brand/10 via-gray-900 to-gray-800">
         {/* eslint-disable-next-line @next/next/no-img-element -- live banner URLs come from Nostr kind-0 metadata, hosts unknown at build time */}
         <img
           src={bannerSrc}
@@ -65,7 +65,7 @@ export default function StoryHero() {
           </span>
         </div>
 
-        <div className="mt-4 flex items-center gap-2 border-t border-gray-800 pt-4 text-sm font-medium text-lime-500">
+        <div className="mt-4 flex items-center gap-2 border-t border-gray-800 pt-4 text-sm font-medium text-brand">
           <BookOpen className="h-4 w-4" aria-hidden="true" />
           <span>Our Story</span>
         </div>

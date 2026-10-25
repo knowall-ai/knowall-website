@@ -25,14 +25,14 @@ function CartButton() {
       onClick={() => setIsOpen(true)}
       aria-label={`Cart${totalItems > 0 ? ` (${totalItems} items)` : ''}`}
       title="Cart"
-      className="relative flex flex-col items-center gap-0.5 text-gray-300 hover:text-lime-500 transition-colors"
+      className="relative flex flex-col items-center gap-0.5 text-gray-300 hover:text-brand transition-colors"
     >
       <ShoppingCart className="h-5 w-5" aria-hidden="true" />
       <span className="text-[10px] text-gray-400">Cart</span>
       {totalItems > 0 && (
         <span
           data-testid="cart-count"
-          className="absolute -right-2 -top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-lime-500 px-1 text-[10px] font-semibold text-black"
+          className="absolute -right-2 -top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-brand px-1 text-[10px] font-semibold text-black"
         >
           {totalItems}
         </span>
@@ -116,14 +116,14 @@ export default function Header() {
                 key={link.name}
                 href={link.href}
                 onClick={handleTopLink(link.href)}
-                className="text-gray-300 hover:text-lime-500 transition-colors"
+                className="text-gray-300 hover:text-brand transition-colors"
               >
                 {link.name}
               </Link>
             ))}
 
             <DropdownMenu>
-              <DropdownMenuTrigger className="flex items-center gap-1 text-gray-300 hover:text-lime-500 transition-colors rounded-sm outline-hidden focus-visible:ring-2 focus-visible:ring-lime-500 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-950 data-[state=open]:text-lime-500">
+              <DropdownMenuTrigger className="flex items-center gap-1 text-gray-300 hover:text-brand transition-colors rounded-sm outline-hidden focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-gray-950 data-[state=open]:text-brand">
                 What we do
                 <ChevronDown className="h-4 w-4" />
               </DropdownMenuTrigger>
@@ -140,7 +140,7 @@ export default function Header() {
                       <DropdownMenuItem
                         key={link.name}
                         asChild
-                        className="focus:bg-gray-800 focus:text-lime-500 cursor-pointer"
+                        className="focus:bg-gray-800 focus:text-brand cursor-pointer"
                       >
                         <Link href={link.href}>{link.name}</Link>
                       </DropdownMenuItem>
@@ -154,7 +154,7 @@ export default function Header() {
               <Link
                 key={link.name}
                 href={link.href}
-                className="text-gray-300 hover:text-lime-500 transition-colors"
+                className="text-gray-300 hover:text-brand transition-colors"
               >
                 {link.name}
               </Link>
@@ -166,7 +166,7 @@ export default function Header() {
               href="/story"
               aria-label="Our Story"
               title="Our Story"
-              className="flex flex-col items-center gap-0.5 text-gray-300 hover:text-lime-500 transition-colors"
+              className="flex flex-col items-center gap-0.5 text-gray-300 hover:text-brand transition-colors"
             >
               <BookOpen className="h-5 w-5" aria-hidden="true" />
               <span className="text-[10px] text-gray-400">Our Story</span>
@@ -175,7 +175,7 @@ export default function Header() {
               href="/shop"
               aria-label="Shop"
               title="Shop"
-              className="flex flex-col items-center gap-0.5 text-gray-300 hover:text-lime-500 transition-colors"
+              className="flex flex-col items-center gap-0.5 text-gray-300 hover:text-brand transition-colors"
             >
               <ShoppingBag className="h-5 w-5" aria-hidden="true" />
               <span className="text-[10px] text-gray-400">Shop</span>
@@ -185,7 +185,7 @@ export default function Header() {
               onClick={() => openContactPanel()}
               aria-label="Message"
               title="Message"
-              className="flex flex-col items-center gap-0.5 text-gray-300 hover:text-lime-500 transition-colors"
+              className="flex flex-col items-center gap-0.5 text-gray-300 hover:text-brand transition-colors"
             >
               <Mail className="h-5 w-5" aria-hidden="true" />
               <span className="text-[10px] text-gray-400">Message</span>
@@ -200,7 +200,7 @@ export default function Header() {
               onClick={() => openContactPanel()}
               aria-label="Message"
               title="Message"
-              className="flex flex-col items-center gap-0.5 text-gray-300 hover:text-lime-500 transition-colors"
+              className="flex flex-col items-center gap-0.5 text-gray-300 hover:text-brand transition-colors"
             >
               <Mail className="h-5 w-5" aria-hidden="true" />
               <span className="text-[10px] text-gray-400">Message</span>
@@ -223,7 +223,7 @@ export default function Header() {
                 <Link
                   key={link.name}
                   href={link.href}
-                  className="text-gray-300 hover:text-lime-500 transition-colors py-2"
+                  className="text-gray-300 hover:text-brand transition-colors py-2"
                   onClick={(e) => {
                     handleTopLink(link.href)(e);
                     setIsMenuOpen(false);
@@ -242,7 +242,7 @@ export default function Header() {
                     <Link
                       key={link.name}
                       href={link.href}
-                      className="block pl-4 text-gray-300 hover:text-lime-500 transition-colors py-2"
+                      className="block pl-4 text-gray-300 hover:text-brand transition-colors py-2"
                       onClick={() => setIsMenuOpen(false)}
                     >
                       {link.name}
@@ -255,7 +255,7 @@ export default function Header() {
                 <Link
                   key={link.name}
                   href={link.href}
-                  className="text-gray-300 hover:text-lime-500 transition-colors py-2"
+                  className="text-gray-300 hover:text-brand transition-colors py-2"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {link.name}
@@ -265,7 +265,7 @@ export default function Header() {
               <Link
                 href="/story"
                 aria-label="Our Story"
-                className="flex items-center gap-2 text-gray-300 hover:text-lime-500 transition-colors py-2"
+                className="flex items-center gap-2 text-gray-300 hover:text-brand transition-colors py-2"
                 onClick={() => setIsMenuOpen(false)}
               >
                 <BookOpen className="h-5 w-5" aria-hidden="true" />
@@ -274,7 +274,7 @@ export default function Header() {
               <Link
                 href="/shop"
                 aria-label="Shop"
-                className="flex items-center gap-2 text-gray-300 hover:text-lime-500 transition-colors py-2"
+                className="flex items-center gap-2 text-gray-300 hover:text-brand transition-colors py-2"
                 onClick={() => setIsMenuOpen(false)}
               >
                 <ShoppingBag className="h-5 w-5" aria-hidden="true" />

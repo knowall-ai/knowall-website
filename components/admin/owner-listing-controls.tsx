@@ -76,17 +76,17 @@ export function OwnerListingControls({
         className={
           compact
             ? 'contents'
-            : 'flex flex-wrap items-center gap-3 rounded-lg border border-lime-600/40 bg-lime-600/10 p-3'
+            : 'flex flex-wrap items-center gap-3 rounded-lg border border-brand/40 bg-brand/10 p-3'
         }
       >
-        {!compact && <span className="text-sm font-semibold text-lime-500">Owner</span>}
+        {!compact && <span className="text-sm font-semibold text-brand">Owner</span>}
         <Button
           variant="outline"
           size={compact ? 'icon' : 'sm'}
           aria-label={`Edit ${title}`}
           onClick={startEdit}
           disabled={loadingEdit}
-          className="border-gray-700 bg-transparent text-gray-300 hover:border-lime-600 hover:bg-gray-800 hover:text-lime-500"
+          className="border-gray-700 bg-transparent text-gray-300 hover:border-brand hover:bg-gray-800 hover:text-brand"
         >
           {loadingEdit ? (
             <Loader2 className="h-4 w-4 animate-spin" />

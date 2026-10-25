@@ -201,7 +201,7 @@ function ReviewComposer({
             type="submit"
             size="sm"
             disabled={isPosting || stars < 1}
-            className="bg-lime-600 text-gray-950 hover:bg-lime-400"
+            className="bg-brand text-gray-950 hover:bg-brand-hover"
           >
             <Send className="mr-2 h-4 w-4" aria-hidden="true" />
             {isPosting

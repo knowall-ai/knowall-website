@@ -103,16 +103,16 @@ export default function AgentsSection() {
   return (
     <div id="agents" className="mt-20 scroll-mt-24">
       <div className="mb-8 flex items-center gap-4" role="presentation">
-        <span className="h-px flex-1 bg-gradient-to-r from-transparent to-lime-500/50" />
-        <h3 className="text-sm font-semibold uppercase tracking-[0.25em] text-lime-400">
+        <span className="h-px flex-1 bg-gradient-to-r from-transparent to-brand/50" />
+        <h3 className="text-sm font-semibold uppercase tracking-[0.25em] text-brand">
           …and the agents
         </h3>
-        <span className="h-px flex-1 bg-gradient-to-l from-transparent to-lime-500/50" />
+        <span className="h-px flex-1 bg-gradient-to-l from-transparent to-brand/50" />
       </div>
       <div>
         <p className="text-lg text-center text-gray-300 max-w-3xl mx-auto mb-12">
           We practise what we preach. Our AI agents work alongside the team across the{' '}
-          <a href="#tminus15" className="text-lime-500 hover:text-lime-400 transition-colors">
+          <a href="#tminus15" className="text-brand hover:text-brand-hover transition-colors">
             T-Minus-15
           </a>{' '}
           lifecycle — taking work from idea to production.
@@ -129,11 +129,11 @@ export default function AgentsSection() {
                 alt={`${agent.name} ${agent.role} — robot portrait`}
                 width={128}
                 height={128}
-                className="h-32 w-32 rounded-full object-cover mb-4 ring-2 ring-lime-500/50"
+                className="h-32 w-32 rounded-full object-cover mb-4 ring-2 ring-brand/50"
               />
               <h3 className="text-xl font-semibold">{agent.name}</h3>
               <p className="text-gray-400 mt-1">{agent.role}</p>
-              <span className="mt-3 inline-block rounded-full bg-lime-500/10 px-3 py-1 text-xs font-medium uppercase tracking-wide text-lime-400">
+              <span className="mt-3 inline-block rounded-full bg-brand/10 px-3 py-1 text-xs font-medium uppercase tracking-wide text-brand">
                 {agent.phase}
               </span>
               <span

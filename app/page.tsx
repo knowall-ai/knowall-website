@@ -58,7 +58,7 @@ export default function Home() {
         {/* max-w-xl keeps the copy on the shaded left, clear of the agents */}
         <div className="max-w-xl text-white">
           <h1 className="text-4xl md:text-6xl font-bold mb-6">
-            Intelligence is <span className="text-lime-300">processing power</span>
+            Intelligence is <span className="text-brand">processing power</span>
           </h1>
           <p className="text-lg md:text-xl mb-8 text-white/90">
             We build intelligent AI systems that transform businesses through custom Microsoft
@@ -68,7 +68,7 @@ export default function Home() {
           </p>
           <div className="flex flex-wrap gap-4">
             <Button
-              className="bg-lime-500 text-gray-950 hover:bg-lime-400 shadow-lg shadow-lime-500/30"
+              className="bg-brand text-gray-950 hover:bg-brand-hover shadow-lg shadow-brand/30"
               asChild
             >
               <a href="#services">Our Services</a>
@@ -89,7 +89,7 @@ export default function Home() {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             <ServiceCard
-              icon={<Bot className="h-8 w-8 text-lime-500" />}
+              icon={<Bot className="h-8 w-8 text-brand" />}
               title="AI Consultancy"
               description="Expert guidance on implementing AI solutions tailored to your business needs."
               darkMode={true}
@@ -97,7 +97,7 @@ export default function Home() {
             />
 
             <ServiceCard
-              icon={<Code className="h-8 w-8 text-lime-500" />}
+              icon={<Code className="h-8 w-8 text-brand" />}
               title="Microsoft Copilot Development"
               description="Custom Microsoft Copilots built to enhance productivity and automate workflows."
               darkMode={true}
@@ -188,21 +188,21 @@ export default function Home() {
                   </span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <Bot className="h-6 w-6 text-lime-500 mt-0.5 shrink-0" />
+                  <Bot className="h-6 w-6 text-brand mt-0.5 shrink-0" />
                   <span className="text-gray-200">
                     AI Copilots participate in your Teams workspace and earn real rewards for their
                     contributions
                   </span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <Zap className="h-6 w-6 text-lime-500 mt-0.5 shrink-0" />
+                  <Zap className="h-6 w-6 text-brand mt-0.5 shrink-0" />
                   <span className="text-gray-200">
                     Value-for-value model fosters recognition and accountability — every
                     contribution, human or AI, is incentivized
                   </span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <Code className="h-6 w-6 text-lime-500 mt-0.5 shrink-0" />
+                  <Code className="h-6 w-6 text-brand mt-0.5 shrink-0" />
                   <span className="text-gray-200">
                     Open-source foundation, adaptable to any organisation&apos;s unique needs with a
                     transparent, community-driven approach
@@ -219,7 +219,7 @@ export default function Home() {
                   href="https://getzapl.ie"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 bg-lime-600 hover:bg-lime-400 text-gray-950 px-6 py-3 rounded-md transition-colors font-medium shadow-lg shadow-lime-500/20"
+                  className="inline-flex items-center gap-2 bg-brand hover:bg-brand-hover text-gray-950 px-6 py-3 rounded-md transition-colors font-medium shadow-lg shadow-brand/20"
                 >
                   <ExternalLink className="h-5 w-5" />
                   <span>Visit getzapl.ie</span>
@@ -258,10 +258,10 @@ export default function Home() {
             <div className="flex-1 w-full">
               <div className="relative">
                 <div
-                  className="absolute -inset-4 bg-lime-500/10 blur-2xl rounded-3xl"
+                  className="absolute -inset-4 bg-brand/10 blur-2xl rounded-3xl"
                   aria-hidden="true"
                 ></div>
-                <div className="relative rounded-xl overflow-hidden border border-gray-700 bg-gray-950 shadow-2xl shadow-lime-500/20">
+                <div className="relative rounded-xl overflow-hidden border border-gray-700 bg-gray-950 shadow-2xl shadow-brand/20">
                   {/* Browser chrome bar */}
                   <div
                     className="flex items-center gap-2 px-4 py-3 bg-gray-800 border-b border-gray-700"
@@ -295,20 +295,20 @@ export default function Home() {
 
               <ul className="space-y-5 mb-10">
                 <li className="flex items-start gap-3">
-                  <Ticket className="h-6 w-6 text-lime-500 mt-0.5 shrink-0" />
+                  <Ticket className="h-6 w-6 text-brand mt-0.5 shrink-0" />
                   <span className="text-gray-200">
                     Azure DevOps work items tagged as &quot;ticket&quot; appear as support tickets,
                     with permission-based, multi-tenant access
                   </span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <Mail className="h-6 w-6 text-lime-500 mt-0.5 shrink-0" />
+                  <Mail className="h-6 w-6 text-brand mt-0.5 shrink-0" />
                   <span className="text-gray-200">
                     Email-to-ticket creation and replies to requesters via Exchange Online
                   </span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <ShieldCheck className="h-6 w-6 text-lime-500 mt-0.5 shrink-0" />
+                  <ShieldCheck className="h-6 w-6 text-brand mt-0.5 shrink-0" />
                   <span className="text-gray-200">
                     Microsoft authentication — sign in with Azure AD/Microsoft accounts
                   </span>
@@ -326,7 +326,7 @@ export default function Home() {
                 href="https://zapdesk.knowall.ai"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 bg-lime-600 hover:bg-lime-400 text-gray-950 px-6 py-3 rounded-md transition-colors font-medium shadow-lg shadow-lime-500/20"
+                className="inline-flex items-center gap-2 bg-brand hover:bg-brand-hover text-gray-950 px-6 py-3 rounded-md transition-colors font-medium shadow-lg shadow-brand/20"
               >
                 <ExternalLink className="h-5 w-5" />
                 <span>Visit zapdesk.knowall.ai</span>
@@ -354,25 +354,25 @@ export default function Home() {
 
               <ul className="space-y-5 mb-10">
                 <li className="flex items-start gap-3">
-                  <Clock className="h-6 w-6 text-lime-500 mt-0.5 shrink-0" />
+                  <Clock className="h-6 w-6 text-brand mt-0.5 shrink-0" />
                   <span className="text-gray-200">
                     Weekly timesheet grid with a real-time start/stop timer for accurate tracking
                   </span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <RefreshCw className="h-6 w-6 text-lime-500 mt-0.5 shrink-0" />
+                  <RefreshCw className="h-6 w-6 text-brand mt-0.5 shrink-0" />
                   <span className="text-gray-200">
                     Automatic synchronization with Business Central Jobs and Job Journal Lines
                   </span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <ShieldCheck className="h-6 w-6 text-lime-500 mt-0.5 shrink-0" />
+                  <ShieldCheck className="h-6 w-6 text-brand mt-0.5 shrink-0" />
                   <span className="text-gray-200">
                     Secure single sign-on via Microsoft Entra ID
                   </span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <Smartphone className="h-6 w-6 text-lime-500 mt-0.5 shrink-0" />
+                  <Smartphone className="h-6 w-6 text-brand mt-0.5 shrink-0" />
                   <span className="text-gray-200">
                     Modern dark theme that works on desktop and mobile
                   </span>
@@ -383,7 +383,7 @@ export default function Home() {
                 href="https://getthyme.ai"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 bg-lime-600 hover:bg-lime-400 text-gray-950 px-6 py-3 rounded-md transition-colors font-medium shadow-lg shadow-lime-500/20"
+                className="inline-flex items-center gap-2 bg-brand hover:bg-brand-hover text-gray-950 px-6 py-3 rounded-md transition-colors font-medium shadow-lg shadow-brand/20"
               >
                 <ExternalLink className="h-5 w-5" />
                 <span>Visit getthyme.ai</span>
@@ -394,10 +394,10 @@ export default function Home() {
             <div className="flex-1 w-full">
               <div className="relative">
                 <div
-                  className="absolute -inset-4 bg-lime-500/10 blur-2xl rounded-3xl"
+                  className="absolute -inset-4 bg-brand/10 blur-2xl rounded-3xl"
                   aria-hidden="true"
                 ></div>
-                <div className="relative rounded-xl overflow-hidden border border-gray-700 bg-gray-950 shadow-2xl shadow-lime-500/20">
+                <div className="relative rounded-xl overflow-hidden border border-gray-700 bg-gray-950 shadow-2xl shadow-brand/20">
                   {/* Browser chrome bar */}
                   <div
                     className="flex items-center gap-2 px-4 py-3 bg-gray-800 border-b border-gray-700"
@@ -449,21 +449,21 @@ export default function Home() {
 
               <ul className="space-y-5 mb-10">
                 <li className="flex items-start gap-3">
-                  <ListChecks className="h-6 w-6 text-lime-500 mt-0.5 shrink-0" />
+                  <ListChecks className="h-6 w-6 text-brand mt-0.5 shrink-0" />
                   <span className="text-gray-200">
                     Fifteen practical steps covering the full delivery lifecycle: Prep, Design,
                     Engineer, Test and Operate
                   </span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <Users className="h-6 w-6 text-lime-500 mt-0.5 shrink-0" />
+                  <Users className="h-6 w-6 text-brand mt-0.5 shrink-0" />
                   <span className="text-gray-200">
                     Cross-functional squad roles — Prepper, Designer, Engineer, Test Pilot and
                     Planner — with short sprints, daily 15-minute stand-ups and retrospectives
                   </span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <Bot className="h-6 w-6 text-lime-500 mt-0.5 shrink-0" />
+                  <Bot className="h-6 w-6 text-brand mt-0.5 shrink-0" />
                   <span className="text-gray-200">
                     One shared playbook for human team members AND AI agents — persona configs like
                     Poppy the Planner, Pepper the Prepper and Teddy the Tester let AI co-pilots
@@ -471,7 +471,7 @@ export default function Home() {
                   </span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <GithubIcon className="h-6 w-6 text-lime-500 mt-0.5 shrink-0" />
+                  <GithubIcon className="h-6 w-6 text-brand mt-0.5 shrink-0" />
                   <span className="text-gray-200">
                     Open source under Creative Commons — the specifics teams actually need: roles,
                     estimates, meetings and work-item metadata
@@ -484,7 +484,7 @@ export default function Home() {
                   href="https://github.com/T-Minus-15/book"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 bg-lime-600 hover:bg-lime-400 text-gray-950 px-6 py-3 rounded-md transition-colors font-medium shadow-lg shadow-lime-500/20"
+                  className="inline-flex items-center gap-2 bg-brand hover:bg-brand-hover text-gray-950 px-6 py-3 rounded-md transition-colors font-medium shadow-lg shadow-brand/20"
                 >
                   <BookOpen className="h-5 w-5" />
                   <span>Read the book</span>
@@ -539,15 +539,15 @@ export default function Home() {
               </p>
               <ul className="space-y-2 mb-6">
                 <li className="flex items-start gap-2">
-                  <Zap className="h-5 w-5 text-lime-500 mt-0.5 shrink-0" />
+                  <Zap className="h-5 w-5 text-brand mt-0.5 shrink-0" />
                   <span>Integration with Microsoft 365 and Teams</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <Zap className="h-5 w-5 text-lime-500 mt-0.5 shrink-0" />
+                  <Zap className="h-5 w-5 text-brand mt-0.5 shrink-0" />
                   <span>Custom knowledge bases and data sources</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <Zap className="h-5 w-5 text-lime-500 mt-0.5 shrink-0" />
+                  <Zap className="h-5 w-5 text-brand mt-0.5 shrink-0" />
                   <span>Creating custom automations with Power Automate</span>
                 </li>
               </ul>
@@ -583,15 +583,15 @@ export default function Home() {
 
               <ul className="space-y-2 mb-6">
                 <li className="flex items-start gap-2">
-                  <Zap className="h-5 w-5 text-lime-500 mt-0.5 shrink-0" />
+                  <Zap className="h-5 w-5 text-brand mt-0.5 shrink-0" />
                   <span>Specialized agents with distinct roles and capabilities</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <Zap className="h-5 w-5 text-lime-500 mt-0.5 shrink-0" />
+                  <Zap className="h-5 w-5 text-brand mt-0.5 shrink-0" />
                   <span>Coordinated problem-solving and task execution</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <Zap className="h-5 w-5 text-lime-500 mt-0.5 shrink-0" />
+                  <Zap className="h-5 w-5 text-brand mt-0.5 shrink-0" />
                   <span>Human-in-the-loop collaboration and oversight</span>
                 </li>
               </ul>
@@ -618,7 +618,7 @@ export default function Home() {
                   alt="Sallie on a video call — her avatar with live telemetry panels"
                   width={1920}
                   height={1080}
-                  className="w-full h-auto rounded-xl ring-2 ring-lime-500/50"
+                  className="w-full h-auto rounded-xl ring-2 ring-brand/50"
                 />
                 <figcaption className="text-xs text-gray-500 mt-2 text-center">
                   Sallie on a video call &mdash; a frame from her live feed
@@ -632,70 +632,70 @@ export default function Home() {
               </p>
               <ul className="grid sm:grid-cols-2 gap-x-6 gap-y-3 mb-6">
                 <li className="flex items-start gap-2">
-                  <Code className="h-5 w-5 text-lime-500 mt-0.5 shrink-0" />
+                  <Code className="h-5 w-5 text-brand mt-0.5 shrink-0" />
                   <span>
                     Custom skills that understand your business &mdash; including Xero and Business
                     Central
                   </span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <Globe className="h-5 w-5 text-lime-500 mt-0.5 shrink-0" />
+                  <Globe className="h-5 w-5 text-brand mt-0.5 shrink-0" />
                   <span>Integrates onto your website</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <Sparkles className="h-5 w-5 text-lime-500 mt-0.5 shrink-0" />
+                  <Sparkles className="h-5 w-5 text-brand mt-0.5 shrink-0" />
                   <span>Uses the latest AI models &mdash; fully configurable</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <Video className="h-5 w-5 text-lime-500 mt-0.5 shrink-0" />
+                  <Video className="h-5 w-5 text-brand mt-0.5 shrink-0" />
                   <span>Joins your internal and external calls like any teammate</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <Camera className="h-5 w-5 text-lime-500 mt-0.5 shrink-0" />
+                  <Camera className="h-5 w-5 text-brand mt-0.5 shrink-0" />
                   <span>Appears on a virtual camera in 1-2-1 and group calls</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <ScreenShare className="h-5 w-5 text-lime-500 mt-0.5 shrink-0" />
+                  <ScreenShare className="h-5 w-5 text-brand mt-0.5 shrink-0" />
                   <span>Shares her screen for demos and presentations (work in progress)</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <Server className="h-5 w-5 text-lime-500 mt-0.5 shrink-0" />
+                  <Server className="h-5 w-5 text-brand mt-0.5 shrink-0" />
                   <span>Runs on her own VM, completing activities end-to-end</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <Users className="h-5 w-5 text-lime-500 mt-0.5 shrink-0" />
+                  <Users className="h-5 w-5 text-brand mt-0.5 shrink-0" />
                   <span>Works alongside your human team members</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <FileText className="h-5 w-5 text-lime-500 mt-0.5 shrink-0" />
+                  <FileText className="h-5 w-5 text-brand mt-0.5 shrink-0" />
                   <span>Updates documentation in SharePoint</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <Brain className="h-5 w-5 text-lime-500 mt-0.5 shrink-0" />
+                  <Brain className="h-5 w-5 text-brand mt-0.5 shrink-0" />
                   <span>Long-term memory of your business and everyone she works with</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <Network className="h-5 w-5 text-lime-500 mt-0.5 shrink-0" />
+                  <Network className="h-5 w-5 text-brand mt-0.5 shrink-0" />
                   <span>
                     Builds a knowledge graph of people, projects, places and organisations
                   </span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <FileSignature className="h-5 w-5 text-lime-500 mt-0.5 shrink-0" />
+                  <FileSignature className="h-5 w-5 text-brand mt-0.5 shrink-0" />
                   <span>Proposals and quotations drafted, branded and sent to clients</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <BarChart3 className="h-5 w-5 text-lime-500 mt-0.5 shrink-0" />
+                  <BarChart3 className="h-5 w-5 text-brand mt-0.5 shrink-0" />
                   <span>Pipeline and opportunities tracked in Dynamics 365 Business Central</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <RefreshCw className="h-5 w-5 text-lime-500 mt-0.5 shrink-0" />
+                  <RefreshCw className="h-5 w-5 text-brand mt-0.5 shrink-0" />
                   <span>
                     Follow-ups and deal chasing, with quotes handed to Allie for invoicing
                   </span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <ShieldCheck className="h-5 w-5 text-lime-500 mt-0.5 shrink-0" />
+                  <ShieldCheck className="h-5 w-5 text-brand mt-0.5 shrink-0" />
                   <span>
                     Human-in-the-loop: Sallie asks in Teams before anything reaches a client
                   </span>
@@ -723,12 +723,12 @@ export default function Home() {
                 className="w-full border-0 bg-gray-950 text-white shadow-lg overflow-hidden"
               >
                 <div className="flex items-center gap-3 px-4 py-3 border-b border-gray-800">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-lime-500/20">
-                    <Bot className="h-5 w-5 text-lime-500" />
+                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-brand/20">
+                    <Bot className="h-5 w-5 text-brand" />
                   </div>
                   <span className="font-semibold whitespace-nowrap">Sallie for Sales</span>
                   <div className="ml-auto flex items-center gap-3 text-xs text-gray-400">
-                    <span className="text-white border-b-2 border-lime-500 pb-0.5">Chat</span>
+                    <span className="text-white border-b-2 border-brand pb-0.5">Chat</span>
                     <span>Pipeline</span>
                     <span>Reports</span>
                     <span>Profile</span>
@@ -736,14 +736,12 @@ export default function Home() {
                 </div>
                 <div className="p-4 space-y-4">
                   <div className="flex items-start gap-2">
-                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-lime-500/20">
-                      <Bot className="h-4 w-4 text-lime-500" />
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand/20">
+                      <Bot className="h-4 w-4 text-brand" />
                     </div>
                     <div className="flex-1 bg-gray-900 rounded-lg p-4">
                       <div className="flex items-baseline gap-2 mb-1">
-                        <span className="text-sm font-semibold text-lime-400">
-                          Sallie for Sales
-                        </span>
+                        <span className="text-sm font-semibold text-brand">Sallie for Sales</span>
                         <span className="text-xs text-gray-500">5/12, 9:15 AM</span>
                       </div>
                       <p className="text-sm text-gray-200 mb-3">
@@ -771,24 +769,22 @@ export default function Home() {
                       </div>
                       <p className="text-sm text-gray-200">Yes</p>
                     </div>
-                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-lime-900/60 text-xs font-semibold text-lime-300">
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand/15 text-xs font-semibold text-brand">
                       BW
                     </div>
                   </div>
                   <div className="flex items-start gap-2">
-                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-lime-500/20">
-                      <Bot className="h-4 w-4 text-lime-500" />
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand/20">
+                      <Bot className="h-4 w-4 text-brand" />
                     </div>
-                    <div className="flex-1 bg-gray-900 rounded-lg p-4 border-t-2 border-lime-500">
+                    <div className="flex-1 bg-gray-900 rounded-lg p-4 border-t-2 border-brand">
                       <div className="flex items-baseline gap-2 mb-3">
-                        <span className="text-sm font-semibold text-lime-400">
-                          Sallie for Sales
-                        </span>
+                        <span className="text-sm font-semibold text-brand">Sallie for Sales</span>
                         <span className="text-xs text-gray-500">5/12, 9:17 AM</span>
                       </div>
                       <div className="flex items-center justify-between mb-3">
                         <span className="font-semibold">Proposal # PRO-0231</span>
-                        <span className="text-xs text-lime-400 border border-lime-500/40 rounded px-2 py-0.5">
+                        <span className="text-xs text-brand border border-brand/40 rounded px-2 py-0.5">
                           Draft ready
                         </span>
                       </div>
@@ -819,14 +815,12 @@ export default function Home() {
                     </div>
                   </div>
                   <div className="flex items-start gap-2">
-                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-lime-500/20">
-                      <Bot className="h-4 w-4 text-lime-500" />
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand/20">
+                      <Bot className="h-4 w-4 text-brand" />
                     </div>
                     <div className="flex-1 bg-gray-900 rounded-lg p-4">
                       <div className="flex items-baseline gap-2 mb-1">
-                        <span className="text-sm font-semibold text-lime-400">
-                          Sallie for Sales
-                        </span>
+                        <span className="text-sm font-semibold text-brand">Sallie for Sales</span>
                         <span className="text-xs text-gray-500">5/12, 9:18 AM</span>
                       </div>
                       <p className="text-sm text-gray-200">
@@ -843,7 +837,7 @@ export default function Home() {
               </Card>
               <div className="text-center">
                 <Button
-                  className="bg-lime-500 text-gray-950 hover:bg-lime-400 shadow-lg shadow-lime-500/30"
+                  className="bg-brand text-gray-950 hover:bg-brand-hover shadow-lg shadow-brand/30"
                   asChild
                 >
                   <a href="#contact">Book a Sallie demo</a>
@@ -871,7 +865,7 @@ export default function Home() {
               </p>
 
               <div className="flex flex-col md:flex-row gap-4 justify-center">
-                <Button className="bg-lime-600 text-gray-950 hover:bg-lime-400" asChild>
+                <Button className="bg-brand text-gray-950 hover:bg-brand-hover" asChild>
                   <a href="mailto:info@knowall.ai">
                     Email <EmailIcon className="ml-2 h-4 w-4" />
                   </a>

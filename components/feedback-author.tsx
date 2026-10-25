@@ -54,7 +54,7 @@ export default function FeedbackAuthor({
             className="h-8 w-8 rounded-full border border-gray-800 bg-gray-800 object-cover"
           />
         ) : (
-          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-lime-600 text-sm font-semibold text-gray-950">
+          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-brand text-sm font-semibold text-gray-950">
             {name.charAt(0).toUpperCase()}
           </span>
         )}
@@ -64,7 +64,7 @@ export default function FeedbackAuthor({
           href={`https://njump.me/${npub}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-sm font-medium text-gray-200 hover:text-lime-500"
+          className="text-sm font-medium text-gray-200 hover:text-brand"
         >
           {name}
         </a>

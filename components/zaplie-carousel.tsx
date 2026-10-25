@@ -128,7 +128,7 @@ export default function ZaplieCarousel() {
               >
                 <div className="absolute inset-0 z-10 pointer-events-none">
                   {hoveredIndex === actualIndex && (
-                    <div className="absolute inset-0 border-2 border-lime-500" />
+                    <div className="absolute inset-0 border-2 border-brand" />
                   )}
                 </div>
                 <Image

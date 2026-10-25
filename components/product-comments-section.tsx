@@ -147,7 +147,7 @@ function ProductComment({
           <button
             type="button"
             onClick={() => setExpanded((value) => !value)}
-            className="mt-1 text-xs font-medium text-lime-500 hover:underline"
+            className="mt-1 text-xs font-medium text-brand hover:underline"
           >
             {expanded ? 'Show less' : 'Show more'}
           </button>
@@ -156,7 +156,7 @@ function ProductComment({
           <button
             type="button"
             onClick={() => setShowReplyForm((value) => !value)}
-            className="text-xs font-medium text-gray-500 hover:text-lime-500"
+            className="text-xs font-medium text-gray-500 hover:text-brand"
           >
             Reply
           </button>
@@ -164,7 +164,7 @@ function ProductComment({
             <button
               type="button"
               onClick={() => setShowReplies((value) => !value)}
-              className="text-xs font-medium text-gray-500 hover:text-lime-500"
+              className="text-xs font-medium text-gray-500 hover:text-brand"
             >
               {showReplies ? 'Hide' : 'Show'} {replies.length}{' '}
               {replies.length === 1 ? 'reply' : 'replies'}
@@ -278,7 +278,7 @@ function CommentComposer({
             type="submit"
             size="sm"
             disabled={isPosting || !content.trim()}
-            className="bg-lime-600 text-gray-950 hover:bg-lime-400"
+            className="bg-brand text-gray-950 hover:bg-brand-hover"
           >
             <Send className="mr-2 h-4 w-4" aria-hidden="true" />
             {isPosting ? 'Posting…' : reply ? 'Reply' : 'Comment'}

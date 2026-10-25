@@ -146,7 +146,7 @@ export function PaymentDisplay({
   if (!paymentRequest || !invoice) {
     return (
       <div className="flex flex-col items-center space-y-4 py-12" data-testid="awaiting-invoice">
-        <Loader2 className="h-8 w-8 animate-spin text-lime-500" />
+        <Loader2 className="h-8 w-8 animate-spin text-brand" />
         <div className="space-y-2 text-center">
           <p className="font-medium text-white">Waiting for invoice...</p>
           <p className="text-sm text-gray-400">
@@ -209,10 +209,10 @@ export function PaymentDisplay({
             variant="outline"
             size="icon"
             onClick={handleCopy}
-            className="shrink-0 border-gray-700 bg-transparent text-gray-300 hover:bg-gray-800 hover:text-lime-500"
+            className="shrink-0 border-gray-700 bg-transparent text-gray-300 hover:bg-gray-800 hover:text-brand"
             aria-label="Copy invoice"
           >
-            {copied ? <Check className="h-4 w-4 text-lime-500" /> : <Copy className="h-4 w-4" />}
+            {copied ? <Check className="h-4 w-4 text-brand" /> : <Copy className="h-4 w-4" />}
           </Button>
         </div>
       </div>
@@ -225,7 +225,7 @@ export function PaymentDisplay({
           <Button
             onClick={handlePayWithWebLN}
             disabled={isPaying}
-            className="w-full bg-lime-600 text-gray-950 hover:bg-lime-400"
+            className="w-full bg-brand text-gray-950 hover:bg-brand-hover"
             size="lg"
           >
             {isPaying ? (
@@ -245,7 +245,7 @@ export function PaymentDisplay({
         <Button
           variant="outline"
           onClick={openInWallet}
-          className="w-full border-gray-700 bg-transparent text-gray-300 hover:border-lime-600 hover:bg-gray-800 hover:text-lime-500"
+          className="w-full border-gray-700 bg-transparent text-gray-300 hover:border-brand hover:bg-gray-800 hover:text-brand"
           size="lg"
         >
           <ExternalLink className="mr-2 h-4 w-4" />

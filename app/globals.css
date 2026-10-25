@@ -18,6 +18,16 @@
 
 @theme {
   /*
+    KnowAll brand lime, sampled from the logo and favicon. Use bg-brand /
+    text-brand / ring-brand etc. for anything that represents the brand
+    accent on dark backgrounds; hover states go lighter (brand-hover), never
+    darker. Filled brand surfaces take dark text (text-gray-950, 16:1); never
+    text-white (1.25:1). Too light for text on white: use lime-700 there.
+  */
+  --color-brand: #9dff0a;
+  --color-brand-hover: #b4ff3d;
+
+  /*
     Tailwind v4 redefined its default palette in OKLCH, which subtly shifts
     hues (e.g. lime-500 gains saturation). Pin the v3 hex values for the
     color families this site uses so the design stays pixel-identical.
@@ -257,8 +267,8 @@
     --popover: 222.2 47.4% 11.2%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 142.1 70.6% 45.3%;
-    --primary-foreground: 144.9 80.4% 10%;
+    --primary: 84 100% 52%; /* brand lime #9dff0a */
+    --primary-foreground: 224 71.4% 4.1%; /* gray-950 #030712, 16:1 */
 
     --secondary: 217.2 32.6% 17.5%;
     --secondary-foreground: 210 40% 98%;
@@ -274,7 +284,7 @@
 
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
-    --ring: 142.1 76.2% 36.3%;
+    --ring: 84 100% 52%; /* brand lime */
 
     --radius: 0.5rem;
   }
@@ -343,7 +353,7 @@
   animation: die-run var(--dur, 5s) linear var(--delay, 0s) infinite;
 }
 .die-pulse[data-tone='signal'] {
-  stroke: #9dfe0a;
+  stroke: #9dff0a;
 }
 .die-pulse[data-tone='value'] {
   stroke: #f7931a;

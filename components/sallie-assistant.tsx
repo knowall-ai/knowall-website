@@ -152,7 +152,7 @@ function MessageBubble({ message }: { message: Message }) {
       className={cn(
         'max-w-[85%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed',
         isUser
-          ? 'ml-auto rounded-br-sm bg-lime-500 text-gray-950'
+          ? 'ml-auto rounded-br-sm bg-brand text-gray-950'
           : 'mr-auto rounded-bl-sm bg-gray-800/90 text-gray-100'
       )}
     >
@@ -170,7 +170,7 @@ function MessageBubble({ message }: { message: Message }) {
                 <a
                   {...props}
                   href={href}
-                  className="text-lime-400 underline hover:text-lime-300"
+                  className="text-brand underline hover:text-brand-hover"
                   {...(internal ? {} : { target: '_blank', rel: 'noopener noreferrer' })}
                 />
               );
@@ -219,7 +219,7 @@ function VoiceToggle({ voice, className }: { voice: Voice; className?: string })
         'cursor-pointer inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium transition-colors',
         voice.muted
           ? 'border-gray-600 text-gray-400 hover:border-gray-500 hover:text-gray-200'
-          : 'border-lime-500/50 bg-lime-500/10 text-lime-300 hover:bg-lime-500/20',
+          : 'border-brand/50 bg-brand/10 text-brand hover:bg-brand/20',
         className
       )}
     >
@@ -292,7 +292,7 @@ function ConversationPanel({
           type="button"
           onClick={() => ask(s)}
           disabled={isLoading}
-          className="cursor-pointer rounded-full border border-lime-500/40 bg-lime-500/10 px-3 py-1.5 text-xs font-medium text-lime-300 transition-colors hover:bg-lime-500/20 hover:text-lime-200 disabled:opacity-50"
+          className="cursor-pointer rounded-full border border-brand/40 bg-brand/10 px-3 py-1.5 text-xs font-medium text-brand transition-colors hover:bg-brand/20 hover:text-brand-hover disabled:opacity-50"
         >
           {s}
         </button>
@@ -305,7 +305,7 @@ function ConversationPanel({
       <div
         className={cn(
           'flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto pr-1',
-          '[scrollbar-width:thin] [scrollbar-color:rgba(157,254,10,0.35)_transparent]',
+          '[scrollbar-width:thin] [scrollbar-color:rgba(157,255,10,0.35)_transparent]',
           listClassName
         )}
         aria-live="polite"
@@ -323,7 +323,7 @@ function ConversationPanel({
               {[0, 1, 2].map((i) => (
                 <span
                   key={i}
-                  className="h-1.5 w-1.5 rounded-full bg-lime-400 animate-sallie-blink motion-reduce:animate-none"
+                  className="h-1.5 w-1.5 rounded-full bg-brand animate-sallie-blink motion-reduce:animate-none"
                   style={{ animationDelay: `${i * 0.2}s` }}
                 />
               ))}
@@ -344,7 +344,7 @@ function ConversationPanel({
 
       {ended ? (
         <div className="mt-3 flex flex-wrap items-center gap-3" data-testid="sallie-ended">
-          <Button asChild className="bg-lime-500 text-gray-950 hover:bg-lime-400">
+          <Button asChild className="bg-brand text-gray-950 hover:bg-brand-hover">
             <a href={signOffMailto(conversationId)}>
               <Mail className="h-4 w-4" />
               Email Sallie to continue
@@ -368,7 +368,7 @@ function ConversationPanel({
               className={cn(
                 'h-12 w-12 shrink-0 border-gray-700 bg-gray-800/90 p-0 text-gray-200 hover:bg-gray-700 hover:text-white',
                 voice.micOn &&
-                  'border-lime-400 bg-lime-500/20 text-lime-300 shadow-[0_0_18px_rgba(157,254,10,0.45)]',
+                  'border-brand bg-brand/20 text-brand shadow-[0_0_18px_rgba(157,255,10,0.45)]',
                 voice.listening && 'animate-pulse motion-reduce:animate-none'
               )}
             >
@@ -390,14 +390,14 @@ function ConversationPanel({
             }
             aria-label="Message Sallie"
             rows={1}
-            className="min-h-[48px] max-h-32 flex-1 resize-none border-gray-700 bg-gray-800/90 text-gray-100 placeholder:text-gray-500 focus-visible:ring-lime-500"
+            className="min-h-[48px] max-h-32 flex-1 resize-none border-gray-700 bg-gray-800/90 text-gray-100 placeholder:text-gray-500 focus-visible:ring-brand"
             disabled={isLoading}
           />
           <Button
             type="submit"
             aria-label="Send message"
             disabled={isLoading || voice.listening || voice.transcribing || !input.trim()}
-            className="h-12 w-12 shrink-0 bg-lime-500 p-0 text-gray-950 hover:bg-lime-400"
+            className="h-12 w-12 shrink-0 bg-brand p-0 text-gray-950 hover:bg-brand-hover"
           >
             {isLoading ? (
               <Loader2 className="h-5 w-5 animate-spin motion-reduce:animate-none" />
@@ -412,7 +412,7 @@ function ConversationPanel({
           {voice.micError}
         </p>
       ) : voice.micSupported && voice.micOn ? (
-        <p role="status" className="mt-2 text-xs text-lime-300/90">
+        <p role="status" className="mt-2 text-xs text-brand/90">
           Mic on — just talk, and tap the mic again to turn it off.
         </p>
       ) : voice.micSupported && !voice.micOnce ? (
@@ -438,14 +438,14 @@ function SpeechBubble({
   return (
     <div
       className={cn(
-        'relative rounded-2xl border border-lime-500/30 bg-gray-900/85 px-5 py-4 text-gray-100 shadow-xl shadow-black/40 backdrop-blur-sm animate-sallie-pop motion-reduce:animate-none',
+        'relative rounded-2xl border border-brand/30 bg-gray-900/85 px-5 py-4 text-gray-100 shadow-xl shadow-black/40 backdrop-blur-sm animate-sallie-pop motion-reduce:animate-none',
         className
       )}
     >
       <span
         aria-hidden="true"
         className={cn(
-          'absolute h-4 w-4 rotate-45 border-lime-500/30 bg-gray-900/85',
+          'absolute h-4 w-4 rotate-45 border-brand/30 bg-gray-900/85',
           tail === 'top' && 'left-1/2 top-[-9px] -ml-2 border-l border-t',
           // Near the foot of the bubble, level with the docked avatar beside it
           tail === 'right' && 'bottom-2 right-[-9px] border-r border-t'
@@ -453,9 +453,9 @@ function SpeechBubble({
       />
       <p className="text-base leading-relaxed">
         {text}
-        <span className="ml-0.5 inline-block h-[1em] w-0.5 translate-y-[2px] bg-lime-400 align-middle animate-sallie-blink motion-reduce:hidden" />
+        <span className="ml-0.5 inline-block h-[1em] w-0.5 translate-y-[2px] bg-brand align-middle animate-sallie-blink motion-reduce:hidden" />
       </p>
-      {note && <p className="mt-1.5 text-xs! text-lime-300">{note}</p>}
+      {note && <p className="mt-1.5 text-xs! text-brand">{note}</p>}
     </div>
   );
 }
@@ -652,7 +652,7 @@ export default function SallieAssistant({
           aria-label={dockOpen ? 'Close chat with Sallie' : 'Chat with Sallie'}
           aria-expanded={dockOpen}
           tabIndex={docked ? 0 : -1}
-          className="cursor-pointer group relative shrink-0 rounded-full ring-2 ring-lime-500/60 shadow-[0_0_40px_rgba(157,254,10,0.35)] transition-transform hover:scale-105 focus:outline-none focus-visible:ring-4 motion-reduce:transition-none motion-reduce:hover:scale-100"
+          className="cursor-pointer group relative shrink-0 rounded-full ring-2 ring-brand/60 shadow-[0_0_40px_rgba(157,255,10,0.35)] transition-transform hover:scale-105 focus:outline-none focus-visible:ring-4 motion-reduce:transition-none motion-reduce:hover:scale-100"
         >
           <SallieStage
             shape="circle"
@@ -660,7 +660,7 @@ export default function SallieAssistant({
             waveform
             className="w-16 md:w-20"
           />
-          <span className="absolute -bottom-1 -right-1 flex h-7 w-7 items-center justify-center rounded-full bg-lime-500 text-gray-950 shadow">
+          <span className="absolute -bottom-1 -right-1 flex h-7 w-7 items-center justify-center rounded-full bg-brand text-gray-950 shadow">
             {dockOpen ? <X className="h-4 w-4" /> : <MessageCircle className="h-4 w-4" />}
           </span>
         </button>
@@ -706,15 +706,15 @@ export default function SallieAssistant({
                   disabled={transcribing}
                   data-testid="sallie-dock-mic"
                   className={cn(
-                    'cursor-pointer relative inline-flex h-11 w-11 shrink-0 items-center justify-center gap-2 rounded-full bg-lime-500 text-sm font-semibold text-gray-950 shadow-lg shadow-lime-500/30 transition-colors hover:bg-lime-400 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-lime-300/60 disabled:opacity-70 sm:w-auto sm:px-4',
-                    micOn && 'bg-lime-400 ring-2 ring-white/80'
+                    'cursor-pointer relative inline-flex h-11 w-11 shrink-0 items-center justify-center gap-2 rounded-full bg-brand text-sm font-semibold text-gray-950 shadow-lg shadow-brand/30 transition-colors hover:bg-brand-hover focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand/60 disabled:opacity-70 sm:w-auto sm:px-4',
+                    micOn && 'bg-brand-hover ring-2 ring-white/80'
                   )}
                 >
                   {/* Pulses while she is listening (still under reduced motion) */}
                   {listening && (
                     <span
                       aria-hidden="true"
-                      className="pointer-events-none absolute inset-0 rounded-full ring-4 ring-lime-400/70 animate-ping motion-reduce:animate-none"
+                      className="pointer-events-none absolute inset-0 rounded-full ring-4 ring-brand/70 animate-ping motion-reduce:animate-none"
                     />
                   )}
                   <Mic className="h-5 w-5" />
@@ -732,7 +732,7 @@ export default function SallieAssistant({
               {/* Browsers hold her voice until the page has been clicked; say so
                   here too, or after a refresh she just stays silent in the corner. */}
               {showDockBubble && voice.blocked && !voice.muted && (
-                <p className="hidden text-xs text-lime-200/80 sm:block">
+                <p className="hidden text-xs text-brand/80 sm:block">
                   Click or tap anywhere to hear Sallie
                 </p>
               )}
@@ -742,18 +742,18 @@ export default function SallieAssistant({
       </div>
 
       {docked && dockOpen && (
-        <div className="flex h-[min(600px,calc(100vh-7rem))] w-[min(400px,calc(100vw-2.5rem))] flex-col overflow-hidden rounded-2xl border border-lime-500/30 bg-gray-950/95 text-white shadow-2xl shadow-black/60 backdrop-blur-md animate-sallie-pop motion-reduce:animate-none">
+        <div className="flex h-[min(600px,calc(100vh-7rem))] w-[min(400px,calc(100vw-2.5rem))] flex-col overflow-hidden rounded-2xl border border-brand/30 bg-gray-950/95 text-white shadow-2xl shadow-black/60 backdrop-blur-md animate-sallie-pop motion-reduce:animate-none">
           <div className="relative flex items-center gap-3 overflow-hidden px-4 py-3">
             <Starfield />
             <SallieStage
               shape="circle"
               busy={conversation.isLoading}
               className="relative z-10 w-12 shrink-0"
-              frameClassName="ring-2 ring-lime-500/50"
+              frameClassName="ring-2 ring-brand/50"
             />
             <div className="relative z-10">
               <p className="font-semibold leading-tight">Sallie</p>
-              <p className="text-xs text-lime-400">KnowAll AI guide</p>
+              <p className="text-xs text-brand">KnowAll AI guide</p>
             </div>
             <VoiceToggle voice={voice} className="relative z-10 ml-auto" />
             <button
@@ -812,17 +812,17 @@ export default function SallieAssistant({
           priority
           waveform
           className="w-44 shrink-0 md:w-56"
-          frameClassName="ring-4 ring-lime-400/60 shadow-[0_0_80px_rgba(157,254,10,0.35)]"
+          frameClassName="ring-4 ring-brand/60 shadow-[0_0_80px_rgba(157,255,10,0.35)]"
         />
         <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
           <h3 className="text-2xl font-bold">Sallie</h3>
-          <span className="text-xs font-semibold uppercase tracking-[0.2em] text-lime-300">
+          <span className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
             Your AI guide
           </span>
           <VoiceToggle voice={voice} />
         </div>
         {voice.blocked && !voice.muted && (
-          <p className="-mt-2 text-xs text-lime-200/80">Click or tap anywhere to hear Sallie</p>
+          <p className="-mt-2 text-xs text-brand/80">Click or tap anywhere to hear Sallie</p>
         )}
         <ConversationPanel
           conversation={conversation}
