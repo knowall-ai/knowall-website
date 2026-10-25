@@ -227,7 +227,7 @@ export default function StoryZapButton({ note, totals }: { note: NostrEvent; tot
               </DialogHeader>
               <Button
                 onClick={() => handleOpenChange(false)}
-                className="w-full bg-lime-600 text-white hover:bg-lime-700"
+                className="w-full bg-lime-600 text-gray-950 hover:bg-lime-400"
               >
                 Done
               </Button>
@@ -333,7 +333,7 @@ export default function StoryZapButton({ note, totals }: { note: NostrEvent; tot
                 <Button
                   onClick={handleZap}
                   disabled={isWorking || effectiveAmount <= 0}
-                  className="w-full bg-lime-600 font-semibold text-white hover:bg-lime-700"
+                  className="w-full bg-lime-600 font-semibold text-gray-950 hover:bg-lime-400"
                 >
                   <Zap className="mr-2 h-4 w-4" aria-hidden="true" />
                   {isWorking

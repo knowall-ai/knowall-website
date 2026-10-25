@@ -269,7 +269,7 @@ function ContactPanel() {
               <Button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full bg-lime-600 font-semibold text-white hover:bg-lime-700"
+                className="w-full bg-lime-600 font-semibold text-gray-950 hover:bg-lime-400"
               >
                 {isSubmitting ? 'Sending...' : 'Send Message'}
                 <Send className="ml-2 h-4 w-4" aria-hidden="true" />

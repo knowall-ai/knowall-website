@@ -103,7 +103,7 @@ export default function SignInButton({
             ) : (
               <span
                 aria-hidden="true"
-                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-lime-600 text-sm font-semibold text-white"
+                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-lime-600 text-sm font-semibold text-gray-950"
               >
                 {name.charAt(0).toUpperCase()}
               </span>
@@ -141,7 +141,7 @@ export default function SignInButton({
     <>
       <Button
         onClick={() => handleOpenChange(true)}
-        className={cn('bg-lime-600 text-white hover:bg-lime-700', className)}
+        className={cn('bg-lime-600 text-gray-950 hover:bg-lime-400', className)}
       >
         <NostrLogo className="h-4 w-4" />
         {label}
@@ -167,7 +167,7 @@ export default function SignInButton({
             <Button
               onClick={handleExtensionSignIn}
               disabled={isSigningIn}
-              className="w-full bg-lime-600 font-semibold text-white hover:bg-lime-700"
+              className="w-full bg-lime-600 font-semibold text-gray-950 hover:bg-lime-400"
             >
               <Puzzle className="mr-2 h-4 w-4" aria-hidden="true" />
               {isSigningIn ? 'Waiting for extension...' : 'Sign in with extension'}

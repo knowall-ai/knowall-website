@@ -160,7 +160,7 @@ export default function StoryComments({
               type="submit"
               size="sm"
               disabled={isPosting || !content.trim()}
-              className="bg-lime-600 text-white hover:bg-lime-700"
+              className="bg-lime-600 text-gray-950 hover:bg-lime-400"
             >
               <Send className="mr-2 h-4 w-4" aria-hidden="true" />
               {isPosting ? 'Posting…' : 'Comment'}
@@ -217,7 +217,7 @@ function StoryComment({
             className="h-8 w-8 rounded-full border border-gray-800 bg-gray-800 object-cover"
           />
         ) : (
-          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-lime-600 text-sm font-semibold text-white">
+          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-lime-600 text-sm font-semibold text-gray-950">
             {name.charAt(0).toUpperCase()}
           </span>
         )}

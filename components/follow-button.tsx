@@ -122,7 +122,7 @@ export default function FollowButton() {
       <Button
         asChild
         size="sm"
-        className="bg-lime-600 hover:bg-lime-700 text-white"
+        className="bg-lime-600 hover:bg-lime-400 text-gray-950"
         data-testid="story-follow-button"
       >
         <a
@@ -153,7 +153,7 @@ export default function FollowButton() {
         className={
           following
             ? 'bg-lime-500/15 text-lime-500 hover:bg-lime-500/15 cursor-default'
-            : 'bg-lime-600 hover:bg-lime-700 text-white'
+            : 'bg-lime-600 hover:bg-lime-400 text-gray-950'
         }
       >
         {isPublishing ? (
