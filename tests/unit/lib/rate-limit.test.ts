@@ -96,4 +96,24 @@ describe('rate limits', () => {
       false
     );
   });
+
+  it('accepts the site even when App Service hands the app a different Host (v1.6.7 regression)', () => {
+    const azureHost = 'knowall-website-fvgjgvg9bxc5ghgs.uksouth-01.azurewebsites.net';
+    const fromSite = new Request('http://x', {
+      headers: {
+        host: azureHost,
+        'x-forwarded-host': 'www.knowall.ai',
+        origin: 'https://www.knowall.ai',
+      },
+    });
+    const apex = new Request('http://x', {
+      headers: { host: azureHost, origin: 'https://knowall.ai' },
+    });
+    const foreign = new Request('http://x', {
+      headers: { host: azureHost, origin: 'https://evil.example' },
+    });
+    expect(isSameOrigin(fromSite)).toBe(true);
+    expect(isSameOrigin(apex)).toBe(true);
+    expect(isSameOrigin(foreign)).toBe(false);
+  });
 });

@@ -1,3 +1,4 @@
+import { ALLOWED_ORIGIN_HOSTS } from '@/lib/request-guards';
 /**
  * Cost guards for the public API routes (chat, speak, listen, contact).
  *
@@ -120,19 +121,26 @@ export function consume(route: Route, ip: string, now = Date.now()): LimitResult
 
 /** True when the request's Origin (or Referer) is this site. Blocks lazy scripted abuse. */
 export function isSameOrigin(req: Request): boolean {
-  // Trust Host, which App Service sets from the real request; a client-supplied
-  // x-forwarded-host that disagrees with it is a spoof attempt.
-  const host = req.headers.get('host');
-  if (!host) return false;
-  const forwardedHost = req.headers.get('x-forwarded-host');
-  if (forwardedHost && forwardedHost !== host) return false;
+  // The browser's Origin (or Referer) must name the site. Comparing it with the
+  // Host header alone broke in production (v1.6.7): behind App Service the Host
+  // the app sees for www.knowall.ai no longer matched, so every voice and
+  // contact request was refused. Accept our known site hosts first, then fall
+  // back to the old same-host check (covers local dev and preview hosts).
   const source = req.headers.get('origin') || req.headers.get('referer');
   if (!source) return false;
+  let sourceUrl: URL;
   try {
-    return new URL(source).host === host;
+    sourceUrl = new URL(source);
   } catch {
     return false;
   }
+  if (ALLOWED_ORIGIN_HOSTS.has(sourceUrl.hostname)) return true;
+  const host = req.headers.get('host');
+  if (!host) return false;
+  // A client-supplied x-forwarded-host that disagrees with Host is a spoof attempt.
+  const forwardedHost = req.headers.get('x-forwarded-host');
+  if (forwardedHost && forwardedHost !== host) return false;
+  return sourceUrl.host === host;
 }
 
 /**

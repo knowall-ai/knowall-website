@@ -118,9 +118,22 @@ describe('POST /api/contact', () => {
     expect(res.status).toBe(403);
   });
 
-  it('rejects a spoofed x-forwarded-host', async () => {
-    const res = await post(valid, { ...SITE, 'x-forwarded-host': 'evil.example' });
+  it('rejects a spoofed x-forwarded-host from a foreign origin', async () => {
+    const res = await post(valid, {
+      ...SITE,
+      'x-forwarded-host': 'evil.example',
+      origin: 'https://evil.example',
+    });
     expect(res.status).toBe(403);
+  });
+
+  it('accepts the site when App Service forwards a different Host (v1.6.7 regression)', async () => {
+    const res = await post(valid, {
+      ...SITE,
+      host: 'knowall-website-fvgjgvg9bxc5ghgs.uksouth-01.azurewebsites.net',
+      'x-forwarded-host': 'www.knowall.ai',
+    });
+    expect(res.status).not.toBe(403);
   });
 
   it('caps a streamed body with no Content-Length', async () => {
