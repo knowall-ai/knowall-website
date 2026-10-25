@@ -47,5 +47,16 @@ export async function loadCatalog(pool, relays, order, merchantPubkey) {
       'Catalog unavailable: no relay returned any KnowAll listings or shipping options'
     );
   }
-  return buildVerifiedCatalog(events, merchantPubkey);
+  const catalog = buildVerifiedCatalog(events, merchantPubkey);
+  // Listings that reference shipping options but no options came back is an
+  // outage, not "free shipping": stay retryable rather than price without it.
+  const needsShipping = [...catalog.listings.values()].some((listing) =>
+    listing.tags.some((t) => t[0] === 'shipping_option')
+  );
+  if (needsShipping && catalog.shippingOptions.size === 0) {
+    throw new Error(
+      'Catalog unavailable: listings reference shipping options but none were returned'
+    );
+  }
+  return catalog;
 }

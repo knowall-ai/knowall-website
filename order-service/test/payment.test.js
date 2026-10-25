@@ -269,3 +269,18 @@ test('a second receipt after confirmation is a no-op', async () => {
   });
   assert.equal(client.sent.length, 2, 'only the first confirmation was sent');
 });
+
+test('a verified payment whose confirmation could not be delivered is retried, not marked paid', async () => {
+  const rumor = receiptRumor({ orderId, invoice: t.invoice, preimage: t.preimage });
+  const offline = {
+    async sendGiftWrap() {
+      throw new Error('offline');
+    },
+  };
+  await handlePaymentReceipt(rumor, offline, { store });
+  assert.equal(store.invoices.get(orderId).paidAt, undefined, 'not final until delivered');
+
+  await handlePaymentReceipt(rumor, client, { store });
+  assert.equal(statusOf(client.sent[0].rumor), 'confirmed', 're-delivery confirms');
+  assert.ok(store.invoices.get(orderId).paidAt);
+});

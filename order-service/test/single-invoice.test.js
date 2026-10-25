@@ -406,3 +406,43 @@ test('an invoice for the wrong amount from the provider is not sent', async () =
   assert.equal(nostrClient.giftWraps.length, 0);
   assert.equal(store.hasOrder(tagValue(order, 'order')), false, 'still retryable');
 });
+
+test('a retry after a failed payment-request delivery re-sends the SAME recorded invoice', async () => {
+  const order = buildOrderRumor();
+  const orderId = tagValue(order, 'order');
+  const failing = {
+    giftWraps: [],
+    async sendGiftWrap() {
+      throw new Error('publish timed out');
+    },
+  };
+  await handleOrder(order, failing, deps({ generateInvoice: generateInvoiceSpy }));
+  assert.equal(store.hasOrder(orderId), false, 'still retryable');
+  assert.ok(store.invoices.get(orderId), 'invoice was recorded before sending');
+
+  await handleOrder(order, nostrClient, deps({ generateInvoice: generateInvoiceSpy }));
+  assert.equal(
+    generateInvoiceSpy.calls.length,
+    1,
+    'no second invoice — its hash would orphan a payment'
+  );
+  assert.equal(paymentTagOf(giftWrapsOfKind(nostrClient, 16)[0].rumor)[2], FAKE_BOLT11);
+});
+
+test('an order id already invoiced to another buyer is ignored, not re-invoiced', async () => {
+  const order = buildOrderRumor();
+  const orderId = tagValue(order, 'order');
+  store.invoices.set(orderId, {
+    invoice: 'lnbc1other',
+    amountSats: 5000,
+    buyerPubkey: randomPubkey(),
+  });
+  await handleOrder(order, nostrClient, deps({ generateInvoice: generateInvoiceSpy }));
+  assert.equal(generateInvoiceSpy.calls.length, 0);
+  assert.equal(nostrClient.giftWraps.length, 0);
+  assert.equal(
+    store.invoices.get(orderId).invoice,
+    'lnbc1other',
+    'the original record is untouched'
+  );
+});

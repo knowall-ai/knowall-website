@@ -149,6 +149,20 @@ function parseShippingOptionPrice(event) {
   return { amount: tag[1] ?? '', currency: (tag[2] ?? 'SATS').toUpperCase() };
 }
 
+/** lib/nip99.ts parseListing `stock`: a non-negative number, or null when untracked. */
+function parseStock(event) {
+  const raw = event.tags.find((t) => t[0] === 'stock' && typeof t[1] === 'string')?.[1];
+  if (raw === undefined) return null;
+  const stock = Number(raw);
+  return Number.isFinite(stock) && stock >= 0 ? stock : null;
+}
+
+/** lib/nip99.ts isSoldOut: NIP-99 `status` sold, or Gamma `stock` 0. */
+export function isSoldOut(event) {
+  const status = event.tags.find((t) => t[0] === 'status' && typeof t[1] === 'string')?.[1];
+  return status === 'sold' || parseStock(event) === 0;
+}
+
 /** Is a currency code priced in bitcoin units (exact, no exchange rate)? */
 function isBitcoinCurrency(currency) {
   const upper = currency.toUpperCase();
@@ -229,6 +243,7 @@ export function priceOrder(order, catalog, { merchantPubkey, rates }) {
     if (parts[1] !== merchantPubkey) return reject('an item is not sold by KnowAll AI');
     const event = catalog.listings.get(item.ref);
     if (!event) return reject('an item is no longer in the KnowAll catalogue');
+    if (isSoldOut(event)) return reject('an item is sold out');
     const price = parseListingPrice(event);
     if (!price) return reject('an item has no price');
     perCurrency.set(
@@ -236,6 +251,18 @@ export function priceOrder(order, catalog, { merchantPubkey, rates }) {
       (perCurrency.get(price.currency) ?? 0) + price.amount * item.quantity
     );
     listingEvents.push(event);
+  }
+
+  // Stock (Gamma `stock` tag), summed per product across lines.
+  const quantityByRef = new Map();
+  for (const item of order.items) {
+    quantityByRef.set(item.ref, (quantityByRef.get(item.ref) ?? 0) + item.quantity);
+  }
+  for (const [ref, quantity] of quantityByRef) {
+    const stock = parseStock(catalog.listings.get(ref));
+    if (stock !== null && quantity > stock) {
+      return reject(`only ${stock} of an item ${stock === 1 ? 'is' : 'are'} in stock`);
+    }
   }
 
   let itemsSats = 0;

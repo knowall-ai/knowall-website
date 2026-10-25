@@ -226,3 +226,39 @@ test('needsExchangeRates is false for a sats-only order', () => {
     true
   );
 });
+
+test('sold-out listings and quantities above stock are refused', () => {
+  const sold = listing('sold', ['100', 'SATS'], [['status', 'sold']]);
+  const empty = listing('empty', ['100', 'SATS'], [['stock', '0']]);
+  const two = listing('two', ['100', 'SATS'], [['stock', '2']]);
+  const events = [sold, empty, two];
+  for (const d of ['sold', 'empty']) {
+    const result = price({ amount: 100, items: [{ ref: ref(d), quantity: 1 }] }, events);
+    assert.match(result.reason, /sold out/, d);
+  }
+  const over = price(
+    {
+      amount: 300,
+      items: [
+        { ref: ref('two'), quantity: 2 },
+        { ref: ref('two'), quantity: 1 },
+      ],
+    },
+    events
+  );
+  assert.match(over.reason, /only 2 of an item are in stock/);
+  assert.equal(price({ amount: 200, items: [{ ref: ref('two'), quantity: 2 }] }, events).ok, true);
+});
+
+test('loadCatalog: listings needing shipping but no shipping options returned is retryable', async () => {
+  const { loadCatalog } = await import('../lib/catalog.js');
+  const pool = {
+    querySync: async (_relays, filter) => (filter.kinds[0] === 30402 ? [BOOK] : []),
+  };
+  const order = { items: [{ ref: ref('book'), quantity: 1 }] };
+  await assert.rejects(loadCatalog(pool, ['wss://x'], order, MERCHANT), /Catalog unavailable/);
+
+  const ok = { querySync: async (_r, f) => (f.kinds[0] === 30402 ? [BOOK] : [UK]) };
+  const catalog = await loadCatalog(ok, ['wss://x'], order, MERCHANT);
+  assert.equal(catalog.shippingOptions.size, 1);
+});

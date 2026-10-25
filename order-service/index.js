@@ -265,29 +265,49 @@ export async function handleOrder(
       `[Order] Priced at ${amount} sats (items ${priced.itemsSats} + shipping ${priced.shippingSats}); buyer stated ${order.amount}`
     );
 
-    // Generate the Lightning invoice for the SERVER-computed amount.
-    console.log(`[Order] Generating invoice for ${amount} sats...`);
-    const generated = await genInvoice(config.lightningAddress, amount, order.orderId);
-    const { invoice, verify } = typeof generated === 'string' ? { invoice: generated } : generated;
-
-    // Bind the invoice to the order: its payment hash is what a receipt's
-    // preimage must hash to. Refuse an invoice for a different amount (a
-    // misbehaving provider) — nothing has been sent yet, so this stays retryable.
-    const { paymentHash, amountMsat } = decode(invoice);
-    if (amountMsat !== amount * 1000) {
-      throw new Error(
-        `LNURL provider returned an invoice for ${amountMsat} msats, expected ${amount * 1000}`
+    // An invoice already recorded for this order means an earlier attempt
+    // got as far as (possibly) delivering it before failing — the buyer may
+    // already have paid it. Re-send THAT invoice rather than issue a new one,
+    // which would overwrite the payment hash their receipt must match.
+    const existing = store.getInvoice(order.orderId);
+    if (existing && existing.buyerPubkey !== order.buyerPubkey) {
+      console.warn(
+        `[Order] ✗ Ignoring order ${order.orderId.slice(0, 8)}: order id already invoiced to another buyer`
       );
+      return;
     }
-    // Must be durable BEFORE the buyer can pay it, or their receipt can never
-    // be verified. A failure here throws -> nothing sent, order retryable.
-    store.addInvoice(order.orderId, {
-      invoice,
-      paymentHash,
-      amountSats: amount,
-      buyerPubkey: order.buyerPubkey,
-      verifyUrl: verify,
-    });
+
+    let invoice;
+    if (existing && existing.amountSats === amount) {
+      console.log(`[Order] Re-sending the invoice already issued for this order`);
+      invoice = existing.invoice;
+    } else {
+      // Generate the Lightning invoice for the SERVER-computed amount.
+      console.log(`[Order] Generating invoice for ${amount} sats...`);
+      const generated = await genInvoice(config.lightningAddress, amount, order.orderId);
+      const { invoice: issued, verify } =
+        typeof generated === 'string' ? { invoice: generated } : generated;
+
+      // Bind the invoice to the order: its payment hash is what a receipt's
+      // preimage must hash to. Refuse an invoice for a different amount (a
+      // misbehaving provider) — nothing has been sent yet, so this stays retryable.
+      const { paymentHash, amountMsat } = decode(issued);
+      if (amountMsat !== amount * 1000) {
+        throw new Error(
+          `LNURL provider returned an invoice for ${amountMsat} msats, expected ${amount * 1000}`
+        );
+      }
+      // Must be durable BEFORE the buyer can pay it, or their receipt can never
+      // be verified. A failure here throws -> nothing sent, order retryable.
+      store.addInvoice(order.orderId, {
+        invoice: issued,
+        paymentHash,
+        amountSats: amount,
+        buyerPubkey: order.buyerPubkey,
+        verifyUrl: verify,
+      });
+      invoice = issued;
+    }
 
     // Build the Kind 16 Type 2 payment request rumor and gift-wrap it to the buyer.
     // The structured invoice data lives in the rumor tags; we fold a human-readable
@@ -464,14 +484,9 @@ export async function handlePaymentReceipt(
     console.log(
       `[Payment] ✓ Payment verified (${result.method}) for order ${orderShort}: ${record.amountSats} sats`
     );
-    try {
-      store.markPaid(receipt.orderId);
-    } catch (persistError) {
-      console.warn(`[Payment] Failed to persist paid flag:`, persistError.message);
-    }
-    persistReceipt();
 
     const thankYouText = formatThankYouNote(receipt.orderId);
+    let delivered = false;
 
     // Gift-wrapped Kind 16 Type 3 status update (structured, authoritative).
     const statusRumor = createStatusUpdateEvent(
@@ -482,9 +497,10 @@ export async function handlePaymentReceipt(
     );
     try {
       await nostrClient.sendGiftWrap(receipt.buyerPubkey, statusRumor);
+      delivered = true;
       console.log(`[Payment] ✓ Gift-wrapped status update sent for order ${orderShort}`);
     } catch (error) {
-      console.warn(`[Payment] Failed to send status gift wrap (non-fatal):`, error.message);
+      console.warn(`[Payment] Failed to send status gift wrap:`, error.message);
     }
 
     // Readable kind-14 copy so the confirmation renders in generic NIP-17 clients.
@@ -495,13 +511,27 @@ export async function handlePaymentReceipt(
     };
     try {
       await nostrClient.sendGiftWrap(receipt.buyerPubkey, readableRumor);
+      delivered = true;
       console.log(`[Payment] ✓ Gift-wrapped readable thank-you sent for order ${orderShort}`);
     } catch (error) {
-      console.warn(
-        `[Payment] Failed to send readable thank-you gift wrap (non-fatal):`,
-        error.message
-      );
+      console.warn(`[Payment] Failed to send readable thank-you gift wrap:`, error.message);
     }
+
+    // Only a DELIVERED confirmation is final. If neither copy was published,
+    // leave the order unpaid and the receipt unrecorded so a re-delivery (or
+    // restart) verifies and confirms again rather than going silent forever.
+    if (!delivered) {
+      console.error(
+        `[Payment] Payment for order ${orderShort} verified but no confirmation was delivered — will retry on next delivery`
+      );
+      return;
+    }
+    try {
+      store.markPaid(receipt.orderId);
+    } catch (persistError) {
+      console.warn(`[Payment] Failed to persist paid flag:`, persistError.message);
+    }
+    persistReceipt();
   } finally {
     inFlightReceipts.delete(receiptKey);
   }

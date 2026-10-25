@@ -73,7 +73,7 @@ The deployment host holds the company identity key: restrict access to the host 
 | Expected: transient relay/network errors are classified by `order-service/lib/relayErrors.js` and swallowed so a flaky relay cannot crash order processing. Anything NOT matched there is treated as a real bug and is fatal (the process exits and the supervisor restarts it).
 
 | A buyer got a `cancelled` status ("couldn't accept order")
-| The service recomputed the order total from the signed catalog and refused the order: an item is unknown or not by the company, a quantity is outside 1–999, no or an unavailable shipping method was chosen, or the buyer's amount didn't match (sat prices must match exactly; fiat-converted amounts may differ by up to 5%). The log line `Rejecting order <id>: <reason>` gives the reason. A rejected order is final; the buyer re-orders from a refreshed shop page.
+| The service recomputed the order total from the signed catalog and refused the order: an item is unknown, not by the company or sold out, a quantity is outside 1–999 or above the listing's stock, no or an unavailable shipping method was chosen, or the buyer's amount didn't match (sat prices must match exactly; fiat-converted amounts may differ by up to 5%). The log line `Rejecting order <id>: <reason>` gives the reason. A rejected order is final; the buyer re-orders from a refreshed shop page.
 
 | An order sits without an invoice, logs `Catalog unavailable` or `All exchange rate sources failed`
 | Pricing needs the catalog relays and, for fiat prices, at least one of CoinGecko, Kraken or Coinbase. These failures leave the order retryable (no fallback rate is ever used for an invoice).
