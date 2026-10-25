@@ -428,7 +428,8 @@ function SpeechBubble({
   className,
 }: {
   text: string;
-  tail?: 'top' | 'right';
+  /** Where the tail points: up at a hero avatar, or left at the docked one. */
+  tail?: 'top' | 'left';
   className?: string;
 }) {
   return (
@@ -443,7 +444,8 @@ function SpeechBubble({
         className={cn(
           'absolute h-4 w-4 rotate-45 border-lime-500/30 bg-gray-900/85',
           tail === 'top' && 'left-1/2 top-[-9px] -ml-2 border-l border-t',
-          tail === 'right' && 'right-[-9px] top-7 border-r border-t'
+          // Near the foot of the bubble, level with the docked avatar beside it
+          tail === 'left' && 'bottom-5 left-[-9px] border-b border-l'
         )}
       />
       <p className="text-base leading-relaxed">
@@ -593,7 +595,7 @@ export default function SallieAssistant({
   const dock = (
     <div
       className={cn(
-        'fixed bottom-5 right-5 z-50 flex flex-col items-end gap-3 transition-all duration-300',
+        'fixed bottom-4 left-4 z-50 flex flex-col items-start gap-3 transition-all duration-300 sm:bottom-5 sm:left-5',
         docked ? 'translate-y-0 opacity-100' : 'pointer-events-none translate-y-6 opacity-0'
       )}
       data-testid="sallie-dock"
@@ -638,46 +640,16 @@ export default function SallieAssistant({
         </div>
       )}
 
-      {showDockBubble && (
-        // Docked from page load, the bubble would cover content on phones.
-        <div className={cn('relative max-w-[300px]', dockOnly && 'hidden sm:block')}>
-          <SpeechBubble
-            text={
-              conversation.messages.length ? 'Still here if you have more questions.' : greeting
-            }
-            tail="right"
-            className="px-4 py-3 [&_p]:text-sm"
-          />
-          {/* Browsers hold her voice until the page has been clicked; say so here
-              too, or after a refresh she just stays silent in the corner. */}
-          {voice.blocked && !voice.muted && (
-            <p className="mt-1.5 text-right text-xs text-lime-200/80">
-              Click or tap anywhere to hear Sallie
-            </p>
-          )}
-          <button
-            type="button"
-            onClick={() => setDockBubbleDismissed(true)}
-            aria-label="Dismiss greeting"
-            className="cursor-pointer absolute -left-2 -top-2 rounded-full bg-gray-800 p-1 text-gray-400 shadow hover:text-white"
-          >
-            <X className="h-3 w-3" />
-          </button>
-        </div>
-      )}
-
-      <div className="flex items-center gap-3">
-        {/* Keep the voice option visible while the chat is closed. */}
-        {docked && !dockOpen && (
-          <VoiceToggle voice={voice} className="bg-gray-950/90 shadow-lg backdrop-blur" />
-        )}
+      {/* Sallie in the corner, with her greeting and voice option beside her
+          (not above), so the dock stays low and clear of the page's content. */}
+      <div className="flex items-end gap-3">
         <button
           type="button"
           onClick={() => setDockOpen((o) => !o)}
           aria-label={dockOpen ? 'Close chat with Sallie' : 'Chat with Sallie'}
           aria-expanded={dockOpen}
           tabIndex={docked ? 0 : -1}
-          className="cursor-pointer group relative rounded-full ring-2 ring-lime-500/60 shadow-[0_0_40px_rgba(157,254,10,0.35)] transition-transform hover:scale-105 focus:outline-none focus-visible:ring-4 motion-reduce:transition-none motion-reduce:hover:scale-100"
+          className="cursor-pointer group relative shrink-0 rounded-full ring-2 ring-lime-500/60 shadow-[0_0_40px_rgba(157,254,10,0.35)] transition-transform hover:scale-105 focus:outline-none focus-visible:ring-4 motion-reduce:transition-none motion-reduce:hover:scale-100"
         >
           <SallieStage
             shape="circle"
@@ -689,11 +661,55 @@ export default function SallieAssistant({
             {dockOpen ? <X className="h-4 w-4" /> : <MessageCircle className="h-4 w-4" />}
           </span>
         </button>
+
+        {docked && !dockOpen && (
+          // On phones only her avatar shows (the voice option is in the open
+          // chat's header), so the dock covers as little of the page as it can.
+          <div className="hidden flex-col items-start gap-2 sm:flex">
+            {showDockBubble && (
+              <div className="relative w-[min(320px,calc(100vw-9rem))]">
+                <SpeechBubble
+                  text={
+                    conversation.messages.length
+                      ? 'Still here if you have more questions.'
+                      : greeting
+                  }
+                  tail="left"
+                  className="px-4 py-3 [&_p]:text-sm"
+                />
+                <button
+                  type="button"
+                  onClick={() => setDockBubbleDismissed(true)}
+                  aria-label="Dismiss greeting"
+                  className="cursor-pointer absolute -right-2 -top-2 rounded-full bg-gray-800 p-1 text-gray-400 shadow hover:text-white"
+                >
+                  <X className="h-3 w-3" />
+                </button>
+              </div>
+            )}
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+              <VoiceToggle voice={voice} className="bg-gray-950/90 shadow-lg backdrop-blur" />
+              {/* Browsers hold her voice until the page has been clicked; say so
+                  here too, or after a refresh she just stays silent in the corner. */}
+              {showDockBubble && voice.blocked && !voice.muted && (
+                <p className="text-xs text-lime-200/80">Click or tap anywhere to hear Sallie</p>
+              )}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
 
-  if (dockOnly) return mounted ? createPortal(dock, document.body) : null;
+  if (dockOnly)
+    return (
+      <>
+        {/* Room below the footer on phones, so the page's last lines can
+            scroll clear of her avatar in the corner. */}
+        <div aria-hidden="true" className="h-24 sm:hidden" />
+        {mounted && createPortal(dock, document.body)}
+      </>
+    );
 
   return (
     <>
