@@ -48,8 +48,8 @@ export default function DieHero({ children }: { children: React.ReactNode }) {
       parallax
       className="die-hero relative isolate overflow-hidden bg-[#040605] md:h-[calc(100svh-73px)] md:min-h-[620px] md:max-h-[1080px]"
     >
-      {/* Phones: the scene sits above the copy, short enough that the buttons clear
-          Sallie's dock. Wider: it fills the hero behind it. */}
+      {/* Phones: the scene sits above the copy, short enough that the headline and
+          buttons show on the first screen. Wider: it fills the hero behind it. */}
       <div className="relative h-[32svh] min-h-[240px] overflow-hidden [container-type:size] md:absolute md:inset-0 md:h-auto">
         <div className="die-stage">
           <div className="die-camera absolute inset-0">
@@ -139,9 +139,7 @@ export default function DieHero({ children }: { children: React.ReactNode }) {
         />
       </div>
 
-      {/* Wide screens: the copy sits above centre so Sallie's docked greeting,
-          bottom-left, stays clear of the buttons. */}
-      <div className="die-copy relative z-10 -mt-10 md:mt-0 md:flex md:h-full md:items-center md:pb-32">
+      <div className="die-copy relative z-10 -mt-10 md:mt-0 md:flex md:h-full md:items-center">
         <div className="mx-auto w-full max-w-6xl px-5 pb-14 md:px-8 md:pb-0">{children}</div>
       </div>
     </MotionScope>

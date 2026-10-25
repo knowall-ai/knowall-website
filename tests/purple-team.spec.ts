@@ -7,7 +7,7 @@ import { test, expect } from '@playwright/test';
  * - The homepage has a Purple Team section that links to /purple-team
  * - /purple-team explains the offering with the agents, charts and an FAQ
  * - An enquiry form validates before sending
- * - Sallie is docked bottom left, with her voice option visible
+ * - Sallie is docked bottom right, with her voice option visible
  */
 test.describe('Purple Team Page', () => {
   test('Homepage section and header link go to the Purple Team page', async ({ page }) => {
@@ -68,7 +68,7 @@ test.describe('Purple Team Page', () => {
     );
   });
 
-  test('Sallie is docked bottom left with her voice option', async ({ page }) => {
+  test('Sallie is docked bottom right with her voice option', async ({ page }) => {
     await page.goto('/purple-team');
     const dock = page.getByTestId('sallie-dock');
     await expect(dock.getByRole('button', { name: 'Chat with Sallie' })).toBeVisible();
@@ -80,7 +80,7 @@ test.describe('Purple Team Page', () => {
     await expect(dock.getByRole('button', { name: 'How does Bitcoin fit in?' })).toHaveCount(0);
     const box = await dock.boundingBox();
     const viewport = page.viewportSize();
-    expect(box && box.x < 40).toBeTruthy();
+    expect(box && viewport && box.x + box.width > viewport.width - 40).toBeTruthy();
     expect(box && viewport && box.y + box.height > viewport.height - 40).toBeTruthy();
   });
 });

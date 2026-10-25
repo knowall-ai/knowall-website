@@ -424,12 +424,15 @@ function ConversationPanel({
 
 function SpeechBubble({
   text,
+  note,
   tail = 'top',
   className,
 }: {
   text: string;
-  /** Where the tail points: up at a hero avatar, or left at the docked one. */
-  tail?: 'top' | 'left';
+  /** A short line under her words, e.g. how to talk to her. */
+  note?: string;
+  /** Where the tail points: up at a hero avatar, or right at the docked one. */
+  tail?: 'top' | 'right';
   className?: string;
 }) {
   return (
@@ -445,13 +448,14 @@ function SpeechBubble({
           'absolute h-4 w-4 rotate-45 border-lime-500/30 bg-gray-900/85',
           tail === 'top' && 'left-1/2 top-[-9px] -ml-2 border-l border-t',
           // Near the foot of the bubble, level with the docked avatar beside it
-          tail === 'left' && 'bottom-5 left-[-9px] border-b border-l'
+          tail === 'right' && 'bottom-2 right-[-9px] border-r border-t'
         )}
       />
       <p className="text-base leading-relaxed">
         {text}
         <span className="ml-0.5 inline-block h-[1em] w-0.5 translate-y-[2px] bg-lime-400 align-middle animate-sallie-blink motion-reduce:hidden" />
       </p>
+      {note && <p className="mt-1.5 text-xs! text-lime-300">{note}</p>}
     </div>
   );
 }
@@ -589,14 +593,37 @@ export default function SallieAssistant({
     };
   }, [unlock]);
 
+  // The dock's "Talk to Sallie" button: one tap opens her chat and starts
+  // listening inside the same gesture, so the browser's mic prompt appears
+  // straight away. She stops talking so she can hear. Tap again to stop.
+  const talk = () => {
+    if (micOn) {
+      setMicOn(false);
+      return;
+    }
+    setDockOpen(true);
+    stop();
+    setMicOn(true);
+    if (!listening && !transcribing && !conversation.isLoading) startListening();
+  };
+
   // Pages without a hero spot for her (e.g. /purple-team) keep her docked.
   const docked = mounted && (dockOnly || !heroOnScreen);
-  const showDockBubble = docked && !dockOpen && !dockBubbleDismissed;
+  // Her greeting is for arrival: once the visitor scrolls into the page it
+  // tucks away, so it never sits over the content they are reading.
+  const [readingPage, setReadingPage] = useState(false);
+  useEffect(() => {
+    const onScroll = () => setReadingPage(window.scrollY > window.innerHeight * 0.4);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+  const showDockBubble = docked && !dockOpen && !dockBubbleDismissed && !readingPage;
 
   const dock = (
     <div
       className={cn(
-        'fixed bottom-4 left-4 z-50 flex flex-col-reverse items-start gap-3 transition-all duration-300 sm:bottom-5 sm:left-5',
+        'fixed bottom-4 right-4 z-50 flex flex-col-reverse items-end gap-3 transition-all duration-300 sm:bottom-5 sm:right-5',
         docked ? 'translate-y-0 opacity-100' : 'pointer-events-none translate-y-6 opacity-0'
       )}
       data-testid="sallie-dock"
@@ -604,11 +631,13 @@ export default function SallieAssistant({
       onPointerDownCapture={onInteract}
       onKeyDownCapture={onInteract}
     >
-      {/* Sallie in the corner, with her greeting and voice option beside her
+      {/* Sallie in the corner, with her greeting, mic and voice option beside her
           (not above), so the dock stays low and clear of the page's content.
           The open chat comes after her in the DOM (flex-col-reverse shows it
-          above), so Tab moves from her button straight into the chat. */}
-      <div className="flex items-end gap-3">
+          above), so Tab moves from her button straight into the chat. Likewise
+          flex-row-reverse puts her greeting on her left while her button stays
+          first in the tab order. */}
+      <div className="flex flex-row-reverse items-end gap-3">
         <button
           ref={dockButtonRef}
           type="button"
@@ -629,37 +658,83 @@ export default function SallieAssistant({
           </span>
         </button>
 
-        {docked && !dockOpen && (
-          // On phones only her avatar shows (the voice option is in the open
-          // chat's header), so the dock covers as little of the page as it can.
-          <div className="hidden flex-col items-start gap-2 sm:flex">
+        {docked && (
+          <div className="flex flex-col items-end gap-2">
+            {/* On phones her greeting and voice option stay out of the way (the
+                voice option is in the open chat's header); her mic stays. */}
             {showDockBubble && (
-              <div className="relative w-[min(320px,calc(100vw-9rem))]">
+              <div className="relative hidden w-[min(320px,calc(100vw-11rem))] sm:block">
                 <SpeechBubble
                   text={
                     conversation.messages.length
                       ? 'Still here if you have more questions.'
                       : greeting
                   }
-                  tail="left"
+                  // Point at the mic unless her opener already does
+                  note={
+                    voice.micSupported && !/\bmic\b/i.test(opener.text)
+                      ? 'Or tap the mic and just talk to me.'
+                      : undefined
+                  }
+                  tail="right"
                   className="px-4 py-3 [&_p]:text-sm"
                 />
                 <button
                   type="button"
                   onClick={() => setDockBubbleDismissed(true)}
                   aria-label="Dismiss greeting"
-                  className="cursor-pointer absolute -right-2 -top-2 rounded-full bg-gray-800 p-1 text-gray-400 shadow hover:text-white"
+                  className="cursor-pointer absolute -left-2 -top-2 rounded-full bg-gray-800 p-1 text-gray-400 shadow hover:text-white"
                 >
                   <X className="h-3 w-3" />
                 </button>
               </div>
             )}
-            <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-              <VoiceToggle voice={voice} className="bg-gray-950/90 shadow-lg backdrop-blur" />
+            <div className="flex flex-row-reverse flex-wrap items-center justify-start gap-x-3 gap-y-1">
+              {voice.micSupported && !conversation.ended && (
+                <button
+                  type="button"
+                  onClick={talk}
+                  aria-label="Talk to Sallie"
+                  aria-pressed={micOn}
+                  title={micOn ? 'Mic on: tap to turn it off' : 'Tap and just talk to Sallie'}
+                  disabled={transcribing}
+                  data-testid="sallie-dock-mic"
+                  className={cn(
+                    'cursor-pointer relative inline-flex h-11 w-11 shrink-0 items-center justify-center gap-2 rounded-full bg-lime-500 text-sm font-semibold text-gray-950 shadow-lg shadow-lime-500/30 transition-colors hover:bg-lime-400 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-lime-300/60 disabled:opacity-70 sm:w-auto sm:px-4',
+                    micOn && 'bg-lime-400 ring-2 ring-white/80'
+                  )}
+                >
+                  {/* Pulses while she is listening (still under reduced motion) */}
+                  {listening && (
+                    <span
+                      aria-hidden="true"
+                      className="pointer-events-none absolute inset-0 rounded-full ring-4 ring-lime-400/70 animate-ping motion-reduce:animate-none"
+                    />
+                  )}
+                  <Mic className="h-5 w-5" />
+                  <span className="hidden sm:inline">
+                    {listening
+                      ? 'Listening…'
+                      : transcribing
+                        ? 'One moment…'
+                        : micOn
+                          ? 'Mic on'
+                          : 'Talk to Sallie'}
+                  </span>
+                </button>
+              )}
+              {!dockOpen && (
+                <VoiceToggle
+                  voice={voice}
+                  className="hidden bg-gray-950/90 shadow-lg backdrop-blur sm:inline-flex"
+                />
+              )}
               {/* Browsers hold her voice until the page has been clicked; say so
                   here too, or after a refresh she just stays silent in the corner. */}
               {showDockBubble && voice.blocked && !voice.muted && (
-                <p className="text-xs text-lime-200/80">Click or tap anywhere to hear Sallie</p>
+                <p className="hidden text-xs text-lime-200/80 sm:block">
+                  Click or tap anywhere to hear Sallie
+                </p>
               )}
             </div>
           </div>

@@ -4,7 +4,7 @@ import { test, expect } from '@playwright/test';
  * Sallie Chat Tests
  *
  * Based on requirements (sallie-chat):
- * - On the homepage Sallie is docked bottom left from load (the hero belongs
+ * - On the homepage Sallie is docked bottom right from load (the hero belongs
  *   to the processing-power scene), with her animated avatar and greeting
  * - Opening the dock shows the chat; sending a message displays a response
  * - When the OpenAI API is unavailable (e.g. no valid API key), Sallie replies
@@ -26,7 +26,7 @@ test.describe('Sallie Chat', () => {
     ).toBeVisible({ timeout: 60000 });
   });
 
-  test('Sallie is docked bottom left from load, not in the hero', async ({ page }) => {
+  test('Sallie is docked bottom right from load, not in the hero', async ({ page }) => {
     const dock = page.getByTestId('sallie-dock');
     // No hero chat card any more
     await expect(page.getByTestId('sallie-chat')).toHaveCount(0);
@@ -38,7 +38,7 @@ test.describe('Sallie Chat', () => {
 
     const box = await dock.boundingBox();
     const viewport = page.viewportSize();
-    expect(box && box.x < 40).toBeTruthy();
+    expect(box && viewport && box.x + box.width > viewport.width - 40).toBeTruthy();
     expect(box && viewport && box.y + box.height > viewport.height - 40).toBeTruthy();
     // The conversation ID is used internally (logging/lead follow-up) but is
     // deliberately not surfaced to visitors.
@@ -50,6 +50,24 @@ test.describe('Sallie Chat', () => {
     await dock.getByRole('button', { name: 'Chat with Sallie' }).click();
     await expect(dock.getByPlaceholder('Type your message...')).toBeVisible();
     await expect(dock.getByRole('button', { name: 'Send message' })).toBeVisible();
+  });
+
+  test('An obvious "Talk to Sallie" mic button sits beside her in the dock', async ({ page }) => {
+    const mic = page.getByTestId('sallie-dock').getByRole('button', { name: 'Talk to Sallie' });
+    await expect(mic).toBeVisible();
+    await expect(mic).toHaveAttribute('aria-pressed', 'false');
+    // At least a 44px touch target
+    const box = await mic.boundingBox();
+    expect(box && box.height >= 44 && box.width >= 44).toBeTruthy();
+  });
+
+  test('Her greeting shows on arrival and tucks away once you scroll', async ({ page }) => {
+    const dock = page.getByTestId('sallie-dock');
+    await expect(dock.getByRole('button', { name: 'Dismiss greeting' })).toBeVisible();
+    await page.locator('#services').scrollIntoViewIfNeeded();
+    await expect(dock.getByRole('button', { name: 'Dismiss greeting' })).toHaveCount(0);
+    // She stays docked with her voice option
+    await expect(dock.getByRole('button', { name: 'Chat with Sallie' })).toBeVisible();
   });
 
   test('Keyboard users move from her button into the chat and back', async ({ page }) => {

@@ -183,6 +183,64 @@ describe('SallieAssistant', () => {
     expect(screen.queryByRole('button', { name: 'Speak to Sallie' })).not.toBeInTheDocument();
   });
 
+  /** A stand-in for the browser's SpeechRecognition that records each start. */
+  function stubRecognition(
+    onStart?: (rec: { onerror: ((e: { error?: string }) => void) | null }) => void
+  ) {
+    const starts: number[] = [];
+    class FakeRecognition {
+      lang = '';
+      interimResults = false;
+      continuous = false;
+      maxAlternatives = 1;
+      onresult = null;
+      onend: (() => void) | null = null;
+      onerror: ((e: { error?: string }) => void) | null = null;
+      start() {
+        starts.push(Date.now());
+        onStart?.(this);
+      }
+      stop() {}
+      abort() {}
+    }
+    vi.stubGlobal('SpeechRecognition', FakeRecognition);
+    return starts;
+  }
+
+  it('docked, one tap on "Talk to Sallie" opens her chat and starts listening', async () => {
+    mockApis();
+    const starts = stubRecognition();
+    render(<SallieAssistant dockOnly />);
+    const mic = await screen.findByRole('button', { name: 'Talk to Sallie' });
+    expect(mic).toHaveAttribute('aria-pressed', 'false');
+    fireEvent.click(mic);
+    // Listening starts inside the tap itself, so the browser's mic prompt appears
+    expect(starts).toHaveLength(1);
+    expect(mic).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByPlaceholderText('Listening…')).toBeInTheDocument();
+    expect(screen.getByText(/Mic on — just talk/)).toBeInTheDocument();
+    // Tapping again turns the mic off
+    fireEvent.click(mic);
+    expect(mic).toHaveAttribute('aria-pressed', 'false');
+  });
+
+  it('docked, a blocked mic shows the reason in her chat and resets the button', async () => {
+    mockApis();
+    stubRecognition((rec) => setTimeout(() => rec.onerror?.({ error: 'not-allowed' }), 0));
+    render(<SallieAssistant dockOnly />);
+    const mic = await screen.findByRole('button', { name: 'Talk to Sallie' });
+    fireEvent.click(mic);
+    expect(await screen.findByText(/Microphone access was blocked/)).toBeInTheDocument();
+    await waitFor(() => expect(mic).toHaveAttribute('aria-pressed', 'false'));
+  });
+
+  it('docked, there is no mic button where the browser cannot listen', async () => {
+    mockApis();
+    render(<SallieAssistant dockOnly />);
+    await screen.findByRole('button', { name: 'Chat with Sallie' });
+    expect(screen.queryByRole('button', { name: 'Talk to Sallie' })).not.toBeInTheDocument();
+  });
+
   it('shows a friendly error when the chat API fails', async () => {
     fetchMock.mockResolvedValue({ ok: false, status: 500, json: async () => ({}) });
     render(<SallieAssistant />);

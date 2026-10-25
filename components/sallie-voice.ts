@@ -357,6 +357,9 @@ export function useSpeechInput({ onInterim, onFinal, onSilent }: SpeechInputOpti
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   // Once the browser recogniser fails we stop trying it for this visit.
   const useRecorder = useRef(false);
+  // Set while the browser asks for mic permission, so a second start (a tap
+  // and the hands-free loop together) can't open the mic twice.
+  const startingRef = useRef(false);
   const callbacks = useRef({ onInterim, onFinal, onSilent });
   useEffect(() => {
     callbacks.current = { onInterim, onFinal, onSilent };
@@ -405,6 +408,8 @@ export function useSpeechInput({ onInterim, onFinal, onSilent }: SpeechInputOpti
       setError('This browser has no way to listen. Please type instead.');
       return;
     }
+    if (startingRef.current || recorderRef.current) return;
+    startingRef.current = true;
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       streamRef.current = stream;
@@ -437,6 +442,8 @@ export function useSpeechInput({ onInterim, onFinal, onSilent }: SpeechInputOpti
       releaseStream();
       setListening(false);
       setError(friendlyMicError('not-allowed'));
+    } finally {
+      startingRef.current = false;
     }
   }, [releaseStream, transcribe]);
 
