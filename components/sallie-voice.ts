@@ -533,6 +533,8 @@ export function useSpeechInput({ onInterim, onFinal, onSilent }: SpeechInputOpti
 
   useEffect(
     () => () => {
+      // Unmounting while the permission prompt is open must not start recording afterwards.
+      generationRef.current += 1;
       recognitionRef.current?.abort();
       if (recorderRef.current?.state === 'recording') recorderRef.current.stop();
       releaseStream();

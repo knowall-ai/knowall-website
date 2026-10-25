@@ -885,7 +885,7 @@ export default function Home() {
       </section>
 
       <Footer darkMode={true} />
-      {/* Sallie is docked bottom-left from page load. */}
+      {/* Sallie is docked bottom-right from page load. */}
       <SallieAssistant dockOnly />
     </main>
   );
