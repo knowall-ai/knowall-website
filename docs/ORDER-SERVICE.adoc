@@ -70,7 +70,7 @@ az containerapp revision list -g KnowAllAIRG -n knowall-order-service -o table
 
 WARNING: In single revision mode Container Apps starts the new revision before stopping the old one, so for a short window two copies run. An order arriving inside that window could be invoiced twice. Redeploy when the shop is quiet, and once the new revision is running deactivate any old revision that is still active (`az containerapp revision deactivate -g KnowAllAIRG -n knowall-order-service --revision <old>`).
 
-To rotate the key, set a new version of `order-service-key` in Key Vault and restart the revision (`az containerapp revision restart`). Container Apps also picks up new Key Vault versions on its own within about 30 minutes.
+Updating the secret: Container Apps reads the latest version of `order-service-key`. It picks up a new version on its own within about 30 minutes, or straight away after `az containerapp revision restart`. Because of the startup safety stop, a new version must still be the *same* company key, for example re-stored in a different encoding (nsec or hex). A genuinely new private key means a new npub. That needs a code change to `KNOWALL_PUBKEY` in `order-service/lib/config.js`, with the listings re-published under the new identity, all deployed together. Otherwise the restarted service refuses to start.
 
 == Configuration
 
