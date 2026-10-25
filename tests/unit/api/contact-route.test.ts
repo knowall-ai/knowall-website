@@ -132,6 +132,7 @@ describe('POST /api/contact', () => {
       ...SITE,
       host: 'knowall-website-fvgjgvg9bxc5ghgs.uksouth-01.azurewebsites.net',
       'x-forwarded-host': 'www.knowall.ai',
+      origin: 'https://www.knowall.ai',
     });
     expect(res.status).not.toBe(403);
   });

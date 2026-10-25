@@ -116,4 +116,15 @@ describe('rate limits', () => {
     expect(isSameOrigin(apex)).toBe(true);
     expect(isSameOrigin(foreign)).toBe(false);
   });
+
+  it('accepts a loopback origin only when the Host is that loopback', () => {
+    const local = new Request('http://x', {
+      headers: { host: 'localhost:3000', origin: 'http://localhost:3000' },
+    });
+    const loopbackToLive = new Request('http://x', {
+      headers: { host: 'www.knowall.ai', origin: 'http://localhost:3000' },
+    });
+    expect(isSameOrigin(local)).toBe(true);
+    expect(isSameOrigin(loopbackToLive)).toBe(false);
+  });
 });

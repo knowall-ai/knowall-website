@@ -1,4 +1,6 @@
 import { ALLOWED_ORIGIN_HOSTS } from '@/lib/request-guards';
+
+const LOOPBACK_HOSTS = new Set(['localhost', '127.0.0.1']);
 /**
  * Cost guards for the public API routes (chat, speak, listen, contact).
  *
@@ -133,6 +135,12 @@ export function isSameOrigin(req: Request): boolean {
     sourceUrl = new URL(source);
   } catch {
     return false;
+  }
+  // Loopback origins only count when the request really is to the loopback host,
+  // so a page served from a visitor's own machine can't post to the live site.
+  if (LOOPBACK_HOSTS.has(sourceUrl.hostname)) {
+    const host = req.headers.get('host');
+    return !!host && sourceUrl.host === host;
   }
   if (ALLOWED_ORIGIN_HOSTS.has(sourceUrl.hostname)) return true;
   const host = req.headers.get('host');
