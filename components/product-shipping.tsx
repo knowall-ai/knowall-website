@@ -12,6 +12,7 @@ import {
   SHIPPING_OPTION_KIND,
   type ShippingZone,
 } from '@/lib/shop-admin';
+import { isVerifiedEvent } from '@/lib/nostr-verify';
 
 interface ProductShippingProps {
   /** Merchant pubkey (hex) whose shipping zones are referenced. */
@@ -42,7 +43,10 @@ export default function ProductShipping({ pubkey, zoneIds }: ProductShippingProp
     ]).then((events) => {
       if (!active) return;
       const latest = dedupeByDTag(
-        events.filter((event) => event.kind === SHIPPING_OPTION_KIND && event.pubkey === pubkey)
+        events.filter(
+          (event) =>
+            event.kind === SHIPPING_OPTION_KIND && event.pubkey === pubkey && isVerifiedEvent(event)
+        )
       );
       const byId = new Map(
         latest

@@ -12,6 +12,7 @@
 import { PROFILE_RELAYS, queryRelays } from './relay';
 import { parseProfileContent, type ProfileMetadata } from './story-social';
 import type { NostrEvent } from './story-notes';
+import { isVerifiedEvent } from './nostr-verify';
 
 // Relays commonly reject REQs with too many filters; stay well under the cap.
 const FILTERS_PER_REQ = 10;
@@ -36,7 +37,7 @@ async function fetchBatch(pubkeys: string[]): Promise<void> {
   // Newest kind-0 per author wins across relays.
   const newest = new Map<string, NostrEvent>();
   for (const event of events) {
-    if (event.kind !== 0 || !pubkeys.includes(event.pubkey)) continue;
+    if (event.kind !== 0 || !pubkeys.includes(event.pubkey) || !isVerifiedEvent(event)) continue;
     const current = newest.get(event.pubkey);
     if (!current || event.created_at > current.created_at) newest.set(event.pubkey, event);
   }

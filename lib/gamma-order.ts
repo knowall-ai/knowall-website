@@ -105,6 +105,66 @@ export function parseCommerceAmount(raw: string | undefined): number | undefined
   return Number.isSafeInteger(value) ? value : undefined;
 }
 
+/**
+ * The order's ALL-IN total in sats: items plus the chosen shipping cost.
+ *
+ * Items are summed per currency and each currency converted once, so a
+ * single-currency cart is exactly `convertToSats(cartTotal, currency)` while a
+ * mixed cart (e.g. a sats-priced sticker pack plus a GBP book) no longer adds
+ * sats to pounds. Unpriced listings count as 0, as in the cart total.
+ *
+ * The order service ports this function (order-service/lib/pricing.js
+ * priceOrder) and refuses orders whose `amount` doesn't match its own
+ * recomputation — keep the two in step.
+ */
+export function orderTotalSats(
+  items: CartItem[],
+  shipping: Pick<ShippingInfo, 'shippingCost' | 'shippingCurrency'>,
+  convertToSats: (amount: number, currency: string) => number
+): number {
+  const perCurrency = new Map<string, number>();
+  for (const item of items) {
+    const price = item.listing.price;
+    if (!price) continue;
+    const currency = price.currency.toUpperCase();
+    perCurrency.set(currency, (perCurrency.get(currency) ?? 0) + price.amount * item.quantity);
+  }
+  let total = 0;
+  for (const [currency, amount] of perCurrency) total += convertToSats(amount, currency);
+
+  if (shipping.shippingCost) {
+    const fallbackCurrency = items[0]?.listing.price?.currency ?? 'GBP';
+    total += convertToSats(shipping.shippingCost, shipping.shippingCurrency || fallbackCurrency);
+  }
+  return total;
+}
+
+/** Longest merchant-supplied cancellation reason the checkout will display. */
+const MAX_CANCELLATION_MESSAGE = 400;
+
+/**
+ * Parse a merchant 'cancelled' status update (kind-16 type-3) — sent by the
+ * order service when it refuses to invoice an order — or null. The caller
+ * must already have checked the rumor's sender is the merchant.
+ */
+export function parseOrderCancellation(
+  event: RumorLike
+): { orderId: string; message: string } | null {
+  const tag = (name: string) => event.tags.find((t) => t[0] === name)?.[1];
+  if (tag('type') !== ORDER_MESSAGE_TYPE.STATUS_UPDATE || tag('status') !== 'cancelled') {
+    return null;
+  }
+  const orderId = tag('order');
+  if (!orderId) return null;
+  const content = event.content?.trim();
+  return {
+    orderId,
+    message: content
+      ? content.slice(0, MAX_CANCELLATION_MESSAGE)
+      : 'The shop could not accept this order. You have not been charged.',
+  };
+}
+
 /** Format shipping address as a single string. */
 export function formatAddress(info: ShippingInfo): string {
   const parts = [info.address, info.city, info.state, info.postalCode, info.country].filter(
@@ -266,6 +326,51 @@ export function toGammaPaymentOptions(
   return paymentOptions
     .filter((opt) => opt.type === 'lightning' && typeof opt.detail === 'string' && opt.detail)
     .map((opt) => ({ type: 'ln' as const, link: opt.detail }));
+}
+
+/** What a decrypted merchant reply means for the order being awaited. */
+export type MerchantReply =
+  | { type: 'payment-request'; paymentRequest: GammaPaymentRequest }
+  | { type: 'cancelled'; message: string };
+
+/**
+ * Interpret a rumor unwrapped from the buyer's gift wraps while awaiting an
+ * invoice. Returns null for anything that isn't a usable answer to THIS order
+ * FROM the merchant.
+ *
+ * The sender check matters: anyone can gift-wrap a message to the buyer's
+ * key, and the unwrap only proves who sealed it (`rumor.pubkey` is the
+ * verified seal signer). Without `rumor.pubkey === merchantPubkey` a third
+ * party could slip the buyer their own invoice or a fake status update.
+ */
+export function interpretMerchantReply(
+  rumor: RumorLike & { pubkey: string },
+  orderId: string,
+  merchantPubkey: string
+): MerchantReply | null {
+  if (rumor.kind !== ORDER_PROCESS_KIND || rumor.pubkey !== merchantPubkey) return null;
+
+  const cancellation = parseOrderCancellation(rumor);
+  if (cancellation) {
+    return cancellation.orderId === orderId
+      ? { type: 'cancelled', message: cancellation.message }
+      : null;
+  }
+
+  const request = parsePaymentRequest(rumor);
+  if (!request || request.orderId !== orderId) return null;
+  const paymentOptions = toGammaPaymentOptions(request.paymentOptions);
+  if (paymentOptions.length === 0) return null; // no usable Lightning option
+  return {
+    type: 'payment-request',
+    paymentRequest: {
+      id: request.orderId,
+      type: 2,
+      amount: request.amount,
+      message: request.message,
+      payment_options: paymentOptions,
+    },
+  };
 }
 
 /**

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { KNOWALL_PUBKEY } from '@/lib/nostr';
+import { isVerifiedEvent } from '@/lib/nostr-verify';
 
 // purplepag.es is a dedicated profile aggregator; the others are general-purpose relays.
 const PROFILE_RELAYS = ['wss://relay.damus.io', 'wss://nos.lol', 'wss://purplepag.es'];
@@ -77,7 +78,12 @@ export function useNostrProfile(pubkey: string = KNOWALL_PUBKEY): ResolvedNostrP
       ws.onmessage = (msg) => {
         try {
           const data = JSON.parse(msg.data as string);
-          if (data[0] === 'EVENT' && data[2]?.pubkey === pubkey) {
+          if (
+            data[0] === 'EVENT' &&
+            data[2]?.kind === 0 &&
+            data[2]?.pubkey === pubkey &&
+            isVerifiedEvent(data[2])
+          ) {
             const event = data[2];
             if (event.created_at > newest) {
               newest = event.created_at;

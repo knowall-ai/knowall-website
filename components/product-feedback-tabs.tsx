@@ -26,6 +26,7 @@ import {
 } from '@/lib/product-reviews';
 import type { NostrEvent } from '@/lib/nip99';
 import type { ProfileMetadata } from '@/lib/story-social';
+import { isVerifiedEvent } from '@/lib/nostr-verify';
 
 const FEEDBACK_TIMEOUT_MS = 8000;
 
@@ -77,7 +78,8 @@ export default function ProductFeedbackTabs({
       const blocklist = await blocklistPromise;
       if (cancelled) return;
       // Moderation: both kinds are screened against the company mute list.
-      const visible = filterBlocked(events, blocklist);
+      // Cheap mute-list screen first, then drop forged comments/reviews.
+      const visible = filterBlocked(events, blocklist).filter(isVerifiedEvent);
       setComments(dedupeComments(visible.filter((event) => event.kind === COMMENT_KIND)));
       setReviewEvents(visible.filter((event) => event.kind === REVIEW_KIND));
       setStatus(respondedRelays === 0 ? 'error' : 'ready');

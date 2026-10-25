@@ -25,6 +25,7 @@ import {
   stripMediaUrls,
   timeAgo,
 } from '@/lib/story-notes';
+import { isVerifiedEvent } from '@/lib/nostr-verify';
 
 const RELAYS = SOCIAL_RELAYS;
 const MAX_NOTES = 50;
@@ -168,7 +169,12 @@ export default function StoryFeed({ pubkey = KNOWALL_PUBKEY }: StoryFeedProps) {
       socket.onmessage = (message) => {
         try {
           const data = JSON.parse(message.data as string);
-          if (data[0] === 'EVENT' && data[2]?.kind === 1 && data[2]?.pubkey === pubkey) {
+          if (
+            data[0] === 'EVENT' &&
+            data[2]?.kind === 1 &&
+            data[2]?.pubkey === pubkey &&
+            isVerifiedEvent(data[2])
+          ) {
             events.set(data[2].id, data[2] as NostrEvent);
           } else if (data[0] === 'EOSE') {
             complete(true);
@@ -207,7 +213,10 @@ export default function StoryFeed({ pubkey = KNOWALL_PUBKEY }: StoryFeedProps) {
       getBlocklist(),
     ]).then(([events, blocklist]) => {
       if (cancelled) return;
-      const visible = events.filter((event) => !isBlocked(event, blocklist));
+      // Muted authors dropped first (cheap), then forged replies/zap receipts.
+      const visible = events.filter(
+        (event) => !isBlocked(event, blocklist) && isVerifiedEvent(event)
+      );
       setRepliesByNote(groupRepliesByNote(visible, noteIds));
       setZapsByNote(aggregateZapsByNote(visible, noteIds));
     });

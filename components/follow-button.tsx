@@ -8,6 +8,7 @@ import { KNOWALL_NPUB, KNOWALL_PUBKEY } from '@/lib/nostr';
 import { SOCIAL_RELAYS, publishToRelays, queryRelays } from '@/lib/relay';
 import { addFollow, isFollowing } from '@/lib/story-social';
 import type { NostrEvent } from '@/lib/story-notes';
+import { isVerifiedEvent } from '@/lib/nostr-verify';
 
 const NJUMP_URL = `https://njump.me/${KNOWALL_NPUB}`;
 
@@ -40,7 +41,8 @@ export default function FollowButton() {
     const events = await queryRelays(SOCIAL_RELAYS, [{ kinds: [3], authors: [pubkey], limit: 1 }]);
     let newest: NostrEvent | null = null;
     for (const event of events) {
-      if (event.kind !== 3 || event.pubkey !== pubkey) continue;
+      // A forged contact list would be re-signed by the user on follow — verify.
+      if (event.kind !== 3 || event.pubkey !== pubkey || !isVerifiedEvent(event)) continue;
       if (!newest || event.created_at > newest.created_at) newest = event;
     }
     return newest;

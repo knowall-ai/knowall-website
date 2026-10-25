@@ -14,6 +14,7 @@ import { publishToRelays, queryRelays } from '@/lib/relay';
 import { dedupeByDTag, getDTag, isShopOwner } from '@/lib/shop-admin';
 import type { NostrEvent } from '@/lib/story-notes';
 import type { EventTemplate } from '@/lib/story-social';
+import { isVerifiedEvent } from '@/lib/nostr-verify';
 
 /**
  * True when the signed-in user is the store owner (the KnowAll AI npub).
@@ -64,7 +65,13 @@ export async function fetchLatestOwnerEvent(
     { kinds: [kind], authors: [KNOWALL_PUBKEY], '#d': [dTag], limit: 10 },
   ]);
   const usable = events.filter(
-    (event) => event.kind === kind && event.pubkey === KNOWALL_PUBKEY && getDTag(event) === dTag
+    (event) =>
+      event.kind === kind &&
+      event.pubkey === KNOWALL_PUBKEY &&
+      getDTag(event) === dTag &&
+      // Edits merge-republish this event under the owner's signature — a
+      // forged version must never be the base.
+      isVerifiedEvent(event)
   );
   return dedupeByDTag(usable)[0] ?? null;
 }
@@ -94,7 +101,10 @@ export function useOwnerCatalog(kind: number): OwnerCatalog {
         if (!active) return;
         setEvents(
           dedupeByDTag(
-            fetched.filter((event) => event.kind === kind && event.pubkey === KNOWALL_PUBKEY)
+            fetched.filter(
+              (event) =>
+                event.kind === kind && event.pubkey === KNOWALL_PUBKEY && isVerifiedEvent(event)
+            )
           )
         );
       })

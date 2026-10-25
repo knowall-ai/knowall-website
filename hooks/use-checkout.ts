@@ -26,10 +26,9 @@ import {
   createPaymentReceiptTemplate,
   formatOrderSummary,
   generateOrderId,
+  interpretMerchantReply,
   ORDER_GENERAL_KIND,
-  ORDER_PROCESS_KIND,
-  parsePaymentRequest,
-  toGammaPaymentOptions,
+  orderTotalSats,
   type CheckoutState,
   type ShippingInfo,
 } from '@/lib/gamma-order';
@@ -43,6 +42,7 @@ import {
   type BuyerIdentity,
 } from '@/lib/nip17';
 import { KNOWALL_PUBKEY, SHOP_RELAYS } from '@/lib/nostr';
+import { isVerifiedEvent } from '@/lib/nostr-verify';
 import { publishToRelays, queryRelays } from '@/lib/relay';
 import { dedupeByDTag, parseShippingZone, SHIPPING_OPTION_KIND } from '@/lib/shop-admin';
 import type { NostrEvent } from '@/lib/story-notes';
@@ -86,8 +86,12 @@ export function useCheckoutShippingOptions(enabled = true): {
     const refs: typeof cartRefs = JSON.parse(cartRefsKey);
     const extraByRef = new Map(refs.map((r) => [r.ref, r.extraCost]));
 
+    // Signature-check BEFORE the newest-per-d-tag dedupe, so a forged "newer"
+    // option can't shadow the genuine one.
     const toOptions = (events: NostrEvent[]): CheckoutShippingOption[] =>
-      dedupeByDTag(events.filter((event) => event.kind === SHIPPING_OPTION_KIND))
+      dedupeByDTag(
+        events.filter((event) => event.kind === SHIPPING_OPTION_KIND && isVerifiedEvent(event))
+      )
         .map((event) => {
           const zone = parseShippingZone(event);
           if (!zone) return null;
@@ -238,25 +242,19 @@ export function useCheckout(): UseCheckoutReturn {
           continue;
         }
         processedWrapsRef.current.add(wrap.id);
-        if (rumor.kind !== ORDER_PROCESS_KIND) continue;
 
-        const request = parsePaymentRequest(rumor);
-        if (!request || request.orderId !== orderId) continue;
-
-        const paymentOptions = toGammaPaymentOptions(request.paymentOptions);
-        if (paymentOptions.length === 0) continue; // no usable Lightning option
+        // Only the KnowAll merchant may answer this order (lib/gamma-order).
+        const reply = interpretMerchantReply(rumor, orderId, KNOWALL_PUBKEY);
+        if (!reply) continue;
 
         if (!cancelled) {
-          setCheckoutState((prev) => ({
-            ...prev,
-            paymentRequest: {
-              id: request.orderId,
-              type: 2,
-              amount: request.amount,
-              message: request.message,
-              payment_options: paymentOptions,
-            },
-          }));
+          setCheckoutState((prev) =>
+            reply.type === 'cancelled'
+              ? // The merchant refused the order (e.g. the price changed):
+                // surface its reason and stop waiting for an invoice.
+                { ...prev, status: 'error', error: reply.message }
+              : { ...prev, paymentRequest: reply.paymentRequest }
+          );
         }
         return;
       }
@@ -297,13 +295,10 @@ export function useCheckout(): UseCheckoutReturn {
         const orderId = generateOrderId();
 
         // Per the Gamma spec the order `amount` is the ALL-IN total in sats —
-        // items PLUS the selected shipping option's cost. Convert each part in
-        // its own currency (the shipping option may be priced differently).
-        const itemsSats = convertToSats(totalPrice, currency);
-        const shippingSats = shipping.shippingCost
-          ? convertToSats(shipping.shippingCost, shipping.shippingCurrency || currency)
-          : 0;
-        const totalSats = itemsSats + shippingSats;
+        // items PLUS the selected shipping option's cost, each currency
+        // converted on its own. The order service recomputes this exact
+        // figure (order-service/lib/pricing.js) and refuses a mismatch.
+        const totalSats = orderTotalSats(items, shipping, convertToSats);
 
         // Build and gift-wrap the structured kind-16 order rumor. The PII
         // (address/email/phone) rides inside the NIP-44 encrypted, kind-13
