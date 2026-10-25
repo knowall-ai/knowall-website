@@ -7,7 +7,12 @@
  *   buffered in full
  */
 
-const ALLOWED_ORIGIN_HOSTS = new Set(['www.knowall.ai', 'knowall.ai', 'localhost', '127.0.0.1']);
+export const ALLOWED_ORIGIN_HOSTS = new Set([
+  'www.knowall.ai',
+  'knowall.ai',
+  'localhost',
+  '127.0.0.1',
+]);
 
 /** False only when an Origin header is present and isn't one of the site's hosts. */
 export function isAllowedOrigin(req: Request): boolean {

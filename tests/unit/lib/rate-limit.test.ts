@@ -96,4 +96,35 @@ describe('rate limits', () => {
       false
     );
   });
+
+  it('accepts the site even when App Service hands the app a different Host (v1.6.7 regression)', () => {
+    const azureHost = 'knowall-website-fvgjgvg9bxc5ghgs.uksouth-01.azurewebsites.net';
+    const fromSite = new Request('http://x', {
+      headers: {
+        host: azureHost,
+        'x-forwarded-host': 'www.knowall.ai',
+        origin: 'https://www.knowall.ai',
+      },
+    });
+    const apex = new Request('http://x', {
+      headers: { host: azureHost, origin: 'https://knowall.ai' },
+    });
+    const foreign = new Request('http://x', {
+      headers: { host: azureHost, origin: 'https://evil.example' },
+    });
+    expect(isSameOrigin(fromSite)).toBe(true);
+    expect(isSameOrigin(apex)).toBe(true);
+    expect(isSameOrigin(foreign)).toBe(false);
+  });
+
+  it('accepts a loopback origin only when the Host is that loopback', () => {
+    const local = new Request('http://x', {
+      headers: { host: 'localhost:3000', origin: 'http://localhost:3000' },
+    });
+    const loopbackToLive = new Request('http://x', {
+      headers: { host: 'www.knowall.ai', origin: 'http://localhost:3000' },
+    });
+    expect(isSameOrigin(local)).toBe(true);
+    expect(isSameOrigin(loopbackToLive)).toBe(false);
+  });
 });
