@@ -32,6 +32,12 @@ vi.mock('@/app/api/chat/logger', () => ({
 
 import { FALLBACK_REPLY, GET, POST } from '@/app/api/chat/route';
 
+/** Chat is Azure OpenAI only; tests turn it on with a test endpoint and key. */
+function stubAzureChat() {
+  vi.stubEnv('AZURE_OPENAI_ENDPOINT', 'https://test-chat.openai.azure.com');
+  vi.stubEnv('AZURE_OPENAI_API_KEY', 'azure-test-key');
+}
+
 function postRequest(body: unknown): Request {
   return new Request('http://localhost:3000/api/chat', {
     method: 'POST',
@@ -48,7 +54,6 @@ beforeEach(() => {
   vi.stubEnv('AZURE_OPENAI_ENDPOINT', '');
   vi.stubEnv('AZURE_OPENAI_API_KEY', '');
   vi.stubEnv('AZURE_OPENAI_DEPLOYMENT', '');
-  vi.stubEnv('OPENAI_MODEL', '');
   // Silence the route's verbose console output in test runs
   vi.spyOn(console, 'log').mockImplementation(() => {});
   vi.spyOn(console, 'error').mockImplementation(() => {});
@@ -84,7 +89,7 @@ describe('GET /api/chat', () => {
 
 describe('POST /api/chat', () => {
   it('returns a 500 error response when no chat provider is configured', async () => {
-    vi.stubEnv('OPENAI_API_KEY', '');
+    // No Azure settings (cleared in beforeEach).
 
     const response = await POST(
       postRequest({ messages: [{ role: 'user', content: 'Hello' }], conversationId: 'conv-1' })
@@ -97,7 +102,7 @@ describe('POST /api/chat', () => {
   });
 
   it('returns the assistant response in the expected shape', async () => {
-    vi.stubEnv('OPENAI_API_KEY', 'sk-test-key');
+    stubAzureChat();
     createMock.mockResolvedValue({
       choices: [{ message: { content: 'Hello from Sallie!' } }],
     });
@@ -121,7 +126,7 @@ describe('POST /api/chat', () => {
   });
 
   it('sends the system prompt without surfacing the conversation id', async () => {
-    vi.stubEnv('OPENAI_API_KEY', 'sk-test-key');
+    stubAzureChat();
     createMock.mockResolvedValue({
       choices: [{ message: { content: 'Hi!' } }],
     });
@@ -138,7 +143,10 @@ describe('POST /api/chat', () => {
     expect(request.model).toBe('gpt-5.6-sol');
     expect(request.max_completion_tokens).toBe(500);
     expect(request).not.toHaveProperty('max_tokens');
-    expect(clientOptionsMock).toHaveBeenCalledWith({ apiKey: 'sk-test-key', baseURL: undefined });
+    expect(clientOptionsMock).toHaveBeenCalledWith({
+      apiKey: 'azure-test-key',
+      baseURL: 'https://test-chat.openai.azure.com/openai/v1/',
+    });
     expect(request.messages[0].role).toBe('system');
     // The conversation id is used for logging only and is no longer injected
     // into the system prompt or surfaced to visitors.
@@ -149,7 +157,7 @@ describe('POST /api/chat', () => {
   });
 
   it('adds the Purple Team focus after the shared prompt on that page', async () => {
-    vi.stubEnv('OPENAI_API_KEY', 'sk-test-key');
+    stubAzureChat();
     createMock.mockResolvedValue({ choices: [{ message: { content: 'Hi!' } }] });
 
     await POST(
@@ -164,7 +172,7 @@ describe('POST /api/chat', () => {
   });
 
   it('ignores an unknown or injected context', async () => {
-    vi.stubEnv('OPENAI_API_KEY', 'sk-test-key');
+    stubAzureChat();
     createMock.mockResolvedValue({ choices: [{ message: { content: 'Hi!' } }] });
 
     await POST(
@@ -183,7 +191,6 @@ describe('POST /api/chat', () => {
     vi.stubEnv('AZURE_OPENAI_ENDPOINT', 'https://knowall-website-ai.openai.azure.com/');
     vi.stubEnv('AZURE_OPENAI_API_KEY', 'azure-test-key');
     vi.stubEnv('AZURE_OPENAI_DEPLOYMENT', 'sallie-chat');
-    vi.stubEnv('OPENAI_API_KEY', 'sk-test-key');
     createMock.mockResolvedValue({
       choices: [{ message: { content: 'Hello from Azure!' } }],
     });
@@ -203,7 +210,7 @@ describe('POST /api/chat', () => {
   });
 
   it('generates a conversation id when none is provided', async () => {
-    vi.stubEnv('OPENAI_API_KEY', 'sk-test-key');
+    stubAzureChat();
     createMock.mockResolvedValue({
       choices: [{ message: { content: 'Hi!' } }],
     });
@@ -215,7 +222,7 @@ describe('POST /api/chat', () => {
   });
 
   it('logs successful conversations', async () => {
-    vi.stubEnv('OPENAI_API_KEY', 'sk-test-key');
+    stubAzureChat();
     createMock.mockResolvedValue({
       choices: [{ message: { content: 'A helpful answer' } }],
     });
@@ -238,7 +245,7 @@ describe('POST /api/chat', () => {
   });
 
   it('logs which opening line the conversation started with', async () => {
-    vi.stubEnv('OPENAI_API_KEY', 'sk-test-key');
+    stubAzureChat();
     createMock.mockResolvedValue({ choices: [{ message: { content: 'Sure' } }] });
     await POST(
       postRequest({
@@ -257,7 +264,7 @@ describe('POST /api/chat', () => {
   });
 
   it('passes the page and turn on for the analytics event, never to the model', async () => {
-    vi.stubEnv('OPENAI_API_KEY', 'sk-test-key');
+    stubAzureChat();
     createMock.mockResolvedValue({ choices: [{ message: { content: 'Sure' } }] });
     await POST(
       postRequest({
@@ -282,7 +289,7 @@ describe('POST /api/chat', () => {
   });
 
   it('returns a fallback response when the OpenAI API call fails', async () => {
-    vi.stubEnv('OPENAI_API_KEY', 'sk-test-key');
+    stubAzureChat();
     createMock.mockRejectedValue(new Error('OpenAI is down'));
 
     const response = await POST(
@@ -303,7 +310,7 @@ describe('POST /api/chat', () => {
   });
 
   it('returns a busy reply instead of the outage fallback when throttled (429)', async () => {
-    vi.stubEnv('OPENAI_API_KEY', 'sk-test-key');
+    stubAzureChat();
     createMock.mockRejectedValue(
       Object.assign(new Error('Rate limit is exceeded'), { status: 429 })
     );
@@ -324,7 +331,7 @@ describe('POST /api/chat', () => {
   });
 
   it('logs fallback conversations too', async () => {
-    vi.stubEnv('OPENAI_API_KEY', 'sk-test-key');
+    stubAzureChat();
     createMock.mockRejectedValue(new Error('OpenAI is down'));
 
     await POST(
@@ -340,7 +347,7 @@ describe('POST /api/chat', () => {
   });
 
   it('handles a request without a messages array', async () => {
-    vi.stubEnv('OPENAI_API_KEY', 'sk-test-key');
+    stubAzureChat();
     createMock.mockResolvedValue({
       choices: [{ message: { content: 'Hi!' } }],
     });
@@ -355,7 +362,7 @@ describe('POST /api/chat', () => {
   });
 
   it('returns 400 for a malformed (non-JSON) request body', async () => {
-    vi.stubEnv('OPENAI_API_KEY', 'sk-test-key');
+    stubAzureChat();
 
     const response = await POST(
       new Request('http://localhost:3000/api/chat', {
@@ -376,7 +383,7 @@ describe('POST /api/chat input validation', () => {
   beforeEach(async () => {
     const { resetRateLimits } = await import('@/lib/rate-limit');
     resetRateLimits();
-    vi.stubEnv('OPENAI_API_KEY', 'sk-test-key');
+    stubAzureChat();
     createMock.mockResolvedValue({ choices: [{ message: { content: 'Hi' } }] });
   });
 
@@ -502,7 +509,7 @@ describe('POST /api/chat cost guards', () => {
   beforeEach(async () => {
     const { resetRateLimits } = await import('@/lib/rate-limit');
     resetRateLimits();
-    vi.stubEnv('OPENAI_API_KEY', 'sk-test');
+    stubAzureChat();
   });
 
   afterEach(() => {

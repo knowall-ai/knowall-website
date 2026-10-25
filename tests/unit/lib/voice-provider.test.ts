@@ -7,7 +7,7 @@ import { realtimeConnection, resolveVoiceProvider } from '@/lib/voice-provider';
  *
  * Requirements: sallie-chat
  * - Voice uses its own Azure OpenAI resource when configured
- * - The OpenAI key is the fallback, never mixed with the Azure endpoint
+ * - The OpenAI API is never used, even when OPENAI_API_KEY is set
  * - A non-Azure endpoint never receives the Azure key
  */
 
@@ -43,23 +43,24 @@ describe('resolveVoiceProvider', () => {
       AZURE_OPENAI_API_KEY: 'chat-key',
       OPENAI_API_KEY: 'sk-openai',
     });
-    expect(provider).toEqual({ name: 'openai', apiKey: 'sk-openai' });
+    expect(provider).toBeNull();
   });
 
-  it('falls back to OpenAI when the Azure endpoint is not an Azure host', () => {
+  it('turns voice off (no OpenAI fallback) when the endpoint is not an Azure host', () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
     const provider = resolveVoiceProvider({
       AZURE_OPENAI_VOICE_ENDPOINT: 'https://evil.example.com/',
       AZURE_OPENAI_VOICE_API_KEY: 'voice-key',
       OPENAI_API_KEY: 'sk-openai',
     });
-    expect(provider?.name).toBe('openai');
+    expect(provider).toBeNull();
     expect(warn).toHaveBeenCalledTimes(1);
     warn.mockRestore();
   });
 
   it('returns null when nothing is configured', () => {
     expect(resolveVoiceProvider({})).toBeNull();
+    expect(resolveVoiceProvider({ OPENAI_API_KEY: 'sk-openai' })).toBeNull();
   });
 });
 

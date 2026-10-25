@@ -1,5 +1,8 @@
 import { defineConfig, devices } from '@playwright/test';
 
+/** Opt in to real Azure OpenAI calls from e2e tests (off by default). */
+const useRealAzure = process.env.E2E_USE_REAL_AZURE === '1';
+
 // Tests run against port 3000 by default; set E2E_PORT to run the suite on a
 // different port (e.g. when a dev server for another checkout already owns
 // 3000 on a shared machine).
@@ -47,32 +50,24 @@ export default defineConfig({
       // production server on the configured port
       PORT,
       NODE_ENV: 'production',
-      // Tests must pass without real secrets. An invalid OpenAI key is always
-      // forced by default so the chat specs deterministically exercise the
-      // API's fallback response path and never make real OpenAI calls. Set
-      // E2E_USE_REAL_OPENAI_KEY=1 to explicitly opt in to passing the real
-      // key through. The admin key gates /api/logs.
-      OPENAI_API_KEY:
-        process.env.E2E_USE_REAL_OPENAI_KEY === '1' && process.env.OPENAI_API_KEY
-          ? process.env.OPENAI_API_KEY
-          : 'sk-test-invalid-key-for-e2e',
-      // Azure OpenAI is preferred over OpenAI when configured, so mask it too
-      // unless real calls were explicitly opted in to.
-      AZURE_OPENAI_ENDPOINT:
-        process.env.E2E_USE_REAL_OPENAI_KEY === '1'
-          ? (process.env.AZURE_OPENAI_ENDPOINT ?? '')
-          : '',
-      AZURE_OPENAI_API_KEY:
-        process.env.E2E_USE_REAL_OPENAI_KEY === '1' ? (process.env.AZURE_OPENAI_API_KEY ?? '') : '',
-      // Same for the voice resource behind /api/speak and /api/listen.
-      AZURE_OPENAI_VOICE_ENDPOINT:
-        process.env.E2E_USE_REAL_OPENAI_KEY === '1'
-          ? (process.env.AZURE_OPENAI_VOICE_ENDPOINT ?? '')
-          : '',
-      AZURE_OPENAI_VOICE_API_KEY:
-        process.env.E2E_USE_REAL_OPENAI_KEY === '1'
-          ? (process.env.AZURE_OPENAI_VOICE_API_KEY ?? '')
-          : '',
+      // Tests must pass without real secrets. Chat is Azure OpenAI only, so an
+      // invalid Azure endpoint and key are forced by default: the chat specs
+      // deterministically exercise the API's fallback response path and never
+      // reach a real model. Set E2E_USE_REAL_AZURE=1 to explicitly opt in to
+      // passing the real Azure settings through. Voice is off unless opted in.
+      // The admin key gates /api/logs.
+      AZURE_OPENAI_ENDPOINT: useRealAzure
+        ? (process.env.AZURE_OPENAI_ENDPOINT ?? '')
+        : 'https://e2e-invalid-knowall.openai.azure.com',
+      AZURE_OPENAI_API_KEY: useRealAzure
+        ? (process.env.AZURE_OPENAI_API_KEY ?? '')
+        : 'e2e-invalid-key',
+      AZURE_OPENAI_VOICE_ENDPOINT: useRealAzure
+        ? (process.env.AZURE_OPENAI_VOICE_ENDPOINT ?? '')
+        : '',
+      AZURE_OPENAI_VOICE_API_KEY: useRealAzure
+        ? (process.env.AZURE_OPENAI_VOICE_API_KEY ?? '')
+        : '',
       ADMIN_API_KEY: process.env.ADMIN_API_KEY || 'test-admin-key-for-e2e',
     },
   },

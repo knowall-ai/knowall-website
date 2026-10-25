@@ -3,7 +3,6 @@ import { describe, it, expect, vi, afterEach } from 'vitest';
 import { pcm16ToWav, synthesizeWithRealtime } from '@/app/api/speak/realtime';
 import { realtimeConnection } from '@/lib/voice-provider';
 
-const OPENAI = realtimeConnection({ name: 'openai', apiKey: 'sk-test' });
 const AZURE = realtimeConnection({
   name: 'azure',
   apiKey: 'azure-key',
@@ -15,7 +14,7 @@ const AZURE = realtimeConnection({
  *
  * Requirements: sallie-chat
  * - Streams PCM from the realtime model and returns a playable WAV
- * - Authenticates with a subprotocol on OpenAI and an api-key header on Azure
+ * - Authenticates to Azure with an api-key header (Azure only, never the OpenAI API)
  * - Fails cleanly on API errors so the route can fall back
  */
 
@@ -47,11 +46,10 @@ describe('synthesizeWithRealtime', () => {
 
   it('asks for marin, reads the script verbatim and returns a WAV of the streamed PCM', async () => {
     vi.stubGlobal('WebSocket', FakeSocket);
-    const promise = synthesizeWithRealtime('Hello there', OPENAI);
+    const promise = synthesizeWithRealtime('Hello there', AZURE);
     await new Promise((r) => setTimeout(r, 5));
     const ws = FakeSocket.last;
-    expect(ws.url).toBe('wss://api.openai.com/v1/realtime?model=gpt-realtime');
-    expect(ws.init).toContain('openai-insecure-api-key.sk-test');
+    expect(ws.url).not.toContain('api.openai.com');
     const session = JSON.parse(ws.sent[0]);
     expect(session.session.audio.output.voice).toBe('marin');
     const response = JSON.parse(ws.sent[1]);
@@ -82,7 +80,7 @@ describe('synthesizeWithRealtime', () => {
 
   it('rejects on an API error event', async () => {
     vi.stubGlobal('WebSocket', FakeSocket);
-    const promise = synthesizeWithRealtime('Hello', OPENAI);
+    const promise = synthesizeWithRealtime('Hello', AZURE);
     await new Promise((r) => setTimeout(r, 5));
     FakeSocket.last.emit({ type: 'error', error: { message: 'nope' } });
     await expect(promise).rejects.toThrow('nope');
@@ -90,7 +88,7 @@ describe('synthesizeWithRealtime', () => {
 
   it('rejects when no audio comes back', async () => {
     vi.stubGlobal('WebSocket', FakeSocket);
-    const promise = synthesizeWithRealtime('Hello', OPENAI);
+    const promise = synthesizeWithRealtime('Hello', AZURE);
     await new Promise((r) => setTimeout(r, 5));
     FakeSocket.last.emit({ type: 'response.done' });
     await expect(promise).rejects.toThrow('no audio');

@@ -43,20 +43,17 @@ endpoints and keys into the GitHub `Production - Azure` environment).
 
 === Chat
 
-`app/api/chat/provider.ts` resolves the backend in this order:
+`app/api/chat/provider.ts` uses **Azure OpenAI only**, when `AZURE_OPENAI_ENDPOINT` and `AZURE_OPENAI_API_KEY` are
+set. `AZURE_OPENAI_DEPLOYMENT` names the deployment (default `gpt-5.6-sol`). Without them the route returns HTTP 500
+and the UI shows the outage message. The direct OpenAI API is deliberately not supported (Ben, 2026-10-25): every
+KnowAll agent runs on Azure OpenAI, where capacity and spend are capped. `OPENAI_API_KEY` is ignored.
 
-. **Azure OpenAI** when `AZURE_OPENAI_ENDPOINT` and `AZURE_OPENAI_API_KEY` are set. `AZURE_OPENAI_DEPLOYMENT`
-  names the deployment (default `gpt-5.6-sol`).
-. **OpenAI** when only `OPENAI_API_KEY` is set (`OPENAI_MODEL` optional). Kept for local development and as a manual
-  fallback.
-. Neither → the route returns HTTP 500 and the UI shows the outage message.
-
-Both providers use the same `openai` client class; only `baseURL` and `model` differ.
+The `openai` client class is used with Azure's v1 base URL.
 
 === Voice
 
 `lib/voice-provider.ts` uses the voice resource when `AZURE_OPENAI_VOICE_ENDPOINT` and `AZURE_OPENAI_VOICE_API_KEY` are
-set, otherwise `OPENAI_API_KEY`. Neither → the routes return 503 and the site falls back to the browser's own speech.
+set; otherwise the routes return 503 and the site falls back to the browser's own speech (never the OpenAI API).
 It deliberately ignores the chat resource's settings. On Azure each call goes a slightly different way, all verified
 against the live resource:
 
@@ -151,8 +148,8 @@ AZURE_OPENAI_VOICE_ENDPOINT=https://knowall-website-voice.openai.azure.com/
 AZURE_OPENAI_VOICE_API_KEY=<az cognitiveservices account keys list -n knowall-website-voice -g KnowAllAIRG --query key1 -o tsv>
 ----
 
-Playwright always masks these (and `OPENAI_API_KEY`) so e2e tests exercise the fallback path; set
-`E2E_USE_REAL_OPENAI_KEY=1` to opt in to real calls.
+Playwright always replaces these with an invalid Azure endpoint (chat) or nothing (voice), so e2e tests exercise
+the fallback path; set `E2E_USE_REAL_AZURE=1` to opt in to real calls.
 
 == Rotating the key
 

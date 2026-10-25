@@ -44,7 +44,8 @@ describe('POST /api/speak', () => {
     vi.stubEnv('AZURE_OPENAI_VOICE_ENDPOINT', '');
     vi.stubEnv('AZURE_OPENAI_VOICE_API_KEY', '');
     speechCreate.mockResolvedValue({ arrayBuffer: async () => new Uint8Array([1, 2, 3]).buffer });
-    vi.stubEnv('OPENAI_API_KEY', 'sk-test');
+    vi.stubEnv('AZURE_OPENAI_VOICE_ENDPOINT', 'https://test-voice.openai.azure.com');
+    vi.stubEnv('AZURE_OPENAI_VOICE_API_KEY', 'azure-voice-key');
     // Deterministic engine for these tests; the realtime path is covered below.
     vi.stubEnv('SALLIE_VOICE_ENGINE', 'tts');
     const { clearVoiceCache } = await import('@/app/api/speak/route');
@@ -144,7 +145,8 @@ describe('POST /api/speak', () => {
   });
 
   it('returns 503 when no API key is configured', async () => {
-    vi.stubEnv('OPENAI_API_KEY', '');
+    vi.stubEnv('AZURE_OPENAI_VOICE_ENDPOINT', '');
+    vi.stubEnv('AZURE_OPENAI_VOICE_API_KEY', '');
     const res = await post({ text: 'Hello' });
     expect(res.status).toBe(503);
     expect(speechCreate).not.toHaveBeenCalled();
