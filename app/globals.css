@@ -54,14 +54,15 @@
   --color-gray-500: #6b7280;
   --color-gray-600: #4b5563;
   /*
-    The dark steps are the greys from sales.knowall.ai (line, surface,
-    surface-2, bg) rather than Tailwind's blue-leaning ones, so the two sites
-    share one background. Every bg-/border-gray-700..950 follows these.
+    The dark steps use the neutral greys from sales.knowall.ai (line, surface,
+    surface-2) rather than Tailwind's blue-leaning ones. gray-950 is one step
+    darker than sales' bg, so the header and page base sit clearly below the
+    gray-900 sections and cards. Every bg-/border-gray-700..950 follows these.
   */
   --color-gray-700: #2d313d;
   --color-gray-800: #1a1d26;
   --color-gray-900: #15171f;
-  --color-gray-950: #0f1117;
+  --color-gray-950: #08090c;
 
   --color-green-50: #f0fdf4;
   --color-green-100: #dcfce7;
@@ -265,9 +266,9 @@
 
 @layer base {
   :root {
-    /* sales.knowall.ai greys: bg #0f1117, surface #1a1d26, raised #252832,
-       line #2d313d, fg #f3f4f6, muted #9ca3af. */
-    --background: 225 21.1% 7.5%;
+    /* sales.knowall.ai greys (surface #1a1d26, raised #252832, line #2d313d,
+       fg #f3f4f6, muted #9ca3af) on the darker page base, gray-950 #08090c. */
+    --background: 225 20% 3.9%;
     --foreground: 220 14.3% 95.9%;
 
     --card: 225 18.8% 12.5%;
