@@ -360,6 +360,9 @@ export function useSpeechInput({ onInterim, onFinal, onSilent }: SpeechInputOpti
   // Set while the browser asks for mic permission, so a second start (a tap
   // and the hands-free loop together) can't open the mic twice.
   const startingRef = useRef(false);
+  // Bumped by stopListening, so a start still waiting on the mic prompt knows
+  // it was cancelled and releases the mic instead of recording.
+  const generationRef = useRef(0);
   const callbacks = useRef({ onInterim, onFinal, onSilent });
   useEffect(() => {
     callbacks.current = { onInterim, onFinal, onSilent };
@@ -410,8 +413,14 @@ export function useSpeechInput({ onInterim, onFinal, onSilent }: SpeechInputOpti
     }
     if (startingRef.current || recorderRef.current) return;
     startingRef.current = true;
+    const generation = generationRef.current;
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      if (generation !== generationRef.current) {
+        // Turned off while the browser was asking: don't start recording.
+        stream.getTracks().forEach((t) => t.stop());
+        return;
+      }
       streamRef.current = stream;
       const mime = ['audio/webm;codecs=opus', 'audio/webm', 'audio/mp4'].find((m) =>
         MediaRecorder.isTypeSupported(m)
@@ -517,6 +526,7 @@ export function useSpeechInput({ onInterim, onFinal, onSilent }: SpeechInputOpti
   }, [startRecognition, startRecorder]);
 
   const stopListening = useCallback(() => {
+    generationRef.current += 1;
     recognitionRef.current?.stop();
     if (recorderRef.current?.state === 'recording') recorderRef.current.stop();
   }, []);

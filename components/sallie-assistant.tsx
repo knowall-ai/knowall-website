@@ -596,6 +596,13 @@ export default function SallieAssistant({
   // The dock's "Talk to Sallie" button: one tap opens her chat and starts
   // listening inside the same gesture, so the browser's mic prompt appears
   // straight away. She stops talking so she can hear. Tap again to stop.
+  const micLabel = listening
+    ? 'Listening…'
+    : transcribing
+      ? 'One moment…'
+      : micOn
+        ? 'Mic on'
+        : 'Talk to Sallie';
   const talk = () => {
     if (micOn) {
       setMicOn(false);
@@ -694,7 +701,6 @@ export default function SallieAssistant({
                 <button
                   type="button"
                   onClick={talk}
-                  aria-label="Talk to Sallie"
                   aria-pressed={micOn}
                   title={micOn ? 'Mic on: tap to turn it off' : 'Tap and just talk to Sallie'}
                   disabled={transcribing}
@@ -712,15 +718,9 @@ export default function SallieAssistant({
                     />
                   )}
                   <Mic className="h-5 w-5" />
-                  <span className="hidden sm:inline">
-                    {listening
-                      ? 'Listening…'
-                      : transcribing
-                        ? 'One moment…'
-                        : micOn
-                          ? 'Mic on'
-                          : 'Talk to Sallie'}
-                  </span>
+                  {/* Her name for the button is its visible label (label in name);
+                      on phones the label is for screen readers only. */}
+                  <span className="sr-only sm:not-sr-only">{micLabel}</span>
                 </button>
               )}
               {!dockOpen && (
