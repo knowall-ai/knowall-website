@@ -30,7 +30,7 @@ vi.mock('@/app/api/chat/logger', () => ({
   logChat: logChatMock,
 }));
 
-import { GET, POST } from '@/app/api/chat/route';
+import { FALLBACK_REPLY, GET, POST } from '@/app/api/chat/route';
 
 function postRequest(body: unknown): Request {
   return new Request('http://localhost:3000/api/chat', {
@@ -65,6 +65,8 @@ describe('GET /api/chat', () => {
 
     expect(response.status).toBe(200);
     expect(response.headers.get('Content-Type')).toBe('application/json');
+    // Same-origin only: no wildcard CORS.
+    expect(response.headers.get('Access-Control-Allow-Origin')).toBeNull();
     const body = await response.json();
     expect(body.status).toBe('ok');
     expect(body.time).toBeTruthy();
@@ -293,8 +295,10 @@ describe('POST /api/chat', () => {
     expect(response.status).toBe(200);
     const body = await response.json();
     expect(body.role).toBe('assistant');
-    expect(body.content).toContain('I received your message: "Are you there?"');
-    expect(body.content).toContain('technical difficulties');
+    expect(body.content).toBe(FALLBACK_REPLY);
+    // Neither the visitor's text nor the system prompt leaks into the fallback.
+    expect(body.content).not.toContain('Are you there?');
+    expect(body.content).not.toContain('You are Sallie');
     expect(body.conversationId).toBe('conv-fallback');
   });
 
@@ -315,7 +319,7 @@ describe('POST /api/chat', () => {
     const body = await response.json();
     expect(body.role).toBe('assistant');
     expect(body.content).toContain('capacity for the minute');
-    expect(body.content).not.toContain('technical difficulties');
+    expect(body.content).not.toBe(FALLBACK_REPLY);
     expect(logChatMock).toHaveBeenCalledTimes(1);
   });
 
@@ -332,7 +336,7 @@ describe('POST /api/chat', () => {
 
     expect(logChatMock).toHaveBeenCalledTimes(1);
     expect(logChatMock.mock.calls[0][0]).toBe('Hello?');
-    expect(logChatMock.mock.calls[0][1]).toContain('technical difficulties');
+    expect(logChatMock.mock.calls[0][1]).toBe(FALLBACK_REPLY);
   });
 
   it('handles a request without a messages array', async () => {

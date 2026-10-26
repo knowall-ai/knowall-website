@@ -94,11 +94,10 @@ test.describe('Sallie Chat', () => {
     await expect(dock.getByText('Hello Sallie', { exact: true })).toBeVisible();
 
     // Sallie replies. Without a valid OPENAI_API_KEY the server responds with
-    // its fallback message acknowledging the user's input.
-    await expect(dock.getByText(/I received your message: "Hello Sallie"/)).toBeVisible({
+    // its fixed fallback, which never echoes the visitor's text.
+    await expect(dock.getByText(/having trouble thinking right now/)).toBeVisible({
       timeout: 25000,
     });
-    await expect(dock.getByText(/technical difficulties/)).toBeVisible();
   });
 
   test('Chat API returns a well-formed fallback response', async ({ request }) => {
