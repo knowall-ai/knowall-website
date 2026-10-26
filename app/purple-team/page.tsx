@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/accordion';
 import SallieAssistant from '@/components/sallie-assistant';
 import CveTrendChart from '@/components/purple-team/cve-trend-chart';
-import ExampleDashboard from '@/components/purple-team/example-dashboard';
+import PortalScreens from '@/components/purple-team/portal-screens';
 import EnquiryForm from '@/components/purple-team/enquiry-form';
 import {
   CVES_PER_YEAR,
@@ -419,25 +419,30 @@ export default function PurpleTeamPage() {
           <h2 className="mb-12 max-w-3xl text-4xl font-bold md:text-5xl">
             A flood of advisories. A handful that matter.
           </h2>
-          <div className="grid gap-10 lg:grid-cols-2">
-            <div className="flex flex-col rounded-2xl border border-gray-800 bg-gray-950 p-6">
-              <h3 className="text-xl font-semibold">New CVEs published per year</h3>
-              <p className="mb-6 text-sm text-gray-400">
-                Source: <SourceLink source={SOURCES.nvd} />, counted by publish date via the{' '}
-                <SourceLink source={SOURCES.nvdApi} />. *1 January to {asOfLabel}.
-              </p>
-              <CveTrendChart data={CVES_PER_YEAR} asOf={CVES_AS_OF} />
-              <KevCallout />
-            </div>
-            <div>
-              <h3 className="mb-2 text-xl font-semibold">What you see each month</h3>
-              <p className="mb-6 text-sm text-gray-400">
-                Your own Purple Team Portal tracks every advisory that touches your code, what we
-                did about it, and your score over time.
-              </p>
-              <ExampleDashboard />
-            </div>
+          <div className="mx-auto flex max-w-3xl flex-col rounded-2xl border border-gray-800 bg-gray-950 p-6">
+            <h3 className="text-xl font-semibold">New CVEs published per year</h3>
+            <p className="mb-6 text-sm text-gray-400">
+              Source: <SourceLink source={SOURCES.nvd} />, counted by publish date via the{' '}
+              <SourceLink source={SOURCES.nvdApi} />. *1 January to {asOfLabel}.
+            </p>
+            <CveTrendChart data={CVES_PER_YEAR} asOf={CVES_AS_OF} />
+            <KevCallout />
           </div>
+        </div>
+      </section>
+
+      {/* The portal, screen by screen: the same screens as the presentation */}
+      <section id="portal" className="px-4 py-24">
+        <div className="container mx-auto max-w-6xl">
+          <Eyebrow>Your Purple Team Portal</Eyebrow>
+          <h2 className="mb-4 max-w-3xl text-4xl font-bold md:text-5xl">
+            What you see, every month.
+          </h2>
+          <p className="mb-10 max-w-2xl text-lg text-gray-300">
+            Your own portal tracks every advisory that touches your code, what the team did about
+            it, and your score over time. These are its real screens, shown with example data.
+          </p>
+          <PortalScreens />
         </div>
       </section>
 
