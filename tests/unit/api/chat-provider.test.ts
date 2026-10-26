@@ -13,7 +13,7 @@ import {
  *
  * Requirements: sallie-chat
  * - Azure OpenAI is used when its endpoint and key are configured
- * - The direct OpenAI API is used only as a fallback
+ * - The direct OpenAI API is never used, even when OPENAI_API_KEY is set
  * - Nothing is configured → no provider, so the route degrades gracefully
  */
 
@@ -43,27 +43,17 @@ describe('resolveChatProvider', () => {
     expect(provider?.model).toBe(DEFAULT_CHAT_MODEL);
   });
 
-  it('falls back to OpenAI when Azure is not fully configured', () => {
+  it('never falls back to the OpenAI API when Azure is not fully configured', () => {
     const provider = resolveChatProvider({
       AZURE_OPENAI_ENDPOINT: 'https://knowall-website-ai.openai.azure.com',
       AZURE_OPENAI_API_KEY: '   ',
       OPENAI_API_KEY: 'sk-openai',
     });
 
-    expect(provider).toEqual({ name: 'openai', apiKey: 'sk-openai', model: DEFAULT_CHAT_MODEL });
-    expect(provider?.baseURL).toBeUndefined();
+    expect(provider).toBeNull();
   });
 
-  it('honours OPENAI_MODEL for the OpenAI provider', () => {
-    const provider = resolveChatProvider({
-      OPENAI_API_KEY: 'sk-openai',
-      OPENAI_MODEL: 'gpt-5.4-mini',
-    });
-
-    expect(provider?.model).toBe('gpt-5.4-mini');
-  });
-
-  it('ignores an endpoint that is not an HTTPS Azure host and falls back to OpenAI', () => {
+  it('ignores an endpoint that is not an HTTPS Azure host, with no OpenAI fallback', () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
     const provider = resolveChatProvider({
       AZURE_OPENAI_ENDPOINT: 'https://evil.example.com/',
@@ -71,14 +61,14 @@ describe('resolveChatProvider', () => {
       OPENAI_API_KEY: 'sk-openai',
     });
 
-    expect(provider?.name).toBe('openai');
+    expect(provider).toBeNull();
     expect(warn).toHaveBeenCalledTimes(1);
     warn.mockRestore();
   });
 
   it('returns null when nothing is configured', () => {
     expect(resolveChatProvider({})).toBeNull();
-    expect(resolveChatProvider({ OPENAI_API_KEY: '' })).toBeNull();
+    expect(resolveChatProvider({ OPENAI_API_KEY: 'sk-openai' })).toBeNull();
   });
 });
 

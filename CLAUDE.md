@@ -54,7 +54,6 @@ Required for development (`.env.local`):
 
 - `AZURE_OPENAI_ENDPOINT` + `AZURE_OPENAI_API_KEY` - For chat (preferred); `AZURE_OPENAI_DEPLOYMENT` optional
 - `AZURE_OPENAI_VOICE_ENDPOINT` + `AZURE_OPENAI_VOICE_API_KEY` - For voice (`/api/speak`, `/api/listen`), a separate resource
-- `OPENAI_API_KEY` - Fallback for chat and voice when the Azure settings are absent
 - `ADMIN_API_KEY` - For `/admin/logs` access
 - `APPLICATIONINSIGHTS_CONNECTION_STRING` - Optional locally (set on App Service). Cookieless page views (`/api/collect`, from `components/page-view-beacon.tsx`) and one `SallieChatTurn` event per chat turn go to the `knowall-website` App Insights resource via `lib/analytics/` (no SDK, no IPs: only a truncated network for geolocation). Read by the sales portal's Website page (knowall-ai/sallie `web/`)
 - `ANALYTICS_SALT` - Secret the day's visitor-hash salt is derived from (HMAC of it and the UTC date; only today's salt is held, in memory); without it each process uses a random one
@@ -70,7 +69,7 @@ Required for development (`.env.local`):
 - Prettier format check
 - TypeScript check (`npm run typecheck`)
 - Unit tests (`npm run test:unit`, Vitest)
-- Playwright e2e tests (Chromium; no secrets needed — chat API falls back without `OPENAI_API_KEY`)
+- Playwright e2e tests (Chromium; no secrets needed — Playwright forces an invalid Azure endpoint so the chat API falls back)
 - Production build (`npm run build`)
 
 **PR lint** (`.github/workflows/pr-lint.yml`) enforces conventional-commit PR titles, a meaningful body, `Fixes #nnn` for feat/fix/perf/refactor, and a `## Test plan` section.
@@ -89,7 +88,7 @@ See `docs/TROUBLESHOOTING.adoc` for Azure-specific issues.
 
 End-to-end (Playwright) tests are in `tests/` following the `[feature-name].spec.ts` convention. Unit tests (Vitest + React Testing Library) are in `tests/unit/` following the `[name].test.ts(x)` convention.
 
-Playwright starts a production server (`npm run build && npm run start` on port 3000, see `playwright.config.ts`) and always injects a placeholder (invalid) `OPENAI_API_KEY`, so the chat tests deterministically exercise the API's fallback response path and never call OpenAI — even when a real key is present in the environment. Set `E2E_USE_REAL_OPENAI_KEY=1` to explicitly opt in to passing the real key through. `ADMIN_API_KEY` falls back to a placeholder when unset.
+Playwright starts a production server (`npm run build && npm run start` on port 3000, see `playwright.config.ts`) and always injects an invalid Azure OpenAI endpoint and key, so the chat tests deterministically exercise the API's fallback response path and never reach a real model, even when real settings are present in the environment. Set `E2E_USE_REAL_AZURE=1` to explicitly opt in to passing the real Azure settings through. Chat and voice are Azure OpenAI only; the direct OpenAI API is not supported. `ADMIN_API_KEY` falls back to a placeholder when unset.
 
 <!-- BEGIN:nextjs-agent-rules -->
 

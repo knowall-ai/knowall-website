@@ -56,7 +56,8 @@ describe('POST /api/listen', () => {
     vi.stubEnv('AZURE_OPENAI_VOICE_ENDPOINT', '');
     vi.stubEnv('AZURE_OPENAI_VOICE_API_KEY', '');
     transcriptionsCreate.mockResolvedValue({ text: '  What does KnowAll do?  ' });
-    vi.stubEnv('OPENAI_API_KEY', 'sk-test');
+    vi.stubEnv('AZURE_OPENAI_VOICE_ENDPOINT', 'https://test-voice.openai.azure.com');
+    vi.stubEnv('AZURE_OPENAI_VOICE_API_KEY', 'azure-voice-key');
     const { resetRateLimits } = await import('@/lib/rate-limit');
     resetRateLimits();
   });
@@ -80,7 +81,8 @@ describe('POST /api/listen', () => {
   });
 
   it('returns 503 when no API key is configured', async () => {
-    vi.stubEnv('OPENAI_API_KEY', '');
+    vi.stubEnv('AZURE_OPENAI_VOICE_ENDPOINT', '');
+    vi.stubEnv('AZURE_OPENAI_VOICE_API_KEY', '');
     const res = await post(clip(100));
     expect(res.status).toBe(503);
     expect(transcriptionsCreate).not.toHaveBeenCalled();

@@ -41,7 +41,7 @@ Please do not run automated scanners or load tests against
 In scope: this repository and its deployment at
 [www.knowall.ai](https://www.knowall.ai). Of particular interest:
 
-- Exposure of server-side secrets (`OPENAI_API_KEY`, `ADMIN_API_KEY`, Azure
+- Exposure of server-side secrets (`ADMIN_API_KEY`, Azure
   deployment credentials) through the client bundle, responses, or logs
 - Authentication or authorisation bypass on the admin chat-log endpoint
   (`/api/logs`) or the shop's owner-only listing controls

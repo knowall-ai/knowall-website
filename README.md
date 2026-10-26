@@ -19,7 +19,7 @@ This repository contains the code for the KnowAll.ai website, an AI consultancy 
 - **TypeScript**: For type-safe code
 - **Tailwind CSS**: For styling
 - **shadcn/ui**: Component library
-- **OpenAI API**: For the chat assistant
+- **Azure OpenAI**: For the chat assistant and Sallie's voice (Azure only; the direct OpenAI API is not used)
 - **Azure App Service**: For deployment
 
 ## Getting Started
@@ -70,17 +70,16 @@ AZURE_OPENAI_API_KEY=your_azure_openai_key_here
 AZURE_OPENAI_DEPLOYMENT=gpt-5.6-sol   # optional, this is the default
 AZURE_OPENAI_VOICE_ENDPOINT=https://knowall-website-voice.openai.azure.com/
 AZURE_OPENAI_VOICE_API_KEY=your_azure_openai_voice_key_here
-OPENAI_API_KEY=your_openai_api_key_here  # optional fallback when the Azure settings are absent
 ADMIN_API_KEY=your_admin_api_key_here
 ```
 
-Make sure to replace the placeholder values with your actual API keys. Chat and voice prefer Azure OpenAI when configured; see `docs/AZURE-OPENAI.adoc` for the resources, their capacity caps and budgets.
+Make sure to replace the placeholder values with your actual API keys. Chat and voice use Azure OpenAI only; see `docs/AZURE-OPENAI.adoc` for the resources, their capacity caps and budgets.
 
 ### Troubleshooting Chat Functionality
 
 If you're experiencing issues with the chat functionality not responding:
 
-1. Verify that your OpenAI API key is valid and has sufficient quota
+1. Verify that your Azure OpenAI endpoint and key are valid and the deployment has capacity
 2. Check the browser console for any API-related errors
 3. Ensure the API key is correctly set in your environment variables
 4. For local development, restart the development server after updating the `.env.local` file
@@ -149,7 +148,6 @@ The deployment uses the following environment variables that must be set in the 
 - `AZURE_RESOURCE_GROUP`: The name of the Azure resource group
 - `AZURE_OPENAI_ENDPOINT` / `AZURE_OPENAI_API_KEY`: The Azure OpenAI resource Sallie's chat uses (see `docs/AZURE-OPENAI.adoc`)
 - `AZURE_OPENAI_VOICE_ENDPOINT` / `AZURE_OPENAI_VOICE_API_KEY`: The Azure OpenAI resource Sallie's voice uses
-- `OPENAI_API_KEY`: OpenAI API key, the fallback for chat and voice when the Azure settings are absent
 - `ADMIN_API_KEY`: Your admin API key for accessing the chat logs in production
 
 The optional `AZURE_OPENAI_DEPLOYMENT` environment _variable_ overrides the deployment name (default `gpt-5.6-sol`).
@@ -166,7 +164,6 @@ The following environment variables need to be set in the "Production - Azure" G
 - `AZURE_RESOURCE_GROUP`: The name of the Azure resource group
 - `AZURE_OPENAI_ENDPOINT` / `AZURE_OPENAI_API_KEY`: The Azure OpenAI resource Sallie's chat uses
 - `AZURE_OPENAI_VOICE_ENDPOINT` / `AZURE_OPENAI_VOICE_API_KEY`: The Azure OpenAI resource Sallie's voice uses
-- `OPENAI_API_KEY`: OpenAI API key, the fallback for chat and voice when the Azure settings are absent
 - `ADMIN_API_KEY`: Your admin API key for accessing the chat logs in production
 
 ### Deployment Process
@@ -232,7 +229,7 @@ The KnowAll.ai website follows security best practices for handling API keys:
    - Development: `.env.local` file (not committed to the repository)
    - Production: GitHub Secrets and Azure Static Web Apps configuration
 
-3. **Authentication for Admin Features**: The admin interface (chat logs) is protected with a separate `ADMIN_API_KEY` that is different from the OpenAI API key.
+3. **Authentication for Admin Features**: The admin interface (chat logs) is protected with a separate `ADMIN_API_KEY` that is different from the Azure OpenAI keys.
 
 4. **No Client-Side Exposure**: The architecture ensures that sensitive keys are never:
    - Included in client-side JavaScript bundles

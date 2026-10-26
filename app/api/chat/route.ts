@@ -110,16 +110,16 @@ export async function POST(req: Request) {
       );
     }
 
-    // Resolve the chat backend: Azure OpenAI when configured, otherwise OpenAI
+    // Azure OpenAI only (never the OpenAI API directly)
     const provider = resolveChatProvider();
     if (!provider) {
       throw new Error(
-        'No chat provider configured: set AZURE_OPENAI_ENDPOINT and AZURE_OPENAI_API_KEY, or OPENAI_API_KEY'
+        'No chat provider configured: set AZURE_OPENAI_ENDPOINT and AZURE_OPENAI_API_KEY'
       );
     }
     console.log('Chat provider:', provider.name, 'model:', provider.model);
 
-    // The OpenAI SDK talks to Azure via its v1 base URL, so one client serves both
+    // The OpenAI SDK talks to Azure via its v1 base URL
     const openai = new OpenAI({
       apiKey: provider.apiKey,
       baseURL: provider.baseURL,

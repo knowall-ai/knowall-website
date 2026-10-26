@@ -62,11 +62,9 @@ export function synthesizeWithRealtime(
     }
     // Node's WebSocket accepts an init object with handshake headers in place of
     // the protocols list; the DOM typings don't know that, hence the cast.
-    const ws = connection.headers
-      ? new WebSocket(connection.url, {
-          headers: connection.headers,
-        } as unknown as string[])
-      : new WebSocket(connection.url, connection.protocols);
+    const ws = new WebSocket(connection.url, {
+      headers: connection.headers,
+    } as unknown as string[]);
     const chunks: Uint8Array[] = [];
     let settled = false;
     const finish = (err: Error | null, data?: Uint8Array) => {

@@ -41,7 +41,6 @@ jobs:
           npm install
           npm run build --if-present
         env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           ADMIN_API_KEY: ${{ secrets.ADMIN_API_KEY || 'default-admin-key' }}
 
       - name: Zip artifact for deployment
@@ -85,7 +84,6 @@ jobs:
           AZURE_OPENAI_DEPLOYMENT: ${{ vars.AZURE_OPENAI_DEPLOYMENT || 'gpt-5.6-sol' }}
           AZURE_OPENAI_VOICE_ENDPOINT: ${{ secrets.AZURE_OPENAI_VOICE_ENDPOINT }}
           AZURE_OPENAI_VOICE_API_KEY: ${{ secrets.AZURE_OPENAI_VOICE_API_KEY }}
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           ADMIN_API_KEY: ${{ secrets.ADMIN_API_KEY }}
         run: |
           echo "Setting up environment variables for Azure App Service"
@@ -95,9 +93,11 @@ jobs:
             "AZURE_OPENAI_DEPLOYMENT=$AZURE_OPENAI_DEPLOYMENT" \
             "AZURE_OPENAI_VOICE_ENDPOINT=$AZURE_OPENAI_VOICE_ENDPOINT" \
             "AZURE_OPENAI_VOICE_API_KEY=$AZURE_OPENAI_VOICE_API_KEY" \
-            "OPENAI_API_KEY=$OPENAI_API_KEY" \
             "ADMIN_API_KEY=$ADMIN_API_KEY" \
             NODE_ENV=production
+          # Azure OpenAI only: remove the retired direct-OpenAI key if it is still set.
+          az webapp config appsettings delete --name knowall-website --resource-group "$AZURE_RESOURCE_GROUP" \
+            --setting-names OPENAI_API_KEY OPENAI_MODEL --output none
 
       - name: Configure Node.js version
         uses: azure/CLI@v3

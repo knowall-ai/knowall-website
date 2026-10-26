@@ -7,10 +7,10 @@ import { test, expect } from '@playwright/test';
  * - On the homepage Sallie is docked bottom right from load (the hero belongs
  *   to the processing-power scene), with her animated avatar and greeting
  * - Opening the dock shows the chat; sending a message displays a response
- * - When the OpenAI API is unavailable (e.g. no valid API key), Sallie replies
+ * - When Azure OpenAI is unavailable (e.g. an invalid endpoint), Sallie replies
  *   with a fallback response instead of an error
  *
- * The Playwright web server is started with an invalid OPENAI_API_KEY
+ * The Playwright web server is started with an invalid Azure OpenAI endpoint
  * (see playwright.config.ts) so these tests exercise the fallback path and
  * never require real secrets.
  */
@@ -93,7 +93,7 @@ test.describe('Sallie Chat', () => {
     // The user's message appears in the conversation
     await expect(dock.getByText('Hello Sallie', { exact: true })).toBeVisible();
 
-    // Sallie replies. Without a valid OPENAI_API_KEY the server responds with
+    // Sallie replies. Without a reachable Azure OpenAI deployment the server responds with
     // its fixed fallback, which never echoes the visitor's text.
     await expect(dock.getByText(/having trouble thinking right now/)).toBeVisible({
       timeout: 25000,

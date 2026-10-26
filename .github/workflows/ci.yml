@@ -129,8 +129,8 @@ jobs:
         run: npx playwright install --with-deps chromium
 
       - name: Run Playwright tests
-        # No secrets needed: the chat API serves fallback responses when
-        # OPENAI_API_KEY is not configured.
+        # No secrets needed: playwright.config.ts forces an invalid Azure
+        # endpoint, so the chat API serves its fallback response.
         run: npm run test
 
       - name: Upload Playwright report
