@@ -5,7 +5,7 @@ import { test, expect } from '@playwright/test';
  *
  * Based on requirements (purple-team-page):
  * - The homepage has a Purple Team section that links to /purple-team
- * - /purple-team explains the offering with the agents, charts and an FAQ
+ * - /purple-team explains the offering with the agents, charts, the real portal screens and an FAQ
  * - An enquiry form validates before sending
  * - Sallie is docked bottom right, with her voice option visible
  */
@@ -27,7 +27,16 @@ test.describe('Purple Team Page', () => {
     await expect(
       page.getByRole('group', { name: 'Bar chart of new CVEs published per year' })
     ).toBeVisible();
-    await expect(page.getByRole('img', { name: /Security score \d+ out of 100/ })).toBeVisible();
+
+    // The real portal, screen by screen: eight tabs, the first selected, and a click switches.
+    const portal = page.locator('#portal');
+    const tabs = portal.getByRole('tab');
+    await expect(tabs).toHaveCount(8);
+    await expect(tabs.first()).toHaveAttribute('aria-selected', 'true');
+    await expect(portal.getByRole('img', { name: /Purple Team Portal, Overview/ })).toBeVisible();
+    await portal.getByRole('tab', { name: 'Web app' }).click();
+    await expect(portal.getByRole('tabpanel')).toContainText('Front Door and WAF');
+    await expect(portal.getByRole('img', { name: /Purple Team Portal, Web app,/ })).toBeVisible();
 
     // Every real figure links to its public source.
     const numbers = page.locator('#numbers');
