@@ -4,45 +4,64 @@ import { useState } from 'react';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
 
-/** The portal's real screens (DEMO_MODE, the fictional Contoso), the same set as the deck's. */
+/**
+ * The portal's real screens (DEMO_MODE, the fictional Contoso), the same set as the deck's.
+ * `description` is the image's text equivalent: what the screen shows, not its caption.
+ */
 export const PORTAL_SCREENS = [
   {
     file: 'portal-overview',
+    description:
+      "Three desk cards show what Pennie, Ollie and Poppie are each working on and their hours this month; below, a Waiting on you strip of approvals with Approve and Comment buttons, then Poppie's briefing and a security score gauge.",
     name: 'Overview',
     caption: "The team right now, what's waiting on you, Poppie's briefing and your security score",
   },
   {
     file: 'portal-cases',
+    description:
+      'Filters by status, priority and source above an Open the longest bar chart of how long each case has been open, then a list of cases, each with a priority score out of 100, severity, exploit and EPSS tags, and the repositories it affects.',
     name: 'Cases',
     caption: "Every vulnerability that affects you, scored, with Poppie's recommendation",
   },
   {
     file: 'portal-case',
+    description:
+      "A Next.js middleware flaw scored 95 out of 100, its progress from Found to Done, a Review the fix PR button, Pennie's write-up with her Affected verdict and evidence, and the reasons behind the score.",
     name: 'Case detail',
     caption: "Pennie's verdict and evidence, Ollie's fix, and where it stands",
   },
   {
     file: 'portal-repos',
+    description:
+      'Repository cards grouped by organisation and project, each with its open findings by severity and which scanning features are on, with filters by source, organisation, project and name.',
     name: 'Repositories',
     caption: 'Each repository by organisation and project, its open findings and its scanning',
   },
   {
     file: 'portal-repo',
+    description:
+      "One repository's open findings by severity, the team's recommendations (upgrades that clear findings, each with a button to ask the team), and approvals waiting on you.",
     name: 'Repository',
     caption: "The team's recommendations for one repository, with a button to set them going",
   },
   {
     file: 'portal-app',
+    description:
+      'One Azure web app: the repository it deploys from, its hostnames, six checks with two failing (WAF in Detection mode, origin not locked to Front Door), its Front Door and WAF settings, and Defender for Cloud alerts and recommendations.',
     name: 'Web app',
     caption: 'Each Azure web app: its repository, Front Door and WAF, and Defender for Cloud',
   },
   {
     file: 'portal-owasp',
+    description:
+      'The OWASP Top 10 checklist for one application: each item marked Not assessed, Pass or Gap, with who checks it and a note of the evidence.',
     name: 'OWASP checklists',
     caption: "The OWASP Top 10 and LLM Top 10, item by item, with Pennie's results",
   },
   {
     file: 'portal-usage',
+    description:
+      "Approvals Poppie paused for budget, the hours left in the CISP block, burn rate and this month's hours, and a 30-day chart of the block running down.",
     name: 'Usage and hours',
     caption: 'Time spent per case, by agent and by job, against your plan',
   },
@@ -74,7 +93,7 @@ export default function PortalScreens() {
         <a href={src(screen.file)} target="_blank" rel="noopener noreferrer" className="block">
           <Image
             src={src(screen.file)}
-            alt={`Purple Team Portal, ${screen.name}, for the fictional company Contoso: ${screen.caption}`}
+            alt={`Purple Team Portal, ${screen.name} screen, example data: ${screen.description}`}
             width={1440}
             height={800}
             sizes="(min-width: 1152px) 1152px, 100vw"

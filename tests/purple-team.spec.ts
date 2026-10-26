@@ -33,10 +33,14 @@ test.describe('Purple Team Page', () => {
     const tabs = portal.getByRole('tab');
     await expect(tabs).toHaveCount(8);
     await expect(tabs.first()).toHaveAttribute('aria-selected', 'true');
-    await expect(portal.getByRole('img', { name: /Purple Team Portal, Overview/ })).toBeVisible();
+    await expect(
+      portal.getByRole('img', { name: /Purple Team Portal, Overview screen/ })
+    ).toBeVisible();
     await portal.getByRole('tab', { name: 'Web app' }).click();
     await expect(portal.getByRole('tabpanel')).toContainText('Front Door and WAF');
-    await expect(portal.getByRole('img', { name: /Purple Team Portal, Web app,/ })).toBeVisible();
+    await expect(
+      portal.getByRole('img', { name: /Purple Team Portal, Web app screen/ })
+    ).toBeVisible();
 
     // Every real figure links to its public source.
     const numbers = page.locator('#numbers');
