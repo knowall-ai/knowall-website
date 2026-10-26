@@ -97,6 +97,62 @@
         max-width: 1000px;
       }
 
+      /* --- The numbers: the copy beside the CVEs-per-year chart (partials/cve-chart.mjs) --- */
+      .dark-inner.numbers {
+        padding: 96px 96px calc(40px + var(--ctl-band));
+        display: grid;
+        grid-template-columns: 560px 1fr;
+        align-items: center;
+        gap: 64px;
+      }
+
+      .numbers-copy {
+        display: flex;
+        flex-direction: column;
+        gap: 34px;
+      }
+
+      .numbers h2 {
+        font-size: 84px;
+        line-height: 1.06;
+        color: #ffffff;
+      }
+
+      .numbers h2 em {
+        font-style: italic;
+        color: var(--lime);
+      }
+
+      /* Narrow column: each figure sits above its line instead of beside it */
+      .numbers .flood-stat {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+
+      .numbers .flood-stat .num {
+        min-width: 0;
+        font-size: 72px;
+      }
+
+      .numbers-chart {
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+
+      .numbers-chart figcaption {
+        font-size: 28px;
+        font-weight: 700;
+        color: #ffffff;
+      }
+
+      .numbers-chart .cve-chart {
+        width: 100%;
+        height: auto;
+      }
+
       /* --- Meet the team: three members beside the trio's hero portrait ----------- */
       .members {
         display: flex;
@@ -352,7 +408,7 @@
     <div class="reveal">
       <div class="slides">
         <!-- Slide 1: Title -->
-        <section role="region" aria-label="Slide 1 of 12: The Purple Team — break it before they do">
+        <section role="region" aria-label="Slide 1 of 13: The Purple Team — break it before they do">
           <div
             class="cover-hero"
             role="img"
@@ -375,7 +431,7 @@
           class="scene"
           style="--scene: url('images/divider-purple-team-flood.jpg')"
           role="region"
-          aria-label="Slide 2 of 12: A flood of advisories, a handful that matter"
+          aria-label="Slide 2 of 13: A flood of advisories, a handful that matter"
         >
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
           <div class="dark-inner flood">
@@ -412,8 +468,10 @@
           </div>
         </section>
 
+        <!-- @include cve-chart {"label": "Slide 3 of 13: The numbers, growing every year"} -->
+
         <!-- Slide 3: Attackers use AI, so do we -->
-        <section role="region" aria-label="Slide 3 of 12: Attackers use AI, so do we">
+        <section role="region" aria-label="Slide 4 of 13: Attackers use AI, so do we">
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
           <div
             class="dark-inner with-agent"
@@ -467,7 +525,7 @@
         </section>
 
         <!-- Slide 4: Meet the team -->
-        <section role="region" aria-label="Slide 4 of 12: Meet the team">
+        <section role="region" aria-label="Slide 5 of 13: Meet the team">
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
           <div
             class="dark-inner with-agent with-agent--wide"
@@ -522,7 +580,7 @@
         </section>
 
         <!-- Slide 5: How it works -->
-        <section class="scene" style="--scene: url('images/scene-datacenter.jpg')" role="region" aria-label="Slide 5 of 12: How it works">
+        <section class="scene" style="--scene: url('images/scene-datacenter.jpg')" role="region" aria-label="Slide 6 of 13: How it works">
           <div class="band">
             <div>
               <h2>How it works</h2>
@@ -585,7 +643,7 @@
         </section>
 
         <!-- Slide 6: Patch fast -->
-        <section role="region" aria-label="Slide 6 of 12: Patch fast">
+        <section role="region" aria-label="Slide 7 of 13: Patch fast">
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
           <div
             class="dark-inner with-agent with-agent--wide"
@@ -631,7 +689,7 @@
         </section>
 
         <!-- Slide 7: Safe by design -->
-        <section role="region" aria-label="Slide 7 of 12: Safe by design">
+        <section role="region" aria-label="Slide 8 of 13: Safe by design">
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
           <div
             class="dark-inner with-agent"
@@ -675,7 +733,7 @@
         </section>
 
         <!-- Slide 8: Works with what you already run -->
-        <section role="region" aria-label="Slide 8 of 12: Works with what you already run">
+        <section role="region" aria-label="Slide 9 of 13: Works with what you already run">
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
           <div
             class="dark-inner with-agent with-agent--wide"
@@ -762,7 +820,7 @@
         </section>
 
         <!-- Slide 9: Your Purple Team Portal -->
-        <section class="scene" style="--scene: url('images/scene-observatory.jpg')" role="region" aria-label="Slide 9 of 12: Your Purple Team Portal">
+        <section class="scene" style="--scene: url('images/scene-observatory.jpg')" role="region" aria-label="Slide 10 of 13: Your Purple Team Portal">
           <div class="band">
             <div>
               <h2>Your Purple Team Portal</h2>
@@ -839,7 +897,7 @@
         </section>
 
         <!-- Slide 10: Three ways to run it -->
-        <section role="region" aria-label="Slide 10 of 12: Three ways to run it">
+        <section role="region" aria-label="Slide 11 of 13: Three ways to run it">
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
           <div
             class="dark-inner with-agent with-agent--wide"
@@ -882,7 +940,7 @@
         </section>
 
         <!-- Slide 11: How you pay -->
-        <section role="region" aria-label="Slide 11 of 12: How you pay">
+        <section role="region" aria-label="Slide 12 of 13: How you pay">
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
           <div
             class="dark-inner with-agent with-agent--wide"
@@ -931,7 +989,7 @@
 
         <!-- Slide 12: CTA -->
         <!-- @include cta {
-          "label": "Slide 12 of 12: Book a Security Discovery",
+          "label": "Slide 13 of 13: Book a Security Discovery",
           "className": "cta--mid-subject",
           "heading": "Break it before<br /><span class=\"they\">they</span> do.",
           "pitch": "Start with a <strong>Security Discovery</strong> &mdash; we measure your estate, set your starting score and come back with a scoped plan: what Pennie would test, what Ollie would watch, and what your first month&rsquo;s report would show.",

@@ -121,6 +121,62 @@
         max-width: 1000px;
       }
 
+      /* --- The numbers: the copy beside the CVEs-per-year chart (partials/cve-chart.mjs) --- */
+      .dark-inner.numbers {
+        padding: 96px 96px calc(40px + var(--ctl-band));
+        display: grid;
+        grid-template-columns: 560px 1fr;
+        align-items: center;
+        gap: 64px;
+      }
+
+      .numbers-copy {
+        display: flex;
+        flex-direction: column;
+        gap: 34px;
+      }
+
+      .numbers h2 {
+        font-size: 84px;
+        line-height: 1.06;
+        color: #ffffff;
+      }
+
+      .numbers h2 em {
+        font-style: italic;
+        color: var(--lime);
+      }
+
+      /* Narrow column: each figure sits above its line instead of beside it */
+      .numbers .flood-stat {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+
+      .numbers .flood-stat .num {
+        min-width: 0;
+        font-size: 72px;
+      }
+
+      .numbers-chart {
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+
+      .numbers-chart figcaption {
+        font-size: 28px;
+        font-weight: 700;
+        color: #ffffff;
+      }
+
+      .numbers-chart .cve-chart {
+        width: 100%;
+        height: auto;
+      }
+
       /* --- Meet the team: three members beside the trio's hero portrait ----------- */
       .members {
         display: flex;
@@ -376,7 +432,7 @@
     <div class="reveal">
       <div class="slides">
         <!-- Slide 1: Title -->
-        <section role="region" aria-label="Slide 1 of 12: The Purple Team — break it before they do">
+        <section role="region" aria-label="Slide 1 of 13: The Purple Team — break it before they do">
           <div
             class="cover-hero"
             role="img"
@@ -399,7 +455,7 @@
           class="scene"
           style="--scene: url('images/divider-purple-team-flood.jpg')"
           role="region"
-          aria-label="Slide 2 of 12: A flood of advisories, a handful that matter"
+          aria-label="Slide 2 of 13: A flood of advisories, a handful that matter"
         >
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
           <div class="dark-inner flood">
@@ -436,8 +492,77 @@
           </div>
         </section>
 
+        <!-- Slide: the numbers, growth over time (figures from components/purple-team/data.ts) -->
+        <section
+          class="scene"
+          style="--scene: url('images/scene-towers.jpg')"
+          role="region"
+          aria-label="Slide 3 of 13: The numbers, growing every year"
+        >
+          <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
+          <div class="dark-inner numbers">
+            <div class="numbers-copy">
+              <p class="kicker">The numbers</p>
+              <h2>Growing <em>every</em> year.</h2>
+              <div class="flood-stat">
+                <div class="num">4.9&times;</div>
+                <p><strong>as many CVEs</strong> in 2026 so far as in all of 2017.</p>
+              </div>
+              <div class="flood-stat">
+                <div class="num">+77%</div>
+                <p><strong>on all of 2025</strong>, and 2026 isn&rsquo;t over.</p>
+              </div>
+            </div>
+            <figure class="numbers-chart">
+              <figcaption>New CVEs published per year</figcaption>
+            <svg class="cve-chart" viewBox="0 0 1000 560" role="img" aria-labelledby="cve-chart-title">
+              <title id="cve-chart-title">Bar chart of new CVEs published per year, 2017 to 2026: 2017 18,113, 2018 18,154, 2019 18,938, 2020 19,222, 2021 21,950, 2022 26,431, 2023 30,949, 2024 40,704, 2025 49,972, 2026 88,565 so far.</title>
+              <defs>
+                <pattern id="cve-partial" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+                  <rect width="9" height="9" fill="#9085e9" fill-opacity="0.35" />
+                  <line x1="0" y1="0" x2="0" y2="9" stroke="#9085e9" stroke-width="4.5" />
+                </pattern>
+              </defs>
+              <line x1="86" x2="992" y1="504" y2="504" stroke="#3a4250" stroke-width="1.5" />
+              <text x="72" y="512" text-anchor="end" font-size="22" fill="#9ca3af">0</text>
+              <line x1="86" x2="992" y1="392" y2="392" stroke="#3a4250" stroke-width="1.5" stroke-dasharray="3 6" />
+              <text x="72" y="400" text-anchor="end" font-size="22" fill="#9ca3af">25k</text>
+              <line x1="86" x2="992" y1="280" y2="280" stroke="#3a4250" stroke-width="1.5" stroke-dasharray="3 6" />
+              <text x="72" y="288" text-anchor="end" font-size="22" fill="#9ca3af">50k</text>
+              <line x1="86" x2="992" y1="168" y2="168" stroke="#3a4250" stroke-width="1.5" stroke-dasharray="3 6" />
+              <text x="72" y="176" text-anchor="end" font-size="22" fill="#9ca3af">75k</text>
+              <line x1="86" x2="992" y1="56" y2="56" stroke="#3a4250" stroke-width="1.5" stroke-dasharray="3 6" />
+              <text x="72" y="64" text-anchor="end" font-size="22" fill="#9ca3af">100k</text>
+              <path d="M99.3,504 V428.85375999999997 q0,-6 6,-6 h52 q6,0 6,6 V504 Z" fill="#9085e9"><title>2017: 18,113 CVEs</title></path>
+              <text x="131.3" y="408.85375999999997" text-anchor="middle" font-size="24" font-weight="700" fill="#cfd6dd">18,113</text>
+              <text x="131.3" y="538" text-anchor="middle" font-size="22" fill="#9ca3af">2017</text>
+              <path d="M189.89999999999998,504 V428.67008 q0,-6 6,-6 h52 q6,0 6,6 V504 Z" fill="#9085e9"><title>2018: 18,154 CVEs</title></path>
+              <text x="221.89999999999998" y="538" text-anchor="middle" font-size="22" fill="#9ca3af">2018</text>
+              <path d="M280.5,504 V425.15776 q0,-6 6,-6 h52 q6,0 6,6 V504 Z" fill="#9085e9"><title>2019: 18,938 CVEs</title></path>
+              <text x="312.5" y="538" text-anchor="middle" font-size="22" fill="#9ca3af">2019</text>
+              <path d="M371.09999999999997,504 V423.88544 q0,-6 6,-6 h52 q6,0 6,6 V504 Z" fill="#9085e9"><title>2020: 19,222 CVEs</title></path>
+              <text x="403.09999999999997" y="538" text-anchor="middle" font-size="22" fill="#9ca3af">2020</text>
+              <path d="M461.7,504 V411.664 q0,-6 6,-6 h52 q6,0 6,6 V504 Z" fill="#9085e9"><title>2021: 21,950 CVEs</title></path>
+              <text x="493.7" y="538" text-anchor="middle" font-size="22" fill="#9ca3af">2021</text>
+              <path d="M552.3,504 V391.58912 q0,-6 6,-6 h52 q6,0 6,6 V504 Z" fill="#9085e9"><title>2022: 26,431 CVEs</title></path>
+              <text x="584.3" y="538" text-anchor="middle" font-size="22" fill="#9ca3af">2022</text>
+              <path d="M642.8999999999999,504 V371.34848 q0,-6 6,-6 h52 q6,0 6,6 V504 Z" fill="#9085e9"><title>2023: 30,949 CVEs</title></path>
+              <text x="674.8999999999999" y="538" text-anchor="middle" font-size="22" fill="#9ca3af">2023</text>
+              <path d="M733.4999999999999,504 V327.64608 q0,-6 6,-6 h52 q6,0 6,6 V504 Z" fill="#9085e9"><title>2024: 40,704 CVEs</title></path>
+              <text x="765.4999999999999" y="538" text-anchor="middle" font-size="22" fill="#9ca3af">2024</text>
+              <path d="M824.0999999999999,504 V286.12544 q0,-6 6,-6 h52 q6,0 6,6 V504 Z" fill="#9085e9"><title>2025: 49,972 CVEs</title></path>
+              <text x="856.0999999999999" y="538" text-anchor="middle" font-size="22" fill="#9ca3af">2025</text>
+              <path d="M914.6999999999999,504 V113.22879999999998 q0,-6 6,-6 h52 q6,0 6,6 V504 Z" fill="url(#cve-partial)"><title>2026: 88,565 CVEs to 23 Oct</title></path>
+              <text x="946.6999999999999" y="93.22879999999998" text-anchor="middle" font-size="30" font-weight="700" fill="#ffffff">88,565*</text>
+              <text x="946.6999999999999" y="538" text-anchor="middle" font-size="22" fill="#9ca3af">2026*</text>
+            </svg>
+              <p class="source">Source: NIST National Vulnerability Database, counted by publish date via the NVD CVE API 2.0. *1 January to 23 Oct 2026.</p>
+            </figure>
+          </div>
+        </section>
+
         <!-- Slide 3: Attackers use AI, so do we -->
-        <section role="region" aria-label="Slide 3 of 12: Attackers use AI, so do we">
+        <section role="region" aria-label="Slide 4 of 13: Attackers use AI, so do we">
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
           <div
             class="dark-inner with-agent"
@@ -491,7 +616,7 @@
         </section>
 
         <!-- Slide 4: Meet the team -->
-        <section role="region" aria-label="Slide 4 of 12: Meet the team">
+        <section role="region" aria-label="Slide 5 of 13: Meet the team">
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
           <div
             class="dark-inner with-agent with-agent--wide"
@@ -546,7 +671,7 @@
         </section>
 
         <!-- Slide 5: How it works -->
-        <section class="scene" style="--scene: url('images/scene-datacenter.jpg')" role="region" aria-label="Slide 5 of 12: How it works">
+        <section class="scene" style="--scene: url('images/scene-datacenter.jpg')" role="region" aria-label="Slide 6 of 13: How it works">
           <div class="band">
             <div>
               <h2>How it works</h2>
@@ -609,7 +734,7 @@
         </section>
 
         <!-- Slide 6: Patch fast -->
-        <section role="region" aria-label="Slide 6 of 12: Patch fast">
+        <section role="region" aria-label="Slide 7 of 13: Patch fast">
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
           <div
             class="dark-inner with-agent with-agent--wide"
@@ -655,7 +780,7 @@
         </section>
 
         <!-- Slide 7: Safe by design -->
-        <section role="region" aria-label="Slide 7 of 12: Safe by design">
+        <section role="region" aria-label="Slide 8 of 13: Safe by design">
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
           <div
             class="dark-inner with-agent"
@@ -699,7 +824,7 @@
         </section>
 
         <!-- Slide 8: Works with what you already run -->
-        <section role="region" aria-label="Slide 8 of 12: Works with what you already run">
+        <section role="region" aria-label="Slide 9 of 13: Works with what you already run">
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
           <div
             class="dark-inner with-agent with-agent--wide"
@@ -786,7 +911,7 @@
         </section>
 
         <!-- Slide 9: Your Purple Team Portal -->
-        <section class="scene" style="--scene: url('images/scene-observatory.jpg')" role="region" aria-label="Slide 9 of 12: Your Purple Team Portal">
+        <section class="scene" style="--scene: url('images/scene-observatory.jpg')" role="region" aria-label="Slide 10 of 13: Your Purple Team Portal">
           <div class="band">
             <div>
               <h2>Your Purple Team Portal</h2>
@@ -863,7 +988,7 @@
         </section>
 
         <!-- Slide 10: Three ways to run it -->
-        <section role="region" aria-label="Slide 10 of 12: Three ways to run it">
+        <section role="region" aria-label="Slide 11 of 13: Three ways to run it">
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
           <div
             class="dark-inner with-agent with-agent--wide"
@@ -906,7 +1031,7 @@
         </section>
 
         <!-- Slide 11: How you pay -->
-        <section role="region" aria-label="Slide 11 of 12: How you pay">
+        <section role="region" aria-label="Slide 12 of 13: How you pay">
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
           <div
             class="dark-inner with-agent with-agent--wide"
@@ -954,7 +1079,7 @@
         </section>
 
         <!-- Slide 12: CTA -->
-        <section class="cta--mid-subject" role="region" aria-label="Slide 12 of 12: Book a Security Discovery">
+        <section class="cta--mid-subject" role="region" aria-label="Slide 13 of 13: Book a Security Discovery">
           <div class="cta-top">
             <h2>Break it before<br /><span class="they">they</span> do.</h2>
             <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
