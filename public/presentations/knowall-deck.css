@@ -226,6 +226,10 @@ section > .logo-light,
   height: 26px;
   object-fit: contain;
 }
+/* A dark mark (the GitHub logo) on a dark pill: shown white */
+.pill-logo img.logo-on-dark {
+  filter: invert(1);
+}
 
 .partner-grid {
   /* one column per partner — five logos, five columns, no orphan row */
