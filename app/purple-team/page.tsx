@@ -602,7 +602,8 @@ function GrowthStats() {
   const first = CVES_PER_YEAR[0];
   const latest = CVES_PER_YEAR.at(-1);
   const previous = CVES_PER_YEAR.at(-2);
-  if (!first || !latest || !previous) return null;
+  // Nothing to compare against (too few years, or a zero count) shows no numbers rather than Infinity
+  if (!first || !latest || !previous || first.count <= 0 || previous.count <= 0) return null;
   const times = (latest.count / first.count).toFixed(1);
   const growth = Math.round((latest.count / previous.count - 1) * 100);
   const sofar = latest.partial ? ' so far' : '';

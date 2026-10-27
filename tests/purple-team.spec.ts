@@ -38,9 +38,28 @@ test.describe('Purple Team Page', () => {
     ).toBeVisible();
     await portal.getByRole('tab', { name: 'Web app' }).click();
     await expect(portal.getByRole('tabpanel')).toContainText('Front Door and WAF');
-    await expect(
-      portal.getByRole('img', { name: /Purple Team Portal, Web app screen/ })
-    ).toBeVisible();
+    const webApp = portal.getByRole('img', { name: /Purple Team Portal, Web app screen/ });
+    await expect(webApp).toBeVisible();
+    // Actually loaded, not just an <img> element on the page
+    await expect
+      .poll(() => webApp.evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0))
+      .toBe(true);
+
+    // Keyboard: arrows move between screens (wrapping), and Tab from the selected one reaches its image
+    await webApp.page().keyboard.press('ArrowRight');
+    await expect(portal.getByRole('tab', { name: 'OWASP checklists' })).toBeFocused();
+    await expect(portal.getByRole('tab', { name: 'OWASP checklists' })).toHaveAttribute(
+      'aria-selected',
+      'true'
+    );
+    await tabs.first().click(); // select the first screen, then Left wraps to the last
+    await page.keyboard.press('ArrowLeft');
+    await expect(tabs.last()).toHaveAttribute('aria-selected', 'true');
+    await page.keyboard.press('Tab');
+    await expect(portal.getByRole('tabpanel').getByRole('link')).toBeFocused();
+
+    // The growth numbers beside the chart, computed from the same data as the slide
+    await expect(page.locator('#numbers')).toContainText(/\d+\.\d×/);
 
     // Every real figure links to its public source.
     const numbers = page.locator('#numbers');

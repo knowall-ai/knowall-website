@@ -82,37 +82,14 @@ export default function PortalScreens() {
     document.getElementById(`portal-tab-${next}`)?.focus();
   };
 
+  // The tab list comes first in the DOM (so Tab from the selected screen reaches its image, as in
+  // the WAI tabs pattern) and is shown below the panel with CSS order
   return (
-    <div>
-      <figure
-        id="portal-panel"
-        role="tabpanel"
-        aria-labelledby={`portal-tab-${active}`}
-        className="overflow-hidden rounded-2xl border border-gray-800 bg-gray-950 shadow-2xl shadow-violet-950/40"
-      >
-        <a href={src(screen.file)} target="_blank" rel="noopener noreferrer" className="block">
-          <Image
-            src={src(screen.file)}
-            alt={`Purple Team Portal, ${screen.name} screen, example data: ${screen.description}`}
-            width={1440}
-            height={800}
-            sizes="(min-width: 1152px) 1152px, 100vw"
-            className="h-auto w-full"
-            priority={active === 0}
-          />
-        </a>
-        <figcaption className="border-t border-gray-800 px-5 py-4 text-gray-300">
-          <strong className="text-white">{screen.name}</strong> &middot; {screen.caption}
-          <span className="ml-2 rounded-full border border-violet-500/40 px-2 py-0.5 text-xs text-violet-300">
-            Example data
-          </span>
-        </figcaption>
-      </figure>
-
+    <div className="flex flex-col">
       <div
         role="tablist"
         aria-label="Portal screens"
-        className="mt-4 grid grid-cols-4 gap-3 md:grid-cols-8"
+        className="order-2 mt-4 grid grid-cols-4 gap-3 md:grid-cols-8"
         onKeyDown={(e) => {
           if (e.key === 'ArrowRight') move(active + 1);
           if (e.key === 'ArrowLeft') move(active - 1);
@@ -155,6 +132,29 @@ export default function PortalScreens() {
           </button>
         ))}
       </div>
+      <figure
+        id="portal-panel"
+        role="tabpanel"
+        aria-labelledby={`portal-tab-${active}`}
+        className="order-1 overflow-hidden rounded-2xl border border-gray-800 bg-gray-950 shadow-2xl shadow-violet-950/40"
+      >
+        <a href={src(screen.file)} target="_blank" rel="noopener noreferrer" className="block">
+          <Image
+            src={src(screen.file)}
+            alt={`Purple Team Portal, ${screen.name} screen, example data: ${screen.description}`}
+            width={1440}
+            height={800}
+            sizes="(min-width: 1152px) 1152px, 100vw"
+            className="h-auto w-full"
+          />
+        </a>
+        <figcaption className="border-t border-gray-800 px-5 py-4 text-gray-300">
+          <strong className="text-white">{screen.name}</strong> &middot; {screen.caption}
+          <span className="ml-2 rounded-full border border-violet-500/40 px-2 py-0.5 text-xs text-violet-300">
+            Example data
+          </span>
+        </figcaption>
+      </figure>
     </div>
   );
 }
