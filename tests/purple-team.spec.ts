@@ -5,7 +5,7 @@ import { test, expect } from '@playwright/test';
  *
  * Based on requirements (purple-team-page):
  * - The homepage has a Purple Team section that links to /purple-team
- * - /purple-team explains the offering with the agents, charts and an FAQ
+ * - /purple-team explains the offering with the agents, charts, the real portal screens and an FAQ
  * - An enquiry form validates before sending
  * - Sallie is docked bottom right, with her voice option visible
  */
@@ -27,7 +27,39 @@ test.describe('Purple Team Page', () => {
     await expect(
       page.getByRole('group', { name: 'Bar chart of new CVEs published per year' })
     ).toBeVisible();
-    await expect(page.getByRole('img', { name: /Security score \d+ out of 100/ })).toBeVisible();
+
+    // The real portal, screen by screen: eight tabs, the first selected, and a click switches.
+    const portal = page.locator('#portal');
+    const tabs = portal.getByRole('tab');
+    await expect(tabs).toHaveCount(8);
+    await expect(tabs.first()).toHaveAttribute('aria-selected', 'true');
+    await expect(
+      portal.getByRole('img', { name: /Purple Team Portal, Overview screen/ })
+    ).toBeVisible();
+    await portal.getByRole('tab', { name: 'Web app' }).click();
+    await expect(portal.getByRole('tabpanel')).toContainText('Front Door and WAF');
+    const webApp = portal.getByRole('img', { name: /Purple Team Portal, Web app screen/ });
+    await expect(webApp).toBeVisible();
+    // Actually loaded, not just an <img> element on the page
+    await expect
+      .poll(() => webApp.evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0))
+      .toBe(true);
+
+    // Keyboard: arrows move between screens (wrapping), and Tab from the selected one reaches its image
+    await webApp.page().keyboard.press('ArrowRight');
+    await expect(portal.getByRole('tab', { name: 'OWASP checklists' })).toBeFocused();
+    await expect(portal.getByRole('tab', { name: 'OWASP checklists' })).toHaveAttribute(
+      'aria-selected',
+      'true'
+    );
+    await tabs.first().click(); // select the first screen, then Left wraps to the last
+    await page.keyboard.press('ArrowLeft');
+    await expect(tabs.last()).toHaveAttribute('aria-selected', 'true');
+    await page.keyboard.press('Tab');
+    await expect(portal.getByRole('tabpanel').getByRole('link')).toBeFocused();
+
+    // The growth numbers beside the chart, computed from the same data as the slide
+    await expect(page.locator('#numbers')).toContainText(/\d+\.\d×/);
 
     // Every real figure links to its public source.
     const numbers = page.locator('#numbers');

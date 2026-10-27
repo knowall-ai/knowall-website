@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/accordion';
 import SallieAssistant from '@/components/sallie-assistant';
 import CveTrendChart from '@/components/purple-team/cve-trend-chart';
-import ExampleDashboard from '@/components/purple-team/example-dashboard';
+import PortalScreens from '@/components/purple-team/portal-screens';
 import EnquiryForm from '@/components/purple-team/enquiry-form';
 import {
   CVES_PER_YEAR,
@@ -419,7 +419,8 @@ export default function PurpleTeamPage() {
           <h2 className="mb-12 max-w-3xl text-4xl font-bold md:text-5xl">
             A flood of advisories. A handful that matter.
           </h2>
-          <div className="grid gap-10 lg:grid-cols-2">
+          <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] lg:items-stretch">
+            <GrowthStats />
             <div className="flex flex-col rounded-2xl border border-gray-800 bg-gray-950 p-6">
               <h3 className="text-xl font-semibold">New CVEs published per year</h3>
               <p className="mb-6 text-sm text-gray-400">
@@ -429,15 +430,22 @@ export default function PurpleTeamPage() {
               <CveTrendChart data={CVES_PER_YEAR} asOf={CVES_AS_OF} />
               <KevCallout />
             </div>
-            <div>
-              <h3 className="mb-2 text-xl font-semibold">What you see each month</h3>
-              <p className="mb-6 text-sm text-gray-400">
-                Your own Purple Team Portal tracks every advisory that touches your code, what we
-                did about it, and your score over time.
-              </p>
-              <ExampleDashboard />
-            </div>
           </div>
+        </div>
+      </section>
+
+      {/* The portal, screen by screen: the same screens as the presentation */}
+      <section id="portal" className="px-4 py-24">
+        <div className="container mx-auto max-w-6xl">
+          <Eyebrow>Your Purple Team Portal</Eyebrow>
+          <h2 className="mb-4 max-w-3xl text-4xl font-bold md:text-5xl">
+            What you see, every month.
+          </h2>
+          <p className="mb-10 max-w-2xl text-lg text-gray-300">
+            Your own portal tracks every advisory that touches your code, what the team did about
+            it, and your score over time. These are its real screens, shown with example data.
+          </p>
+          <PortalScreens />
         </div>
       </section>
 
@@ -586,6 +594,46 @@ export default function PurpleTeamPage() {
  * year) CISA added to its exploited list that year. Different cohorts, so no
  * percentage — just the two numbers side by side.
  */
+/**
+ * The growth in two numbers, as on the presentation's numbers slide: the latest year against the
+ * first, and against the year before it (never against itself once the latest year is complete).
+ */
+function GrowthStats() {
+  const first = CVES_PER_YEAR[0];
+  const latest = CVES_PER_YEAR.at(-1);
+  const previous = CVES_PER_YEAR.at(-2);
+  // Nothing to compare against (too few years, or a zero count) shows no numbers rather than Infinity
+  if (!first || !latest || !previous || first.count <= 0 || previous.count <= 0) return null;
+  const times = (latest.count / first.count).toFixed(1);
+  const growth = Math.round((latest.count / previous.count - 1) * 100);
+  const sofar = latest.partial ? ' so far' : '';
+  return (
+    <div className="flex flex-col justify-center gap-10">
+      <div className="border-l-2 border-violet-400 pl-6">
+        <p className="text-6xl font-bold text-violet-300">{times}×</p>
+        <p className="mt-2 text-lg text-gray-300">
+          as many CVEs in {latest.year}
+          {sofar} as in all of {first.year}.
+        </p>
+      </div>
+      <div className="border-l-2 border-violet-400 pl-6">
+        <p className="text-6xl font-bold text-violet-300">
+          {growth >= 0 ? '+' : ''}
+          {growth}%
+        </p>
+        <p className="mt-2 text-lg text-gray-300">
+          on all of {previous.year}
+          {latest.partial ? `, and ${latest.year} isn’t over.` : '.'}
+        </p>
+      </div>
+      <p className="text-gray-400">
+        Nobody can read them all. The team matches each one to your code, so you only hear about the
+        handful that touch you.
+      </p>
+    </div>
+  );
+}
+
 function KevCallout() {
   const last = CVES_PER_YEAR.filter((d) => !d.partial).at(-1);
   if (!last) return null;
