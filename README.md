@@ -168,14 +168,13 @@ The following environment variables need to be set in the "Production - Azure" G
 
 ### Deployment Process
 
-1. Make your changes locally
-2. Commit and push to the master branch:
+1. Merge your changes to `master` through a pull request
+2. Tag a release from `master` and push the tag (only admins and maintainers can create `v*` tags):
    ```bash
-   git add .
-   git commit -m "Your commit message"
-   git push origin master
+   git tag v1.2.3
+   git push origin v1.2.3
    ```
-3. GitHub Actions will automatically build and deploy the site to Azure
+3. GitHub Actions will build and deploy the site to Azure
 4. You can monitor the deployment in the Actions tab of your GitHub repository
 
 ## Project Structure
