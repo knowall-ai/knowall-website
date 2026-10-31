@@ -153,7 +153,7 @@ The optional `AZURE_OPENAI_DEPLOYMENT` environment _variable_ overrides the depl
 
 These secrets are configured in the GitHub repository under Settings > Environments > Production - Azure.
 
-The workflow signs in to Azure with GitHub's OIDC token, so no Azure password is stored. The same environment holds the sign-in as _variables_: `AZURE_CLIENT_ID`, `AZURE_TENANT_ID` and `AZURE_SUBSCRIPTION_ID`, for an app registration with a federated credential for `repo:knowall-ai/knowall-website:environment:Production - Azure` and *Website Contributor* on the web app only.
+The workflow signs in to Azure with GitHub's OIDC token, so no Azure password is stored. The same environment holds the sign-in as _variables_: `AZURE_CLIENT_ID`, `AZURE_TENANT_ID` and `AZURE_SUBSCRIPTION_ID`, for an app registration with a federated credential for `repo:knowall-ai/knowall-website:environment:Production - Azure` and _Website Contributor_ on the web app only.
 
 The GitHub Actions workflow (`.github/workflows/azure-app-service.yml`) configures these environment variables for the deployed application.
 
