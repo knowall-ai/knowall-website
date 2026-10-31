@@ -71,10 +71,14 @@ jobs:
       - name: Unzip artifact for deployment
         run: unzip release.zip
 
+      # OIDC: the app registration trusts this repo's "Production - Azure" environment and has
+      # Website Contributor on the site only, so no Azure secret is stored.
       - name: Login to Azure
         uses: azure/login@v3
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
 
       - name: Set environment variables
         env:
