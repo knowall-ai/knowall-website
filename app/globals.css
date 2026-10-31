@@ -53,10 +53,16 @@
   --color-gray-400: #9ca3af;
   --color-gray-500: #6b7280;
   --color-gray-600: #4b5563;
-  --color-gray-700: #374151;
-  --color-gray-800: #1f2937;
-  --color-gray-900: #111827;
-  --color-gray-950: #030712;
+  /*
+    The dark steps use the neutral greys from sales.knowall.ai (line, surface,
+    surface-2) rather than Tailwind's blue-leaning ones. gray-950 is one step
+    darker than sales' bg, so the header and page base sit clearly below the
+    gray-900 sections and cards. Every bg-/border-gray-700..950 follows these.
+  */
+  --color-gray-700: #2d313d;
+  --color-gray-800: #1a1d26;
+  --color-gray-900: #15171f;
+  --color-gray-950: #08090c;
 
   --color-green-50: #f0fdf4;
   --color-green-100: #dcfce7;
@@ -260,29 +266,31 @@
 
 @layer base {
   :root {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    /* sales.knowall.ai greys (surface #1a1d26, raised #252832, line #2d313d,
+       fg #f3f4f6, muted #9ca3af) on the darker page base, gray-950 #08090c. */
+    --background: 225 20% 3.9%;
+    --foreground: 220 14.3% 95.9%;
 
-    --card: 222.2 47.4% 11.2%;
-    --card-foreground: 210 40% 98%;
+    --card: 225 18.8% 12.5%;
+    --card-foreground: 220 14.3% 95.9%;
 
-    --popover: 222.2 47.4% 11.2%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 225 18.8% 12.5%;
+    --popover-foreground: 220 14.3% 95.9%;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 226.2 14.9% 17.1%;
+    --secondary-foreground: 220 14.3% 95.9%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 226.2 14.9% 17.1%;
+    --muted-foreground: 217.9 10.6% 64.9%;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 226.2 14.9% 17.1%;
+    --accent-foreground: 220 14.3% 95.9%;
 
     --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive-foreground: 220 14.3% 95.9%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
+    --border: 225 15.1% 20.8%;
+    --input: 225 15.1% 20.8%;
 
     --radius: 0.5rem;
   }
