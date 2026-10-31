@@ -138,13 +138,12 @@ To create a new test file:
 
 ## Deployment
 
-The website is deployed on Azure App Service. Any push to the master branch will trigger a new deployment via GitHub Actions.
+The website is deployed on Azure App Service. Pushing a `v*` tag (or running the workflow by hand) triggers a new deployment via GitHub Actions.
 
 ### Azure App Service Configuration
 
 The deployment uses the following environment variables that must be set in the GitHub repository secrets:
 
-- `AZURE_CREDENTIALS`: The Azure service principal credentials for deployment
 - `AZURE_RESOURCE_GROUP`: The name of the Azure resource group
 - `AZURE_OPENAI_ENDPOINT` / `AZURE_OPENAI_API_KEY`: The Azure OpenAI resource Sallie's chat uses (see `docs/AZURE-OPENAI.adoc`)
 - `AZURE_OPENAI_VOICE_ENDPOINT` / `AZURE_OPENAI_VOICE_API_KEY`: The Azure OpenAI resource Sallie's voice uses
@@ -154,13 +153,14 @@ The optional `AZURE_OPENAI_DEPLOYMENT` environment _variable_ overrides the depl
 
 These secrets are configured in the GitHub repository under Settings > Environments > Production - Azure.
 
+The workflow signs in to Azure with GitHub's OIDC token, so no Azure password is stored. The same environment holds the sign-in as _variables_: `AZURE_CLIENT_ID`, `AZURE_TENANT_ID` and `AZURE_SUBSCRIPTION_ID`, for an app registration with a federated credential for `repo:knowall-ai/knowall-website:environment:Production - Azure` and *Website Contributor* on the web app only.
+
 The GitHub Actions workflow (`.github/workflows/azure-app-service.yml`) configures these environment variables for the deployed application.
 
 ### Environment Variables
 
 The following environment variables need to be set in the "Production - Azure" GitHub environment:
 
-- `AZURE_CREDENTIALS`: The Azure service principal credentials for deployment
 - `AZURE_RESOURCE_GROUP`: The name of the Azure resource group
 - `AZURE_OPENAI_ENDPOINT` / `AZURE_OPENAI_API_KEY`: The Azure OpenAI resource Sallie's chat uses
 - `AZURE_OPENAI_VOICE_ENDPOINT` / `AZURE_OPENAI_VOICE_API_KEY`: The Azure OpenAI resource Sallie's voice uses
