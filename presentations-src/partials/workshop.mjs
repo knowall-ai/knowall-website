@@ -7,6 +7,8 @@
 //   alt          description of the art (the panel is role="img")
 //   focus        optional horizontal focus of the art in the panel (CSS %), default 50%
 //   kicker       e.g. "Methodology &middot; W-M1"
+//   phase        optional lifecycle stage shown as a green capitals prefix on the
+//                title, e.g. "Prep" renders "PREP: <title>"
 //   title        the workshop title (HTML)
 //   subtitle     optional line under the title (HTML)
 //   chapter      optional book chapter(s) the workshop is built on (HTML)
@@ -21,6 +23,7 @@ export default function workshop({
   alt,
   focus = '50%',
   kicker,
+  phase,
   title,
   subtitle,
   chapter,
@@ -37,7 +40,7 @@ export default function workshop({
           <div class="ws-copy">
             <div class="ws-head">
               <p class="kicker">${kicker}</p>
-              <h2>${title}</h2>${subtitle ? `\n              <p class="ws-sub">${subtitle}</p>` : ''}${
+              <h2>${phase ? `<span class="ws-phase">${phase}:</span> ` : ''}${title}</h2>${subtitle ? `\n              <p class="ws-sub">${subtitle}</p>` : ''}${
                 chapter
                   ? `\n              <p class="ws-chapter"><svg class="ic" aria-hidden="true"><use href="icons.svg#i-scroll-text" /></svg><span>From the book: ${chapter}</span></p>`
                   : ''
