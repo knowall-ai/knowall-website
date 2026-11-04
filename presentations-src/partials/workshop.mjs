@@ -2,8 +2,8 @@
 // One workshop per slide (T-Minus-15 workshops deck): the workshop's art in a
 // panel on the left, fading into the charcoal, and its details on the right.
 //
-//   label        the slide's aria-label, e.g. "Slide 3 of 14: The Avengers of Agile"
-//   image        art path, e.g. "images/tminus15-workshops/m1-avengers.jpg"
+//   label        the slide's aria-label, e.g. "Slide 4 of 16: W-M0, Assemble: The Avengers of Agile"
+//   image        art path, e.g. "images/tminus15-workshops/m0-assemble.jpg"
 //   alt          description of the art (the panel is role="img")
 //   focus        optional horizontal focus of the art in the panel (CSS %), default 50%
 //   kicker       e.g. "Methodology &middot; W-M1"

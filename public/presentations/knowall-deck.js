@@ -255,8 +255,14 @@ function fitSlide(slide) {
     }
   });
 }
-Reveal.on('ready', (event) => fitSlide(event.currentSlide));
+// In print/PDF mode (?print-pdf) every slide is laid out at once, so fit
+// them all once Reveal has built the print pages (and again after fonts load).
+const printing = () => typeof Reveal.isPrintingPDF === 'function' && Reveal.isPrintingPDF();
+const fitAll = () => Reveal.getSlides().forEach(fitSlide);
+Reveal.on('ready', (event) => (printing() ? fitAll() : fitSlide(event.currentSlide)));
+if (Reveal.isReady()) printing() ? fitAll() : fitSlide(Reveal.getCurrentSlide());
+Reveal.on('pdf-ready', fitAll);
 Reveal.on('slidechanged', (event) => fitSlide(event.currentSlide));
 if (document.fonts && document.fonts.ready) {
-  document.fonts.ready.then(() => fitSlide(Reveal.getCurrentSlide()));
+  document.fonts.ready.then(() => (printing() ? fitAll() : fitSlide(Reveal.getCurrentSlide())));
 }
