@@ -5,13 +5,16 @@
 // --- Per-slide call to action -------------------------------------------
 // Every content slide carries a floating call-to-action pill; the cover, the
 // slide after it and the closing CTA slide stay clean. A deck can change the
-// pill with attributes on <body>:
+// pill with attributes on <body>, or switch it off and leave the closing
+// slide's button as the only call to action:
 //   <body data-cta-label="Book a Security Discovery"
 //         data-cta-href="https://www.knowall.ai/purple-team#enquire">
+//   <body data-cta="none">
 const deckSlides = Array.from(document.querySelectorAll('.reveal .slides > section'));
 const ctaLabel = document.body.dataset.ctaLabel || 'Book a working session';
 const ctaHref = document.body.dataset.ctaHref || 'https://www.knowall.ai/#contact';
-deckSlides.slice(2, -1).forEach((slide) => {
+const ctaSlides = document.body.dataset.cta === 'none' ? [] : deckSlides.slice(2, -1);
+ctaSlides.forEach((slide) => {
   const cta = document.createElement('a');
   cta.className = 'slide-cta';
   cta.href = ctaHref;
