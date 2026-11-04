@@ -7,6 +7,34 @@
         --ws-panel: 860px;
       }
 
+      /* --- Closing slide: the lift-off fills the frame ------------------------
+         The art sits right of centre, so the side fade is lighter than the
+         shared one and stops by mid-slide; a foot shade keeps the contact
+         details legible over the bright exhaust. */
+      .cta--full-art .cta-top::before {
+        background:
+          linear-gradient(
+            90deg,
+            rgba(15, 18, 22, 0.9) 0%,
+            rgba(15, 18, 22, 0.62) 32%,
+            rgba(15, 18, 22, 0.1) 58%,
+            rgba(15, 18, 22, 0) 100%
+          ),
+          var(--deck-hero) center 0% / cover no-repeat;
+      }
+
+      /* Let the exhaust glow through the foot band: a soft fade instead of the
+         shared solid charcoal, still dark enough under the pitch and contacts. */
+      .cta--full-art .cta-bottom {
+        background: linear-gradient(
+          180deg,
+          rgba(15, 18, 22, 0) 0%,
+          rgba(15, 18, 22, 0.45) 30%,
+          rgba(15, 18, 22, 0.72) 62%,
+          rgba(15, 18, 22, 0.86) 100%
+        );
+      }
+
       /* --- Cover: the art in a left-hand panel, the copy beside it ---------- */
       .tm-cover-art {
         position: absolute;
@@ -609,9 +637,10 @@
         <!-- Slide 14: CTA -->
         <!-- @include cta {
           "label": "Slide 14 of 14: Ready for lift-off?",
+          "className": "cta--full-art",
           "heading": "Ready for<br />lift-off?",
           "pitch": "Talk to us about running the <strong>T-Minus-15 workshops</strong> with your team &mdash; the methodology workshops for your whole delivery team, and the technology sessions wherever they help most.",
-          "button": { "text": "Plan your workshops", "icon": "i-send", "ariaLabel": "Email KnowAll AI about the T-Minus-15 workshops" },
+          "button": { "text": "Plan your workshops", "icon": "send", "ariaLabel": "Email KnowAll AI about the T-Minus-15 workshops" },
           "mailSubject": "T-Minus-15 workshops"
         } -->
       </div>
