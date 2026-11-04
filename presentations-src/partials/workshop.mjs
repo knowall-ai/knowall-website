@@ -19,6 +19,7 @@
 //   topics       array of topic strings (HTML)
 //   columns      optional topic columns, default 2
 //   note         optional footnote, e.g. "Can run as a series of sessions"
+//   compact      optional: tighter, smaller topic list for long lists
 export default function workshop({
   label,
   image,
@@ -36,9 +37,10 @@ export default function workshop({
   topics = [],
   columns = 2,
   note,
+  compact = false,
 }) {
   const topicItems = topics.map((t) => `                <li>${t}</li>`).join('\n');
-  return `        <section class="ws" role="region" aria-label="${label}">
+  return `        <section class="ws${compact ? ' ws--compact' : ''}" role="region" aria-label="${label}">
           <div class="ws-art" style="--ws-art: url('${image}'); --ws-focus: ${focus}" role="img" aria-label="${alt}"></div>
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
           <div class="ws-copy">

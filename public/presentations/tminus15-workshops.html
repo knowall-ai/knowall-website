@@ -323,6 +323,12 @@
         color: var(--text);
       }
 
+      /* Long topic lists (e.g. a chapter per topic) stay clear of the controls. */
+      .ws--compact .ws-topics li {
+        font-size: 18px;
+        margin-bottom: 4px;
+      }
+
       .ws-topics li::before {
         content: '';
         position: absolute;
@@ -429,7 +435,7 @@
         </section>
 
         <!-- Slide 3: W-L1 -->
-        <section class="ws" role="region" aria-label="Slide 3 of 16: W-L1, Mission Control: The Gnostic Enterprise">
+        <section class="ws ws--compact" role="region" aria-label="Slide 3 of 16: W-L1, Mission Control: The Gnostic Enterprise">
           <div class="ws-art" style="--ws-art: url('images/tminus15-workshops/w-l1-mission-control.jpg'); --ws-focus: 30%" role="img" aria-label="A flight director standing in a vast moon-base mission-control hall, watching a wall of screens that each show a different launch pad and crew"></div>
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
           <div class="ws-copy">
@@ -455,7 +461,7 @@
                 <li>Understanding Agile for the Enterprise</li>
                 <li>The Rise of the Super Employee</li>
                 <li>Philosopher Leaders</li>
-                <li>Harnessing Cloud and Low-Code</li>
+                <li>Build Fast: Cloud, Low-Code and Agentic Delivery</li>
                 <li>The Power of Data: Making Smarter Decisions</li>
                 <li>Automate Everything Unhuman</li>
                 <li>Bringing Teams Together</li>

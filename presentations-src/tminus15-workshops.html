@@ -299,6 +299,12 @@
         color: var(--text);
       }
 
+      /* Long topic lists (e.g. a chapter per topic) stay clear of the controls. */
+      .ws--compact .ws-topics li {
+        font-size: 18px;
+        margin-bottom: 4px;
+      }
+
       .ws-topics li::before {
         content: '';
         position: absolute;
@@ -420,12 +426,13 @@
           "audience": "CTOs, CIOs, sponsors, portfolio and programme leads, and the stakeholders who fund and steer delivery.",
           "description": "The view from mission control: how leaders set the standards, investments and guardrails that let people and AI agents do their best work, from one team to many.",
           "columns": 2,
+          "compact": true,
           "topics": [
             "Return to Chaos: Embracing Agile Squads",
             "Understanding Agile for the Enterprise",
             "The Rise of the Super Employee",
             "Philosopher Leaders",
-            "Harnessing Cloud and Low-Code",
+            "Build Fast: Cloud, Low-Code and Agentic Delivery",
             "The Power of Data: Making Smarter Decisions",
             "Automate Everything Unhuman",
             "Bringing Teams Together",
