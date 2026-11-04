@@ -2017,3 +2017,9 @@ a.partner-link:focus-visible {
   border-radius: 8px;
   box-shadow: 0 22px 46px rgba(0, 0, 0, 0.6);
 }
+
+/* Fit-to-box (see fitSlide in knowall-deck.js): children of a data-fit box
+   zoom down together when the content is too long for the slide. */
+[data-fit] > * {
+  zoom: var(--fit, 1);
+}

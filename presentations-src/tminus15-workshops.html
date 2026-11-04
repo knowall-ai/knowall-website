@@ -205,7 +205,9 @@
         bottom: calc(28px + var(--ctl-band));
         display: flex;
         flex-direction: column;
-        justify-content: center;
+        /* safe: if a slide is too long, overflow runs downwards (where the
+           deck's fit-to-box can measure it) instead of off the top. */
+        justify-content: safe center;
         gap: 26px;
       }
 
@@ -467,12 +469,12 @@
             "Agility for the enterprise",
             "Scrum",
             "Kanban vs Scrum",
-            "Kanban boards",
-            "Definition of Done",
-            "WIP limits",
             "Agile vs DevOps",
             "DevOps principles",
+            "DevOps across the countdown",
+            "The cross-functional squad",
             "Team values",
+            "Recruit the best",
             "Skills for the team",
             "Remote working",
             "The power of collaboration",
@@ -492,6 +494,7 @@
           "duration": "Half-day workshop",
           "subtitle": "Sprint goals, honest estimates and a roadmap people can trust",
           "chapter": "PLAN: Plotting the Course",
+          "columns": 3,
           "audience": "The whole delivery team, especially product owners, Scrum Masters, delivery and project managers, and the sponsors who need a date.",
           "description": "Every countdown starts in mission control. Set a sprint goal the client signs up to, size the work honestly against the crew&rsquo;s real capacity, and schedule only what fits the fifteen-day launch window &mdash; with a roadmap of small, regular launches instead of one big-bang release day.",
           "topics": [
@@ -504,6 +507,9 @@
             "Sprint types, from Prep &amp; Design to Operational",
             "The sprint burndown",
             "Risks and issues",
+            "Kanban boards",
+            "Definition of Done",
+            "WIP limits",
             "Roadmaps and milestones",
             "Incremental releases, not big-bang launches",
             "Release day vs announcement day"

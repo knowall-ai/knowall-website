@@ -43,7 +43,7 @@ export default function workshop({
   return `        <section class="ws${compact ? ' ws--compact' : ''}" role="region" aria-label="${label}">
           <div class="ws-art" style="--ws-art: url('${image}'); --ws-focus: ${focus}" role="img" aria-label="${alt}"></div>
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
-          <div class="ws-copy">
+          <div class="ws-copy" data-fit>
             <div class="ws-head">
               <p class="kicker">${kicker}</p>
               <h2>${phase ? `<span class="ws-phase">${phase}:</span> ` : ''}${title}</h2>${subtitle ? `\n              <p class="ws-sub">${subtitle}</p>` : ''}${
