@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- Generated from presentations-src/tminus15-workshops.html by `npm run decks:build`: edit the source, not this file. -->
     <title>T-Minus-15 Workshops — KnowAll AI</title>
-    <meta name="description" content="The T-Minus-15 workshops from KnowAll AI: seven methodology workshops that take your team from Assemble to Operate, one chapter of the T-Minus-15 book at a time, plus hands-on technology sessions on Azure DevOps, data, Power Platform, CI/CD and agentic coding." />
+    <meta name="description" content="The T-Minus-15 workshops from KnowAll AI: seven methodology workshops that take your team from Assemble to Operate, one chapter of the T-Minus-15 book at a time, plus hands-on technology sessions on Azure DevOps, data, Power Platform, CI/CD and agentic coding, and a two-hour leadership briefing on running many teams." />
     <link rel="icon" href="/favicon.ico" type="image/x-icon" />
     <meta property="og:title" content="T-Minus-15 Workshops — KnowAll AI" />
-    <meta property="og:description" content="The T-Minus-15 workshops from KnowAll AI: seven methodology workshops that take your team from Assemble to Operate, one chapter of the T-Minus-15 book at a time, plus hands-on technology sessions on Azure DevOps, data, Power Platform, CI/CD and agentic coding." />
+    <meta property="og:description" content="The T-Minus-15 workshops from KnowAll AI: seven methodology workshops that take your team from Assemble to Operate, one chapter of the T-Minus-15 book at a time, plus hands-on technology sessions on Azure DevOps, data, Power Platform, CI/CD and agentic coding, and a two-hour leadership briefing on running many teams." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://www.knowall.ai/presentations/tminus15-workshops.html" />
     <meta property="og:image" content="https://www.knowall.ai/presentations/images/og/tminus15-workshops.jpg" />
@@ -17,7 +17,7 @@
     <meta property="og:image:alt" content="T-Minus-15 Workshops — KnowAll AI" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="T-Minus-15 Workshops — KnowAll AI" />
-    <meta name="twitter:description" content="The T-Minus-15 workshops from KnowAll AI: seven methodology workshops that take your team from Assemble to Operate, one chapter of the T-Minus-15 book at a time, plus hands-on technology sessions on Azure DevOps, data, Power Platform, CI/CD and agentic coding." />
+    <meta name="twitter:description" content="The T-Minus-15 workshops from KnowAll AI: seven methodology workshops that take your team from Assemble to Operate, one chapter of the T-Minus-15 book at a time, plus hands-on technology sessions on Azure DevOps, data, Power Platform, CI/CD and agentic coding, and a two-hour leadership briefing on running many teams." />
     <meta name="twitter:image" content="https://www.knowall.ai/presentations/images/og/tminus15-workshops.jpg" />
     <link rel="stylesheet" href="vendor/reveal/reset.css" />
     <link rel="stylesheet" href="vendor/reveal/reveal.css" />
@@ -89,7 +89,19 @@
       .tm-tracks {
         display: grid;
         grid-template-columns: 1.25fr 1fr;
-        gap: 56px;
+        gap: 48px;
+        align-items: start;
+      }
+
+      .tm-stack {
+        display: flex;
+        flex-direction: column;
+        gap: 28px;
+      }
+
+      .tm-track--lead {
+        padding: 34px 48px;
+        gap: 16px;
       }
 
       .tm-track {
@@ -97,10 +109,10 @@
         border: 1px solid var(--line);
         border-radius: 22px;
         box-shadow: var(--shadow-card), var(--inset-top);
-        padding: 52px 56px;
+        padding: 44px 52px;
         display: flex;
         flex-direction: column;
-        gap: 28px;
+        gap: 24px;
       }
 
       .tm-track h3 {
@@ -294,7 +306,7 @@
     <div class="reveal">
       <div class="slides">
         <!-- Slide 1: Title -->
-        <section role="region" aria-label="Slide 1 of 15: T-Minus-15 Workshops">
+        <section role="region" aria-label="Slide 1 of 16: T-Minus-15 Workshops">
           <div
             class="cover-hero"
             role="img"
@@ -306,9 +318,10 @@
             <p class="kicker">KnowAll AI &middot; T-Minus-15 Workshops</p>
             <h1>Build your own<br /><em>elite delivery team</em></h1>
             <p class="lead">
-              Seven methodology workshops that take your team from Assemble to Operate, and hands-on
-              technology sessions on the tools that make it work &mdash; so your people can deliver
-              with confidence, long after we have gone.
+              Seven methodology workshops that take your team from Assemble to Operate, hands-on
+              technology sessions on the tools that make it work, and a leadership briefing for
+              running many crews &mdash; so your people can deliver with confidence, long after we
+              have gone.
             </p>
             <div class="tm-book">
               <img src="images/tminus15-book.png" alt="The T-Minus-15 book cover" />
@@ -326,13 +339,13 @@
           class="scene"
           style="--scene: url('images/tminus15-workshops/scene-two-tracks.jpg')"
           role="region"
-          aria-label="Slide 2 of 15: Two tracks, one launch"
+          aria-label="Slide 2 of 16: Three tracks, one launch"
         >
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
-          <div class="dark-inner" style="gap: 52px">
+          <div class="dark-inner" style="gap: 40px">
             <div>
               <p class="kicker">The programme</p>
-              <h2>Two tracks, one launch</h2>
+              <h2>Three tracks, one launch</h2>
             </div>
             <div class="tm-tracks">
               <div class="tm-track">
@@ -348,23 +361,70 @@
                   <li><span class="code">W-M6</span><span><span class="phase">OPERATE</span>Shipping value, not just code</span></li>
                 </ol>
               </div>
+              <div class="tm-stack">
               <div class="tm-track">
                 <h3><svg class="ic" aria-hidden="true"><use href="icons.svg#i-server-cog" /></svg>Technology workshops</h3>
-                <p class="tm-rule">Run in any order &mdash; typically half a day each, with deeper dives on specific subjects afterwards as needed.</p>
+                <p class="tm-rule">Any order, typically half a day each, with deeper dives afterwards as needed.</p>
                 <ol>
                   <li><span class="code">W-T1</span><span>Azure DevOps</span></li>
-                  <li><span class="code">W-T2</span><span>Data storage: Dataverse vs SharePoint vs SQL</span></li>
+                  <li><span class="code">W-T2</span><span>Data storage</span></li>
                   <li><span class="code">W-T3</span><span>Power Platform, incl. Code Apps</span></li>
                   <li><span class="code">W-T4</span><span>CI/CD</span></li>
                   <li><span class="code">W-T5</span><span>Agentic coding</span></li>
                 </ol>
               </div>
+              <div class="tm-track tm-track--lead">
+                <h3><svg class="ic" aria-hidden="true"><use href="icons.svg#i-users" /></svg>Leadership briefing</h3>
+                <p class="tm-rule">Two hours for CTOs, sponsors and stakeholders.</p>
+                <ol>
+                  <li><span class="code">W-L1</span><span><span class="phase">MISSION CONTROL</span>Running many crews</span></li>
+                </ol>
+              </div>
+              </div>
             </div>
           </div>
         </section>
 
-        <!-- Slide 3: W-M0 -->
-        <section class="ws" role="region" aria-label="Slide 3 of 15: W-M0, Assemble: The Avengers of Agile">
+        <!-- Slide 3: W-L1 -->
+        <section class="ws" role="region" aria-label="Slide 3 of 16: W-L1, Mission Control: Running many crews">
+          <div class="ws-art" style="--ws-art: url('images/tminus15-workshops/w-l1-mission-control.jpg'); --ws-focus: 30%" role="img" aria-label="A flight director standing in a vast moon-base mission-control hall, watching a wall of screens that each show a different launch pad and crew"></div>
+          <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
+          <div class="ws-copy">
+            <div class="ws-head">
+              <p class="kicker">Leadership &middot; W-L1</p>
+              <h2><span class="ws-phase">Mission Control:</span> Running many crews</h2>
+              <p class="ws-sub">Scaling T-Minus-15 across teams, with the guardrails to keep it safe</p>
+              <p class="ws-chapter"><svg class="ic" aria-hidden="true"><use href="icons.svg#i-scroll-text" /></svg><span>From the books: T-Minus-15 &middot; The Gnostic Enterprise</span></p>
+              <p class="ws-chapter ws-duration"><svg class="ic" aria-hidden="true"><use href="icons.svg#i-clock" /></svg><span>Two-hour briefing</span></p>
+            </div>
+            <div class="ws-block">
+              <h3 class="ws-label"><svg class="ic" aria-hidden="true"><use href="icons.svg#i-users" /></svg>Audience</h3>
+              <p>CTOs, CIOs, sponsors, portfolio and programme leads, and the stakeholders who fund and steer delivery.</p>
+            </div>
+            <div class="ws-block">
+              <h3 class="ws-label"><svg class="ic" aria-hidden="true"><use href="icons.svg#i-file-text" /></svg>Description</h3>
+              <p>The view from mission control. How to run several T-Minus-15 crews of humans and AI agents at once: shaping teams and the portfolio they deliver, setting the guardrails that keep everyone safe without slowing them down, and monitoring flow and quality across the whole programme &mdash; including where SAFe&reg; fits.</p>
+            </div>
+            <div class="ws-block">
+              <h3 class="ws-label"><svg class="ic" aria-hidden="true"><use href="icons.svg#i-clipboard-list" /></svg>Topics</h3>
+              <ul class="ws-topics" style="--ws-cols: 2">
+                <li>Many crews, one mission: shaping the teams</li>
+                <li>Portfolio epics and lean business cases</li>
+                <li>Where T-Minus-15 nests in SAFe&reg;</li>
+                <li>PI planning and the Innovation &amp; Planning sprint</li>
+                <li>Guardrails: policies, security and cost</li>
+                <li>Guardrails for AI agents: humans approve</li>
+                <li>The Cloud Centre of Excellence</li>
+                <li>Monitoring flow: DORA metrics and dashboards</li>
+                <li>Funding and prioritising across teams</li>
+                <li>Leading elite teams: psychological safety</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- Slide 4: W-M0 -->
+        <section class="ws" role="region" aria-label="Slide 4 of 16: W-M0, Assemble: The Avengers of Agile">
           <div class="ws-art" style="--ws-art: url('images/tminus15-workshops/m0-assemble.jpg'); --ws-focus: 22%" role="img" aria-label="Astronauts suiting up in a moon-base crew room in front of lit lockers, helped by small robot crew members, one handing over a helmet"></div>
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
           <div class="ws-copy">
@@ -407,8 +467,8 @@
           </div>
         </section>
 
-        <!-- Slide 4: W-M1 -->
-        <section class="ws" role="region" aria-label="Slide 4 of 15: W-M1, Plan: Plotting the course">
+        <!-- Slide 5: W-M1 -->
+        <section class="ws" role="region" aria-label="Slide 5 of 16: W-M1, Plan: Plotting the course">
           <div class="ws-art" style="--ws-art: url('images/tminus15-workshops/m1-plan.jpg'); --ws-focus: 22%" role="img" aria-label="An astronaut in a moon-base mission-control room pointing at a glowing holographic launch timeline while crew work at consoles"></div>
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
           <div class="ws-copy">
@@ -447,8 +507,8 @@
           </div>
         </section>
 
-        <!-- Slide 5: W-M2 -->
-        <section class="ws" role="region" aria-label="Slide 5 of 15: W-M2, Prep">
+        <!-- Slide 6: W-M2 -->
+        <section class="ws" role="region" aria-label="Slide 6 of 16: W-M2, Prep">
           <div class="ws-art" style="--ws-art: url('images/tminus15-workshops/m2-prep.jpg'); --ws-focus: 22%" role="img" aria-label="An astronaut checking a glowing manifest in a moon-base supply depot, crates sorted into lit rows by size while a small robot moves one into place"></div>
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
           <div class="ws-copy">
@@ -484,8 +544,8 @@
           </div>
         </section>
 
-        <!-- Slide 6: W-M3 -->
-        <section class="ws" role="region" aria-label="Slide 6 of 15: W-M3, Design">
+        <!-- Slide 7: W-M3 -->
+        <section class="ws" role="region" aria-label="Slide 7 of 16: W-M3, Design">
           <div class="ws-art" style="--ws-art: url('images/tminus15-workshops/m3-design.jpg'); --ws-focus: 38%" role="img" aria-label="An astronaut sketching rocket blueprints at a drafting table on the Moon, with colour swatches, a scale model and a test cockpit nearby"></div>
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
           <div class="ws-copy">
@@ -517,8 +577,8 @@
           </div>
         </section>
 
-        <!-- Slide 7: W-M4 -->
-        <section class="ws" role="region" aria-label="Slide 7 of 15: W-M4, Engineer">
+        <!-- Slide 8: W-M4 -->
+        <section class="ws" role="region" aria-label="Slide 8 of 16: W-M4, Engineer">
           <div class="ws-art" style="--ws-art: url('images/tminus15-workshops/m4-engineer.jpg'); --ws-focus: 74%" role="img" aria-label="A steel rocket being assembled inside a launch gantry, a crane lowering its nose cone while astronauts work on the platforms"></div>
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
           <div class="ws-copy">
@@ -555,8 +615,8 @@
           </div>
         </section>
 
-        <!-- Slide 8: W-M5 -->
-        <section class="ws" role="region" aria-label="Slide 8 of 15: W-M5, Test">
+        <!-- Slide 9: W-M5 -->
+        <section class="ws" role="region" aria-label="Slide 9 of 16: W-M5, Test">
           <div class="ws-art" style="--ws-art: url('images/tminus15-workshops/m5-test.jpg'); --ws-focus: 66%" role="img" aria-label="A rocket engine test-firing a lime-green plume across a crater while an astronaut watches the gauges from behind a barrier"></div>
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
           <div class="ws-copy">
@@ -592,8 +652,8 @@
           </div>
         </section>
 
-        <!-- Slide 9: W-M6 -->
-        <section class="ws" role="region" aria-label="Slide 9 of 15: W-M6, Operate">
+        <!-- Slide 10: W-M6 -->
+        <section class="ws" role="region" aria-label="Slide 10 of 16: W-M6, Operate">
           <div class="ws-art" style="--ws-art: url('images/tminus15-workshops/m6-operate.jpg'); --ws-focus: 50%" role="img" aria-label="A rocket lifting off from the Moon while a reusable booster lands upright on a nearby pad and astronauts cheer from a mission control dome"></div>
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
           <div class="ws-copy">
@@ -633,8 +693,8 @@
           </div>
         </section>
 
-        <!-- Slide 10: W-T1 -->
-        <section class="ws" role="region" aria-label="Slide 10 of 15: W-T1, Azure DevOps">
+        <!-- Slide 11: W-T1 -->
+        <section class="ws" role="region" aria-label="Slide 11 of 16: W-T1, Azure DevOps">
           <div class="ws-art" style="--ws-art: url('images/tminus15-workshops/t1-azure-devops.jpg'); --ws-focus: 22%" role="img" aria-label="An astronaut moving a lit card between columns on a wall of glowing boards in a moon-base operations room"></div>
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
           <div class="ws-copy">
@@ -667,8 +727,8 @@
           </div>
         </section>
 
-        <!-- Slide 11: W-T2 -->
-        <section class="ws" role="region" aria-label="Slide 11 of 15: W-T2, Data storage">
+        <!-- Slide 12: W-T2 -->
+        <section class="ws" role="region" aria-label="Slide 12 of 16: W-T2, Data storage">
           <div class="ws-art" style="--ws-art: url('images/tminus15-workshops/t2-data-storage.jpg'); --ws-focus: 22%" role="img" aria-label="Three different storage facilities on the Moon connected by pipes, with an astronaut comparing them and a rocket on a distant pad"></div>
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
           <div class="ws-copy">
@@ -702,8 +762,8 @@
           </div>
         </section>
 
-        <!-- Slide 12: W-T3 -->
-        <section class="ws" role="region" aria-label="Slide 12 of 15: W-T3, Power Platform">
+        <!-- Slide 13: W-T3 -->
+        <section class="ws" role="region" aria-label="Slide 13 of 16: W-T3, Power Platform">
           <div class="ws-art" style="--ws-art: url('images/tminus15-workshops/t3-power-platform.jpg'); --ws-focus: 22%" role="img" aria-label="Close-up of a rocket engine&rsquo;s nozzles and glowing power conduits, an astronaut engineer connecting a power cable"></div>
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
           <div class="ws-copy">
@@ -737,8 +797,8 @@
           </div>
         </section>
 
-        <!-- Slide 13: W-T4 -->
-        <section class="ws" role="region" aria-label="Slide 13 of 15: W-T4, CI/CD">
+        <!-- Slide 14: W-T4 -->
+        <section class="ws" role="region" aria-label="Slide 14 of 16: W-T4, CI/CD">
           <div class="ws-art" style="--ws-art: url('images/tminus15-workshops/t4-cicd.jpg'); --ws-focus: 22%" role="img" aria-label="Robotic arms assembling glowing parts on an automated moon-base assembly line, an astronaut watching from a walkway above"></div>
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
           <div class="ws-copy">
@@ -772,8 +832,8 @@
           </div>
         </section>
 
-        <!-- Slide 14: W-T5 -->
-        <section class="ws" role="region" aria-label="Slide 14 of 15: W-T5, Agentic coding">
+        <!-- Slide 15: W-T5 -->
+        <section class="ws" role="region" aria-label="Slide 15 of 16: W-T5, Agentic coding">
           <div class="ws-art" style="--ws-art: url('images/tminus15-workshops/t5-agentic-coding.jpg'); --ws-focus: 22%" role="img" aria-label="An astronaut at a workbench with floating holographic panels, three small robot crew members building alongside"></div>
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
           <div class="ws-copy">
@@ -807,8 +867,8 @@
           </div>
         </section>
 
-        <!-- Slide 15: CTA -->
-        <section class="cta--full-art" role="region" aria-label="Slide 15 of 15: Ready for lift-off?">
+        <!-- Slide 16: CTA -->
+        <section class="cta--full-art" role="region" aria-label="Slide 16 of 16: Ready for lift-off?">
           <div class="cta-top">
             <h2>Ready for<br />lift-off?</h2>
             <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />

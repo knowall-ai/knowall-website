@@ -1,4 +1,4 @@
-<!-- @include head {"title": "T-Minus-15 Workshops — KnowAll AI", "description": "The T-Minus-15 workshops from KnowAll AI: seven methodology workshops that take your team from Assemble to Operate, one chapter of the T-Minus-15 book at a time, plus hands-on technology sessions on Azure DevOps, data, Power Platform, CI/CD and agentic coding."} -->
+<!-- @include head {"title": "T-Minus-15 Workshops — KnowAll AI", "description": "The T-Minus-15 workshops from KnowAll AI: seven methodology workshops that take your team from Assemble to Operate, one chapter of the T-Minus-15 book at a time, plus hands-on technology sessions on Azure DevOps, data, Power Platform, CI/CD and agentic coding, and a two-hour leadership briefing on running many teams."} -->
     <style>
       /* Deck-specific styles — everything shared lives in knowall-deck.css */
       :root {
@@ -65,7 +65,19 @@
       .tm-tracks {
         display: grid;
         grid-template-columns: 1.25fr 1fr;
-        gap: 56px;
+        gap: 48px;
+        align-items: start;
+      }
+
+      .tm-stack {
+        display: flex;
+        flex-direction: column;
+        gap: 28px;
+      }
+
+      .tm-track--lead {
+        padding: 34px 48px;
+        gap: 16px;
       }
 
       .tm-track {
@@ -73,10 +85,10 @@
         border: 1px solid var(--line);
         border-radius: 22px;
         box-shadow: var(--shadow-card), var(--inset-top);
-        padding: 52px 56px;
+        padding: 44px 52px;
         display: flex;
         flex-direction: column;
-        gap: 28px;
+        gap: 24px;
       }
 
       .tm-track h3 {
@@ -270,7 +282,7 @@
     <div class="reveal">
       <div class="slides">
         <!-- Slide 1: Title -->
-        <section role="region" aria-label="Slide 1 of 15: T-Minus-15 Workshops">
+        <section role="region" aria-label="Slide 1 of 16: T-Minus-15 Workshops">
           <div
             class="cover-hero"
             role="img"
@@ -282,9 +294,10 @@
             <p class="kicker">KnowAll AI &middot; T-Minus-15 Workshops</p>
             <h1>Build your own<br /><em>elite delivery team</em></h1>
             <p class="lead">
-              Seven methodology workshops that take your team from Assemble to Operate, and hands-on
-              technology sessions on the tools that make it work &mdash; so your people can deliver
-              with confidence, long after we have gone.
+              Seven methodology workshops that take your team from Assemble to Operate, hands-on
+              technology sessions on the tools that make it work, and a leadership briefing for
+              running many crews &mdash; so your people can deliver with confidence, long after we
+              have gone.
             </p>
             <div class="tm-book">
               <img src="images/tminus15-book.png" alt="The T-Minus-15 book cover" />
@@ -302,13 +315,13 @@
           class="scene"
           style="--scene: url('images/tminus15-workshops/scene-two-tracks.jpg')"
           role="region"
-          aria-label="Slide 2 of 15: Two tracks, one launch"
+          aria-label="Slide 2 of 16: Three tracks, one launch"
         >
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
-          <div class="dark-inner" style="gap: 52px">
+          <div class="dark-inner" style="gap: 40px">
             <div>
               <p class="kicker">The programme</p>
-              <h2>Two tracks, one launch</h2>
+              <h2>Three tracks, one launch</h2>
             </div>
             <div class="tm-tracks">
               <div class="tm-track">
@@ -324,24 +337,62 @@
                   <li><span class="code">W-M6</span><span><span class="phase">OPERATE</span>Shipping value, not just code</span></li>
                 </ol>
               </div>
+              <div class="tm-stack">
               <div class="tm-track">
                 <h3><svg class="ic" aria-hidden="true"><use href="icons.svg#i-server-cog" /></svg>Technology workshops</h3>
-                <p class="tm-rule">Run in any order &mdash; typically half a day each, with deeper dives on specific subjects afterwards as needed.</p>
+                <p class="tm-rule">Any order, typically half a day each, with deeper dives afterwards as needed.</p>
                 <ol>
                   <li><span class="code">W-T1</span><span>Azure DevOps</span></li>
-                  <li><span class="code">W-T2</span><span>Data storage: Dataverse vs SharePoint vs SQL</span></li>
+                  <li><span class="code">W-T2</span><span>Data storage</span></li>
                   <li><span class="code">W-T3</span><span>Power Platform, incl. Code Apps</span></li>
                   <li><span class="code">W-T4</span><span>CI/CD</span></li>
                   <li><span class="code">W-T5</span><span>Agentic coding</span></li>
                 </ol>
               </div>
+              <div class="tm-track tm-track--lead">
+                <h3><svg class="ic" aria-hidden="true"><use href="icons.svg#i-users" /></svg>Leadership briefing</h3>
+                <p class="tm-rule">Two hours for CTOs, sponsors and stakeholders.</p>
+                <ol>
+                  <li><span class="code">W-L1</span><span><span class="phase">MISSION CONTROL</span>Running many crews</span></li>
+                </ol>
+              </div>
+              </div>
             </div>
           </div>
         </section>
 
-        <!-- Slide 3: W-M0 -->
+        <!-- Slide 3: W-L1 -->
         <!-- @include workshop {
-          "label": "Slide 3 of 15: W-M0, Assemble: The Avengers of Agile",
+          "label": "Slide 3 of 16: W-L1, Mission Control: Running many crews",
+          "image": "images/tminus15-workshops/w-l1-mission-control.jpg",
+          "alt": "A flight director standing in a vast moon-base mission-control hall, watching a wall of screens that each show a different launch pad and crew",
+          "focus": "30%",
+          "kicker": "Leadership &middot; W-L1",
+          "phase": "Mission Control",
+          "title": "Running many crews",
+          "duration": "Two-hour briefing",
+          "subtitle": "Scaling T-Minus-15 across teams, with the guardrails to keep it safe",
+          "chapterLabel": "From the books",
+          "chapter": "T-Minus-15 &middot; The Gnostic Enterprise",
+          "audience": "CTOs, CIOs, sponsors, portfolio and programme leads, and the stakeholders who fund and steer delivery.",
+          "description": "The view from mission control. How to run several T-Minus-15 crews of humans and AI agents at once: shaping teams and the portfolio they deliver, setting the guardrails that keep everyone safe without slowing them down, and monitoring flow and quality across the whole programme &mdash; including where SAFe&reg; fits.",
+          "topics": [
+            "Many crews, one mission: shaping the teams",
+            "Portfolio epics and lean business cases",
+            "Where T-Minus-15 nests in SAFe&reg;",
+            "PI planning and the Innovation &amp; Planning sprint",
+            "Guardrails: policies, security and cost",
+            "Guardrails for AI agents: humans approve",
+            "The Cloud Centre of Excellence",
+            "Monitoring flow: DORA metrics and dashboards",
+            "Funding and prioritising across teams",
+            "Leading elite teams: psychological safety"
+          ]
+        } -->
+
+        <!-- Slide 4: W-M0 -->
+        <!-- @include workshop {
+          "label": "Slide 4 of 16: W-M0, Assemble: The Avengers of Agile",
           "image": "images/tminus15-workshops/m0-assemble.jpg",
           "alt": "Astronauts suiting up in a moon-base crew room in front of lit lockers, helped by small robot crew members, one handing over a helmet",
           "focus": "22%",
@@ -374,9 +425,9 @@
           ]
         } -->
 
-        <!-- Slide 4: W-M1 -->
+        <!-- Slide 5: W-M1 -->
         <!-- @include workshop {
-          "label": "Slide 4 of 15: W-M1, Plan: Plotting the course",
+          "label": "Slide 5 of 16: W-M1, Plan: Plotting the course",
           "image": "images/tminus15-workshops/m1-plan.jpg",
           "alt": "An astronaut in a moon-base mission-control room pointing at a glowing holographic launch timeline while crew work at consoles",
           "focus": "22%",
@@ -404,9 +455,9 @@
           ]
         } -->
 
-        <!-- Slide 5: W-M2 -->
+        <!-- Slide 6: W-M2 -->
         <!-- @include workshop {
-          "label": "Slide 5 of 15: W-M2, Prep",
+          "label": "Slide 6 of 16: W-M2, Prep",
           "image": "images/tminus15-workshops/m2-prep.jpg",
           "alt": "An astronaut checking a glowing manifest in a moon-base supply depot, crates sorted into lit rows by size while a small robot moves one into place",
           "focus": "22%",
@@ -431,9 +482,9 @@
           ]
         } -->
 
-        <!-- Slide 6: W-M3 -->
+        <!-- Slide 7: W-M3 -->
         <!-- @include workshop {
-          "label": "Slide 6 of 15: W-M3, Design",
+          "label": "Slide 7 of 16: W-M3, Design",
           "image": "images/tminus15-workshops/m3-design.jpg",
           "alt": "An astronaut sketching rocket blueprints at a drafting table on the Moon, with colour swatches, a scale model and a test cockpit nearby",
           "focus": "38%",
@@ -454,9 +505,9 @@
           ]
         } -->
 
-        <!-- Slide 7: W-M4 -->
+        <!-- Slide 8: W-M4 -->
         <!-- @include workshop {
-          "label": "Slide 7 of 15: W-M4, Engineer",
+          "label": "Slide 8 of 16: W-M4, Engineer",
           "image": "images/tminus15-workshops/m4-engineer.jpg",
           "alt": "A steel rocket being assembled inside a launch gantry, a crane lowering its nose cone while astronauts work on the platforms",
           "focus": "74%",
@@ -482,9 +533,9 @@
           ]
         } -->
 
-        <!-- Slide 8: W-M5 -->
+        <!-- Slide 9: W-M5 -->
         <!-- @include workshop {
-          "label": "Slide 8 of 15: W-M5, Test",
+          "label": "Slide 9 of 16: W-M5, Test",
           "image": "images/tminus15-workshops/m5-test.jpg",
           "alt": "A rocket engine test-firing a lime-green plume across a crater while an astronaut watches the gauges from behind a barrier",
           "focus": "66%",
@@ -509,9 +560,9 @@
           ]
         } -->
 
-        <!-- Slide 9: W-M6 -->
+        <!-- Slide 10: W-M6 -->
         <!-- @include workshop {
-          "label": "Slide 9 of 15: W-M6, Operate",
+          "label": "Slide 10 of 16: W-M6, Operate",
           "image": "images/tminus15-workshops/m6-operate.jpg",
           "alt": "A rocket lifting off from the Moon while a reusable booster lands upright on a nearby pad and astronauts cheer from a mission control dome",
           "focus": "50%",
@@ -540,9 +591,9 @@
           ]
         } -->
 
-        <!-- Slide 10: W-T1 -->
+        <!-- Slide 11: W-T1 -->
         <!-- @include workshop {
-          "label": "Slide 10 of 15: W-T1, Azure DevOps",
+          "label": "Slide 11 of 16: W-T1, Azure DevOps",
           "note": "Optional follow-up deep dives on specific subjects, as needed.",
           "image": "images/tminus15-workshops/t1-azure-devops.jpg",
           "alt": "An astronaut moving a lit card between columns on a wall of glowing boards in a moon-base operations room",
@@ -563,9 +614,9 @@
           ]
         } -->
 
-        <!-- Slide 11: W-T2 -->
+        <!-- Slide 12: W-T2 -->
         <!-- @include workshop {
-          "label": "Slide 11 of 15: W-T2, Data storage",
+          "label": "Slide 12 of 16: W-T2, Data storage",
           "note": "Optional follow-up deep dives on specific subjects, as needed.",
           "image": "images/tminus15-workshops/t2-data-storage.jpg",
           "alt": "Three different storage facilities on the Moon connected by pipes, with an astronaut comparing them and a rocket on a distant pad",
@@ -587,9 +638,9 @@
           ]
         } -->
 
-        <!-- Slide 12: W-T3 -->
+        <!-- Slide 13: W-T3 -->
         <!-- @include workshop {
-          "label": "Slide 12 of 15: W-T3, Power Platform",
+          "label": "Slide 13 of 16: W-T3, Power Platform",
           "image": "images/tminus15-workshops/t3-power-platform.jpg",
           "alt": "Close-up of a rocket engine&rsquo;s nozzles and glowing power conduits, an astronaut engineer connecting a power cable",
           "focus": "22%",
@@ -611,9 +662,9 @@
           "note": "Can run as a series of sessions, depending on your team&rsquo;s experience, with optional deep dives on specific subjects."
         } -->
 
-        <!-- Slide 13: W-T4 -->
+        <!-- Slide 14: W-T4 -->
         <!-- @include workshop {
-          "label": "Slide 13 of 15: W-T4, CI/CD",
+          "label": "Slide 14 of 16: W-T4, CI/CD",
           "note": "Optional follow-up deep dives on specific subjects, as needed.",
           "image": "images/tminus15-workshops/t4-cicd.jpg",
           "alt": "Robotic arms assembling glowing parts on an automated moon-base assembly line, an astronaut watching from a walkway above",
@@ -635,9 +686,9 @@
           ]
         } -->
 
-        <!-- Slide 14: W-T5 -->
+        <!-- Slide 15: W-T5 -->
         <!-- @include workshop {
-          "label": "Slide 14 of 15: W-T5, Agentic coding",
+          "label": "Slide 15 of 16: W-T5, Agentic coding",
           "note": "Optional follow-up deep dives on specific subjects, as needed.",
           "image": "images/tminus15-workshops/t5-agentic-coding.jpg",
           "alt": "An astronaut at a workbench with floating holographic panels, three small robot crew members building alongside",
@@ -659,9 +710,9 @@
           ]
         } -->
 
-        <!-- Slide 15: CTA -->
+        <!-- Slide 16: CTA -->
         <!-- @include cta {
-          "label": "Slide 15 of 15: Ready for lift-off?",
+          "label": "Slide 16 of 16: Ready for lift-off?",
           "className": "cta--full-art",
           "heading": "Ready for<br />lift-off?",
           "pitch": "Talk to us about running the <strong>T-Minus-15 workshops</strong> with your team &mdash; the methodology workshops for your whole delivery team, and the technology sessions wherever they help most.",

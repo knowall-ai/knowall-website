@@ -12,6 +12,7 @@
 //   title        the workshop title (HTML)
 //   subtitle     optional line under the title (HTML)
 //   chapter      optional book chapter(s) the workshop is built on (HTML)
+//   chapterLabel optional lead-in for the chapter line, default "From the book"
 //   duration     optional length, e.g. "Half-day workshop" (shown with a clock)
 //   audience     who should attend (HTML)
 //   description  what the workshop covers and why (HTML)
@@ -28,6 +29,7 @@ export default function workshop({
   title,
   subtitle,
   chapter,
+  chapterLabel = 'From the book',
   duration,
   audience,
   description,
@@ -44,7 +46,7 @@ export default function workshop({
               <p class="kicker">${kicker}</p>
               <h2>${phase ? `<span class="ws-phase">${phase}:</span> ` : ''}${title}</h2>${subtitle ? `\n              <p class="ws-sub">${subtitle}</p>` : ''}${
                 chapter
-                  ? `\n              <p class="ws-chapter"><svg class="ic" aria-hidden="true"><use href="icons.svg#i-scroll-text" /></svg><span>From the book: ${chapter}</span></p>`
+                  ? `\n              <p class="ws-chapter"><svg class="ic" aria-hidden="true"><use href="icons.svg#i-scroll-text" /></svg><span>${chapterLabel}: ${chapter}</span></p>`
                   : ''
               }${
                 duration
