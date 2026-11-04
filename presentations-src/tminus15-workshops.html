@@ -277,16 +277,20 @@
         color: var(--mist);
       }
 
+      /* Newspaper columns, not a grid: topics run down each column in order,
+         and a topic that wraps doesn't open a gap beside it in the next
+         column (a grid row is as tall as its tallest cell). */
       .ws-topics {
         list-style: none;
         margin: 0;
         padding: 0;
-        display: grid;
-        grid-template-columns: repeat(var(--ws-cols, 2), minmax(0, 1fr));
-        gap: 7px 28px;
+        column-count: var(--ws-cols, 2);
+        column-gap: 28px;
       }
 
       .ws-topics li {
+        break-inside: avoid;
+        margin-bottom: 7px;
         position: relative;
         padding-left: 22px;
         font-size: 20px;
