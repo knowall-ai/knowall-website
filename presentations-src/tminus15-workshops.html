@@ -1,0 +1,623 @@
+<!-- @include head {"title": "T-Minus-15 Workshops — KnowAll AI", "description": "The T-Minus-15 workshops from KnowAll AI: six methodology workshops that take your team from Prep to Operate, one chapter of the T-Minus-15 book at a time, plus hands-on technology sessions on Azure DevOps, data, Power Platform, CI/CD and agentic coding."} -->
+    <style>
+      /* Deck-specific styles — everything shared lives in knowall-deck.css */
+      :root {
+        --deck-cover: url('images/tminus15-workshops/m6-operate.jpg');
+        --deck-hero: url('images/tminus15-workshops/close-liftoff.jpg');
+        --ws-panel: 860px;
+      }
+
+      /* --- Cover: the art in a left-hand panel, the copy beside it ---------- */
+      .tm-cover-art {
+        position: absolute;
+        inset: 0 auto 0 0;
+        width: 720px;
+        background: url('images/tminus15-workshops/cover-portrait.jpg') center / cover no-repeat;
+      }
+
+      .tm-cover-art::after {
+        content: '';
+        position: absolute;
+        inset: 0 -1px 0 auto;
+        width: 220px;
+        background: linear-gradient(90deg, transparent, var(--charcoal));
+      }
+
+      .tm-cover-copy {
+        position: absolute;
+        left: 820px;
+        right: 96px;
+        top: 230px;
+        bottom: calc(60px + var(--ctl-band));
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 34px;
+      }
+
+      .tm-cover-copy h1 {
+        font-size: 112px;
+        line-height: 1.04;
+        color: #ffffff;
+      }
+
+      .tm-cover-copy h1 em {
+        font-style: italic;
+        color: var(--lime);
+      }
+
+      .tm-cover-copy .lead {
+        font-size: 31px;
+        color: var(--mist);
+      }
+
+      .tm-book {
+        display: flex;
+        align-items: center;
+        gap: 34px;
+        margin-top: 10px;
+        padding-top: 34px;
+        border-top: 1px solid var(--line);
+      }
+
+      .tm-book img {
+        height: 190px;
+        width: auto;
+        border-radius: 6px;
+        box-shadow: var(--shadow-card);
+      }
+
+      .tm-book p {
+        font-size: 24px;
+        color: var(--mist);
+      }
+
+      .tm-book strong {
+        color: var(--text);
+      }
+
+      /* --- Overview: the two tracks ----------------------------------------- */
+      .tm-tracks {
+        display: grid;
+        grid-template-columns: 1.25fr 1fr;
+        gap: 56px;
+      }
+
+      .tm-track {
+        background: linear-gradient(180deg, var(--panel), var(--panel-lo));
+        border: 1px solid var(--line);
+        border-radius: 22px;
+        box-shadow: var(--shadow-card), var(--inset-top);
+        padding: 52px 56px;
+        display: flex;
+        flex-direction: column;
+        gap: 28px;
+      }
+
+      .tm-track h3 {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        font-size: 38px;
+        color: var(--text);
+      }
+
+      .tm-track h3 .ic {
+        color: var(--lime);
+      }
+
+      .tm-track .tm-rule {
+        font-size: 26px;
+        color: var(--mist);
+      }
+
+      .tm-track ol {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .tm-track li {
+        display: grid;
+        grid-template-columns: 112px 1fr;
+        align-items: baseline;
+        font-size: 30px;
+        color: var(--text);
+      }
+
+      .tm-track li .code {
+        font-weight: 800;
+        font-size: 24px;
+        letter-spacing: 0.08em;
+        color: var(--lime);
+      }
+
+      .tm-track li .phase {
+        font-weight: 800;
+        color: var(--lime);
+        margin-right: 10px;
+      }
+
+      /* --- Workshop slides --------------------------------------------------- */
+      .ws-art {
+        position: absolute;
+        inset: 0 auto 0 0;
+        width: var(--ws-panel);
+        background: var(--ws-art) var(--ws-focus, 50%) center / cover no-repeat;
+      }
+
+      .ws-art::after {
+        content: '';
+        position: absolute;
+        inset: 0 -1px 0 auto;
+        width: 260px;
+        background: linear-gradient(90deg, transparent, var(--charcoal));
+      }
+
+      .ws-copy {
+        position: absolute;
+        left: calc(var(--ws-panel) + 40px);
+        right: 96px;
+        top: 186px;
+        bottom: calc(28px + var(--ctl-band));
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 26px;
+      }
+
+      .ws-head {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .ws-copy h2 {
+        font-size: 68px;
+        line-height: 1.05;
+        color: #ffffff;
+        margin-top: 6px;
+      }
+
+      .ws-sub {
+        font-size: 28px;
+        font-weight: 700;
+        color: var(--text);
+      }
+
+      .ws-chapter {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 20px;
+        font-style: italic;
+        color: var(--mist);
+      }
+
+      .ws-chapter .ic {
+        color: var(--lime);
+        font-size: 22px;
+      }
+
+      .ws-block {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .reveal .ws-label {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 18px;
+        font-weight: 800;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--lime);
+      }
+
+      .ws-block p {
+        font-size: 23px;
+        line-height: 1.5;
+        color: var(--mist);
+      }
+
+      .ws-topics {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: grid;
+        grid-template-columns: repeat(var(--ws-cols, 2), minmax(0, 1fr));
+        gap: 7px 28px;
+      }
+
+      .ws-topics li {
+        position: relative;
+        padding-left: 22px;
+        font-size: 20px;
+        font-weight: 700;
+        line-height: 1.35;
+        color: var(--text);
+      }
+
+      .ws-topics li::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0.55em;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--lime);
+        opacity: 0.85;
+      }
+
+      .ws-note {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 20px;
+        color: var(--mist);
+      }
+
+      .ws-note .ic {
+        color: var(--lime);
+      }
+    </style>
+  </head>
+  <body>
+
+    <div class="reveal">
+      <div class="slides">
+        <!-- Slide 1: Title -->
+        <section role="region" aria-label="Slide 1 of 14: T-Minus-15 Workshops">
+          <div
+            class="tm-cover-art"
+            role="img"
+            aria-label="A sleek steel rocket with glowing lime-green fins on a lunar launch pad at night, a small astronaut looking up at it"
+          ></div>
+          <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
+          <div class="tm-cover-copy">
+            <p class="kicker">KnowAll AI &middot; T-Minus-15 Workshops</p>
+            <h1>Build your own<br /><em>elite delivery team</em></h1>
+            <p class="lead">
+              Six methodology workshops that take your team from Prep to Operate, and hands-on
+              technology sessions on the tools that make it work &mdash; so your people can deliver
+              with confidence, long after we have gone.
+            </p>
+            <div class="tm-book">
+              <img src="images/tminus15-book.png" alt="The T-Minus-15 book cover" />
+              <p>
+                Each methodology workshop is built on a chapter of
+                <strong>T-Minus-15: Secrets of an elite DevOps team</strong> &mdash; our
+                open-source delivery methodology, combining the best of Agile and DevOps.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Slide 2: Two tracks -->
+        <section role="region" aria-label="Slide 2 of 14: Two tracks, one launch programme">
+          <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
+          <div class="dark-inner" style="gap: 52px">
+            <div>
+              <p class="kicker">The programme</p>
+              <h2>Two tracks, one launch</h2>
+            </div>
+            <div class="tm-tracks">
+              <div class="tm-track">
+                <h3><svg class="ic" aria-hidden="true"><use href="icons.svg#i-rocket" /></svg>Methodology workshops</h3>
+                <p class="tm-rule">Run in order &mdash; each one builds on the last, following the T-Minus-15 lifecycle.</p>
+                <ol>
+                  <li><span class="code">W-M1</span><span>The Avengers of Agile</span></li>
+                  <li><span class="code">W-M2</span><span><span class="phase">PREP</span>Decoding the client&rsquo;s wants and needs</span></li>
+                  <li><span class="code">W-M3</span><span><span class="phase">DESIGN</span>Crafting UX that doesn&rsquo;t suck</span></li>
+                  <li><span class="code">W-M4</span><span><span class="phase">ENGINEER</span>The art of engineering</span></li>
+                  <li><span class="code">W-M5</span><span><span class="phase">TEST</span>Raising the bar</span></li>
+                  <li><span class="code">W-M6</span><span><span class="phase">OPERATE</span>Shipping value, not just code</span></li>
+                </ol>
+              </div>
+              <div class="tm-track">
+                <h3><svg class="ic" aria-hidden="true"><use href="icons.svg#i-server-cog" /></svg>Technology workshops</h3>
+                <p class="tm-rule">Run in any order &mdash; scheduled around the work your team is doing.</p>
+                <ol>
+                  <li><span class="code">W-T1</span><span>Azure DevOps</span></li>
+                  <li><span class="code">W-T2</span><span>Dataverse vs SharePoint vs SQL</span></li>
+                  <li><span class="code">W-T3</span><span>Power Platform, incl. Code Apps</span></li>
+                  <li><span class="code">W-T4</span><span>CI/CD</span></li>
+                  <li><span class="code">W-T5</span><span>Agentic coding</span></li>
+                </ol>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Slide 3: W-M1 -->
+        <!-- @include workshop {
+          "label": "Slide 3 of 14: W-M1, The Avengers of Agile",
+          "image": "images/tminus15-workshops/m1-avengers.jpg",
+          "alt": "Five astronauts, each carrying the tool of a different role, gathered beneath a steel rocket with glowing lime fins on the Moon",
+          "focus": "62%",
+          "kicker": "Methodology &middot; W-M1",
+          "title": "The Avengers of Agile",
+          "subtitle": "Assembling a cross-functional squad that delivers results",
+          "chapter": "Let&rsquo;s get Agile! &middot; So what about DevOps? &middot; The Avengers of Agile",
+          "audience": "The whole delivery team &mdash; product owners, analysts, designers, developers, testers and operations &mdash; plus the managers and sponsors who support them.",
+          "description": "The foundation for everything that follows. We cover why agility matters, how Scrum and Kanban work in practice, where DevOps fits, and the roles, values and habits that turn a group of specialists into a squad that ships.",
+          "columns": 3,
+          "topics": [
+            "Overview of Agile",
+            "The Agile Manifesto",
+            "Pros and cons of Agile",
+            "Agility for the enterprise",
+            "Scrum",
+            "Kanban vs Scrum",
+            "Sprints",
+            "The sprint burndown",
+            "Kanban boards",
+            "Definition of Done",
+            "WIP limits",
+            "Agile vs DevOps",
+            "DevOps principles",
+            "Team values",
+            "Skills for the team",
+            "Remote working",
+            "The power of collaboration",
+            "Positive karma"
+          ]
+        } -->
+
+        <!-- Slide 4: W-M2 -->
+        <!-- @include workshop {
+          "label": "Slide 4 of 14: W-M2, Prep",
+          "image": "images/tminus15-workshops/m2-prep.jpg",
+          "alt": "An astronaut studying a glowing star map inside a domed planning hut beside rows of cargo crates, a rocket waiting in the distance",
+          "focus": "58%",
+          "kicker": "Methodology &middot; W-M2 &middot; Prep",
+          "title": "Decoding the client&rsquo;s wants and needs",
+          "chapter": "PREP: Decoding the client&rsquo;s wants and needs",
+          "audience": "Product owners, business analysts, project managers and the subject-matter experts who shape what gets built.",
+          "description": "If you don&rsquo;t understand the requirements, you&rsquo;re in for a bumpy ride. Learn how to get real clarity on what the client needs, and turn it into a well-structured product backlog of epics, features and stories the whole team can deliver against.",
+          "topics": [
+            "The importance of clarity",
+            "Getting the lowdown",
+            "The product backlog",
+            "Epics",
+            "Features",
+            "Stories",
+            "Tasks",
+            "Bugs and enhancements",
+            "Personas",
+            "So, what does the client want?"
+          ]
+        } -->
+
+        <!-- Slide 5: W-M3 -->
+        <!-- @include workshop {
+          "label": "Slide 5 of 14: W-M3, Design",
+          "image": "images/tminus15-workshops/m3-design.jpg",
+          "alt": "An astronaut sketching rocket blueprints at a drafting table on the Moon, with colour swatches, a scale model and a test cockpit nearby",
+          "focus": "38%",
+          "kicker": "Methodology &middot; W-M3 &middot; Design",
+          "title": "Crafting UX that doesn&rsquo;t suck",
+          "chapter": "DESIGN: Crafting UX That Doesn&rsquo;t Suck",
+          "audience": "UX and UI designers, solution architects, analysts and developers who build the screens people use &mdash; and the product owners who sign them off.",
+          "description": "Nobody cares how clever your code is if people hate using it. A practical look at designing experiences that just work: the principles that matter, how to get good UX shipped rather than stuck in theory, and how agents and brand guidelines keep the design consistent.",
+          "topics": [
+            "Why give a damn about UX",
+            "The three UX commandments",
+            "Getting practical: UX that ships",
+            "The bottom line",
+            "Agentic design",
+            "Brand guidelines"
+          ]
+        } -->
+
+        <!-- Slide 6: W-M4 -->
+        <!-- @include workshop {
+          "label": "Slide 6 of 14: W-M4, Engineer",
+          "image": "images/tminus15-workshops/m4-engineer.jpg",
+          "alt": "A steel rocket being assembled inside a launch gantry, a crane lowering its nose cone while astronauts work on the platforms",
+          "focus": "74%",
+          "kicker": "Methodology &middot; W-M4 &middot; Engineer",
+          "title": "The art of engineering",
+          "chapter": "ENGINEER: The Art of Engineering",
+          "audience": "Developers, low-code makers, solution architects and technical leads.",
+          "description": "Engineering isn&rsquo;t slinging code frantically &mdash; it&rsquo;s a mindset. The habits that turn good engineers into an elite team: plan before you build, keep it simple and reusable, use AI and low-code wisely, and hand testers a finished feature rather than a ticking time bomb.",
+          "topics": [
+            "Review Prep and Design: look before you leap",
+            "Architect before you code",
+            "Source control: commit early, commit often",
+            "Document as you go",
+            "Build reusable components",
+            "Keep it simple (KISS)",
+            "Leverage AI and low-code",
+            "Finish what you start: make features deployable",
+            "Think like an end user",
+            "Collaborate, don&rsquo;t isolate",
+            "Balancing focus and flow"
+          ]
+        } -->
+
+        <!-- Slide 7: W-M5 -->
+        <!-- @include workshop {
+          "label": "Slide 7 of 14: W-M5, Test",
+          "image": "images/tminus15-workshops/m5-test.jpg",
+          "alt": "A rocket engine test-firing a lime-green plume across a crater while an astronaut watches the gauges from behind a barrier",
+          "focus": "66%",
+          "kicker": "Methodology &middot; W-M5 &middot; Test",
+          "title": "Raising the bar",
+          "subtitle": "The pursuit of quality in agile projects",
+          "chapter": "TEST: Raising the Bar",
+          "audience": "Testers and QA analysts, developers, product owners, and the business users who carry out acceptance testing.",
+          "description": "Not just good &mdash; awesome. How to shift testing left so quality is built in from the first line of code: clear acceptance criteria, test plans every story can be checked against, and the automated, security, performance and user testing that proves a release is ready.",
+          "topics": [
+            "The importance of acceptance criteria",
+            "Test plans, suites and cases",
+            "Features vs bugs vs enhancements",
+            "Static code analysis",
+            "Automated UI testing",
+            "Security assessment and compliance",
+            "Performance testing",
+            "User acceptance testing",
+            "A/B testing"
+          ]
+        } -->
+
+        <!-- Slide 8: W-M6 -->
+        <!-- @include workshop {
+          "label": "Slide 8 of 14: W-M6, Operate",
+          "image": "images/tminus15-workshops/m6-operate.jpg",
+          "alt": "A rocket lifting off from the Moon while a reusable booster lands upright on a nearby pad and astronauts cheer from a mission control dome",
+          "focus": "50%",
+          "kicker": "Methodology &middot; W-M6 &middot; Operate",
+          "title": "Shipping value, not just code",
+          "chapter": "OPERATE: Shipping Value, Not Just Code",
+          "audience": "DevOps and platform engineers, developers, technical leads, and release and service managers.",
+          "description": "Building the delivery engine that turns great ideas into deployed features with minimal friction. Pipelines, branching and infrastructure-as-code that make releases boring in the best way &mdash; and the feedback loops that keep a solution improving long after launch.",
+          "topics": [
+            "CI/CD: the backbone of modern delivery",
+            "Pick a branching strategy",
+            "GitFlow vs Release Flow",
+            "Topic branches: short and sweet",
+            "Lock down your repo with sensible policies",
+            "Git habits that won&rsquo;t annoy your team",
+            "Infrastructure-as-code",
+            "Build pipelines",
+            "Release pipelines",
+            "From ideas to delivery",
+            "Release notes people actually read",
+            "The anti-dramatic launch",
+            "Get feedback that actually matters",
+            "Life after launch"
+          ]
+        } -->
+
+        <!-- Slide 9: W-T1 -->
+        <!-- @include workshop {
+          "label": "Slide 9 of 14: W-T1, Azure DevOps",
+          "image": "images/tminus15-workshops/t1-azure-devops.jpg",
+          "alt": "A mission control dome with a wall of colour-coded task cards, a checklist board and a vault of archives, a rocket visible through the window",
+          "focus": "26%",
+          "kicker": "Technology &middot; W-T1",
+          "title": "Azure DevOps",
+          "subtitle": "Backlogs, boards, test plans and repos",
+          "audience": "The whole delivery team &mdash; product owners, analysts, developers, testers and project managers.",
+          "description": "A hands-on tour of the platform that runs the T-Minus-15 process day to day. Set up a backlog and boards your team will actually use, plan and track sprints, manage test plans and suites, and keep code in repos with pull requests and policies.",
+          "topics": [
+            "Backlogs: epics, features and stories",
+            "Boards and sprints",
+            "Queries and dashboards",
+            "Test plans and suites",
+            "Repos and pull requests",
+            "Pipelines at a glance"
+          ]
+        } -->
+
+        <!-- Slide 10: W-T2 -->
+        <!-- @include workshop {
+          "label": "Slide 10 of 14: W-T2, Data storage",
+          "image": "images/tminus15-workshops/t2-data-storage.jpg",
+          "alt": "Three different storage facilities on the Moon connected by pipes, with an astronaut comparing them and a rocket on a distant pad",
+          "focus": "22%",
+          "kicker": "Technology &middot; W-T2",
+          "title": "Data storage",
+          "subtitle": "Dataverse vs SharePoint vs SQL",
+          "audience": "Solution architects, data engineers, developers and Power Platform makers.",
+          "description": "Choosing where your data lives is one of the hardest decisions to undo. We compare Dataverse, SharePoint and SQL side by side &mdash; capability, security, performance, licensing and cost &mdash; so you can pick the right store for each solution with confidence.",
+          "topics": [
+            "Dataverse",
+            "SharePoint lists and libraries",
+            "Azure SQL",
+            "Security and access models",
+            "Scale, delegation and performance",
+            "Licensing and cost",
+            "Choosing the right store"
+          ]
+        } -->
+
+        <!-- Slide 11: W-T3 -->
+        <!-- @include workshop {
+          "label": "Slide 11 of 14: W-T3, Power Platform",
+          "image": "images/tminus15-workshops/t3-power-platform.jpg",
+          "alt": "A moon base powered by solar arrays, with astronauts snapping modular habitat pods together beside a rocket",
+          "focus": "14%",
+          "kicker": "Technology &middot; W-T3",
+          "title": "Power Platform",
+          "subtitle": "Including Code Apps",
+          "audience": "Power Platform makers, developers and analysts who build or support business apps.",
+          "description": "From canvas and model-driven apps to Code Apps and Power Automate, learn how to build business solutions quickly without cutting corners &mdash; and how solutions, environments and connection references keep them manageable as they grow.",
+          "topics": [
+            "Canvas apps",
+            "Model-driven apps",
+            "Code Apps",
+            "Power Automate",
+            "Connectors",
+            "Solutions and environments",
+            "ALM for Power Platform"
+          ],
+          "note": "Can run as a series of sessions, depending on your team&rsquo;s experience."
+        } -->
+
+        <!-- Slide 12: W-T4 -->
+        <!-- @include workshop {
+          "label": "Slide 12 of 14: W-T4, CI/CD",
+          "image": "images/tminus15-workshops/t4-cicd.jpg",
+          "alt": "An automated conveyor carrying rocket parts through a glowing scanning arch and a robotic arm towards a finished rocket on the launch pad",
+          "focus": "58%",
+          "kicker": "Technology &middot; W-T4",
+          "title": "CI/CD",
+          "subtitle": "Continuous integration and delivery",
+          "audience": "Developers, DevOps and platform engineers, and technical leads.",
+          "description": "Build the pipelines that take code from commit to customer automatically. Hands-on with build and release pipelines, environments and approvals, branch policies, secrets and infrastructure-as-code &mdash; including deploying Power Platform solutions.",
+          "topics": [
+            "Continuous integration",
+            "Build pipelines",
+            "Release pipelines and environments",
+            "Approvals and branch policies",
+            "Secrets and service connections",
+            "Infrastructure-as-code",
+            "Deploying Power Platform solutions"
+          ]
+        } -->
+
+        <!-- Slide 13: W-T5 -->
+        <!-- @include workshop {
+          "label": "Slide 13 of 14: W-T5, Agentic coding",
+          "image": "images/tminus15-workshops/t5-agentic-coding.jpg",
+          "alt": "Small helper robots and astronauts working together to build a steel rocket with glowing lime fins on the Moon",
+          "focus": "52%",
+          "kicker": "Technology &middot; W-T5",
+          "title": "Agentic coding",
+          "subtitle": "Humans and AI agents as one team",
+          "audience": "Developers and technical leads, plus analysts and testers who want to work alongside AI agents.",
+          "description": "AI agents can now plan, write, test and review code &mdash; with people firmly in charge. See how we use tools such as Claude Code across the T-Minus-15 lifecycle, where agents add genuine value, and the skills, guardrails and reviews that keep their output trustworthy.",
+          "topics": [
+            "What agentic coding is",
+            "Claude Code in practice",
+            "Skills and specialist agents",
+            "Writing good specs and prompts",
+            "Agent-assisted testing and review",
+            "Guardrails and human sign-off",
+            "Where agents help, and where they don&rsquo;t"
+          ]
+        } -->
+
+        <!-- Slide 14: CTA -->
+        <!-- @include cta {
+          "label": "Slide 14 of 14: Ready for lift-off?",
+          "heading": "Ready for<br />lift-off?",
+          "pitch": "Talk to us about running the <strong>T-Minus-15 workshops</strong> with your team &mdash; the methodology track in order, and the technology sessions wherever they help most.",
+          "button": { "text": "Plan your workshops", "icon": "i-send", "ariaLabel": "Email KnowAll AI about the T-Minus-15 workshops" },
+          "mailSubject": "T-Minus-15 workshops"
+        } -->
+      </div>
+    </div>
+
+    <script src="vendor/reveal/reveal.js"></script>
+    <script src="knowall-deck.js"></script>
+  </body>
+</html>
