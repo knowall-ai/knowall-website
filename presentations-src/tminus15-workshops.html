@@ -2,7 +2,7 @@
     <style>
       /* Deck-specific styles — everything shared lives in knowall-deck.css */
       :root {
-        --deck-cover: url('images/tminus15-workshops/m6-operate.jpg');
+        --deck-cover: url('images/tminus15-workshops/cover.jpg');
         --deck-hero: url('images/tminus15-workshops/close-liftoff.jpg');
         --ws-panel: 860px;
       }
@@ -35,61 +35,18 @@
         );
       }
 
-      /* --- Cover: the art in a left-hand panel, the copy beside it ---------- */
-      .tm-cover-art {
-        position: absolute;
-        inset: 0 auto 0 0;
-        width: 720px;
-        background: url('images/tminus15-workshops/cover-portrait.jpg') center / cover no-repeat;
-      }
-
-      .tm-cover-art::after {
-        content: '';
-        position: absolute;
-        inset: 0 -1px 0 auto;
-        width: 220px;
-        background: linear-gradient(90deg, transparent, var(--charcoal));
-      }
-
-      .tm-cover-copy {
-        position: absolute;
-        left: 820px;
-        right: 96px;
-        top: 230px;
-        bottom: calc(60px + var(--ctl-band));
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        gap: 34px;
-      }
-
-      .tm-cover-copy h1 {
-        font-size: 112px;
-        line-height: 1.04;
-        color: #ffffff;
-      }
-
-      .tm-cover-copy h1 em {
-        font-style: italic;
-        color: var(--lime);
-      }
-
-      .tm-cover-copy .lead {
-        font-size: 31px;
-        color: var(--mist);
-      }
-
+      /* --- Cover: the house full-bleed cover, plus the book it's built on --- */
       .tm-book {
         display: flex;
         align-items: center;
-        gap: 34px;
-        margin-top: 10px;
-        padding-top: 34px;
-        border-top: 1px solid var(--line);
+        gap: 28px;
+        max-width: 1150px;
+        padding-top: 30px;
+        border-top: 1px solid rgba(255, 255, 255, 0.14);
       }
 
       .tm-book img {
-        height: 190px;
+        height: 120px;
         width: auto;
         border-radius: 6px;
         box-shadow: var(--shadow-card);
@@ -303,12 +260,13 @@
         <!-- Slide 1: Title -->
         <section role="region" aria-label="Slide 1 of 14: T-Minus-15 Workshops">
           <div
-            class="tm-cover-art"
+            class="cover-hero"
             role="img"
-            aria-label="A sleek steel rocket with glowing lime-green fins on a lunar launch pad at night, a small astronaut looking up at it"
+            aria-label="A steel rocket with glowing lime-green fins standing ready on a lunar launch pad at night beside its launch tower, a small crew of astronauts walking towards it"
           ></div>
+          <div class="cover-scrim" aria-hidden="true"></div>
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
-          <div class="tm-cover-copy">
+          <div class="cover-copy">
             <p class="kicker">KnowAll AI &middot; T-Minus-15 Workshops</p>
             <h1>Build your own<br /><em>elite delivery team</em></h1>
             <p class="lead">

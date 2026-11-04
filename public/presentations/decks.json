@@ -37,7 +37,7 @@
       "slug": "tminus15-workshops",
       "title": "T-Minus-15 Workshops",
       "description": "Six methodology workshops that take your team from Prep to Operate, one chapter of the T-Minus-15 book at a time, plus hands-on technology sessions on Azure DevOps, data, Power Platform, CI/CD and agentic coding.",
-      "cover": "images/tminus15-workshops/m6-operate.jpg",
+      "cover": "images/tminus15-workshops/cover.jpg",
       "thumb": "images/thumbs/tminus15-workshops.jpg",
       "order": 5
     }
