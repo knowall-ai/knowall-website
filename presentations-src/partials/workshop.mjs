@@ -12,6 +12,7 @@
 //   title        the workshop title (HTML)
 //   subtitle     optional line under the title (HTML)
 //   chapter      optional book chapter(s) the workshop is built on (HTML)
+//   duration     optional length, e.g. "Half-day workshop" (shown with a clock)
 //   audience     who should attend (HTML)
 //   description  what the workshop covers and why (HTML)
 //   topics       array of topic strings (HTML)
@@ -27,6 +28,7 @@ export default function workshop({
   title,
   subtitle,
   chapter,
+  duration,
   audience,
   description,
   topics = [],
@@ -43,6 +45,10 @@ export default function workshop({
               <h2>${phase ? `<span class="ws-phase">${phase}:</span> ` : ''}${title}</h2>${subtitle ? `\n              <p class="ws-sub">${subtitle}</p>` : ''}${
                 chapter
                   ? `\n              <p class="ws-chapter"><svg class="ic" aria-hidden="true"><use href="icons.svg#i-scroll-text" /></svg><span>From the book: ${chapter}</span></p>`
+                  : ''
+              }${
+                duration
+                  ? `\n              <p class="ws-chapter ws-duration"><svg class="ic" aria-hidden="true"><use href="icons.svg#i-clock" /></svg><span>${duration}</span></p>`
                   : ''
               }
             </div>
