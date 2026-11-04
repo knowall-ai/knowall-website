@@ -32,6 +32,14 @@
       "cover": "images/cover-purple-team.jpg",
       "thumb": "images/thumbs/purple-team.jpg",
       "order": 4
+    },
+    {
+      "slug": "tminus15-workshops",
+      "title": "T-Minus-15 Workshops",
+      "description": "Seven methodology workshops that take your team from Assemble to Operate, one chapter of the T-Minus-15 book at a time, plus hands-on technology sessions on Azure DevOps, data, Power Platform, CI/CD and agentic coding, and a two-hour leadership briefing on running many teams.",
+      "cover": "images/tminus15-workshops/cover.jpg",
+      "thumb": "images/thumbs/tminus15-workshops.jpg",
+      "order": 5
     }
   ],
   "retired": [
