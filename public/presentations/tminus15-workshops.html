@@ -93,15 +93,58 @@
         align-items: start;
       }
 
-      .tm-stack {
+      /* Leadership briefing: a slim strip above the two workshop tracks. */
+      .tm-lead {
         display: flex;
-        flex-direction: column;
-        gap: 28px;
+        align-items: center;
+        gap: 40px;
+        padding: 26px 52px;
+        background: linear-gradient(180deg, var(--panel), var(--panel-lo));
+        border: 1px solid var(--line-lime, var(--line));
+        border-radius: 22px;
+        box-shadow: var(--shadow-card), var(--inset-top);
       }
 
-      .tm-track--lead {
-        padding: 34px 48px;
-        gap: 16px;
+      .tm-lead h3 {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        font-size: 34px;
+        color: var(--text);
+        white-space: nowrap;
+      }
+
+      .tm-lead h3 .ic {
+        color: var(--lime);
+      }
+
+      .tm-lead .tm-lead-item {
+        display: flex;
+        align-items: baseline;
+        gap: 22px;
+        font-size: 30px;
+        color: var(--text);
+        white-space: nowrap;
+      }
+
+      .tm-lead .code {
+        font-weight: 800;
+        font-size: 24px;
+        letter-spacing: 0.08em;
+        color: var(--lime);
+      }
+
+      .tm-lead .phase {
+        font-weight: 800;
+        color: var(--lime);
+        margin-right: 10px;
+      }
+
+      .tm-lead .tm-rule {
+        margin-left: auto;
+        font-size: 22px;
+        color: var(--mist);
+        white-space: nowrap;
       }
 
       .tm-track {
@@ -347,6 +390,11 @@
               <p class="kicker">The programme</p>
               <h2>Three tracks, one launch</h2>
             </div>
+            <div class="tm-lead">
+              <h3><svg class="ic" aria-hidden="true"><use href="icons.svg#i-users" /></svg>Leadership briefing</h3>
+              <p class="tm-lead-item"><span class="code">W-L1</span><span><span class="phase">MISSION CONTROL</span>The Gnostic Enterprise</span></p>
+              <p class="tm-rule">Two hours, for CTOs and stakeholders</p>
+            </div>
             <div class="tm-tracks">
               <div class="tm-track">
                 <h3><svg class="ic" aria-hidden="true"><use href="icons.svg#i-rocket" /></svg>Methodology workshops</h3>
@@ -361,7 +409,6 @@
                   <li><span class="code">W-M6</span><span><span class="phase">OPERATE</span>Shipping value, not just code</span></li>
                 </ol>
               </div>
-              <div class="tm-stack">
               <div class="tm-track">
                 <h3><svg class="ic" aria-hidden="true"><use href="icons.svg#i-server-cog" /></svg>Technology workshops</h3>
                 <p class="tm-rule">Any order, typically half a day each, with deeper dives afterwards as needed.</p>
@@ -372,14 +419,6 @@
                   <li><span class="code">W-T4</span><span>CI/CD</span></li>
                   <li><span class="code">W-T5</span><span>Agentic coding</span></li>
                 </ol>
-              </div>
-              <div class="tm-track tm-track--lead">
-                <h3><svg class="ic" aria-hidden="true"><use href="icons.svg#i-users" /></svg>Leadership briefing</h3>
-                <p class="tm-rule">Two hours for CTOs, sponsors and stakeholders.</p>
-                <ol>
-                  <li><span class="code">W-L1</span><span><span class="phase">MISSION CONTROL</span>The Gnostic Enterprise</span></li>
-                </ol>
-              </div>
               </div>
             </div>
           </div>
