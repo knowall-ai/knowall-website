@@ -260,6 +260,7 @@ function fitSlide(slide) {
 const printing = () => typeof Reveal.isPrintingPDF === 'function' && Reveal.isPrintingPDF();
 const fitAll = () => Reveal.getSlides().forEach(fitSlide);
 Reveal.on('ready', (event) => (printing() ? fitAll() : fitSlide(event.currentSlide)));
+if (Reveal.isReady()) printing() ? fitAll() : fitSlide(Reveal.getCurrentSlide());
 Reveal.on('pdf-ready', fitAll);
 Reveal.on('slidechanged', (event) => fitSlide(event.currentSlide));
 if (document.fonts && document.fonts.ready) {
