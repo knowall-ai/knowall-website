@@ -229,7 +229,9 @@
         bottom: calc(28px + var(--ctl-band));
         display: flex;
         flex-direction: column;
-        justify-content: center;
+        /* safe: if a slide is too long, overflow runs downwards (where the
+           deck's fit-to-box can measure it) instead of off the top. */
+        justify-content: safe center;
         gap: 26px;
       }
 
@@ -438,7 +440,7 @@
         <section class="ws ws--compact" role="region" aria-label="Slide 3 of 16: W-L1, Mission Control: The Gnostic Enterprise">
           <div class="ws-art" style="--ws-art: url('images/tminus15-workshops/w-l1-mission-control.jpg'); --ws-focus: 30%" role="img" aria-label="A flight director standing in a vast moon-base mission-control hall, watching a wall of screens that each show a different launch pad and crew"></div>
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
-          <div class="ws-copy">
+          <div class="ws-copy" data-fit>
             <div class="ws-head">
               <p class="kicker">Leadership &middot; W-L1</p>
               <h2><span class="ws-phase">Mission Control:</span> The Gnostic Enterprise</h2>
@@ -480,7 +482,7 @@
         <section class="ws" role="region" aria-label="Slide 4 of 16: W-M0, Assemble: The Avengers of Agile">
           <div class="ws-art" style="--ws-art: url('images/tminus15-workshops/m0-assemble.jpg'); --ws-focus: 22%" role="img" aria-label="Astronauts suiting up in a moon-base crew room in front of lit lockers, helped by small robot crew members, one handing over a helmet"></div>
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
-          <div class="ws-copy">
+          <div class="ws-copy" data-fit>
             <div class="ws-head">
               <p class="kicker">Methodology &middot; W-M0</p>
               <h2><span class="ws-phase">Assemble:</span> The Avengers of Agile</h2>
@@ -505,12 +507,12 @@
                 <li>Agility for the enterprise</li>
                 <li>Scrum</li>
                 <li>Kanban vs Scrum</li>
-                <li>Kanban boards</li>
-                <li>Definition of Done</li>
-                <li>WIP limits</li>
                 <li>Agile vs DevOps</li>
                 <li>DevOps principles</li>
+                <li>DevOps across the countdown</li>
+                <li>The cross-functional squad</li>
                 <li>Team values</li>
+                <li>Recruit the best</li>
                 <li>Skills for the team</li>
                 <li>Remote working</li>
                 <li>The power of collaboration</li>
@@ -524,7 +526,7 @@
         <section class="ws" role="region" aria-label="Slide 5 of 16: W-M1, Plan: Plotting the course">
           <div class="ws-art" style="--ws-art: url('images/tminus15-workshops/m1-plan.jpg'); --ws-focus: 22%" role="img" aria-label="An astronaut in a moon-base mission-control room pointing at a glowing holographic launch timeline while crew work at consoles"></div>
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
-          <div class="ws-copy">
+          <div class="ws-copy" data-fit>
             <div class="ws-head">
               <p class="kicker">Methodology &middot; W-M1</p>
               <h2><span class="ws-phase">Plan:</span> Plotting the course</h2>
@@ -542,7 +544,7 @@
             </div>
             <div class="ws-block">
               <h3 class="ws-label"><svg class="ic" aria-hidden="true"><use href="icons.svg#i-clipboard-list" /></svg>Topics</h3>
-              <ul class="ws-topics" style="--ws-cols: 2">
+              <ul class="ws-topics" style="--ws-cols: 3">
                 <li>Target: setting the sprint goal</li>
                 <li>Size: story point estimation</li>
                 <li>Total effort vs engineering effort</li>
@@ -552,6 +554,9 @@
                 <li>Sprint types, from Prep &amp; Design to Operational</li>
                 <li>The sprint burndown</li>
                 <li>Risks and issues</li>
+                <li>Kanban boards</li>
+                <li>Definition of Done</li>
+                <li>WIP limits</li>
                 <li>Roadmaps and milestones</li>
                 <li>Incremental releases, not big-bang launches</li>
                 <li>Release day vs announcement day</li>
@@ -564,7 +569,7 @@
         <section class="ws" role="region" aria-label="Slide 6 of 16: W-M2, Prep">
           <div class="ws-art" style="--ws-art: url('images/tminus15-workshops/m2-prep.jpg'); --ws-focus: 22%" role="img" aria-label="An astronaut checking a glowing manifest in a moon-base supply depot, crates sorted into lit rows by size while a small robot moves one into place"></div>
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
-          <div class="ws-copy">
+          <div class="ws-copy" data-fit>
             <div class="ws-head">
               <p class="kicker">Methodology &middot; W-M2</p>
               <h2><span class="ws-phase">Prep:</span> Decoding the client&rsquo;s wants and needs</h2>
@@ -601,7 +606,7 @@
         <section class="ws" role="region" aria-label="Slide 7 of 16: W-M3, Design">
           <div class="ws-art" style="--ws-art: url('images/tminus15-workshops/m3-design.jpg'); --ws-focus: 38%" role="img" aria-label="An astronaut sketching rocket blueprints at a drafting table on the Moon, with colour swatches, a scale model and a test cockpit nearby"></div>
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
-          <div class="ws-copy">
+          <div class="ws-copy" data-fit>
             <div class="ws-head">
               <p class="kicker">Methodology &middot; W-M3</p>
               <h2><span class="ws-phase">Design:</span> Crafting UX that doesn&rsquo;t suck</h2>
@@ -634,7 +639,7 @@
         <section class="ws" role="region" aria-label="Slide 8 of 16: W-M4, Engineer">
           <div class="ws-art" style="--ws-art: url('images/tminus15-workshops/m4-engineer.jpg'); --ws-focus: 74%" role="img" aria-label="A steel rocket being assembled inside a launch gantry, a crane lowering its nose cone while astronauts work on the platforms"></div>
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
-          <div class="ws-copy">
+          <div class="ws-copy" data-fit>
             <div class="ws-head">
               <p class="kicker">Methodology &middot; W-M4</p>
               <h2><span class="ws-phase">Engineer:</span> The art of engineering</h2>
@@ -672,7 +677,7 @@
         <section class="ws" role="region" aria-label="Slide 9 of 16: W-M5, Test">
           <div class="ws-art" style="--ws-art: url('images/tminus15-workshops/m5-test.jpg'); --ws-focus: 66%" role="img" aria-label="A rocket engine test-firing a lime-green plume across a crater while an astronaut watches the gauges from behind a barrier"></div>
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
-          <div class="ws-copy">
+          <div class="ws-copy" data-fit>
             <div class="ws-head">
               <p class="kicker">Methodology &middot; W-M5</p>
               <h2><span class="ws-phase">Test:</span> Raising the bar</h2>
@@ -709,7 +714,7 @@
         <section class="ws" role="region" aria-label="Slide 10 of 16: W-M6, Operate">
           <div class="ws-art" style="--ws-art: url('images/tminus15-workshops/m6-operate.jpg'); --ws-focus: 50%" role="img" aria-label="A rocket lifting off from the Moon while a reusable booster lands upright on a nearby pad and astronauts cheer from a mission control dome"></div>
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
-          <div class="ws-copy">
+          <div class="ws-copy" data-fit>
             <div class="ws-head">
               <p class="kicker">Methodology &middot; W-M6</p>
               <h2><span class="ws-phase">Operate:</span> Shipping value,<br />not just code</h2>
@@ -750,7 +755,7 @@
         <section class="ws" role="region" aria-label="Slide 11 of 16: W-T1, Azure DevOps">
           <div class="ws-art" style="--ws-art: url('images/tminus15-workshops/t1-azure-devops.jpg'); --ws-focus: 22%" role="img" aria-label="An astronaut moving a lit card between columns on a wall of glowing boards in a moon-base operations room"></div>
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
-          <div class="ws-copy">
+          <div class="ws-copy" data-fit>
             <div class="ws-head">
               <p class="kicker">Technology &middot; W-T1</p>
               <h2>Azure DevOps</h2>
@@ -784,7 +789,7 @@
         <section class="ws" role="region" aria-label="Slide 12 of 16: W-T2, Data storage">
           <div class="ws-art" style="--ws-art: url('images/tminus15-workshops/t2-data-storage.jpg'); --ws-focus: 22%" role="img" aria-label="Three different storage facilities on the Moon connected by pipes, with an astronaut comparing them and a rocket on a distant pad"></div>
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
-          <div class="ws-copy">
+          <div class="ws-copy" data-fit>
             <div class="ws-head">
               <p class="kicker">Technology &middot; W-T2</p>
               <h2>Data storage</h2>
@@ -819,7 +824,7 @@
         <section class="ws" role="region" aria-label="Slide 13 of 16: W-T3, Power Platform">
           <div class="ws-art" style="--ws-art: url('images/tminus15-workshops/t3-power-platform.jpg'); --ws-focus: 22%" role="img" aria-label="Close-up of a rocket engine&rsquo;s nozzles and glowing power conduits, an astronaut engineer connecting a power cable"></div>
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
-          <div class="ws-copy">
+          <div class="ws-copy" data-fit>
             <div class="ws-head">
               <p class="kicker">Technology &middot; W-T3</p>
               <h2>Power Platform</h2>
@@ -854,7 +859,7 @@
         <section class="ws" role="region" aria-label="Slide 14 of 16: W-T4, CI/CD">
           <div class="ws-art" style="--ws-art: url('images/tminus15-workshops/t4-cicd.jpg'); --ws-focus: 22%" role="img" aria-label="Robotic arms assembling glowing parts on an automated moon-base assembly line, an astronaut watching from a walkway above"></div>
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
-          <div class="ws-copy">
+          <div class="ws-copy" data-fit>
             <div class="ws-head">
               <p class="kicker">Technology &middot; W-T4</p>
               <h2>CI/CD</h2>
@@ -889,7 +894,7 @@
         <section class="ws" role="region" aria-label="Slide 15 of 16: W-T5, Agentic coding">
           <div class="ws-art" style="--ws-art: url('images/tminus15-workshops/t5-agentic-coding.jpg'); --ws-focus: 22%" role="img" aria-label="An astronaut at a workbench with floating holographic panels, three small robot crew members building alongside"></div>
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
-          <div class="ws-copy">
+          <div class="ws-copy" data-fit>
             <div class="ws-head">
               <p class="kicker">Technology &middot; W-T5</p>
               <h2>Agentic coding</h2>

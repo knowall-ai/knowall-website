@@ -231,3 +231,32 @@ document.querySelectorAll('.carousel').forEach((root) => {
   Reveal.on('slidechanged', onSlide);
   if (Reveal.isReady()) onSlide();
 });
+
+/**
+ * Fit-to-box for dense slides. Any element with `data-fit` shrinks its
+ * children (CSS zoom, so text re-wraps across the full width rather than
+ * leaving a gap) until its content fits its box, down to 72%. Reveal scales
+ * the whole 1920x1080 slide to the screen; this handles content that is too
+ * long for the slide itself. Measured when a slide becomes current, because
+ * Reveal hides distant slides (display: none) and they can't be measured.
+ *
+ * The box should use `justify-content: safe center` (or start) so overflow
+ * runs downwards, where scrollHeight can see it.
+ */
+function fitSlide(slide) {
+  if (!slide) return;
+  slide.querySelectorAll('[data-fit]').forEach((box) => {
+    if (!box.clientHeight) return;
+    let fit = 1;
+    box.style.setProperty('--fit', '1');
+    while (box.scrollHeight > box.clientHeight + 1 && fit > 0.72) {
+      fit = Math.round((fit - 0.02) * 100) / 100;
+      box.style.setProperty('--fit', String(fit));
+    }
+  });
+}
+Reveal.on('ready', (event) => fitSlide(event.currentSlide));
+Reveal.on('slidechanged', (event) => fitSlide(event.currentSlide));
+if (document.fonts && document.fonts.ready) {
+  document.fonts.ready.then(() => fitSlide(Reveal.getCurrentSlide()));
+}
