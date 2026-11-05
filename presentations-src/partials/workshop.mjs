@@ -18,6 +18,8 @@
 //   description  what the workshop covers and why (HTML)
 //   topics       array of topic strings (HTML)
 //   columns      optional topic columns, default 2
+//   outcomes     optional: what attendees leave with (HTML)
+//   breakout     optional 2-hour break-out lab: { title, detail } (HTML)
 //   note         optional footnote, e.g. "Can run as a series of sessions"
 //   compact      optional: tighter, smaller topic list for long lists
 export default function workshop({
@@ -36,10 +38,30 @@ export default function workshop({
   description,
   topics = [],
   columns = 2,
+  outcomes,
+  breakout,
   note,
   compact = false,
 }) {
   const topicItems = topics.map((t) => `                <li>${t}</li>`).join('\n');
+  // What attendees take away, and the optional hands-on lab that follows,
+  // side by side under the topics.
+  const takeaways = [
+    outcomes
+      ? `              <div class="ws-block">
+                <h3 class="ws-label"><svg class="ic" aria-hidden="true"><use href="icons.svg#i-graduation-cap" /></svg>You leave with</h3>
+                <p>${outcomes}</p>
+              </div>`
+      : '',
+    breakout
+      ? `              <div class="ws-block">
+                <h3 class="ws-label"><svg class="ic" aria-hidden="true"><use href="icons.svg#i-flask-conical" /></svg>Optional break-out &middot; 2 hours</h3>
+                <p><strong>${breakout.title}:</strong> ${breakout.detail}</p>
+              </div>`
+      : '',
+  ]
+    .filter(Boolean)
+    .join('\n');
   return `        <section class="ws${compact ? ' ws--compact' : ''}" role="region" aria-label="${label}">
           <div class="ws-art" style="--ws-art: url('${image}'); --ws-focus: ${focus}" role="img" aria-label="${alt}"></div>
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
@@ -69,7 +91,7 @@ export default function workshop({
               <ul class="ws-topics" style="--ws-cols: ${columns}">
 ${topicItems}
               </ul>
-            </div>${note ? `\n            <p class="ws-note"><svg class="ic" aria-hidden="true"><use href="icons.svg#i-calendar-check" /></svg>${note}</p>` : ''}
+            </div>${takeaways ? `\n            <div class="ws-pair">\n${takeaways}\n            </div>` : ''}${note ? `\n            <p class="ws-note"><svg class="ic" aria-hidden="true"><use href="icons.svg#i-calendar-check" /></svg>${note}</p>` : ''}
           </div>
         </section>
 `;
