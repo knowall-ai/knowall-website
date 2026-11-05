@@ -63,7 +63,10 @@ export async function connectSigner(keyPath) {
   if (!/^[0-9a-f]{64}$/i.test(keyHex)) {
     throw new Error(`${keyPath} does not contain a 64-char hex key`);
   }
-  const signer = BunkerSigner.fromBunker(hexToBytes(keyHex), BUNKER);
+  const signer = BunkerSigner.fromBunker(hexToBytes(keyHex), BUNKER, {
+    // nostr-tools 2.25.3+ defaults each request to 30 s; Amber approval is a human step, so match awaitAmber
+    timeout: AMBER_TIMEOUT_MS,
+  });
   console.log('Connecting to Amber signer (approval may be needed on the phone)...');
   const pubkey = await awaitAmber(signer.getPublicKey(), 'confirm the connection');
   if (pubkey !== companyPubkeyHex()) {
