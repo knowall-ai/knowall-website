@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- Generated from presentations-src/tminus15-workshops.html by `npm run decks:build`: edit the source, not this file. -->
     <title>T-Minus-15 Workshops — KnowAll AI</title>
-    <meta name="description" content="The T-Minus-15 workshops from KnowAll AI: seven methodology workshops that take your team from Assemble to Operate, one chapter of the T-Minus-15 book at a time, plus hands-on technology sessions on Azure DevOps, data, Power Platform, CI/CD and agentic coding, and a two-hour leadership briefing on running many teams." />
+    <meta name="description" content="The T-Minus-15 workshops from KnowAll AI: seven methodology workshops that take your team from Assemble to Operate, one chapter of the T-Minus-15 book at a time, with optional break-out labs, plus hands-on technology sessions on Azure DevOps, data, Power Platform, CI/CD and agentic coding, and a two-hour leadership briefing on running many teams." />
     <link rel="icon" href="/favicon.ico" type="image/x-icon" />
     <meta property="og:title" content="T-Minus-15 Workshops — KnowAll AI" />
-    <meta property="og:description" content="The T-Minus-15 workshops from KnowAll AI: seven methodology workshops that take your team from Assemble to Operate, one chapter of the T-Minus-15 book at a time, plus hands-on technology sessions on Azure DevOps, data, Power Platform, CI/CD and agentic coding, and a two-hour leadership briefing on running many teams." />
+    <meta property="og:description" content="The T-Minus-15 workshops from KnowAll AI: seven methodology workshops that take your team from Assemble to Operate, one chapter of the T-Minus-15 book at a time, with optional break-out labs, plus hands-on technology sessions on Azure DevOps, data, Power Platform, CI/CD and agentic coding, and a two-hour leadership briefing on running many teams." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://www.knowall.ai/presentations/tminus15-workshops.html" />
     <meta property="og:image" content="https://www.knowall.ai/presentations/images/og/tminus15-workshops.jpg" />
@@ -17,7 +17,7 @@
     <meta property="og:image:alt" content="T-Minus-15 Workshops — KnowAll AI" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="T-Minus-15 Workshops — KnowAll AI" />
-    <meta name="twitter:description" content="The T-Minus-15 workshops from KnowAll AI: seven methodology workshops that take your team from Assemble to Operate, one chapter of the T-Minus-15 book at a time, plus hands-on technology sessions on Azure DevOps, data, Power Platform, CI/CD and agentic coding, and a two-hour leadership briefing on running many teams." />
+    <meta name="twitter:description" content="The T-Minus-15 workshops from KnowAll AI: seven methodology workshops that take your team from Assemble to Operate, one chapter of the T-Minus-15 book at a time, with optional break-out labs, plus hands-on technology sessions on Azure DevOps, data, Power Platform, CI/CD and agentic coding, and a two-hour leadership briefing on running many teams." />
     <meta name="twitter:image" content="https://www.knowall.ai/presentations/images/og/tminus15-workshops.jpg" />
     <link rel="stylesheet" href="vendor/reveal/reset.css" />
     <link rel="stylesheet" href="vendor/reveal/reveal.css" />
@@ -205,6 +205,48 @@
         margin-right: 10px;
       }
 
+      /* --- How the workshops run --------------------------------------------- */
+      .tm-track ol.tm-labs {
+        gap: 14px;
+      }
+
+      .tm-track ol.tm-labs li {
+        font-size: 28px;
+      }
+
+      .tm-facts {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+      }
+
+      .tm-track .tm-facts li {
+        display: block;
+        position: relative;
+        padding-left: 26px;
+        font-size: 24px;
+        line-height: 1.45;
+        color: var(--mist);
+      }
+
+      .tm-facts li::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0.6em;
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        background: var(--lime);
+      }
+
+      .tm-facts strong {
+        color: var(--text);
+      }
+
       /* --- Workshop slides --------------------------------------------------- */
       .ws-art {
         position: absolute;
@@ -343,6 +385,22 @@
         opacity: 0.85;
       }
 
+      /* What attendees leave with, beside the optional break-out lab. */
+      .ws-pair {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 32px;
+      }
+
+      .ws-pair .ws-block p {
+        font-size: 21px;
+        line-height: 1.45;
+      }
+
+      .ws-pair strong {
+        color: var(--text);
+      }
+
       .ws-note {
         display: flex;
         align-items: center;
@@ -361,7 +419,7 @@
     <div class="reveal">
       <div class="slides">
         <!-- Slide 1: Title -->
-        <section role="region" aria-label="Slide 1 of 16: T-Minus-15 Workshops">
+        <section role="region" aria-label="Slide 1 of 17: T-Minus-15 Workshops">
           <div
             class="cover-hero"
             role="img"
@@ -394,7 +452,7 @@
           class="scene"
           style="--scene: url('images/tminus15-workshops/scene-two-tracks.jpg')"
           role="region"
-          aria-label="Slide 2 of 16: Three tracks, one launch"
+          aria-label="Slide 2 of 17: Three tracks, one launch"
         >
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
           <div class="dark-inner" style="gap: 40px">
@@ -410,7 +468,7 @@
             <div class="tm-tracks">
               <div class="tm-track">
                 <h3><svg class="ic" aria-hidden="true"><use href="icons.svg#i-rocket" /></svg>Methodology workshops</h3>
-                <p class="tm-rule">One workshop for each stage of the T-Minus-15 lifecycle, each built on a chapter of the book. Typically half a day each.</p>
+                <p class="tm-rule">One workshop for each stage of the T-Minus-15 lifecycle, each built on a chapter of the book. Typically half a day each, with an optional two-hour break-out lab.</p>
                 <ol>
                   <li><span class="code">W-M0</span><span><span class="phase">ASSEMBLE</span>The Avengers of Agile</span></li>
                   <li><span class="code">W-M1</span><span><span class="phase">PLAN</span>Plotting the course</span></li>
@@ -436,8 +494,49 @@
           </div>
         </section>
 
-        <!-- Slide 3: W-L1 -->
-        <section class="ws ws--compact" role="region" aria-label="Slide 3 of 16: W-L1, Mission Control: The Gnostic Enterprise">
+        <!-- Slide 3: How the workshops run -->
+        <section
+          class="scene"
+          style="--scene: url('images/tminus15-workshops/scene-two-tracks.jpg')"
+          role="region"
+          aria-label="Slide 3 of 17: How the workshops run"
+        >
+          <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
+          <div class="dark-inner" style="gap: 40px">
+            <div>
+              <p class="kicker">How the workshops run</p>
+              <h2>Learn it, then launch it</h2>
+            </div>
+            <div class="tm-tracks">
+              <div class="tm-track">
+                <h3><svg class="ic" aria-hidden="true"><use href="icons.svg#i-flask-conical" /></svg>Break-out labs</h3>
+                <p class="tm-rule">Optional, two hours each, after a methodology workshop. Each group takes one simple use case of its own through the whole countdown.</p>
+                <ol class="tm-labs">
+                  <li><span class="code">W-M0</span><span><span class="phase">ASSEMBLE</span>Build your crew</span></li>
+                  <li><span class="code">W-M1</span><span><span class="phase">PLAN</span>Plan a sprint</span></li>
+                  <li><span class="code">W-M2</span><span><span class="phase">PREP</span>Build a backlog</span></li>
+                  <li><span class="code">W-M3</span><span><span class="phase">DESIGN</span>Brand guidelines</span></li>
+                  <li><span class="code">W-M4</span><span><span class="phase">ENGINEER</span>Agentic delivery</span></li>
+                  <li><span class="code">W-M5</span><span><span class="phase">TEST</span>Automated testing</span></li>
+                  <li><span class="code">W-M6</span><span><span class="phase">OPERATE</span>Launch readiness</span></li>
+                </ol>
+              </div>
+              <div class="tm-track">
+                <h3><svg class="ic" aria-hidden="true"><use href="icons.svg#i-globe" /></svg>In person or remote</h3>
+                <ul class="tm-facts">
+                  <li><strong>In person:</strong> a half-day workshop, with its break-out the same afternoon or on another day.</li>
+                  <li><strong>Remote:</strong> each workshop runs as two shorter sessions, and break-outs use breakout rooms with a facilitator in each.</li>
+                  <li><strong>Small groups:</strong> about six to eight people per facilitator, each organisation in its own group.</li>
+                  <li><strong>Built in our environment:</strong> nothing to install and no access needed to your systems.</li>
+                  <li><strong>Sample data only:</strong> no customer, patient or confidential data in any build.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Slide 4: W-L1 -->
+        <section class="ws ws--compact" role="region" aria-label="Slide 4 of 17: W-L1, Mission Control: The Gnostic Enterprise">
           <div class="ws-art" style="--ws-art: url('images/tminus15-workshops/w-l1-mission-control.jpg'); --ws-focus: 30%" role="img" aria-label="A flight director standing in a vast moon-base mission-control hall, watching a wall of screens that each show a different launch pad and crew"></div>
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
           <div class="ws-copy" data-fit>
@@ -475,11 +574,17 @@
                 <li>Range Safety: Security by Design</li>
               </ul>
             </div>
+            <div class="ws-pair">
+              <div class="ws-block">
+                <h3 class="ws-label"><svg class="ic" aria-hidden="true"><use href="icons.svg#i-graduation-cap" /></svg>You leave with</h3>
+                <p>A leadership view of scaling delivery across many teams, and the standards and guardrails that let people and agents do their best work.</p>
+              </div>
+            </div>
           </div>
         </section>
 
-        <!-- Slide 4: W-M0 -->
-        <section class="ws" role="region" aria-label="Slide 4 of 16: W-M0, Assemble: The Avengers of Agile">
+        <!-- Slide 5: W-M0 -->
+        <section class="ws" role="region" aria-label="Slide 5 of 17: W-M0, Assemble: The Avengers of Agile">
           <div class="ws-art" style="--ws-art: url('images/tminus15-workshops/m0-assemble.jpg'); --ws-focus: 22%" role="img" aria-label="Astronauts suiting up in a moon-base crew room in front of lit lockers, helped by small robot crew members, one handing over a helmet"></div>
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
           <div class="ws-copy" data-fit>
@@ -519,11 +624,21 @@
                 <li>Positive karma</li>
               </ul>
             </div>
+            <div class="ws-pair">
+              <div class="ws-block">
+                <h3 class="ws-label"><svg class="ic" aria-hidden="true"><use href="icons.svg#i-graduation-cap" /></svg>You leave with</h3>
+                <p>A shared understanding of Agile, Scrum, Kanban and DevOps, and of the roles, values and habits of a squad that ships.</p>
+              </div>
+              <div class="ws-block">
+                <h3 class="ws-label"><svg class="ic" aria-hidden="true"><use href="icons.svg#i-flask-conical" /></svg>Optional break-out &middot; 2 hours</h3>
+                <p><strong>Build your crew:</strong> map your own team to the countdown&rsquo;s stages, roles and agents, and draft a working agreement.</p>
+              </div>
+            </div>
           </div>
         </section>
 
-        <!-- Slide 5: W-M1 -->
-        <section class="ws" role="region" aria-label="Slide 5 of 16: W-M1, Plan: Plotting the course">
+        <!-- Slide 6: W-M1 -->
+        <section class="ws" role="region" aria-label="Slide 6 of 17: W-M1, Plan: Plotting the course">
           <div class="ws-art" style="--ws-art: url('images/tminus15-workshops/m1-plan.jpg'); --ws-focus: 22%" role="img" aria-label="An astronaut in a moon-base mission-control room pointing at a glowing holographic launch timeline while crew work at consoles"></div>
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
           <div class="ws-copy" data-fit>
@@ -562,11 +677,21 @@
                 <li>Release day vs announcement day</li>
               </ul>
             </div>
+            <div class="ws-pair">
+              <div class="ws-block">
+                <h3 class="ws-label"><svg class="ic" aria-hidden="true"><use href="icons.svg#i-graduation-cap" /></svg>You leave with</h3>
+                <p>The confidence to set a sprint goal, size work honestly against real capacity, and plan only what fits.</p>
+              </div>
+              <div class="ws-block">
+                <h3 class="ws-label"><svg class="ic" aria-hidden="true"><use href="icons.svg#i-flask-conical" /></svg>Optional break-out &middot; 2 hours</h3>
+                <p><strong>Plan a sprint:</strong> set the goal, size the work, work out capacity and set up a board for your own example use case.</p>
+              </div>
+            </div>
           </div>
         </section>
 
-        <!-- Slide 6: W-M2 -->
-        <section class="ws" role="region" aria-label="Slide 6 of 16: W-M2, Prep: Decoding the client&rsquo;s wants and needs">
+        <!-- Slide 7: W-M2 -->
+        <section class="ws" role="region" aria-label="Slide 7 of 17: W-M2, Prep: Decoding the client&rsquo;s wants and needs">
           <div class="ws-art" style="--ws-art: url('images/tminus15-workshops/m2-prep.jpg'); --ws-focus: 22%" role="img" aria-label="An astronaut checking a glowing manifest in a moon-base supply depot, crates sorted into lit rows by size while a small robot moves one into place"></div>
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
           <div class="ws-copy" data-fit>
@@ -599,11 +724,21 @@
                 <li>So, what does the client want?</li>
               </ul>
             </div>
+            <div class="ws-pair">
+              <div class="ws-block">
+                <h3 class="ws-label"><svg class="ic" aria-hidden="true"><use href="icons.svg#i-graduation-cap" /></svg>You leave with</h3>
+                <p>The skills to draw out what a client really needs, and shape it into a backlog of epics, features and stories.</p>
+              </div>
+              <div class="ws-block">
+                <h3 class="ws-label"><svg class="ic" aria-hidden="true"><use href="icons.svg#i-flask-conical" /></svg>Optional break-out &middot; 2 hours</h3>
+                <p><strong>Build a backlog:</strong> turn your example use case into epics, features and stories with clear acceptance criteria.</p>
+              </div>
+            </div>
           </div>
         </section>
 
-        <!-- Slide 7: W-M3 -->
-        <section class="ws" role="region" aria-label="Slide 7 of 16: W-M3, Design: Crafting UX that doesn&rsquo;t suck">
+        <!-- Slide 8: W-M3 -->
+        <section class="ws" role="region" aria-label="Slide 8 of 17: W-M3, Design: Crafting UX that doesn&rsquo;t suck">
           <div class="ws-art" style="--ws-art: url('images/tminus15-workshops/m3-design.jpg'); --ws-focus: 38%" role="img" aria-label="An astronaut sketching rocket blueprints at a drafting table on the Moon, with colour swatches, a scale model and a test cockpit nearby"></div>
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
           <div class="ws-copy" data-fit>
@@ -632,11 +767,21 @@
                 <li>Brand guidelines</li>
               </ul>
             </div>
+            <div class="ws-pair">
+              <div class="ws-block">
+                <h3 class="ws-label"><svg class="ic" aria-hidden="true"><use href="icons.svg#i-graduation-cap" /></svg>You leave with</h3>
+                <p>The principles of UX that ships, and how brand guidelines steer people and agents alike.</p>
+              </div>
+              <div class="ws-block">
+                <h3 class="ws-label"><svg class="ic" aria-hidden="true"><use href="icons.svg#i-flask-conical" /></svg>Optional break-out &middot; 2 hours</h3>
+                <p><strong>Brand guidelines:</strong> create brand guidelines that your team and its agents can both follow.</p>
+              </div>
+            </div>
           </div>
         </section>
 
-        <!-- Slide 8: W-M4 -->
-        <section class="ws" role="region" aria-label="Slide 8 of 16: W-M4, Engineer: The art of engineering">
+        <!-- Slide 9: W-M4 -->
+        <section class="ws" role="region" aria-label="Slide 9 of 17: W-M4, Engineer: The art of engineering">
           <div class="ws-art" style="--ws-art: url('images/tminus15-workshops/m4-engineer.jpg'); --ws-focus: 74%" role="img" aria-label="A steel rocket being assembled inside a launch gantry, a crane lowering its nose cone while astronauts work on the platforms"></div>
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
           <div class="ws-copy" data-fit>
@@ -670,11 +815,21 @@
                 <li>Balancing focus and flow</li>
               </ul>
             </div>
+            <div class="ws-pair">
+              <div class="ws-block">
+                <h3 class="ws-label"><svg class="ic" aria-hidden="true"><use href="icons.svg#i-graduation-cap" /></svg>You leave with</h3>
+                <p>The engineering habits of an elite team, and how to use AI and low-code without cutting corners.</p>
+              </div>
+              <div class="ws-block">
+                <h3 class="ws-label"><svg class="ic" aria-hidden="true"><use href="icons.svg#i-flask-conical" /></svg>Optional break-out &middot; 2 hours</h3>
+                <p><strong>Agentic delivery:</strong> build your example use case with AI agents, with people reviewing every change.</p>
+              </div>
+            </div>
           </div>
         </section>
 
-        <!-- Slide 9: W-M5 -->
-        <section class="ws" role="region" aria-label="Slide 9 of 16: W-M5, Test: Raising the bar">
+        <!-- Slide 10: W-M5 -->
+        <section class="ws" role="region" aria-label="Slide 10 of 17: W-M5, Test: Raising the bar">
           <div class="ws-art" style="--ws-art: url('images/tminus15-workshops/m5-test.jpg'); --ws-focus: 66%" role="img" aria-label="A rocket engine test-firing a lime-green plume across a crater while an astronaut watches the gauges from behind a barrier"></div>
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
           <div class="ws-copy" data-fit>
@@ -708,11 +863,21 @@
                 <li>The bug cap</li>
               </ul>
             </div>
+            <div class="ws-pair">
+              <div class="ws-block">
+                <h3 class="ws-label"><svg class="ic" aria-hidden="true"><use href="icons.svg#i-graduation-cap" /></svg>You leave with</h3>
+                <p>How to build quality in from the first acceptance criterion, and which tests are worth automating.</p>
+              </div>
+              <div class="ws-block">
+                <h3 class="ws-label"><svg class="ic" aria-hidden="true"><use href="icons.svg#i-flask-conical" /></svg>Optional break-out &middot; 2 hours</h3>
+                <p><strong>Automated testing:</strong> write Playwright tests for the app you built, then run them on every change.</p>
+              </div>
+            </div>
           </div>
         </section>
 
-        <!-- Slide 10: W-M6 -->
-        <section class="ws" role="region" aria-label="Slide 10 of 16: W-M6, Operate: Shipping value, not just code">
+        <!-- Slide 11: W-M6 -->
+        <section class="ws" role="region" aria-label="Slide 11 of 17: W-M6, Operate: Shipping value, not just code">
           <div class="ws-art" style="--ws-art: url('images/tminus15-workshops/m6-operate.jpg'); --ws-focus: 50%" role="img" aria-label="A rocket lifting off from the Moon while a reusable booster lands upright on a nearby pad and astronauts cheer from a mission control dome"></div>
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
           <div class="ws-copy" data-fit>
@@ -749,11 +914,21 @@
                 <li>Life after launch</li>
               </ul>
             </div>
+            <div class="ws-pair">
+              <div class="ws-block">
+                <h3 class="ws-label"><svg class="ic" aria-hidden="true"><use href="icons.svg#i-graduation-cap" /></svg>You leave with</h3>
+                <p>How pipelines, branching and release habits make launches boring, and how to keep improving after go-live.</p>
+              </div>
+              <div class="ws-block">
+                <h3 class="ws-label"><svg class="ic" aria-hidden="true"><use href="icons.svg#i-flask-conical" /></svg>Optional break-out &middot; 2 hours</h3>
+                <p><strong>Launch readiness:</strong> put together the release checklist, release notes and go-live plan for your example use case.</p>
+              </div>
+            </div>
           </div>
         </section>
 
-        <!-- Slide 11: W-T1 -->
-        <section class="ws" role="region" aria-label="Slide 11 of 16: W-T1, Azure DevOps">
+        <!-- Slide 12: W-T1 -->
+        <section class="ws" role="region" aria-label="Slide 12 of 17: W-T1, Azure DevOps">
           <div class="ws-art" style="--ws-art: url('images/tminus15-workshops/t1-azure-devops.jpg'); --ws-focus: 22%" role="img" aria-label="An astronaut moving a lit card between columns on a wall of glowing boards in a moon-base operations room"></div>
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
           <div class="ws-copy" data-fit>
@@ -782,12 +957,18 @@
                 <li>Pipelines at a glance</li>
               </ul>
             </div>
+            <div class="ws-pair">
+              <div class="ws-block">
+                <h3 class="ws-label"><svg class="ic" aria-hidden="true"><use href="icons.svg#i-graduation-cap" /></svg>You leave with</h3>
+                <p>The confidence to run backlogs, boards, sprints, test plans and repos in Azure DevOps day to day.</p>
+              </div>
+            </div>
             <p class="ws-note"><svg class="ic" aria-hidden="true"><use href="icons.svg#i-calendar-check" /></svg>Optional follow-up deep dives on specific subjects, as needed.</p>
           </div>
         </section>
 
-        <!-- Slide 12: W-T2 -->
-        <section class="ws" role="region" aria-label="Slide 12 of 16: W-T2, Data storage">
+        <!-- Slide 13: W-T2 -->
+        <section class="ws" role="region" aria-label="Slide 13 of 17: W-T2, Data storage">
           <div class="ws-art" style="--ws-art: url('images/tminus15-workshops/t2-data-storage.jpg'); --ws-focus: 22%" role="img" aria-label="Three different storage facilities on the Moon connected by pipes, with an astronaut comparing them and a rocket on a distant pad"></div>
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
           <div class="ws-copy" data-fit>
@@ -817,12 +998,18 @@
                 <li>Choosing the right store</li>
               </ul>
             </div>
+            <div class="ws-pair">
+              <div class="ws-block">
+                <h3 class="ws-label"><svg class="ic" aria-hidden="true"><use href="icons.svg#i-graduation-cap" /></svg>You leave with</h3>
+                <p>A clear way to choose between Dataverse, SharePoint and SQL for each kind of data.</p>
+              </div>
+            </div>
             <p class="ws-note"><svg class="ic" aria-hidden="true"><use href="icons.svg#i-calendar-check" /></svg>Optional follow-up deep dives on specific subjects, as needed.</p>
           </div>
         </section>
 
-        <!-- Slide 13: W-T3 -->
-        <section class="ws" role="region" aria-label="Slide 13 of 16: W-T3, Power Platform">
+        <!-- Slide 14: W-T3 -->
+        <section class="ws" role="region" aria-label="Slide 14 of 17: W-T3, Power Platform">
           <div class="ws-art" style="--ws-art: url('images/tminus15-workshops/t3-power-platform.jpg'); --ws-focus: 22%" role="img" aria-label="Close-up of a rocket engine&rsquo;s nozzles and glowing power conduits, an astronaut engineer connecting a power cable"></div>
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
           <div class="ws-copy" data-fit>
@@ -852,12 +1039,18 @@
                 <li>ALM for Power Platform</li>
               </ul>
             </div>
+            <div class="ws-pair">
+              <div class="ws-block">
+                <h3 class="ws-label"><svg class="ic" aria-hidden="true"><use href="icons.svg#i-graduation-cap" /></svg>You leave with</h3>
+                <p>A working understanding of canvas, model-driven and Code Apps, and how to keep solutions manageable as they grow.</p>
+              </div>
+            </div>
             <p class="ws-note"><svg class="ic" aria-hidden="true"><use href="icons.svg#i-calendar-check" /></svg>Can run as a series of sessions, depending on your team&rsquo;s experience, with optional deep dives on specific subjects.</p>
           </div>
         </section>
 
-        <!-- Slide 14: W-T4 -->
-        <section class="ws" role="region" aria-label="Slide 14 of 16: W-T4, CI/CD">
+        <!-- Slide 15: W-T4 -->
+        <section class="ws" role="region" aria-label="Slide 15 of 17: W-T4, CI/CD">
           <div class="ws-art" style="--ws-art: url('images/tminus15-workshops/t4-cicd.jpg'); --ws-focus: 22%" role="img" aria-label="Robotic arms assembling glowing parts on an automated moon-base assembly line, an astronaut watching from a walkway above"></div>
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
           <div class="ws-copy" data-fit>
@@ -887,12 +1080,18 @@
                 <li>Deploying Power Platform solutions</li>
               </ul>
             </div>
+            <div class="ws-pair">
+              <div class="ws-block">
+                <h3 class="ws-label"><svg class="ic" aria-hidden="true"><use href="icons.svg#i-graduation-cap" /></svg>You leave with</h3>
+                <p>An understanding of how pipelines carry code, including Power Platform solutions, from commit to customer.</p>
+              </div>
+            </div>
             <p class="ws-note"><svg class="ic" aria-hidden="true"><use href="icons.svg#i-calendar-check" /></svg>Optional follow-up deep dives on specific subjects, as needed.</p>
           </div>
         </section>
 
-        <!-- Slide 15: W-T5 -->
-        <section class="ws" role="region" aria-label="Slide 15 of 16: W-T5, Agentic coding">
+        <!-- Slide 16: W-T5 -->
+        <section class="ws" role="region" aria-label="Slide 16 of 17: W-T5, Agentic coding">
           <div class="ws-art" style="--ws-art: url('images/tminus15-workshops/t5-agentic-coding.jpg'); --ws-focus: 22%" role="img" aria-label="An astronaut at a workbench with floating holographic panels, three small robot crew members building alongside"></div>
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
           <div class="ws-copy" data-fit>
@@ -922,12 +1121,18 @@
                 <li>Where agents help, and where they don&rsquo;t</li>
               </ul>
             </div>
+            <div class="ws-pair">
+              <div class="ws-block">
+                <h3 class="ws-label"><svg class="ic" aria-hidden="true"><use href="icons.svg#i-graduation-cap" /></svg>You leave with</h3>
+                <p>A practical sense of where agents add genuine value, and the guardrails and reviews that keep their work trustworthy.</p>
+              </div>
+            </div>
             <p class="ws-note"><svg class="ic" aria-hidden="true"><use href="icons.svg#i-calendar-check" /></svg>Optional follow-up deep dives on specific subjects, as needed.</p>
           </div>
         </section>
 
-        <!-- Slide 16: CTA -->
-        <section class="cta--full-art" role="region" aria-label="Slide 16 of 16: Ready for lift-off?">
+        <!-- Slide 17: CTA -->
+        <section class="cta--full-art" role="region" aria-label="Slide 17 of 17: Ready for lift-off?">
           <div class="cta-top">
             <h2>Ready for<br />lift-off?</h2>
             <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />

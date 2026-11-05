@@ -1,4 +1,4 @@
-<!-- @include head {"title": "T-Minus-15 Workshops — KnowAll AI", "description": "The T-Minus-15 workshops from KnowAll AI: seven methodology workshops that take your team from Assemble to Operate, one chapter of the T-Minus-15 book at a time, plus hands-on technology sessions on Azure DevOps, data, Power Platform, CI/CD and agentic coding, and a two-hour leadership briefing on running many teams."} -->
+<!-- @include head {"title": "T-Minus-15 Workshops — KnowAll AI", "description": "The T-Minus-15 workshops from KnowAll AI: seven methodology workshops that take your team from Assemble to Operate, one chapter of the T-Minus-15 book at a time, with optional break-out labs, plus hands-on technology sessions on Azure DevOps, data, Power Platform, CI/CD and agentic coding, and a two-hour leadership briefing on running many teams."} -->
     <style>
       /* Deck-specific styles — everything shared lives in knowall-deck.css */
       :root {
@@ -181,6 +181,48 @@
         margin-right: 10px;
       }
 
+      /* --- How the workshops run --------------------------------------------- */
+      .tm-track ol.tm-labs {
+        gap: 14px;
+      }
+
+      .tm-track ol.tm-labs li {
+        font-size: 28px;
+      }
+
+      .tm-facts {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+      }
+
+      .tm-track .tm-facts li {
+        display: block;
+        position: relative;
+        padding-left: 26px;
+        font-size: 24px;
+        line-height: 1.45;
+        color: var(--mist);
+      }
+
+      .tm-facts li::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0.6em;
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        background: var(--lime);
+      }
+
+      .tm-facts strong {
+        color: var(--text);
+      }
+
       /* --- Workshop slides --------------------------------------------------- */
       .ws-art {
         position: absolute;
@@ -319,6 +361,22 @@
         opacity: 0.85;
       }
 
+      /* What attendees leave with, beside the optional break-out lab. */
+      .ws-pair {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 32px;
+      }
+
+      .ws-pair .ws-block p {
+        font-size: 21px;
+        line-height: 1.45;
+      }
+
+      .ws-pair strong {
+        color: var(--text);
+      }
+
       .ws-note {
         display: flex;
         align-items: center;
@@ -337,7 +395,7 @@
     <div class="reveal">
       <div class="slides">
         <!-- Slide 1: Title -->
-        <section role="region" aria-label="Slide 1 of 16: T-Minus-15 Workshops">
+        <section role="region" aria-label="Slide 1 of 17: T-Minus-15 Workshops">
           <div
             class="cover-hero"
             role="img"
@@ -370,7 +428,7 @@
           class="scene"
           style="--scene: url('images/tminus15-workshops/scene-two-tracks.jpg')"
           role="region"
-          aria-label="Slide 2 of 16: Three tracks, one launch"
+          aria-label="Slide 2 of 17: Three tracks, one launch"
         >
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
           <div class="dark-inner" style="gap: 40px">
@@ -386,7 +444,7 @@
             <div class="tm-tracks">
               <div class="tm-track">
                 <h3><svg class="ic" aria-hidden="true"><use href="icons.svg#i-rocket" /></svg>Methodology workshops</h3>
-                <p class="tm-rule">One workshop for each stage of the T-Minus-15 lifecycle, each built on a chapter of the book. Typically half a day each.</p>
+                <p class="tm-rule">One workshop for each stage of the T-Minus-15 lifecycle, each built on a chapter of the book. Typically half a day each, with an optional two-hour break-out lab.</p>
                 <ol>
                   <li><span class="code">W-M0</span><span><span class="phase">ASSEMBLE</span>The Avengers of Agile</span></li>
                   <li><span class="code">W-M1</span><span><span class="phase">PLAN</span>Plotting the course</span></li>
@@ -412,9 +470,50 @@
           </div>
         </section>
 
-        <!-- Slide 3: W-L1 -->
+        <!-- Slide 3: How the workshops run -->
+        <section
+          class="scene"
+          style="--scene: url('images/tminus15-workshops/scene-two-tracks.jpg')"
+          role="region"
+          aria-label="Slide 3 of 17: How the workshops run"
+        >
+          <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
+          <div class="dark-inner" style="gap: 40px">
+            <div>
+              <p class="kicker">How the workshops run</p>
+              <h2>Learn it, then launch it</h2>
+            </div>
+            <div class="tm-tracks">
+              <div class="tm-track">
+                <h3><svg class="ic" aria-hidden="true"><use href="icons.svg#i-flask-conical" /></svg>Break-out labs</h3>
+                <p class="tm-rule">Optional, two hours each, after a methodology workshop. Each group takes one simple use case of its own through the whole countdown.</p>
+                <ol class="tm-labs">
+                  <li><span class="code">W-M0</span><span><span class="phase">ASSEMBLE</span>Build your crew</span></li>
+                  <li><span class="code">W-M1</span><span><span class="phase">PLAN</span>Plan a sprint</span></li>
+                  <li><span class="code">W-M2</span><span><span class="phase">PREP</span>Build a backlog</span></li>
+                  <li><span class="code">W-M3</span><span><span class="phase">DESIGN</span>Brand guidelines</span></li>
+                  <li><span class="code">W-M4</span><span><span class="phase">ENGINEER</span>Agentic delivery</span></li>
+                  <li><span class="code">W-M5</span><span><span class="phase">TEST</span>Automated testing</span></li>
+                  <li><span class="code">W-M6</span><span><span class="phase">OPERATE</span>Launch readiness</span></li>
+                </ol>
+              </div>
+              <div class="tm-track">
+                <h3><svg class="ic" aria-hidden="true"><use href="icons.svg#i-globe" /></svg>In person or remote</h3>
+                <ul class="tm-facts">
+                  <li><strong>In person:</strong> a half-day workshop, with its break-out the same afternoon or on another day.</li>
+                  <li><strong>Remote:</strong> each workshop runs as two shorter sessions, and break-outs use breakout rooms with a facilitator in each.</li>
+                  <li><strong>Small groups:</strong> about six to eight people per facilitator, each organisation in its own group.</li>
+                  <li><strong>Built in our environment:</strong> nothing to install and no access needed to your systems.</li>
+                  <li><strong>Sample data only:</strong> no customer, patient or confidential data in any build.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Slide 4: W-L1 -->
         <!-- @include workshop {
-          "label": "Slide 3 of 16: W-L1, Mission Control: The Gnostic Enterprise",
+          "label": "Slide 4 of 17: W-L1, Mission Control: The Gnostic Enterprise",
           "image": "images/tminus15-workshops/w-l1-mission-control.jpg",
           "alt": "A flight director standing in a vast moon-base mission-control hall, watching a wall of screens that each show a different launch pad and crew",
           "focus": "30%",
@@ -422,6 +521,7 @@
           "phase": "Mission Control",
           "title": "The Gnostic Enterprise",
           "duration": "Two-hour briefing",
+          "outcomes": "A leadership view of scaling delivery across many teams, and the standards and guardrails that let people and agents do their best work.",
           "subtitle": "Scaling T-Minus-15 across many teams",
           "chapterLabel": "From the books",
           "chapter": "T-Minus-15 &middot; The Gnostic Enterprise",
@@ -447,9 +547,9 @@
           ]
         } -->
 
-        <!-- Slide 4: W-M0 -->
+        <!-- Slide 5: W-M0 -->
         <!-- @include workshop {
-          "label": "Slide 4 of 16: W-M0, Assemble: The Avengers of Agile",
+          "label": "Slide 5 of 17: W-M0, Assemble: The Avengers of Agile",
           "image": "images/tminus15-workshops/m0-assemble.jpg",
           "alt": "Astronauts suiting up in a moon-base crew room in front of lit lockers, helped by small robot crew members, one handing over a helmet",
           "focus": "22%",
@@ -457,6 +557,8 @@
           "phase": "Assemble",
           "title": "The Avengers of Agile",
           "duration": "Half-day workshop",
+          "outcomes": "A shared understanding of Agile, Scrum, Kanban and DevOps, and of the roles, values and habits of a squad that ships.",
+          "breakout": { "title": "Build your crew", "detail": "map your own team to the countdown&rsquo;s stages, roles and agents, and draft a working agreement." },
           "subtitle": "Assembling a cross-functional squad that delivers results",
           "chapter": "ASSEMBLE: The Avengers of Agile",
           "audience": "The whole delivery team &mdash; product owners, analysts, designers, developers, testers and operations &mdash; plus the managers and sponsors who support them.",
@@ -482,9 +584,9 @@
           ]
         } -->
 
-        <!-- Slide 5: W-M1 -->
+        <!-- Slide 6: W-M1 -->
         <!-- @include workshop {
-          "label": "Slide 5 of 16: W-M1, Plan: Plotting the course",
+          "label": "Slide 6 of 17: W-M1, Plan: Plotting the course",
           "image": "images/tminus15-workshops/m1-plan.jpg",
           "alt": "An astronaut in a moon-base mission-control room pointing at a glowing holographic launch timeline while crew work at consoles",
           "focus": "22%",
@@ -492,6 +594,8 @@
           "phase": "Plan",
           "title": "Plotting the course",
           "duration": "Half-day workshop",
+          "outcomes": "The confidence to set a sprint goal, size work honestly against real capacity, and plan only what fits.",
+          "breakout": { "title": "Plan a sprint", "detail": "set the goal, size the work, work out capacity and set up a board for your own example use case." },
           "subtitle": "Sprint goals, honest estimates and a roadmap people can trust",
           "chapter": "PLAN: Plotting the Course",
           "columns": 3,
@@ -516,9 +620,9 @@
           ]
         } -->
 
-        <!-- Slide 6: W-M2 -->
+        <!-- Slide 7: W-M2 -->
         <!-- @include workshop {
-          "label": "Slide 6 of 16: W-M2, Prep: Decoding the client&rsquo;s wants and needs",
+          "label": "Slide 7 of 17: W-M2, Prep: Decoding the client&rsquo;s wants and needs",
           "image": "images/tminus15-workshops/m2-prep.jpg",
           "alt": "An astronaut checking a glowing manifest in a moon-base supply depot, crates sorted into lit rows by size while a small robot moves one into place",
           "focus": "22%",
@@ -526,6 +630,8 @@
           "phase": "Prep",
           "title": "Decoding the client&rsquo;s wants and needs",
           "duration": "Half-day workshop",
+          "outcomes": "The skills to draw out what a client really needs, and shape it into a backlog of epics, features and stories.",
+          "breakout": { "title": "Build a backlog", "detail": "turn your example use case into epics, features and stories with clear acceptance criteria." },
           "chapter": "PREP: Decoding the client&rsquo;s wants and needs",
           "audience": "The whole delivery team, especially product owners, business analysts, project managers and the subject-matter experts who shape what gets built.",
           "description": "If you don&rsquo;t understand the requirements, you&rsquo;re in for a bumpy ride. Learn how to get real clarity on what the client needs, and turn it into a well-structured product backlog of epics, features and stories the whole team can deliver against.",
@@ -543,9 +649,9 @@
           ]
         } -->
 
-        <!-- Slide 7: W-M3 -->
+        <!-- Slide 8: W-M3 -->
         <!-- @include workshop {
-          "label": "Slide 7 of 16: W-M3, Design: Crafting UX that doesn&rsquo;t suck",
+          "label": "Slide 8 of 17: W-M3, Design: Crafting UX that doesn&rsquo;t suck",
           "image": "images/tminus15-workshops/m3-design.jpg",
           "alt": "An astronaut sketching rocket blueprints at a drafting table on the Moon, with colour swatches, a scale model and a test cockpit nearby",
           "focus": "38%",
@@ -553,6 +659,8 @@
           "phase": "Design",
           "title": "Crafting UX that doesn&rsquo;t suck",
           "duration": "Half-day workshop",
+          "outcomes": "The principles of UX that ships, and how brand guidelines steer people and agents alike.",
+          "breakout": { "title": "Brand guidelines", "detail": "create brand guidelines that your team and its agents can both follow." },
           "chapter": "DESIGN: Crafting UX That Doesn&rsquo;t Suck",
           "audience": "The whole delivery team, especially UX and UI designers, solution architects and the product owners who sign the designs off.",
           "description": "Nobody cares how clever your code is if people hate using it. A practical look at designing experiences that just work: the principles that matter, how to get good UX shipped rather than stuck in theory, and how agents and brand guidelines keep the design consistent.",
@@ -566,9 +674,9 @@
           ]
         } -->
 
-        <!-- Slide 8: W-M4 -->
+        <!-- Slide 9: W-M4 -->
         <!-- @include workshop {
-          "label": "Slide 8 of 16: W-M4, Engineer: The art of engineering",
+          "label": "Slide 9 of 17: W-M4, Engineer: The art of engineering",
           "image": "images/tminus15-workshops/m4-engineer.jpg",
           "alt": "A steel rocket being assembled inside a launch gantry, a crane lowering its nose cone while astronauts work on the platforms",
           "focus": "74%",
@@ -576,6 +684,8 @@
           "phase": "Engineer",
           "title": "The art of engineering",
           "duration": "Half-day workshop",
+          "outcomes": "The engineering habits of an elite team, and how to use AI and low-code without cutting corners.",
+          "breakout": { "title": "Agentic delivery", "detail": "build your example use case with AI agents, with people reviewing every change." },
           "chapter": "ENGINEER: The Art of Engineering",
           "audience": "The whole delivery team, especially developers, low-code makers, solution architects and technical leads.",
           "description": "Engineering isn&rsquo;t slinging code frantically &mdash; it&rsquo;s a mindset. The habits that turn good engineers into an elite team: plan before you build, keep it simple and reusable, use AI and low-code wisely, and hand testers a finished feature rather than a ticking time bomb.",
@@ -594,9 +704,9 @@
           ]
         } -->
 
-        <!-- Slide 9: W-M5 -->
+        <!-- Slide 10: W-M5 -->
         <!-- @include workshop {
-          "label": "Slide 9 of 16: W-M5, Test: Raising the bar",
+          "label": "Slide 10 of 17: W-M5, Test: Raising the bar",
           "image": "images/tminus15-workshops/m5-test.jpg",
           "alt": "A rocket engine test-firing a lime-green plume across a crater while an astronaut watches the gauges from behind a barrier",
           "focus": "66%",
@@ -604,6 +714,8 @@
           "phase": "Test",
           "title": "Raising the bar",
           "duration": "Half-day workshop",
+          "outcomes": "How to build quality in from the first acceptance criterion, and which tests are worth automating.",
+          "breakout": { "title": "Automated testing", "detail": "write Playwright tests for the app you built, then run them on every change." },
           "subtitle": "Quality built in from the first acceptance criterion",
           "chapter": "TEST: Raising the Bar &ndash; The Pursuit of Quality",
           "audience": "The whole delivery team, especially testers and QA analysts, plus the business users who carry out acceptance testing.",
@@ -622,9 +734,9 @@
           ]
         } -->
 
-        <!-- Slide 10: W-M6 -->
+        <!-- Slide 11: W-M6 -->
         <!-- @include workshop {
-          "label": "Slide 10 of 16: W-M6, Operate: Shipping value, not just code",
+          "label": "Slide 11 of 17: W-M6, Operate: Shipping value, not just code",
           "image": "images/tminus15-workshops/m6-operate.jpg",
           "alt": "A rocket lifting off from the Moon while a reusable booster lands upright on a nearby pad and astronauts cheer from a mission control dome",
           "focus": "50%",
@@ -632,6 +744,8 @@
           "phase": "Operate",
           "title": "Shipping value,<br />not just code",
           "duration": "Half-day workshop",
+          "outcomes": "How pipelines, branching and release habits make launches boring, and how to keep improving after go-live.",
+          "breakout": { "title": "Launch readiness", "detail": "put together the release checklist, release notes and go-live plan for your example use case." },
           "chapterLabel": "From the chapters",
           "chapter": "OPERATE: Shipping Value, Not Just Code &middot; Delighted Customers, Not Just Happy Ones",
           "audience": "The whole delivery team, especially DevOps and platform engineers, technical leads, and release and service managers.",
@@ -654,9 +768,9 @@
           ]
         } -->
 
-        <!-- Slide 11: W-T1 -->
+        <!-- Slide 12: W-T1 -->
         <!-- @include workshop {
-          "label": "Slide 11 of 16: W-T1, Azure DevOps",
+          "label": "Slide 12 of 17: W-T1, Azure DevOps",
           "note": "Optional follow-up deep dives on specific subjects, as needed.",
           "image": "images/tminus15-workshops/t1-azure-devops.jpg",
           "alt": "An astronaut moving a lit card between columns on a wall of glowing boards in a moon-base operations room",
@@ -664,6 +778,7 @@
           "kicker": "Technology &middot; W-T1",
           "title": "Azure DevOps",
           "duration": "Half-day workshop",
+          "outcomes": "The confidence to run backlogs, boards, sprints, test plans and repos in Azure DevOps day to day.",
           "subtitle": "Backlogs, boards, test plans and repos",
           "audience": "The whole delivery team &mdash; product owners, analysts, developers, testers and project managers.",
           "description": "A hands-on tour of the platform that runs the T-Minus-15 process day to day. Set up a backlog and boards your team will actually use, plan and track sprints, manage test plans and suites, and keep code in repos with pull requests and policies.",
@@ -677,9 +792,9 @@
           ]
         } -->
 
-        <!-- Slide 12: W-T2 -->
+        <!-- Slide 13: W-T2 -->
         <!-- @include workshop {
-          "label": "Slide 12 of 16: W-T2, Data storage",
+          "label": "Slide 13 of 17: W-T2, Data storage",
           "note": "Optional follow-up deep dives on specific subjects, as needed.",
           "image": "images/tminus15-workshops/t2-data-storage.jpg",
           "alt": "Three different storage facilities on the Moon connected by pipes, with an astronaut comparing them and a rocket on a distant pad",
@@ -687,6 +802,7 @@
           "kicker": "Technology &middot; W-T2",
           "title": "Data storage",
           "duration": "Half-day workshop",
+          "outcomes": "A clear way to choose between Dataverse, SharePoint and SQL for each kind of data.",
           "subtitle": "Dataverse vs SharePoint vs SQL",
           "audience": "Solution architects, data engineers, developers and Power Platform makers.",
           "description": "Choosing where your data lives is one of the hardest decisions to undo. We compare Dataverse, SharePoint and SQL side by side &mdash; capability, security, performance, licensing and cost &mdash; so you can pick the right store for each solution with confidence.",
@@ -701,15 +817,16 @@
           ]
         } -->
 
-        <!-- Slide 13: W-T3 -->
+        <!-- Slide 14: W-T3 -->
         <!-- @include workshop {
-          "label": "Slide 13 of 16: W-T3, Power Platform",
+          "label": "Slide 14 of 17: W-T3, Power Platform",
           "image": "images/tminus15-workshops/t3-power-platform.jpg",
           "alt": "Close-up of a rocket engine&rsquo;s nozzles and glowing power conduits, an astronaut engineer connecting a power cable",
           "focus": "22%",
           "kicker": "Technology &middot; W-T3",
           "title": "Power Platform",
           "duration": "Half-day workshop",
+          "outcomes": "A working understanding of canvas, model-driven and Code Apps, and how to keep solutions manageable as they grow.",
           "subtitle": "Including Code Apps",
           "audience": "Power Platform makers, developers and analysts who build or support business apps.",
           "description": "From canvas and model-driven apps to Code Apps and Power Automate, learn how to build business solutions quickly without cutting corners &mdash; and how solutions, environments and connection references keep them manageable as they grow.",
@@ -725,9 +842,9 @@
           "note": "Can run as a series of sessions, depending on your team&rsquo;s experience, with optional deep dives on specific subjects."
         } -->
 
-        <!-- Slide 14: W-T4 -->
+        <!-- Slide 15: W-T4 -->
         <!-- @include workshop {
-          "label": "Slide 14 of 16: W-T4, CI/CD",
+          "label": "Slide 15 of 17: W-T4, CI/CD",
           "note": "Optional follow-up deep dives on specific subjects, as needed.",
           "image": "images/tminus15-workshops/t4-cicd.jpg",
           "alt": "Robotic arms assembling glowing parts on an automated moon-base assembly line, an astronaut watching from a walkway above",
@@ -735,6 +852,7 @@
           "kicker": "Technology &middot; W-T4",
           "title": "CI/CD",
           "duration": "Half-day workshop",
+          "outcomes": "An understanding of how pipelines carry code, including Power Platform solutions, from commit to customer.",
           "subtitle": "Continuous integration and delivery",
           "audience": "Developers, DevOps and platform engineers, and technical leads.",
           "description": "Build the pipelines that take code from commit to customer automatically. Hands-on with build and release pipelines, environments and approvals, branch policies, secrets and infrastructure-as-code &mdash; including deploying Power Platform solutions.",
@@ -749,9 +867,9 @@
           ]
         } -->
 
-        <!-- Slide 15: W-T5 -->
+        <!-- Slide 16: W-T5 -->
         <!-- @include workshop {
-          "label": "Slide 15 of 16: W-T5, Agentic coding",
+          "label": "Slide 16 of 17: W-T5, Agentic coding",
           "note": "Optional follow-up deep dives on specific subjects, as needed.",
           "image": "images/tminus15-workshops/t5-agentic-coding.jpg",
           "alt": "An astronaut at a workbench with floating holographic panels, three small robot crew members building alongside",
@@ -759,6 +877,7 @@
           "kicker": "Technology &middot; W-T5",
           "title": "Agentic coding",
           "duration": "Half-day workshop",
+          "outcomes": "A practical sense of where agents add genuine value, and the guardrails and reviews that keep their work trustworthy.",
           "subtitle": "Humans and AI agents as one team",
           "audience": "Developers and technical leads, plus analysts and testers who want to work alongside AI agents.",
           "description": "AI agents can now plan, write, test and review code &mdash; with people firmly in charge. See how we use tools such as Claude Code across the T-Minus-15 lifecycle, where agents add genuine value, and the skills, guardrails and reviews that keep their output trustworthy.",
@@ -773,9 +892,9 @@
           ]
         } -->
 
-        <!-- Slide 16: CTA -->
+        <!-- Slide 17: CTA -->
         <!-- @include cta {
-          "label": "Slide 16 of 16: Ready for lift-off?",
+          "label": "Slide 17 of 17: Ready for lift-off?",
           "className": "cta--full-art",
           "heading": "Ready for<br />lift-off?",
           "pitch": "Talk to us about running the <strong>T-Minus-15 workshops</strong> with your team &mdash; the methodology workshops for your whole delivery team, and the technology sessions wherever they help most.",
