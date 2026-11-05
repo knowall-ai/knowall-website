@@ -20,6 +20,7 @@
 //   columns      optional topic columns, default 2
 //   outcomes     optional: what attendees leave with (HTML)
 //   breakout     optional 2-hour break-out lab: { title, detail } (HTML)
+//   followup     optional follow-up sessions (HTML), shown beside "You leave with"
 //   note         optional footnote, e.g. "Can run as a series of sessions"
 //   compact      optional: tighter, smaller topic list for long lists
 export default function workshop({
@@ -40,6 +41,7 @@ export default function workshop({
   columns = 2,
   outcomes,
   breakout,
+  followup,
   note,
   compact = false,
 }) {
@@ -57,6 +59,12 @@ export default function workshop({
       ? `              <div class="ws-block">
                 <h3 class="ws-label"><svg class="ic" aria-hidden="true"><use href="icons.svg#i-flask-conical" /></svg>Optional break-out &middot; 2 hours</h3>
                 <p><strong>${breakout.title}:</strong> ${breakout.detail}</p>
+              </div>`
+      : '',
+    followup
+      ? `              <div class="ws-block">
+                <h3 class="ws-label"><svg class="ic" aria-hidden="true"><use href="icons.svg#i-calendar-check" /></svg>Optional follow-ups</h3>
+                <p>${followup}</p>
               </div>`
       : '',
   ]
