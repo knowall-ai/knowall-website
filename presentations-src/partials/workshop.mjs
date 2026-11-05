@@ -11,8 +11,11 @@
 //                title, e.g. "Prep" renders "PREP: <title>"
 //   title        the workshop title (HTML)
 //   subtitle     optional line under the title (HTML)
-//   chapter      optional book chapter(s) the workshop is built on (HTML)
-//   chapterLabel optional lead-in for the chapter line, default "From the book"
+//   books        optional books the workshop is built on: [{ title, url }],
+//                shown as links on the "From the book" line
+//   chapter      optional book chapter(s) the workshop is built on (HTML), used
+//                when there are no books
+//   chapterLabel optional lead-in for that line, default "From the book"
 //   duration     optional length, e.g. "Half-day workshop" (shown with a clock)
 //   audience     who should attend (HTML)
 //   description  what the workshop covers and why (HTML)
@@ -20,6 +23,7 @@
 //   columns      optional topic columns, default 2
 //   outcomes     optional: what attendees leave with (HTML)
 //   breakout     optional 2-hour break-out lab: { title, detail } (HTML)
+//   followup     optional follow-up sessions (HTML), shown beside "You leave with"
 //   note         optional footnote, e.g. "Can run as a series of sessions"
 //   compact      optional: tighter, smaller topic list for long lists
 export default function workshop({
@@ -31,6 +35,7 @@ export default function workshop({
   phase,
   title,
   subtitle,
+  books = [],
   chapter,
   chapterLabel = 'From the book',
   duration,
@@ -40,9 +45,17 @@ export default function workshop({
   columns = 2,
   outcomes,
   breakout,
+  followup,
   note,
   compact = false,
 }) {
+  const source = books.length
+    ? books
+        .map(
+          (b) => `<a class="ws-book" href="${b.url}" target="_blank" rel="noopener">${b.title}</a>`
+        )
+        .join(' &middot; ')
+    : chapter;
   const topicItems = topics.map((t) => `                <li>${t}</li>`).join('\n');
   // What attendees take away, and the optional hands-on lab that follows,
   // side by side under the topics.
@@ -59,6 +72,12 @@ export default function workshop({
                 <p><strong>${breakout.title}:</strong> ${breakout.detail}</p>
               </div>`
       : '',
+    followup
+      ? `              <div class="ws-block">
+                <h3 class="ws-label"><svg class="ic" aria-hidden="true"><use href="icons.svg#i-calendar-check" /></svg>Optional follow-ups</h3>
+                <p>${followup}</p>
+              </div>`
+      : '',
   ]
     .filter(Boolean)
     .join('\n');
@@ -69,8 +88,8 @@ export default function workshop({
             <div class="ws-head">
               <p class="kicker">${kicker}</p>
               <h2>${phase ? `<span class="ws-phase">${phase}:</span> ` : ''}${title}</h2>${subtitle ? `\n              <p class="ws-sub">${subtitle}</p>` : ''}${
-                chapter
-                  ? `\n              <p class="ws-chapter"><svg class="ic" aria-hidden="true"><use href="icons.svg#i-scroll-text" /></svg><span>${chapterLabel}: ${chapter}</span></p>`
+                source
+                  ? `\n              <p class="ws-chapter"><svg class="ic" aria-hidden="true"><use href="icons.svg#i-scroll-text" /></svg><span>${chapterLabel}: ${source}</span></p>`
                   : ''
               }${
                 duration
