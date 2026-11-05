@@ -51,7 +51,9 @@ export default function workshop({
 }) {
   const source = books.length
     ? books
-        .map((b) => `<a class="ws-book" href="${b.url}" target="_blank" rel="noopener">${b.title}</a>`)
+        .map(
+          (b) => `<a class="ws-book" href="${b.url}" target="_blank" rel="noopener">${b.title}</a>`
+        )
         .join(' &middot; ')
     : chapter;
   const topicItems = topics.map((t) => `                <li>${t}</li>`).join('\n');
