@@ -2023,3 +2023,96 @@ a.partner-link:focus-visible {
 [data-fit] > * {
   zoom: var(--fit, 1);
 }
+
+/* --- Print / Save as PDF ---------------------------------------------------
+   Ctrl+P or the browser's Print menu gives one 16:9 page per slide.
+   knowall-deck.js adds .kd-print to <html> on beforeprint, so the slides are
+   laid out (and the text-fit code can measure them) before the browser takes
+   its print snapshot, and removes it on afterprint. reveal's own ?print-pdf
+   mode still works too; these rules only apply outside it. */
+@media print {
+  @page {
+    size: 1920px 1080px;
+    margin: 0;
+  }
+}
+
+html.kd-print,
+html.kd-print body.reveal-viewport {
+  display: block !important;
+  width: 1920px !important;
+  height: auto !important;
+  overflow: visible !important;
+  background: #0f1216;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+html.kd-print body.reveal-viewport > .reveal {
+  position: static !important;
+  width: 1920px !important;
+  height: auto !important;
+  overflow: visible !important;
+}
+
+html.kd-print .reveal .slides {
+  position: static !important;
+  inset: auto !important;
+  width: 1920px !important;
+  height: auto !important;
+  margin: 0 !important;
+  transform: none !important;
+  zoom: 1 !important;
+  overflow: visible !important;
+  pointer-events: auto;
+}
+
+html.kd-print .reveal .slides > section {
+  display: block !important;
+  position: relative !important;
+  inset: auto !important;
+  width: 1920px !important;
+  height: 1080px !important;
+  overflow: hidden !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: none !important;
+  transition: none !important;
+  break-after: page;
+  break-inside: avoid;
+}
+
+html.kd-print .reveal .slides > section:last-child {
+  break-after: auto;
+}
+
+/* every element on its resting frame: no entry sequence, drift or fade */
+html.kd-print .reveal *,
+html.kd-print .reveal *::before,
+html.kd-print .reveal *::after {
+  animation: none !important;
+  transition: none !important;
+}
+
+html.kd-print .reveal .seq {
+  opacity: 1 !important;
+  transform: none !important;
+  visibility: visible !important;
+}
+
+/* screen-only furniture */
+html.kd-print .reveal .controls,
+html.kd-print .reveal .progress,
+html.kd-print .reveal .slide-number,
+html.kd-print .reveal .backgrounds,
+html.kd-print .reveal .pause-overlay,
+html.kd-print .reveal .speaker-notes {
+  display: none !important;
+}
+
+/* ?print-pdf: reveal breaks after every page, the last one included, which
+   left a blank page at the end of each exported PDF */
+html.print-pdf .reveal .slides .pdf-page:last-child {
+  page-break-after: auto;
+  break-after: auto;
+}
