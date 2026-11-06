@@ -113,6 +113,8 @@ Reveal.initialize({
   margin: 0,
   minScale: 0.2,
   maxScale: 2.0,
+  // ?print-pdf: one page per slide, never a spill-over page
+  pdfMaxPagesPerSlide: 1,
 });
 /**
  * Run the clash check only once the entry sequence has settled.
@@ -263,6 +265,45 @@ Reveal.on('ready', (event) => (printing() ? fitAll() : fitSlide(event.currentSli
 if (Reveal.isReady()) printing() ? fitAll() : fitSlide(Reveal.getCurrentSlide());
 Reveal.on('pdf-ready', fitAll);
 Reveal.on('slidechanged', (event) => fitSlide(event.currentSlide));
+
+// Ctrl+P / the browser's Print menu: lay every slide out as a 16:9 page
+// (styles under html.kd-print in knowall-deck.css) and fit each one before
+// the browser takes its print snapshot, then put the presenting view back.
+// beforeprint runs before print styles apply, so the class does the layout
+// on screen too, which is what lets fitSlide measure every slide.
+// .print-pdf switches off reveal's built-in "paper" print styles (black text
+// on white, backgrounds stripped), which match html:not(.print-pdf).
+// Reveal.isPrintingPDF() reads the URL, not the class, so it stays false.
+if (!printing()) {
+  // Reveal hides distant slides (display: none), so their CSS background
+  // images aren't fetched until shown, and a print snapshot taken straight
+  // after beforeprint could catch them still loading. Warm the cache once the
+  // deck has loaded so every slide's artwork is ready to print.
+  const preloadSlideArt = () => {
+    const urls = new Set();
+    document.querySelectorAll('.reveal .slides *').forEach((el) => {
+      for (const [, url] of getComputedStyle(el).backgroundImage.matchAll(/url\("?([^")]+)"?\)/g)) {
+        urls.add(url);
+      }
+    });
+    urls.forEach((url) => {
+      new Image().src = url;
+    });
+  };
+  const idle = window.requestIdleCallback || ((fn) => setTimeout(fn, 1500));
+  if (document.readyState === 'complete') idle(preloadSlideArt);
+  else window.addEventListener('load', () => idle(preloadSlideArt), { once: true });
+
+  window.addEventListener('beforeprint', () => {
+    document.documentElement.classList.add('kd-print', 'print-pdf');
+    fitAll();
+  });
+  window.addEventListener('afterprint', () => {
+    document.documentElement.classList.remove('kd-print', 'print-pdf');
+    Reveal.layout();
+    fitSlide(Reveal.getCurrentSlide());
+  });
+}
 if (document.fonts && document.fonts.ready) {
   document.fonts.ready.then(() => (printing() ? fitAll() : fitSlide(Reveal.getCurrentSlide())));
 }
