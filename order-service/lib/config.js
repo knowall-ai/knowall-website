@@ -74,8 +74,10 @@ export const config = {
   // (validated at startup).
   orderServiceKey: requireEnv('ORDER_SERVICE_KEY'),
 
-  // Lightning Address invoices are generated from (LNURL-pay).
-  lightningAddress: requireEnv('LIGHTNING_ADDRESS'),
+  // Lightning Address invoices are generated from (LNURL-pay). Optional: when
+  // unset or unreachable the service still runs and holds incoming orders
+  // until it recovers (lib/lightningHealth.js).
+  lightningAddress: getEnv('LIGHTNING_ADDRESS').trim(),
 
   // Relays (comma-separated). Defaults to the site's shop relay set.
   relays: getEnv('RELAYS', 'wss://relay.damus.io,wss://nos.lol,wss://relay.primal.net')

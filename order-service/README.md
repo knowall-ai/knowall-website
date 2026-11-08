@@ -41,12 +41,14 @@ The two can never diverge (one `generateInvoice` call, asserted by `test/single-
 
 ## Configuration (environment only)
 
-| Variable            | Required | Description                                                                                                              |
-| ------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------ |
-| `ORDER_SERVICE_KEY` | yes      | The **KnowAll AI company identity's** secret key, as `nsec1...` or 64-char hex. Supplied at deployment, never committed. |
-| `LIGHTNING_ADDRESS` | yes      | Lightning Address (LNURL-pay) invoices are generated from, e.g. `shop@getalby.com`.                                      |
-| `RELAYS`            | no       | Comma-separated relay URLs. Defaults to the site's shop set: `relay.damus.io`, `nos.lol`, `relay.primal.net`.            |
-| `CATALOG_RELAYS`    | no       | Relays the catalog is read from when pricing. Defaults to the website's `SHOP_RELAYS` (Plebeian Market relay first).     |
+| Variable            | Required | Description                                                                                                                                                                                |
+| ------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `ORDER_SERVICE_KEY` | yes      | The **KnowAll AI company identity's** secret key, as `nsec1...` or 64-char hex. Supplied at deployment, never committed.                                                                   |
+| `LIGHTNING_ADDRESS` | yes\*    | Lightning Address (LNURL-pay) invoices are generated from, e.g. `shop@getalby.com`. \*If it is unset or unreachable, the service still starts and holds orders until it works (see below). |
+| `RELAYS`            | no       | Comma-separated relay URLs. Defaults to the site's shop set: `relay.damus.io`, `nos.lol`, `relay.primal.net`.                                                                              |
+| `CATALOG_RELAYS`    | no       | Relays the catalog is read from when pricing. Defaults to the website's `SHOP_RELAYS` (Plebeian Market relay first).                                                                       |
+
+**When Lightning is down.** The service never exits because the Lightning Address is unset or its backend (e.g. LNbits) is unreachable. `lib/lightningHealth.js` probes `https://<domain>/.well-known/lnurlp/<name>` every minute and logs only state changes. While the probe fails, new orders are held in memory: not priced, not invoiced, not marked processed. They are invoiced when the probe recovers, or after a restart through the 2-day lookback. The website reports the same probe to buyers through `/api/payments-status`.
 
 Copy `.env.example` to `.env` for local runs (gitignored); in deployment set the variables on the host (App Service settings, container env, systemd `EnvironmentFile`).
 

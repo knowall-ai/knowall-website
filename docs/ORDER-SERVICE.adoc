@@ -60,7 +60,7 @@ az containerapp update -g KnowAllAIRG -n knowall-order-service \
   --image knowallshopacr.azurecr.io/order-service:$TAG
 ----
 
-Then check the startup log for `✓ Lightning Address is valid`, `✓ Key verified: service runs as the KnowAll AI npub` and `✓ Service ready - listening for orders`, and confirm a single replica:
+Then check the startup log for `✓ Lightning Address is reachable` (`⚠ ... not reachable` means it started in degraded mode, holding orders until the address works), `✓ Key verified: service runs as the KnowAll AI npub` and `✓ Service ready - listening for orders`, and confirm a single replica:
 
 [source,bash]
 ----
@@ -86,7 +86,7 @@ Environment variables only (a local `.env` is a dev convenience; it is gitignore
 
 | `LIGHTNING_ADDRESS`
 | yes
-| Lightning Address (LNURL-pay) invoices are generated from, e.g. `shop@getalby.com`. Validated at startup.
+| Lightning Address (LNURL-pay) invoices are generated from, e.g. `shop@getalby.com`. Probed every minute. If it is unset or unreachable, the service keeps running and holds orders until it recovers. The website's `/api/payments-status` probes the same address (`SHOP_LIGHTNING_ADDRESS`, default `shop@bank.knowall.ai`), so keep the two in sync.
 
 | `RELAYS`
 | no
@@ -118,8 +118,8 @@ The deployment host holds the company identity key: restrict access to the host 
 | Startup exits with "does not match the expected identity"
 | The safety stop (above): `ORDER_SERVICE_KEY` does not derive to the company npub. Correct the secret and restart; nothing was processed.
 
-| Startup hangs or exits validating the Lightning Address
-| LNURL requests carry a 10s deadline; a timeout or non-2xx here means the Lightning Address endpoint (`https://<domain>/.well-known/lnurlp/<name>`) is down or wrong. Fix `LIGHTNING_ADDRESS` and restart.
+| Log shows `Lightning payments unavailable` / checkout says payments are temporarily unavailable
+| The Lightning Address endpoint (`https://<domain>/.well-known/lnurlp/<name>`) is down or wrong. Orders are held, not lost, and are invoiced automatically once it answers again. If the address itself is wrong, fix `LIGHTNING_ADDRESS` and restart.
 
 | An order got no invoice after a transient LNURL/relay failure
 | Failed orders are *not* marked processed — the next re-delivery of the gift wrap (relays are polled with a 2-day lookback) retries automatically. Check the logs for `will retry on next delivery`.

@@ -36,7 +36,7 @@ import { randomBytes } from 'node:crypto';
 process.env.ORDER_SERVICE_KEY ||= 'a'.repeat(64);
 process.env.LIGHTNING_ADDRESS ||= 'shop@example.com';
 
-const { handleOrder } = await import('../index.js');
+const { handleOrder, retryPendingOrders } = await import('../index.js');
 const { ORDER_MESSAGE_TYPE } = await import('../lib/orderParser.js');
 const { KNOWALL_PUBKEY } = await import('../lib/config.js');
 const { encodeTestInvoice } = await import('./helpers/bolt11.js');
@@ -445,4 +445,64 @@ test('an order id already invoiced to another buyer is ignored, not re-invoiced'
     'lnbc1other',
     'the original record is untouched'
   );
+});
+
+test('Lightning down: the order is held, not priced/invoiced and not marked processed', async () => {
+  const order = buildOrderRumor();
+  const orderId = tagValue(order, 'order');
+  const pending = new Map();
+  await handleOrder(
+    order,
+    nostrClient,
+    deps({ generateInvoice: generateInvoiceSpy, isLightningHealthy: () => false, pending })
+  );
+
+  assert.equal(generateInvoiceSpy.calls.length, 0, 'no invoice while Lightning is down');
+  assert.equal(nostrClient.giftWraps.length, 0, 'nothing sent (no cancellation either)');
+  assert.equal(store.hasOrder(orderId), false, 'not marked processed, so it is retried');
+  assert.equal(pending.size, 1, 'held for retry');
+
+  // Recovery: the held order is invoiced exactly once, even if the same order
+  // also arrives again while the retry is in flight.
+  const healthy = deps({
+    generateInvoice: generateInvoiceSpy,
+    isLightningHealthy: () => true,
+    pending,
+  });
+  const handled = [];
+  retryPendingOrders(nostrClient, {
+    pending,
+    handle: (event, client) => {
+      const p = handleOrder(event, client, healthy);
+      handled.push(p);
+      return p;
+    },
+  });
+  await new Promise((r) => setImmediate(r));
+  handled.push(handleOrder(order, nostrClient, healthy));
+  await Promise.all(handled);
+
+  assert.equal(pending.size, 0);
+  assert.equal(generateInvoiceSpy.calls.length, 1, 'invoiced exactly once on recovery');
+  assert.equal(giftWrapsOfKind(nostrClient, 16).length, 1);
+  assert.equal(store.hasOrder(orderId), true);
+});
+
+test('Lightning fails mid-order: a failed probe holds the order for retry', async () => {
+  const order = buildOrderRumor();
+  const pending = new Map();
+  await handleOrder(
+    order,
+    nostrClient,
+    deps({
+      generateInvoice: async () => {
+        throw new Error('fetch failed');
+      },
+      recheckLightning: async () => false,
+      pending,
+    })
+  );
+  assert.equal(nostrClient.giftWraps.length, 0);
+  assert.equal(store.hasOrder(tagValue(order, 'order')), false);
+  assert.equal(pending.size, 1);
 });
