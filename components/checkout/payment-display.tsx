@@ -1,13 +1,19 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Check, Copy, ExternalLink, Loader2, Zap } from 'lucide-react';
+import { Check, Clock, Copy, ExternalLink, Loader2, RefreshCw, Zap } from 'lucide-react';
 import QRCode from 'qrcode';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useExchangeRate } from '@/hooks/use-exchange-rate';
 import type { GammaPaymentRequest } from '@/lib/gamma-order';
+
+/**
+ * How long "Waiting for invoice..." spins before we say it's taking longer than
+ * usual (e.g. Lightning is down and the order service is holding the order).
+ */
+const INVOICE_WAIT_TIMEOUT_MS = 75_000;
 
 interface PaymentDisplayProps {
   orderId: string;
@@ -39,6 +45,8 @@ export function PaymentDisplay({
   const [isPaying, setIsPaying] = useState(false);
   const [payError, setPayError] = useState<string | null>(null);
   const [webln, setWebln] = useState<WebLNProvider | null>(null);
+  const [waitTimedOut, setWaitTimedOut] = useState(false);
+  const [waitAttempt, setWaitAttempt] = useState(0);
 
   // WebLN is injected by extensions, sometimes only after our first render —
   // poll briefly so a late-arriving provider still surfaces the one-click
@@ -66,6 +74,14 @@ export function PaymentDisplay({
   )?.link;
   const satsAmount = paymentRequest?.amount ?? 0;
   const fiatAmount = satsAmount > 0 ? convertToFiat(satsAmount, fiatCurrency) : 0;
+
+  // Stop spinning forever if the invoice doesn't arrive.
+  useEffect(() => {
+    if (invoice) return;
+    setWaitTimedOut(false);
+    const timer = setTimeout(() => setWaitTimedOut(true), INVOICE_WAIT_TIMEOUT_MS);
+    return () => clearTimeout(timer);
+  }, [invoice, waitAttempt]);
 
   // Generate the QR code when the invoice arrives.
   useEffect(() => {
@@ -141,6 +157,34 @@ export function PaymentDisplay({
       setIsPaying(false);
     }
   };
+
+  // Waited too long: replace the spinner with a friendly message + retry. A
+  // late invoice still replaces this as soon as it arrives.
+  if ((!paymentRequest || !invoice) && waitTimedOut) {
+    return (
+      <div className="flex flex-col items-center space-y-4 py-12" data-testid="invoice-delayed">
+        <Clock className="h-8 w-8 text-gray-400" aria-hidden="true" />
+        <div className="space-y-2 text-center">
+          <p className="font-medium text-white">The invoice is taking longer than usual</p>
+          <p className="text-sm text-gray-400">
+            Lightning payments may be temporarily unavailable. Your order has been sent, and its
+            invoice will appear here once payments are back. Please try again a little later.
+          </p>
+          <p className="mt-4 text-xs text-gray-500">
+            Order ID: {orderId.slice(0, 8)}...{orderId.slice(-8)}
+          </p>
+        </div>
+        <Button
+          variant="outline"
+          onClick={() => setWaitAttempt((n) => n + 1)}
+          className="border-gray-700 bg-transparent text-gray-300 hover:border-brand hover:bg-gray-800 hover:text-brand"
+        >
+          <RefreshCw className="mr-2 h-4 w-4" aria-hidden="true" />
+          Keep waiting
+        </Button>
+      </div>
+    );
+  }
 
   // Waiting state while we watch for the merchant's payment request.
   if (!paymentRequest || !invoice) {

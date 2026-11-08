@@ -151,6 +151,8 @@ The deployment uses the following settings, stored as secrets in the GitHub envi
 
 The optional `AZURE_OPENAI_DEPLOYMENT` environment _variable_ overrides the deployment name (default `gpt-5.6-sol`).
 
+Checkout asks `GET /api/payments-status` whether Lightning payments are available. The route probes the shop's Lightning Address (`https://<domain>/.well-known/lnurlp/<name>`, cached for 60s) and returns `{"lightning":"ok"|"unavailable","checkedAt":"..."}`. When the answer is "unavailable", checkout shows a notice and disables Place Order; if the route fails, buying is not blocked. The address defaults to the order service's `shop@bank.knowall.ai` (`lib/payments-status.ts`). If that address ever changes, set the optional `SHOP_LIGHTNING_ADDRESS` App Service setting to the new one.
+
 These secrets are configured in the GitHub repository under Settings > Environments > Production - Azure.
 
 The workflow signs in to Azure with GitHub's OIDC token, so no Azure password is stored. The same environment holds the sign-in as _variables_: `AZURE_CLIENT_ID`, `AZURE_TENANT_ID` and `AZURE_SUBSCRIPTION_ID`, for an app registration with a federated credential for `repo:knowall-ai@50064085/knowall-website@807790037:environment:Production - Azure` and _Website Contributor_ on the web app only. That subject is GitHub's ID-based format, which the repo is opted in to (Settings API: `actions/oidc/customization/sub` with `use_immutable_subject: true`); without it GitHub sends `repo:knowall-ai/knowall-website:…` and the Azure sign-in fails.

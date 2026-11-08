@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { AlertCircle, ShoppingBag } from 'lucide-react';
+import { AlertCircle, Info, ShoppingBag } from 'lucide-react';
 import {
   Sheet,
   SheetContent,
@@ -12,6 +12,7 @@ import {
 import { useNostrAuth } from '@/components/auth/nostr-auth-provider';
 import { useCart } from '@/hooks/use-cart';
 import { useCheckout, useCheckoutShippingOptions } from '@/hooks/use-checkout';
+import { usePaymentsStatus } from '@/hooks/use-payments-status';
 import type { ShippingInfo } from '@/lib/gamma-order';
 import { formatPrice } from '@/lib/nip99';
 import { OrderConfirmation } from './order-confirmation';
@@ -52,6 +53,8 @@ export function CheckoutPanel({ open, onOpenChange }: CheckoutPanelProps) {
   } = useCheckout();
 
   const [step, setStep] = useState<CheckoutStep>('shipping');
+  // Only an explicit "unavailable" blocks ordering; "unknown" never does.
+  const paymentsUnavailable = usePaymentsStatus(open && step === 'shipping') === 'unavailable';
   const [localError, setLocalError] = useState<string | null>(null);
   const resetTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -149,6 +152,19 @@ export function CheckoutPanel({ open, onOpenChange }: CheckoutPanelProps) {
 
           {step === 'shipping' && (
             <>
+              {paymentsUnavailable && (
+                <div
+                  className="flex items-start gap-2 rounded-lg border border-amber-900/60 bg-amber-950/40 p-3 text-sm text-amber-200"
+                  role="status"
+                  data-testid="payments-unavailable"
+                >
+                  <Info className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
+                  <p>
+                    Lightning payments are temporarily unavailable. Please try again a little later.
+                  </p>
+                </div>
+              )}
+
               <div className="rounded-lg bg-gray-800/60 p-3">
                 <p className="text-sm">
                   <span className="font-medium">{totalItems} item(s)</span>
@@ -171,7 +187,7 @@ export function CheckoutPanel({ open, onOpenChange }: CheckoutPanelProps) {
                 shippingOptions={shippingOptions}
                 optionsLoading={shippingOptionsLoading}
                 subtotal={totalPrice}
-                submitDisabled={ratesLoading}
+                submitDisabled={ratesLoading || paymentsUnavailable}
               />
             </>
           )}
