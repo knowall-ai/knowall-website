@@ -9,23 +9,17 @@
         --purple-wash: rgba(185, 140, 255, 0.08);
       }
 
-      /* ---- The pipeline: two sources -> readiness review -> supported apps ---- */
-      .pipe {
+      /* ---- The feed: two sources -> readiness review -> fed into the monthly blocks ---- */
+      .feed-top {
         display: grid;
-        grid-template-columns: 500px 60px 340px 60px 1fr;
+        grid-template-columns: 1fr 1fr 56px 1.15fr;
         align-items: stretch;
         gap: 0 18px;
-      }
-      .pipe-col {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        gap: 22px;
       }
       .pipe-box {
         background: rgba(255, 255, 255, 0.045);
         border-left: 3px solid var(--lime);
-        padding: 26px 30px 28px;
+        padding: 20px 28px 22px;
       }
       .pipe-box .tag {
         font-size: 19px;
@@ -35,14 +29,14 @@
         color: var(--lime);
       }
       .pipe-box h4 {
-        font-size: 36px;
+        font-size: 34px;
         color: var(--text);
-        margin: 6px 0 6px;
+        margin: 4px 0 4px;
       }
       .pipe-box p {
-        font-size: 25px;
+        font-size: 24px;
         color: var(--mist);
-        line-height: 1.4;
+        line-height: 1.35;
       }
       .pipe-arrow {
         display: flex;
@@ -53,38 +47,52 @@
       }
       .pipe-gate {
         display: flex;
-        flex-direction: column;
-        justify-content: center;
         align-items: center;
-        text-align: center;
-        gap: 12px;
+        gap: 24px;
         border: 2px dashed var(--line-lime);
-        padding: 22px 20px;
+        padding: 18px 26px;
       }
       .pipe-gate .ic {
-        font-size: 68px;
+        font-size: 64px;
         color: var(--lime);
+        flex: none;
       }
       .pipe-gate h4 {
         font-size: 34px;
         color: var(--text);
+        margin-bottom: 4px;
       }
       .pipe-gate p {
         font-size: 24px;
         color: var(--mist);
-        line-height: 1.4;
+        line-height: 1.35;
       }
-      .pipe-plan {
+      .feed-drop {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 18px;
+        margin: -14px 0;
+        font-size: 25px;
+        font-weight: 700;
+        color: var(--text);
+      }
+      .feed-drop .down {
+        color: var(--lime);
+        font-size: 40px;
+        line-height: 1;
+      }
+      .feed-plan {
         position: relative;
         border: 2px solid var(--purple-line);
         background: var(--purple-wash);
-        padding: 54px 32px 30px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        gap: 18px;
+        padding: 40px 24px 22px;
+        display: grid;
+        grid-template-columns: 210px repeat(12, 1fr);
+        gap: 10px;
+        align-items: center;
       }
-      .pipe-plan .shield {
+      .feed-plan .shield {
         position: absolute;
         top: -19px;
         left: 24px;
@@ -100,40 +108,72 @@
         letter-spacing: 0.14em;
         text-transform: uppercase;
       }
-      .pipe-plan h4 {
-        font-size: 36px;
-        color: var(--text);
+      .feed-plan .origin {
+        grid-column: 1;
+        font-size: 18px;
+        font-weight: 800;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--mist);
       }
-      .apps {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 12px;
-      }
-      .app {
+      .lane {
+        height: 52px;
         display: flex;
         align-items: center;
-        gap: 12px;
-        padding: 15px 18px;
-        background: rgba(255, 255, 255, 0.06);
-        font-size: 25px;
+        gap: 14px;
+        padding: 0 18px 0 0;
+        background: linear-gradient(90deg, rgba(157, 254, 10, 0.3), rgba(157, 254, 10, 0.07));
+        font-size: 24px;
         font-weight: 700;
         color: var(--text);
+        white-space: nowrap;
       }
-      .app .ic {
-        color: var(--lime);
-        font-size: 26px;
+      .lane .in {
+        align-self: stretch;
+        width: 52px;
         flex: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--lime);
+        color: var(--ink);
+        font-size: 30px;
+        font-weight: 800;
       }
-      .app--next {
+      .lane .from {
+        margin-left: auto;
+        font-size: 19px;
+        font-weight: 600;
+        color: var(--mist);
+      }
+      .lane--yours {
+        background: linear-gradient(90deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.04));
+      }
+      .lane--yours .in {
+        background: var(--text);
+      }
+      .lane--next {
         background: none;
         border: 2px dashed var(--line-lime);
         color: var(--lime);
-        padding: 13px 16px;
       }
-      .pipe-plan .plan-note {
-        font-size: 24px;
-        color: var(--mist);
-        line-height: 1.4;
+      .lane--next .in {
+        background: none;
+        color: var(--lime);
+        border-right: 2px dashed var(--line-lime);
+      }
+      .feed-plan .blocks-label {
+        grid-column: 1;
+        font-size: 19px;
+        font-weight: 800;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--lime);
+        line-height: 1.3;
+      }
+      .feed-plan .block {
+        height: 60px;
+        margin-top: 6px;
       }
 
       /* ---- The twelve monthly blocks ---- */
@@ -361,49 +401,45 @@
           <div class="band">
             <div>
               <h2>One plan for every app</h2>
-              <p class="band-sub">Apps flow in from us and from your business. Blocks keep them all running.</p>
+              <p class="band-sub">Apps are fed in from us and from your business. Monthly blocks keep them all running.</p>
             </div>
             <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
           </div>
           <div class="content content--dense">
-            <div class="pipe" role="img" aria-label="Diagram: apps built by KnowAll AI and apps built by your own teams pass a readiness review and join the supported solutions on your plan, all covered by the Purple Team and powered by twelve monthly blocks">
-              <div class="pipe-col">
-                <div class="pipe-box">
-                  <p class="tag">Source 1</p>
-                  <h4>Built by KnowAll AI</h4>
-                  <p>Agentic workshops, proofs of concept and full projects.</p>
-                </div>
-                <div class="pipe-box">
-                  <p class="tag">Source 2</p>
-                  <h4>Built by your teams</h4>
-                  <p>Power Platform, Copilot Studio, AI agents and custom code.</p>
-                </div>
+            <div class="feed-top" role="img" aria-label="Diagram: apps built by KnowAll AI and apps built by your own teams pass a readiness review">
+              <div class="pipe-box">
+                <p class="tag">Source 1</p>
+                <h4>Built by KnowAll AI</h4>
+                <p>Agentic workshops, proofs of concept and full projects.</p>
+              </div>
+              <div class="pipe-box">
+                <p class="tag">Source 2</p>
+                <h4>Built by your teams</h4>
+                <p>Power Platform, Copilot Studio, AI agents and custom code.</p>
               </div>
               <div class="pipe-arrow" aria-hidden="true">&rarr;</div>
               <div class="pipe-gate">
                 <svg class="ic" aria-hidden="true"><use href="icons.svg#i-clipboard-list" /></svg>
-                <h4>Readiness review</h4>
-                <p>Documentation, monitoring and access checked first.</p>
-              </div>
-              <div class="pipe-arrow" aria-hidden="true">&rarr;</div>
-              <div class="pipe-plan">
-                <span class="shield">
-                  <svg class="ic" aria-hidden="true"><use href="icons.svg#i-shield-check" /></svg>
-                  Covered by the Purple Team
-                </span>
-                <h4>Supported solutions on your plan</h4>
-                <div class="apps">
-                  <div class="app"><svg class="ic" aria-hidden="true"><use href="icons.svg#i-check" /></svg>Stock control</div>
-                  <div class="app"><svg class="ic" aria-hidden="true"><use href="icons.svg#i-check" /></svg>Site inspections</div>
-                  <div class="app"><svg class="ic" aria-hidden="true"><use href="icons.svg#i-check" /></svg>Customer portal</div>
-                  <div class="app"><svg class="ic" aria-hidden="true"><use href="icons.svg#i-check" /></svg>Invoice agent</div>
-                  <div class="app"><svg class="ic" aria-hidden="true"><use href="icons.svg#i-check" /></svg>Your team&rsquo;s app</div>
-                  <div class="app app--next">+ Your next app</div>
+                <div>
+                  <h4>Readiness review</h4>
+                  <p>Documentation, monitoring and access checked first.</p>
                 </div>
-                <p class="plan-note">Supported, improved and security-tested under one agreement.</p>
               </div>
             </div>
-            <div class="blocks" role="img" aria-label="Twelve monthly blocks, one for each month of the plan">
+            <p class="feed-drop"><span class="down" aria-hidden="true">&darr;</span>Each app is fed into the next monthly block, and stays covered from then on<span class="down" aria-hidden="true">&darr;</span></p>
+            <div class="feed-plan" role="img" aria-label="Diagram: twelve monthly blocks. Stock control, built by KnowAll AI, is fed in at block 1. Customer portal, built by KnowAll AI, is fed in at block 3. Your team&rsquo;s app is fed in at block 6. Your next app is fed in at block 9. Every app stays on the plan to block 12, covered by the Purple Team.">
+              <span class="shield">
+                <svg class="ic" aria-hidden="true"><use href="icons.svg#i-shield-check" /></svg>
+                Covered by the Purple Team
+              </span>
+              <p class="origin">Built by us</p>
+              <div class="lane" style="grid-column: 2 / -1"><span class="in">&darr;</span>Stock control<span class="from">fed in at block 1</span></div>
+              <p class="origin">Built by us</p>
+              <div class="lane" style="grid-column: 4 / -1"><span class="in">&darr;</span>Customer portal<span class="from">fed in at block 3</span></div>
+              <p class="origin">Built by you</p>
+              <div class="lane lane--yours" style="grid-column: 7 / -1"><span class="in">&darr;</span>Your team&rsquo;s app<span class="from">fed in at block 6</span></div>
+              <p class="origin">Either</p>
+              <div class="lane lane--next" style="grid-column: 10 / -1"><span class="in">&darr;</span>+ Your next app</div>
               <p class="blocks-label">Monthly blocks</p>
               <div class="block">1</div>
               <div class="block">2</div>
