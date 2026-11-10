@@ -102,6 +102,15 @@ section.tw.tw-scene::before {
   padding: 1px 8px;
 }
 
+/* Code fonts: no ligatures, so <> and <!-- --> read literally */
+.tw code,
+.tw-code pre {
+  font-variant-ligatures: none;
+  font-feature-settings:
+    'liga' 0,
+    'calt' 0;
+}
+
 .tw h3 {
   display: flex;
   align-items: center;
