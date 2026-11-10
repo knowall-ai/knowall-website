@@ -279,6 +279,17 @@
           grid-column: 3 / span 2;
         }
 
+        /* more than six decks: five columns, so ten decks fit in two rows
+           instead of four squeezed ones (the 3-column centring rules above no
+           longer apply) */
+        .presentations-grid:has(> .presentation-card:nth-child(7)) {
+          grid-template-columns: repeat(10, minmax(0, 1fr));
+        }
+
+        .presentations-grid:has(> .presentation-card:nth-child(7)) > .presentation-card {
+          grid-column: span 2;
+        }
+
         .thumb {
           flex: 1 1 0;
           min-height: 72px;
@@ -302,6 +313,25 @@
 
         .footer {
           padding: 12px 24px;
+        }
+      }
+
+      /* more than six decks on a short desktop screen: two rows of cards no
+         longer fit, so the page scrolls and each thumbnail keeps its shape */
+      @media (min-width: 900px) and (min-height: 560px) and (max-height: 699px) {
+        body:has(.presentations-grid > .presentation-card:nth-child(7)) {
+          height: auto;
+          overflow: auto;
+        }
+
+        body:has(.presentations-grid > .presentation-card:nth-child(7)) .presentations-grid {
+          flex: none;
+          grid-auto-rows: auto;
+        }
+
+        body:has(.presentations-grid > .presentation-card:nth-child(7)) .thumb {
+          flex: none;
+          aspect-ratio: 16 / 9;
         }
       }
 
@@ -463,6 +493,86 @@
           <div class="card-body">
             <h2>T-Minus-15 Workshops</h2>
             <p>Seven methodology workshops that take your team from Assemble to Operate, one chapter of the T-Minus-15 book at a time, with optional break-out labs, plus hands-on technology sessions on Azure DevOps, data, Power Platform, CI/CD and agentic coding, and a two-hour leadership briefing on running many teams.</p>
+            <span class="cta" aria-hidden="true">View presentation &rarr;</span>
+          </div>
+        </a>
+        <a
+          class="presentation-card"
+          href="w-t1-azure-devops.html"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="W-T1 Azure DevOps presentation (opens in a new tab)"
+        >
+          <div class="thumb">
+            <img src="images/thumbs/w-t1-azure-devops.jpg" alt="" width="720" height="405" />
+          </div>
+          <div class="card-body">
+            <h2>W-T1 Azure DevOps</h2>
+            <p>A hands-on, half-day technology workshop on running delivery in Azure DevOps: process templates, backlogs and boards, queries and dashboards, Test Plans, Repos and pull requests, and automation, with a step-by-step lab.</p>
+            <span class="cta" aria-hidden="true">View presentation &rarr;</span>
+          </div>
+        </a>
+        <a
+          class="presentation-card"
+          href="w-t2-data-storage.html"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="W-T2 Data Storage presentation (opens in a new tab)"
+        >
+          <div class="thumb">
+            <img src="images/thumbs/w-t2-data-storage.jpg" alt="" width="720" height="405" />
+          </div>
+          <div class="card-body">
+            <h2>W-T2 Data Storage</h2>
+            <p>Dataverse vs SharePoint vs Azure SQL, hands on: security models, scale and delegation, relationships, integration and licensing, and how to choose the right store for each solution, with a step-by-step lab.</p>
+            <span class="cta" aria-hidden="true">View presentation &rarr;</span>
+          </div>
+        </a>
+        <a
+          class="presentation-card"
+          href="w-t3-power-platform.html"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="W-T3 Power Platform presentation (opens in a new tab)"
+        >
+          <div class="thumb">
+            <img src="images/thumbs/w-t3-power-platform.jpg" alt="" width="720" height="405" />
+          </div>
+          <div class="card-body">
+            <h2>W-T3 Power Platform</h2>
+            <p>Canvas, model-driven and Code Apps, Power Automate, connectors and data loss prevention, and solution-based ALM: a hands-on half day for makers and developers, with a step-by-step lab.</p>
+            <span class="cta" aria-hidden="true">View presentation &rarr;</span>
+          </div>
+        </a>
+        <a
+          class="presentation-card"
+          href="w-t4-cicd.html"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="W-T4 CI/CD presentation (opens in a new tab)"
+        >
+          <div class="thumb">
+            <img src="images/thumbs/w-t4-cicd.jpg" alt="" width="720" height="405" />
+          </div>
+          <div class="card-body">
+            <h2>W-T4 CI/CD</h2>
+            <p>YAML pipelines in Azure DevOps, from build and test to environments, approvals, secrets, Bicep infrastructure-as-code and Power Platform solution deployment, with a step-by-step lab.</p>
+            <span class="cta" aria-hidden="true">View presentation &rarr;</span>
+          </div>
+        </a>
+        <a
+          class="presentation-card"
+          href="w-t5-agentic-coding.html"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="W-T5 Agentic Coding presentation (opens in a new tab)"
+        >
+          <div class="thumb">
+            <img src="images/thumbs/w-t5-agentic-coding.jpg" alt="" width="720" height="405" />
+          </div>
+          <div class="card-body">
+            <h2>W-T5 Agentic Coding</h2>
+            <p>Agentic coding with Claude Code: the agent loop, CLAUDE.md, skills and subagents, specs from acceptance criteria, MCP, hooks, CI and the guardrails that keep agent work trustworthy, with a step-by-step lab.</p>
             <span class="cta" aria-hidden="true">View presentation &rarr;</span>
           </div>
         </a>

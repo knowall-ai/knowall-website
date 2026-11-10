@@ -1,0 +1,1233 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Generated from presentations-src/w-t2-data-storage.html by `npm run decks:build`: edit the source, not this file. -->
+    <title>W-T2 Data Storage Workshop — KnowAll AI</title>
+    <meta name="description" content="KnowAll AI technology workshop W-T2: a hands-on, half-day comparison of Dataverse, SharePoint and Azure SQL for solution architects, developers and Power Platform makers." />
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+    <meta property="og:title" content="W-T2 Data Storage Workshop — KnowAll AI" />
+    <meta property="og:description" content="KnowAll AI technology workshop W-T2: a hands-on, half-day comparison of Dataverse, SharePoint and Azure SQL for solution architects, developers and Power Platform makers." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://www.knowall.ai/presentations/w-t2-data-storage.html" />
+    <meta property="og:image" content="https://www.knowall.ai/presentations/images/og/w-t2-data-storage.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="W-T2 Data Storage Workshop — KnowAll AI" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="W-T2 Data Storage Workshop — KnowAll AI" />
+    <meta name="twitter:description" content="KnowAll AI technology workshop W-T2: a hands-on, half-day comparison of Dataverse, SharePoint and Azure SQL for solution architects, developers and Power Platform makers." />
+    <meta name="twitter:image" content="https://www.knowall.ai/presentations/images/og/w-t2-data-storage.jpg" />
+    <link rel="stylesheet" href="vendor/reveal/reset.css" />
+    <link rel="stylesheet" href="vendor/reveal/reveal.css" />
+    <link rel="stylesheet" href="vendor/fonts.css" />
+    <link rel="stylesheet" href="knowall-deck.css" />
+    <link rel="stylesheet" href="tw-kit.css" />
+    <style>
+      /* Deck-specific styles — shared components live in tw-kit.css */
+      :root {
+        --deck-cover: url('images/tminus15-workshops/t2-data-storage.jpg');
+        --deck-hero: url('images/tminus15-workshops/close-liftoff.jpg');
+      }
+
+      /* Store cards: icon, name, one-line role and a short list */
+      .ds-store .ic {
+        font-size: 44px;
+        color: var(--lime);
+      }
+
+      .ds-store h3 {
+        font-size: 34px;
+      }
+
+      /* Small two-up code blocks */
+      .ds-code-pair {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 32px;
+        align-items: start;
+      }
+
+      /* Business-unit tree on the security slide */
+      .ds-bu .tw-node {
+        flex: none;
+        width: 300px;
+      }
+
+      .ds-row {
+        display: flex;
+        gap: 28px;
+        justify-content: center;
+      }
+
+      .ds-note {
+        font-size: 21px !important;
+        color: var(--mist);
+      }
+    </style>
+  </head>
+  <body data-cta="none">
+    <div class="reveal">
+      <div class="slides">
+        <!-- 1 COVER -->
+        <section role="region" aria-label="Slide 1: W-T2 Data storage">
+          <div class="cover-hero" role="img" aria-label="Three different storage facilities on the Moon connected by pipes, with an astronaut comparing them and a rocket on a distant pad"></div>
+          <div class="cover-scrim" aria-hidden="true"></div>
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="cover-copy">
+            <p class="kicker">Technology workshop &middot; W-T2</p>
+            <h1>Data storage:<br /><em>choose once, choose well</em></h1>
+            <p class="lead">Dataverse vs SharePoint vs Azure SQL &mdash; a hands-on, half-day workshop for solution architects, developers and Power Platform makers.</p>
+          </div>
+          <aside class="notes">
+            <p>Welcome everyone. This is W-T2, the data storage workshop. Over the next three and a half hours we compare Dataverse, SharePoint and Azure SQL side by side, then put all three to work in a lab.</p>
+            <p>Quick round of the room: what are people building today, and where does its data live?</p>
+          </aside>
+        </section>
+
+        <!-- 2 AGENDA -->
+        <section class="tw" role="region" aria-label="Slide 2: Agenda">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Agenda</p>
+            <h2>The next three and a half hours</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <ol class="tw-agenda">
+              <li><span class="t">09:30</span><b>Why it matters</b></li>
+              <li class="tw-break"><span class="t">11:05</span><b>Break</b></li>
+              <li><span class="t">09:40</span><b>1 &middot; Dataverse</b></li>
+              <li><span class="t">11:20</span><b>5 &middot; Delegation, scale and performance</b></li>
+              <li><span class="t">10:05</span><b>2 &middot; Dataverse security</b></li>
+              <li><span class="t">11:40</span><b>6 &middot; Licensing, cost and choosing</b></li>
+              <li><span class="t">10:25</span><b>3 &middot; SharePoint lists and libraries</b></li>
+              <li><span class="t">12:00</span><b>Hands-on lab</b></li>
+              <li><span class="t">10:45</span><b>4 &middot; Azure SQL</b></li>
+              <li><span class="t">12:45</span><b>Flight rules, recap and Q&amp;A</b></li>
+            </ol>
+          </div>
+          <aside class="notes">
+            <p>Six short modules, a break in the middle, then a 45-minute lab where you build the same small app on all three stores.</p>
+            <p>Questions are welcome at any point; deeper questions go on the parking board for the deep-dive sessions.</p>
+          </aside>
+        </section>
+
+        <!-- 3 WHY IT MATTERS -->
+        <section class="tw" role="region" aria-label="Slide 3: Why it matters">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Why it matters</p>
+            <h2>The hardest decision to undo</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-cols tw-wide-left">
+              <div class="tw-stack">
+                <p class="tw-lead">Screens can be rebuilt in a sprint. <strong>Data outlives every app built on top of it.</strong></p>
+                <ul class="tw-list">
+                  <li>The store fixes your <strong>security model</strong>, <strong>scale ceiling</strong> and <strong>licence bill</strong></li>
+                  <li>Migrating later means re-keying relationships, re-building permissions and re-testing every app</li>
+                  <li>Most &ldquo;Power Apps is slow&rdquo; complaints are really <strong>data and delegation</strong> problems</li>
+                  <li>There is no single right answer &mdash; only the right store <strong>for each kind of data</strong></li>
+                </ul>
+              </div>
+              <div class="tw-stack">
+                <div class="tw-callout tw-pitfall"><svg class="ic"><use href="icons.svg#i-alert-triangle" /></svg><p><strong>The classic trap:</strong> &ldquo;We&rsquo;ll start on a SharePoint list and move later.&rdquo; Later rarely comes &mdash; the list just grows.</p></div>
+                <div class="tw-callout"><svg class="ic"><use href="icons.svg#i-lightbulb" /></svg><p><strong>Today&rsquo;s goal:</strong> a repeatable way to choose, with the trade-offs written down.</p></div>
+              </div>
+            </div>
+          </div>
+          <aside class="notes">
+            <p>Set the scene: the user interface is cheap to change, the data model is not. Once records, relationships and permissions exist, moving them is a project in its own right.</p>
+            <p>Ask the room for a story of a SharePoint list that outgrew itself &mdash; there is almost always one.</p>
+          </aside>
+        </section>
+
+        <!-- 4 THREE STORES -->
+        <section class="tw" role="region" aria-label="Slide 4: Three stores at a glance">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">The contenders</p>
+            <h2>Three stores at a glance</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-cols" style="--cols: 3">
+              <div class="tw-card ds-store">
+                <svg class="ic"><use href="icons.svg#i-database" /></svg>
+                <h3>Dataverse</h3>
+                <span class="tw-tag">Business data platform</span>
+                <ul class="tw-list">
+                  <li>Relational tables with rich types</li>
+                  <li>Role-based security built in</li>
+                  <li>Native to model-driven apps and solutions</li>
+                </ul>
+              </div>
+              <div class="tw-card ds-store">
+                <svg class="ic"><use href="icons.svg#i-file-text" /></svg>
+                <h3>SharePoint</h3>
+                <span class="tw-tag">Documents and simple lists</span>
+                <ul class="tw-list">
+                  <li>Already licensed with Microsoft 365</li>
+                  <li>Great for documents and metadata</li>
+                  <li>Flat lists, limited relationships</li>
+                </ul>
+              </div>
+              <div class="tw-card ds-store">
+                <svg class="ic"><use href="icons.svg#i-server-cog" /></svg>
+                <h3>Azure SQL</h3>
+                <span class="tw-tag">Full relational engine</span>
+                <ul class="tw-list">
+                  <li>T-SQL, views, stored procedures</li>
+                  <li>Scales to very large volumes</li>
+                  <li>Shared by apps, APIs and reporting</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <aside class="notes">
+            <p>One-line positioning for each. Dataverse is a managed business data platform; SharePoint is a collaboration platform that happens to store lists; Azure SQL is a general-purpose relational database.</p>
+            <p>We will come back to this as a full decision matrix in module 6.</p>
+          </aside>
+        </section>
+
+        <!-- 5 DIVIDER 01 -->
+        <section class="tw-divider" role="region" aria-label="Slide 5: Module 1, Dataverse">
+          <div class="tw-divider-art" style="--art: url('images/tminus15-workshops/t2-data-storage.jpg'); --focus: 60%" role="img" aria-label="Storage facilities on the Moon connected by pipes"></div>
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-divider-copy">
+            <p class="tw-mod">01</p>
+            <h2>Dataverse</h2>
+            <p>Tables, relationships and logic &mdash; the data platform under Power Platform and Dynamics 365.</p>
+          </div>
+          <aside class="notes"><p>Module one: how Dataverse models data. We cover table types, relationships, column types and business logic, then look at the Web API.</p></aside>
+        </section>
+
+        <!-- 6 TABLE TYPES -->
+        <section class="tw" role="region" aria-label="Slide 6: Dataverse table types">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 1 &middot; Dataverse</p>
+            <h2>Four kinds of table</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <table class="tw-table">
+              <thead><tr><th>Type</th><th>What it is</th><th>Use it for</th></tr></thead>
+              <tbody>
+                <tr><th>Standard</th><td>Relational table in Dataverse, user- or organisation-owned</td><td>Most business records: requests, assets, cases</td></tr>
+                <tr><th>Activity</th><td>Standard table with time and party fields; appears on timelines</td><td>Emails, calls, appointments, custom interactions</td></tr>
+                <tr><th>Elastic</th><td>Backed by Azure Cosmos DB; scales horizontally, fewer relational features</td><td>High-volume telemetry, logs, IoT readings</td></tr>
+                <tr><th>Virtual</th><td>Rows live in an external system; Dataverse holds no data</td><td>Surfacing SQL or other data without copying it</td></tr>
+              </tbody>
+            </table>
+            <div class="tw-callout"><svg class="ic"><use href="icons.svg#i-lightbulb" /></svg><p><strong>Ownership is set at creation:</strong> choose user/team-owned if you will ever need row-level security &mdash; it can&rsquo;t be changed later.</p></div>
+          </div>
+          <aside class="notes">
+            <p>Standard tables cover ninety per cent of needs. Elastic tables trade relational features for scale; virtual tables let model-driven apps show external data in place.</p>
+            <p>Stress the ownership point: organisation-owned tables can&rsquo;t restrict rows by owner or business unit, and you cannot switch later.</p>
+          </aside>
+        </section>
+
+        <!-- 7 RELATIONSHIPS -->
+        <section class="tw" role="region" aria-label="Slide 7: Relationships and cascade behaviour">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 1 &middot; Dataverse</p>
+            <h2>Relationships and cascade behaviour</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-flow">
+              <div class="tw-node"><svg class="ic"><use href="icons.svg#i-users" /></svg><b>Site</b><span>1 site&hellip;</span></div>
+              <div class="tw-arrow"></div>
+              <div class="tw-node tw-node-hot"><svg class="ic"><use href="icons.svg#i-box" /></svg><b>Asset</b><span>&hellip;has many assets (1:N)</span></div>
+              <div class="tw-arrow"></div>
+              <div class="tw-node"><svg class="ic"><use href="icons.svg#i-clipboard-list" /></svg><b>Service request</b><span>&hellip;each with many requests</span></div>
+              <div class="tw-arrow"></div>
+              <div class="tw-node"><svg class="ic"><use href="icons.svg#i-network" /></svg><b>Tag</b><span>Requests &harr; tags (N:N)</span></div>
+            </div>
+            <div class="tw-cols">
+              <ul class="tw-list">
+                <li><strong>1:N / N:1</strong> &mdash; a lookup column on the child table</li>
+                <li><strong>N:N</strong> &mdash; native (hidden intersect table) or manual (your own table, so you can add columns)</li>
+              </ul>
+              <ul class="tw-list">
+                <li><strong>Parental</strong> &mdash; delete, assign and share cascade to children</li>
+                <li><strong>Referential</strong> &mdash; children stay; choose <em>Remove link</em> or <em>Restrict</em> on delete</li>
+              </ul>
+            </div>
+          </div>
+          <aside class="notes">
+            <p>Walk the sample model we will use in the lab: sites, assets, service requests and tags.</p>
+            <p>Cascade behaviour is where surprises happen. A parental relationship means deleting a site deletes its assets, and reassigning a site reassigns them too. Restrict delete is often the safer default for reference data.</p>
+          </aside>
+        </section>
+
+        <!-- 8 COLUMNS AND LOGIC -->
+        <section class="tw" role="region" aria-label="Slide 8: Columns and server-side logic">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 1 &middot; Dataverse</p>
+            <h2>Columns that carry logic</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-cols tw-wide-right">
+              <div class="tw-stack">
+                <ul class="tw-list">
+                  <li><strong>Choice / choices</strong> &mdash; prefer global choices for values shared across tables</li>
+                  <li><strong>Formula columns</strong> &mdash; Power Fx, calculated when read</li>
+                  <li><strong>Rollup columns</strong> &mdash; aggregate child rows on a schedule (not real-time)</li>
+                  <li><strong>Business rules</strong> &mdash; simple validation and defaults, no code</li>
+                  <li><strong>Plug-ins and flows</strong> &mdash; when the logic outgrows the above</li>
+                </ul>
+              </div>
+              <div class="tw-stack">
+                <div class="tw-code">
+                  <div class="tw-code-title">Formula column &middot; kai_daysopen</div>
+<pre><code><span class="c">// Whole days since the request was raised</span>
+<span class="f">DateDiff</span>(<span class="v">'Created On'</span>, <span class="f">UTCNow</span>(), <span class="k">TimeUnit</span>.<span class="n">Days</span>)</code></pre>
+                </div>
+                <div class="tw-code">
+                  <div class="tw-code-title">Formula column &middot; kai_isoverdue</div>
+<pre><code><span class="f">If</span>(
+  <span class="v">Status</span> = <span class="s">'Status (Requests)'</span>.<span class="n">Open</span>
+    &amp;&amp; <span class="v">'Due Date'</span> &lt; <span class="f">UTCToday</span>(),
+  <span class="n">true</span>, <span class="n">false</span>
+)</code></pre>
+                </div>
+              </div>
+            </div>
+            <div class="tw-callout tw-pitfall"><svg class="ic"><use href="icons.svg#i-alert-triangle" /></svg><p><strong>Pitfall:</strong> filtering or sorting on time-based formula columns can be limited &mdash; test views and delegation early.</p></div>
+          </div>
+          <aside class="notes">
+            <p>Formula columns use Power Fx, so makers already know the language. They are evaluated at read time, so they are always current but have some restrictions on sorting and filtering.</p>
+            <p>Rollups run on a schedule, by default every few hours, so do not use them for anything that must be exact right now.</p>
+          </aside>
+        </section>
+
+        <!-- 9 WEB API AND FETCHXML -->
+        <section class="tw" role="region" aria-label="Slide 9: Querying Dataverse from code">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 1 &middot; Dataverse</p>
+            <h2>Querying from code: OData and FetchXML</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="ds-code-pair">
+              <div class="tw-code tw-code-sm">
+                <div class="tw-code-title">Web API (OData v4)</div>
+<pre><code><span class="f">GET</span> https://<span class="v">{org}</span>.crm11.dynamics.com
+  /api/data/v9.2/<span class="s">kai_assets</span>
+  ?<span class="k">$select</span>=kai_name,kai_status,createdon
+  &amp;<span class="k">$filter</span>=kai_status <span class="k">eq</span> <span class="n">1</span>
+     <span class="k">and</span> <span class="f">contains</span>(kai_name,<span class="s">'pump'</span>)
+  &amp;<span class="k">$expand</span>=kai_SiteId(<span class="k">$select</span>=kai_name)
+  &amp;<span class="k">$orderby</span>=createdon <span class="k">desc</span>
+  &amp;<span class="k">$top</span>=<span class="n">50</span>
+
+<span class="k">Authorization</span>: Bearer <span class="v">{entra-token}</span>
+<span class="k">Prefer</span>: odata.include-annotations=<span class="s">"*"</span></code></pre>
+              </div>
+              <div class="tw-code tw-code-sm">
+                <div class="tw-code-title">FetchXML</div>
+<pre><code>&lt;<span class="k">fetch</span> <span class="v">top</span>=<span class="s">"50"</span>&gt;
+  &lt;<span class="k">entity</span> <span class="v">name</span>=<span class="s">"kai_asset"</span>&gt;
+    &lt;<span class="k">attribute</span> <span class="v">name</span>=<span class="s">"kai_name"</span> /&gt;
+    &lt;<span class="k">attribute</span> <span class="v">name</span>=<span class="s">"kai_status"</span> /&gt;
+    &lt;<span class="k">attribute</span> <span class="v">name</span>=<span class="s">"createdon"</span> /&gt;
+    &lt;<span class="k">order</span> <span class="v">attribute</span>=<span class="s">"createdon"</span> <span class="v">descending</span>=<span class="s">"true"</span> /&gt;
+    &lt;<span class="k">filter</span>&gt;
+      &lt;<span class="k">condition</span> <span class="v">attribute</span>=<span class="s">"kai_status"</span>
+                 <span class="v">operator</span>=<span class="s">"eq"</span> <span class="v">value</span>=<span class="s">"1"</span> /&gt;
+      &lt;<span class="k">condition</span> <span class="v">attribute</span>=<span class="s">"kai_name"</span>
+                 <span class="v">operator</span>=<span class="s">"like"</span> <span class="v">value</span>=<span class="s">"%pump%"</span> /&gt;
+    &lt;/<span class="k">filter</span>&gt;
+    &lt;<span class="k">link-entity</span> <span class="v">name</span>=<span class="s">"kai_site"</span> <span class="v">link-type</span>=<span class="s">"outer"</span>
+        <span class="v">from</span>=<span class="s">"kai_siteid"</span> <span class="v">to</span>=<span class="s">"kai_siteid"</span>&gt;
+      &lt;<span class="k">attribute</span> <span class="v">name</span>=<span class="s">"kai_name"</span> /&gt;
+    &lt;/<span class="k">link-entity</span>&gt;
+  &lt;/<span class="k">entity</span>&gt;
+&lt;/<span class="k">fetch</span>&gt;</code></pre>
+              </div>
+            </div>
+            <p class="ds-note">Both return the same rows. OData suits apps and APIs; FetchXML suits views, reports and aggregates. The host name depends on your region.</p>
+          </div>
+          <aside class="notes">
+            <p>Everything in Dataverse is reachable through the Web API with an Entra ID token, so custom code, Azure Functions and integrations all use the same security model as the apps.</p>
+            <p>Point out $select: always ask for only the columns you need. FetchXML supports aggregates and is what views use under the hood.</p>
+          </aside>
+        </section>
+
+        <!-- 10 DATAVERSE PITFALLS -->
+        <section class="tw" role="region" aria-label="Slide 10: Dataverse pitfalls">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 1 &middot; Dataverse</p>
+            <h2>Get the schema right first time</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-cols">
+              <div class="tw-stack">
+                <div class="tw-callout"><svg class="ic"><use href="icons.svg#i-lightbulb" /></svg><p><strong>Build inside a solution</strong> with your own publisher prefix (e.g. <code>kai_</code>), never the default <code>cr123_</code>.</p></div>
+                <div class="tw-callout"><svg class="ic"><use href="icons.svg#i-lightbulb" /></svg><p><strong>Name tables in the singular</strong> and write a description for every column &mdash; it is your data dictionary.</p></div>
+                <div class="tw-callout"><svg class="ic"><use href="icons.svg#i-lightbulb" /></svg><p><strong>Use alternate keys</strong> for anything you import or integrate, so upserts don&rsquo;t create duplicates.</p></div>
+              </div>
+              <div class="tw-stack">
+                <div class="tw-callout tw-pitfall"><svg class="ic"><use href="icons.svg#i-alert-triangle" /></svg><p><strong>Schema names are permanent.</strong> You can rename the display name, never the logical name.</p></div>
+                <div class="tw-callout tw-pitfall"><svg class="ic"><use href="icons.svg#i-alert-triangle" /></svg><p><strong>Text column lengths</strong> can be increased but are awkward to reduce once data exists.</p></div>
+                <div class="tw-callout tw-pitfall"><svg class="ic"><use href="icons.svg#i-alert-triangle" /></svg><p><strong>Don&rsquo;t mirror a spreadsheet.</strong> Normalise repeating columns into child tables.</p></div>
+              </div>
+            </div>
+          </div>
+          <aside class="notes">
+            <p>These are the mistakes we see most on inherited Dataverse environments. The publisher prefix ends up in every logical name, every API call and every integration, so it is worth getting right on day one.</p>
+            <p>Alternate keys are the unsung hero of data migration: they let you re-run an import safely.</p>
+          </aside>
+        </section>
+
+        <!-- 11 DIVIDER 02 -->
+        <section class="tw-divider" role="region" aria-label="Slide 11: Module 2, Dataverse security">
+          <div class="tw-divider-art" style="--art: url('images/scene-vault.jpg'); --focus: 60%" role="img" aria-label="A vault"></div>
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-divider-copy">
+            <p class="tw-mod">02</p>
+            <h2>Dataverse security</h2>
+            <p>Business units, roles, teams and columns &mdash; who sees which rows, and which fields.</p>
+          </div>
+          <aside class="notes"><p>Module two: the Dataverse security model. This is the biggest reason to choose Dataverse over SharePoint, so it is worth understanding properly.</p></aside>
+        </section>
+
+        <!-- 12 SECURITY MODEL -->
+        <section class="tw" role="region" aria-label="Slide 12: The security model">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 2 &middot; Security</p>
+            <h2>How the pieces fit</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-flow">
+              <div class="tw-node"><svg class="ic"><use href="icons.svg#i-users" /></svg><b>User or Entra group</b><span>Signs in with Entra ID</span></div>
+              <div class="tw-arrow"></div>
+              <div class="tw-node"><svg class="ic"><use href="icons.svg#i-network" /></svg><b>Team</b><span>Owner team or Entra group team</span></div>
+              <div class="tw-arrow"></div>
+              <div class="tw-node tw-node-hot"><svg class="ic"><use href="icons.svg#i-shield-check" /></svg><b>Security role</b><span>Privileges &times; depth per table</span></div>
+              <div class="tw-arrow"></div>
+              <div class="tw-node"><svg class="ic"><use href="icons.svg#i-layers" /></svg><b>Business unit</b><span>Boundary for &ldquo;my unit&rsquo;s&rdquo; rows</span></div>
+              <div class="tw-arrow"></div>
+              <div class="tw-node"><svg class="ic"><use href="icons.svg#i-database" /></svg><b>Rows</b><span>Create, read, write, delete, append, share&hellip;</span></div>
+            </div>
+            <div class="tw-cols">
+              <ul class="tw-list">
+                <li><strong>Roles are additive</strong> &mdash; a user gets the union of every role they hold, directly or via teams</li>
+                <li><strong>Entra group teams</strong> let IT manage membership in one place</li>
+              </ul>
+              <ul class="tw-list">
+                <li><strong>Business units</strong> mirror who should see whose data, not the org chart</li>
+                <li><strong>Environment</strong> access is gated by an Entra security group first</li>
+              </ul>
+            </div>
+          </div>
+          <aside class="notes">
+            <p>Read it left to right: a person belongs to teams, teams and people hold roles, roles grant privileges to a depth, and depth is measured against business units.</p>
+            <p>Recommend Entra group teams so joiners and leavers are handled in Entra, not by hand in Dataverse. And always restrict each environment to a security group.</p>
+          </aside>
+        </section>
+
+        <!-- 13 PRIVILEGE DEPTH -->
+        <section class="tw" role="region" aria-label="Slide 13: Privilege depth">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 2 &middot; Security</p>
+            <h2>Privilege depth: how far a role reaches</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <table class="tw-table">
+              <thead><tr><th>Depth</th><th>The user can act on rows&hellip;</th><th>Typical role</th></tr></thead>
+              <tbody>
+                <tr><th>None</th><td>No access to the table</td><td>Anyone outside the process</td></tr>
+                <tr><th>User</th><td>They own, or that are shared with them or their teams</td><td>Requester</td></tr>
+                <tr><th>Business unit</th><td>Owned by anyone in their business unit</td><td>Team lead</td></tr>
+                <tr><th>Parent: child BU</th><td>In their business unit and every unit below it</td><td>Regional manager</td></tr>
+                <tr><th>Organisation</th><td>Every row in the environment</td><td>Administrator, reporting</td></tr>
+              </tbody>
+            </table>
+            <div class="tw-callout"><svg class="ic"><use href="icons.svg#i-lightbulb" /></svg><p><strong>Start from least privilege:</strong> copy a minimal role and add to it &mdash; never start from System Administrator and take away.</p></div>
+          </div>
+          <aside class="notes">
+            <p>Each privilege &mdash; create, read, write, delete, append, append to, assign, share &mdash; gets its own depth per table. So a requester might create at user level but read at business-unit level.</p>
+            <p>Encourage people to design roles per persona and document them in a matrix before building them.</p>
+          </aside>
+        </section>
+
+        <!-- 14 COLUMN SECURITY, SHARING, AUDITING -->
+        <section class="tw" role="region" aria-label="Slide 14: Column security, sharing and auditing">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 2 &middot; Security</p>
+            <h2>Columns, sharing and auditing</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-cols" style="--cols: 3">
+              <div class="tw-card">
+                <span class="tw-tag">Column security</span>
+                <ul class="tw-list">
+                  <li>Mark a column as secured</li>
+                  <li>Grant read / update / create via a <strong>column security profile</strong></li>
+                  <li>Everyone else sees it locked, the value masked as ********</li>
+                </ul>
+              </div>
+              <div class="tw-card">
+                <span class="tw-tag">Record sharing</span>
+                <ul class="tw-list">
+                  <li>Grants access to one row for one user or team</li>
+                  <li>Fine for exceptions</li>
+                  <li>Slow and opaque at volume</li>
+                </ul>
+              </div>
+              <div class="tw-card">
+                <span class="tw-tag">Auditing</span>
+                <ul class="tw-list">
+                  <li>Enable at environment, table and column level</li>
+                  <li>Records who changed what, and when</li>
+                  <li>Audit logs use log capacity &mdash; set retention</li>
+                </ul>
+              </div>
+            </div>
+            <div class="tw-callout tw-pitfall"><svg class="ic"><use href="icons.svg#i-alert-triangle" /></svg><p><strong>Pitfall:</strong> using sharing as the main security model. If you share thousands of rows, redesign with business units or owner teams instead.</p></div>
+          </div>
+          <aside class="notes">
+            <p>Column security hides sensitive fields such as personal identifiers from people who can otherwise see the row. Sharing is for genuine exceptions; at scale it slows queries and becomes impossible to reason about.</p>
+            <p>Auditing is not on by default for every table. Agree what needs auditing and for how long as part of the design.</p>
+          </aside>
+        </section>
+
+        <!-- 15 DEMO SECURITY -->
+        <section class="tw tw-scene" style="--scene: url('images/scene-controlroom.jpg')" role="region" aria-label="Slide 15: Live demo, roles and column security">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <span class="tw-demo-badge"><svg class="ic"><use href="icons.svg#i-play" /></svg>Live demo</span>
+            <h2>Same table, three people, three views</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <ol class="tw-steps">
+              <li>Create a <em>Requester</em> role: Service request read and write at <strong>user</strong> depth<span class="tw-expect">The requester only sees their own requests</span></li>
+              <li>Create a <em>Team lead</em> role: read at <strong>business unit</strong> depth<span class="tw-expect">The lead sees every request in their unit</span></li>
+              <li>Secure the <code>kai_notes</code> column and grant it to leads only<span class="tw-expect">Requesters see the field locked, its value masked as ********</span></li>
+              <li>Open the audit history on a changed row<span class="tw-expect">Old and new values, who and when</span></li>
+            </ol>
+          </div>
+          <aside class="notes">
+            <p>Use three test accounts in separate browser profiles so the room can see the difference side by side. Pre-create the users and business units before the session to save time.</p>
+          </aside>
+        </section>
+
+        <!-- 16 DIVIDER 03 -->
+        <section class="tw-divider" role="region" aria-label="Slide 16: Module 3, SharePoint">
+          <div class="tw-divider-art" style="--art: url('images/scene-blocks.jpg'); --focus: 60%" role="img" aria-label="Stacked blocks"></div>
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-divider-copy">
+            <p class="tw-mod">03</p>
+            <h2>SharePoint lists and libraries</h2>
+            <p>Brilliant for documents and simple lists &mdash; as long as you know where the edges are.</p>
+          </div>
+          <aside class="notes"><p>Module three: SharePoint. It is everywhere and already licensed, which is exactly why it gets stretched beyond what it is good at.</p></aside>
+        </section>
+
+        <!-- 17 WHEN SHAREPOINT IS FINE -->
+        <section class="tw" role="region" aria-label="Slide 17: When SharePoint is the right call">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 3 &middot; SharePoint</p>
+            <h2>When SharePoint is the right call</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-cols">
+              <div class="tw-card">
+                <h3><svg class="ic"><use href="icons.svg#i-check" /></svg>Good fit</h3>
+                <ul class="tw-list">
+                  <li><strong>Documents</strong> with metadata, versioning and co-authoring</li>
+                  <li>Simple lists: a few thousand rows, few relationships</li>
+                  <li>Team-level data where site permissions are enough</li>
+                  <li>Standard-licence apps and flows for Microsoft 365 users</li>
+                </ul>
+              </div>
+              <div class="tw-card">
+                <h3><svg class="ic"><use href="icons.svg#i-x" /></svg>Poor fit</h3>
+                <ul class="tw-list">
+                  <li>Data that needs <strong>row-level security</strong></li>
+                  <li>Many related lists and complex lookups</li>
+                  <li>Lists heading for tens of thousands of rows</li>
+                  <li>Transactions, integrity rules or heavy reporting</li>
+                </ul>
+              </div>
+            </div>
+            <div class="tw-callout"><svg class="ic"><use href="icons.svg#i-lightbulb" /></svg><p><strong>A common hybrid:</strong> structured records in Dataverse or SQL, with their documents in a SharePoint library.</p></div>
+          </div>
+          <aside class="notes">
+            <p>SharePoint is not the enemy; it is the best place for documents. The problems start when lists are used as a relational database.</p>
+            <p>The hybrid pattern is very common: Dataverse has built-in SharePoint document integration for exactly this reason.</p>
+          </aside>
+        </section>
+
+        <!-- 18 THRESHOLD AND INDEXING -->
+        <section class="tw" role="region" aria-label="Slide 18: The list view threshold and indexing">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 3 &middot; SharePoint</p>
+            <h2>The 5,000-item threshold and indexes</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-cols tw-wide-left">
+              <div class="tw-stack">
+                <ul class="tw-list">
+                  <li>A list can hold millions of items, but a <strong>query that scans more than 5,000</strong> is blocked</li>
+                  <li>The threshold <strong>can&rsquo;t be raised</strong> in SharePoint Online</li>
+                  <li><strong>Index</strong> the columns you filter and sort on &mdash; ideally before the list passes 5,000</li>
+                  <li>The <strong>first filter</strong> in a query must use an indexed column and cut results below 5,000</li>
+                  <li>Lookups, people and managed metadata columns add joins &mdash; keep each view to a few</li>
+                </ul>
+              </div>
+              <div class="tw-code">
+                <div class="tw-code-title">Power Fx &middot; filter on indexed columns</div>
+<pre><code><span class="c">// Status and Site are indexed</span>
+<span class="f">Filter</span>(
+  <span class="v">Assets</span>,
+  <span class="v">Status</span>.Value = <span class="s">"Active"</span>,
+  <span class="v">SiteCode</span> = <span class="v">drpSite</span>.Selected.Code
+)</code></pre>
+              </div>
+            </div>
+            <div class="tw-callout tw-pitfall"><svg class="ic"><use href="icons.svg#i-alert-triangle" /></svg><p><strong>Pitfall:</strong> adding an index to a list that is already over the threshold can fail &mdash; plan indexes on day one.</p></div>
+          </div>
+          <aside class="notes">
+            <p>The 5,000 list view threshold is the single most common SharePoint surprise. It limits how many items a single query can scan, not how many the list can store.</p>
+            <p>Indexes and selective first filters are the fix. If you can&rsquo;t design queries that stay under the threshold, that is a strong signal to use Dataverse or SQL.</p>
+          </aside>
+        </section>
+
+        <!-- 19 PERMISSIONS -->
+        <section class="tw" role="region" aria-label="Slide 19: SharePoint permissions">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 3 &middot; SharePoint</p>
+            <h2>Permission inheritance, and why item-level hurts</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-cols">
+              <ul class="tw-tree">
+                <li><span class="tw-chip">Site</span><span>Owners, members, visitors</span></li>
+                <li style="--lvl: 1"><span class="tw-chip">List</span><span>Inherits from the site</span></li>
+                <li style="--lvl: 2"><span class="tw-chip">Item</span><span>Unique permissions = broken inheritance</span></li>
+                <li style="--lvl: 1"><span class="tw-chip">Library</span><span>Inherits from the site</span></li>
+                <li style="--lvl: 2"><span class="tw-chip">Folder</span><span>Break here, not on every file</span></li>
+              </ul>
+              <ul class="tw-list">
+                <li>Every broken item creates its own <strong>permission scope</strong> to manage and audit</li>
+                <li>Many unique scopes in one list slow queries and become impossible to reason about</li>
+                <li>Power Apps still <strong>lists</strong> what a user can read &mdash; hiding data in the app is not security</li>
+                <li>Need per-row access? That is a <strong>Dataverse or SQL</strong> requirement</li>
+              </ul>
+            </div>
+          </div>
+          <aside class="notes">
+            <p>SharePoint security is designed around sites, lists and libraries. Breaking inheritance per item works for a handful of exceptions but does not scale.</p>
+            <p>Make the point firmly: filtering a gallery in Power Apps is not security. Anyone with list access can open the list directly or call the API.</p>
+          </aside>
+        </section>
+
+        <!-- 20 DIVIDER 04 -->
+        <section class="tw-divider" role="region" aria-label="Slide 20: Module 4, Azure SQL">
+          <div class="tw-divider-art" style="--art: url('images/scene-datacenter.jpg'); --focus: 60%" role="img" aria-label="A data centre"></div>
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-divider-copy">
+            <p class="tw-mod">04</p>
+            <h2>Azure SQL</h2>
+            <p>A full relational engine &mdash; when you need scale, T-SQL or one database shared by many systems.</p>
+          </div>
+          <aside class="notes"><p>Module four: Azure SQL Database. We cover service tiers, identity, network isolation, row-level security and backups.</p></aside>
+        </section>
+
+        <!-- 21 SERVICE TIERS -->
+        <section class="tw" role="region" aria-label="Slide 21: Azure SQL purchasing models and tiers">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 4 &middot; Azure SQL</p>
+            <h2>Purchasing models and tiers</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <table class="tw-table tw-table-sm">
+              <thead><tr><th>Option</th><th>How it&rsquo;s sized</th><th>Good for</th></tr></thead>
+              <tbody>
+                <tr><th>DTU (Basic / Standard / Premium)</th><td>Bundled compute, storage and I/O</td><td>Small, steady, simple workloads</td></tr>
+                <tr><th>vCore &middot; General Purpose</th><td>Choose vCores and storage separately</td><td>Most business applications</td></tr>
+                <tr><th>vCore &middot; Serverless</th><td>Auto-scales; can auto-pause when idle</td><td>Dev/test and intermittent apps</td></tr>
+                <tr><th>vCore &middot; Business Critical</th><td>Local SSD, built-in replicas</td><td>Low latency, high availability</td></tr>
+                <tr><th>vCore &middot; Hyperscale</th><td>Storage scales independently, very large databases</td><td>Large and fast-growing data</td></tr>
+                <tr><th>Elastic pool</th><td>Many databases share one pool</td><td>Many small databases, uneven load</td></tr>
+              </tbody>
+            </table>
+            <div class="tw-callout"><svg class="ic"><use href="icons.svg#i-lightbulb" /></svg><p><strong>Start small and scale:</strong> you can move between most tiers online. Watch for the first-connection delay after a serverless database auto-pauses.</p></div>
+          </div>
+          <aside class="notes">
+            <p>vCore is the recommended model for new work because you can see and size compute and storage independently, and use Azure Hybrid Benefit if you have SQL licences.</p>
+            <p>Serverless is ideal for labs and quiet apps, but the resume delay after auto-pause surprises users &mdash; turn auto-pause off for interactive production apps.</p>
+          </aside>
+        </section>
+
+        <!-- 22 IDENTITY AND NETWORK -->
+        <section class="tw" role="region" aria-label="Slide 22: Identity and network">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 4 &middot; Azure SQL</p>
+            <h2>No passwords, no public endpoint</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-flow">
+              <div class="tw-node"><svg class="ic"><use href="icons.svg#i-cloud" /></svg><b>App or Function</b><span>System-assigned managed identity</span></div>
+              <div class="tw-arrow"></div>
+              <div class="tw-node tw-node-hot"><svg class="ic"><use href="icons.svg#i-key-round" /></svg><b>Entra ID</b><span>Issues the access token</span></div>
+              <div class="tw-arrow"></div>
+              <div class="tw-node"><svg class="ic"><use href="icons.svg#i-lock" /></svg><b>Private endpoint</b><span>Private IP in your VNet</span></div>
+              <div class="tw-arrow"></div>
+              <div class="tw-node"><svg class="ic"><use href="icons.svg#i-database" /></svg><b>Azure SQL</b><span>Entra-only auth, public access off</span></div>
+            </div>
+            <div class="tw-cols tw-wide-right">
+              <ul class="tw-list">
+                <li>Turn on <strong>Microsoft Entra-only authentication</strong></li>
+                <li>Grant <strong>groups and identities</strong>, not people</li>
+              </ul>
+              <div class="tw-code tw-code-sm">
+                <div class="tw-code-title">T-SQL &middot; grant a managed identity</div>
+<pre><code><span class="k">CREATE USER</span> [app-assets-prod] <span class="k">FROM EXTERNAL PROVIDER</span>;
+<span class="k">ALTER ROLE</span> db_datareader <span class="k">ADD MEMBER</span> [app-assets-prod];
+<span class="k">ALTER ROLE</span> db_datawriter <span class="k">ADD MEMBER</span> [app-assets-prod];</code></pre>
+              </div>
+            </div>
+          </div>
+          <aside class="notes">
+            <p>The target pattern: no SQL logins, no connection-string passwords. The app authenticates with its managed identity, and the database is reachable only through a private endpoint.</p>
+            <p>Power Platform can reach a private database through an on-premises data gateway or Power Platform virtual network support. Plan this early: it affects licensing and environment setup.</p>
+          </aside>
+        </section>
+
+        <!-- 23 ROW-LEVEL SECURITY -->
+        <section class="tw" role="region" aria-label="Slide 23: Row-level security">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 4 &middot; Azure SQL</p>
+            <h2>Row-level security in the engine</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-cols tw-wide-left">
+              <div class="tw-code tw-code-sm">
+                <div class="tw-code-title">rls.sql</div>
+<pre><code><span class="k">CREATE FUNCTION</span> sec.<span class="f">fn_SiteFilter</span>(<span class="v">@SiteId</span> <span class="k">int</span>)
+  <span class="k">RETURNS TABLE WITH SCHEMABINDING AS</span>
+<span class="k">RETURN</span>
+  <span class="k">SELECT</span> <span class="n">1</span> <span class="k">AS</span> allowed
+  <span class="k">FROM</span> dbo.UserSite us
+  <span class="k">WHERE</span> us.SiteId = <span class="v">@SiteId</span>
+    <span class="k">AND</span> us.UserName = <span class="f">USER_NAME</span>();
+<span class="k">GO</span>
+<span class="hl"><span class="k">CREATE SECURITY POLICY</span> sec.SitePolicy</span>
+  <span class="k">ADD FILTER PREDICATE</span> sec.<span class="f">fn_SiteFilter</span>(SiteId)
+    <span class="k">ON</span> dbo.Asset,
+  <span class="k">ADD BLOCK PREDICATE</span> sec.<span class="f">fn_SiteFilter</span>(SiteId)
+    <span class="k">ON</span> dbo.Asset <span class="k">AFTER INSERT</span>,
+  <span class="k">ADD BLOCK PREDICATE</span> sec.<span class="f">fn_SiteFilter</span>(SiteId)
+    <span class="k">ON</span> dbo.Asset <span class="k">AFTER UPDATE</span>
+  <span class="k">WITH</span> (STATE = <span class="k">ON</span>);</code></pre>
+              </div>
+              <div class="tw-stack">
+                <h3><svg class="ic"><use href="icons.svg#i-check" /></svg>What to notice</h3>
+                <ul class="tw-list">
+                  <li><strong>Filter predicate</strong> hides rows on read</li>
+                  <li><strong>Block predicates</strong> stop inserts into other sites, and updates that move a row to one</li>
+                  <li>Applies to every client: apps, APIs, reports</li>
+                  <li>Index the predicate columns</li>
+                </ul>
+                <div class="tw-callout tw-pitfall"><svg class="ic"><use href="icons.svg#i-alert-triangle" /></svg><p>A shared service identity is one user to SQL. Pass the real user with <code>SESSION_CONTEXT</code> or Entra delegation.</p></div>
+              </div>
+            </div>
+          </div>
+          <aside class="notes">
+            <p>Row-level security puts the rule in the database, so it cannot be bypassed by a different client. The predicate function decides which rows each user may see.</p>
+            <p>The catch: if every request arrives as one service identity, SQL cannot tell users apart. Either connect as the signed-in user or set SESSION_CONTEXT from a trusted API and filter on that.</p>
+          </aside>
+        </section>
+
+        <!-- 24 BACKUPS AND POWER PLATFORM -->
+        <section class="tw" role="region" aria-label="Slide 24: Backups and connecting from Power Platform">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 4 &middot; Azure SQL</p>
+            <h2>Backups, and connecting from Power Platform</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-cols">
+              <div class="tw-card">
+                <span class="tw-tag">Backups</span>
+                <ul class="tw-list">
+                  <li>Automatic full, differential and log backups</li>
+                  <li><strong>Point-in-time restore</strong> within a configurable window (default 7 days)</li>
+                  <li><strong>Long-term retention</strong> for weekly, monthly or yearly copies</li>
+                  <li>Restores create a new database &mdash; rehearse the swap</li>
+                </ul>
+              </div>
+              <div class="tw-card">
+                <span class="tw-tag">From Power Platform</span>
+                <ul class="tw-list">
+                  <li><strong>SQL Server connector</strong> is premium</li>
+                  <li>Use <strong>Entra ID</strong> authentication, not SQL logins</li>
+                  <li>Private databases need a <strong>data gateway</strong> or VNet support</li>
+                  <li>Use <strong>views</strong> for reads and <strong>stored procedures</strong> for complex writes</li>
+                </ul>
+              </div>
+            </div>
+            <div class="tw-callout"><svg class="ic"><use href="icons.svg#i-lightbulb" /></svg><p><strong>Virtual tables</strong> can surface SQL rows inside Dataverse and model-driven apps without copying data.</p></div>
+          </div>
+          <aside class="notes">
+            <p>Backups are on by default, but a restore is only proven once you have done one. Rehearse it in test, including repointing the app.</p>
+            <p>For Power Apps, views keep delegation simple and stored procedures (called from flows or APIs) handle multi-table writes in a transaction.</p>
+          </aside>
+        </section>
+
+        <!-- 25 DIVIDER 05 -->
+        <section class="tw-divider" role="region" aria-label="Slide 25: Module 5, Delegation, scale and performance">
+          <div class="tw-divider-art" style="--art: url('images/scene-serverhall.jpg'); --focus: 60%" role="img" aria-label="A server hall"></div>
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-divider-copy">
+            <p class="tw-mod">05</p>
+            <h2>Delegation, scale and performance</h2>
+            <p>Why the app shows 500 rows when there are 50,000 &mdash; and how to fix it.</p>
+          </div>
+          <aside class="notes"><p>Welcome back from the break. Module five is the one that explains most &ldquo;missing data&rdquo; bugs in Power Apps: delegation.</p></aside>
+        </section>
+
+        <!-- 26 WHAT DELEGATION IS -->
+        <section class="tw" role="region" aria-label="Slide 26: What delegation is">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 5 &middot; Delegation</p>
+            <h2>Who does the filtering?</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-cols">
+              <div class="tw-stack">
+                <h3><svg class="ic"><use href="icons.svg#i-check" /></svg>Delegable</h3>
+                <div class="tw-flow">
+                  <div class="tw-node"><b>App</b><span>Sends the query</span></div>
+                  <div class="tw-arrow"></div>
+                  <div class="tw-node tw-node-hot"><b>Data source</b><span>Filters all rows</span></div>
+                  <div class="tw-arrow"></div>
+                  <div class="tw-node"><b>Correct results</b><span>Paged back</span></div>
+                </div>
+              </div>
+              <div class="tw-stack">
+                <h3><svg class="ic"><use href="icons.svg#i-x" /></svg>Not delegable</h3>
+                <div class="tw-flow">
+                  <div class="tw-node"><b>Data source</b><span>Returns first 500</span></div>
+                  <div class="tw-arrow"></div>
+                  <div class="tw-node"><b>App</b><span>Filters locally</span></div>
+                  <div class="tw-arrow"></div>
+                  <div class="tw-node"><b>Silently wrong</b><span>Rows 501+ ignored</span></div>
+                </div>
+              </div>
+            </div>
+            <ul class="tw-list">
+              <li>The <strong>data row limit</strong> is 500 by default and can be raised to <strong>2,000</strong> in app settings &mdash; a test aid, not a fix</li>
+              <li>Studio flags it with a <strong>delegation warning</strong> (blue underline) &mdash; treat warnings as bugs</li>
+            </ul>
+          </div>
+          <aside class="notes">
+            <p>Delegation means pushing the work to the data source. When a formula can&rsquo;t be delegated, Power Apps fetches only the first 500 (or up to 2,000) rows and works on those, so results are silently incomplete once the data grows.</p>
+            <p>Tip for testing: set the limit to a tiny number like 5 in development so problems show up immediately.</p>
+          </aside>
+        </section>
+
+        <!-- 27 POWER FX DELEGATION CODE -->
+        <section class="tw" role="region" aria-label="Slide 27: Delegable and non-delegable Power Fx">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 5 &middot; Delegation</p>
+            <h2>Rewrite the formula, not the limit</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="ds-code-pair">
+              <div class="tw-code">
+                <div class="tw-code-title">&#10007; Not delegable</div>
+<pre><code><span class="c">// Function on the column</span>
+<span class="f">Filter</span>(<span class="v">Assets</span>,
+  <span class="f">Year</span>(<span class="v">PurchaseDate</span>) = <span class="n">2026</span>)
+
+<span class="c">// Search on SharePoint</span>
+<span class="f">Search</span>(<span class="v">Assets</span>, <span class="v">txtFind</span>.Text, <span class="s">"Title"</span>)
+
+<span class="c">// Substring on SharePoint</span>
+<span class="f">Filter</span>(<span class="v">Assets</span>,
+  <span class="v">txtFind</span>.Text <span class="k">in</span> <span class="v">Title</span>)</code></pre>
+              </div>
+              <div class="tw-code">
+                <div class="tw-code-title">&#10003; Delegable rewrite</div>
+<pre><code><span class="c">// Compare the raw column to a range</span>
+<span class="f">Filter</span>(<span class="v">Assets</span>,
+  <span class="v">PurchaseDate</span> &gt;= <span class="f">Date</span>(<span class="n">2026</span>,<span class="n">1</span>,<span class="n">1</span>),
+  <span class="v">PurchaseDate</span> &lt; <span class="f">Date</span>(<span class="n">2027</span>,<span class="n">1</span>,<span class="n">1</span>))
+
+<span class="c">// Prefix match instead of search</span>
+<span class="f">Filter</span>(<span class="v">Assets</span>,
+  <span class="f">StartsWith</span>(<span class="v">Title</span>, <span class="v">txtFind</span>.Text))
+
+<span class="c">// Or move it to Dataverse / SQL,
+// where Search and in can delegate</span></code></pre>
+              </div>
+            </div>
+            <div class="tw-callout"><svg class="ic"><use href="icons.svg#i-lightbulb" /></svg><p><strong>Rule of thumb:</strong> keep the column bare on the left; put functions on the value you compare it with.</p></div>
+          </div>
+          <aside class="notes">
+            <p>The commonest cause of a delegation warning is wrapping the column in a function such as Year, Lower or Len. The source can&rsquo;t evaluate that, so Power Apps falls back to local processing.</p>
+            <p>Rewrite to compare the bare column against a computed value. For free-text search on large SharePoint lists, StartsWith is often the best you can do.</p>
+          </aside>
+        </section>
+
+        <!-- 28 DELEGATION BY SOURCE -->
+        <section class="tw" role="region" aria-label="Slide 28: Delegation by source">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 5 &middot; Delegation</p>
+            <h2>Same formula, different source</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <table class="tw-table">
+              <thead><tr><th>Formula pattern</th><th>Dataverse</th><th>SharePoint</th><th>Azure SQL</th></tr></thead>
+              <tbody>
+                <tr><th><code>Filter</code> with <code>=</code>, <code>&lt;</code>, <code>&gt;</code> on a column</th><td class="yes">Yes</td><td class="yes">Yes</td><td class="yes">Yes</td></tr>
+                <tr><th><code>StartsWith</code></th><td class="yes">Yes</td><td class="yes">Yes</td><td class="yes">Yes</td></tr>
+                <tr><th><code>Search</code> / <code>in</code> (substring)</th><td class="yes">Yes</td><td class="no">No</td><td class="yes">Yes</td></tr>
+                <tr><th><code>Sort</code> / <code>SortByColumns</code> on a column</th><td class="yes">Yes</td><td class="meh">Simple columns</td><td class="yes">Yes</td></tr>
+                <tr><th>Function on the column (<code>Year</code>, <code>Lower</code>, <code>Len</code>)</th><td class="no">No</td><td class="no">No</td><td class="no">No</td></tr>
+              </tbody>
+            </table>
+            <p class="ds-note">Delegation support changes between releases and by column type &mdash; always check the current connector documentation and trust the warning in Studio.</p>
+          </div>
+          <aside class="notes">
+            <p>This is a simplified view for the common cases. The details depend on column type: for example, SharePoint lookups and person columns have more restrictions.</p>
+            <p>The practical message: Dataverse and SQL delegate far more than SharePoint, which is another reason large or search-heavy data shouldn&rsquo;t live in a list.</p>
+          </aside>
+        </section>
+
+        <!-- 29 API LIMITS -->
+        <section class="tw" role="region" aria-label="Slide 29: API limits and throttling">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 5 &middot; Scale</p>
+            <h2>Limits, throttling and retries</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-cols" style="--cols: 3">
+              <div class="tw-card">
+                <span class="tw-tag">Dataverse</span>
+                <ul class="tw-list">
+                  <li><strong>Service protection limits</strong> per user, per server, over a 5-minute window: request count, execution time and concurrency</li>
+                  <li>Plus <strong>Power Platform request</strong> entitlements per licence</li>
+                </ul>
+              </div>
+              <div class="tw-card">
+                <span class="tw-tag">SharePoint</span>
+                <ul class="tw-list">
+                  <li>Tenant and app <strong>throttling</strong> under heavy load</li>
+                  <li>Bulk loops in flows hit it first</li>
+                  <li>Batch requests and use delta queries</li>
+                </ul>
+              </div>
+              <div class="tw-card">
+                <span class="tw-tag">Azure SQL</span>
+                <ul class="tw-list">
+                  <li>Bound by the tier&rsquo;s <strong>compute, I/O and session</strong> limits</li>
+                  <li>Watch Query Performance Insight</li>
+                  <li>Index for your real queries</li>
+                </ul>
+              </div>
+            </div>
+            <div class="tw-callout tw-pitfall"><svg class="ic"><use href="icons.svg#i-alert-triangle" /></svg><p><strong>Always honour <code>429</code> and <code>Retry-After</code>.</strong> Integrations that retry instantly make throttling worse. Batch, page and back off.</p></div>
+          </div>
+          <aside class="notes">
+            <p>Every store protects itself. Dataverse service protection limits are evaluated per user over a sliding five-minute window, covering number of requests, total execution time and concurrent requests; exceed them and you receive a 429 with a Retry-After header.</p>
+            <p>Check the current numbers in Microsoft Learn before quoting them &mdash; they and the licence-based request entitlements have changed over time.</p>
+          </aside>
+        </section>
+
+        <!-- 30 DIVIDER 06 -->
+        <section class="tw-divider" role="region" aria-label="Slide 30: Module 6, Licensing, cost and choosing">
+          <div class="tw-divider-art" style="--art: url('images/scene-interchange.jpg'); --focus: 60%" role="img" aria-label="A road interchange"></div>
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-divider-copy">
+            <p class="tw-mod">06</p>
+            <h2>Licensing, cost and choosing</h2>
+            <p>Putting it together: a repeatable way to pick the right store for each kind of data.</p>
+          </div>
+          <aside class="notes"><p>Module six brings everything together into a decision matrix and a simple decision flow you can reuse on your own projects.</p></aside>
+        </section>
+
+        <!-- 31 LICENSING -->
+        <section class="tw" role="region" aria-label="Slide 31: Licensing and cost">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 6 &middot; Licensing</p>
+            <h2>What drives the bill</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <table class="tw-table">
+              <thead><tr><th></th><th>Dataverse</th><th>SharePoint</th><th>Azure SQL</th></tr></thead>
+              <tbody>
+                <tr><th>Connector in Power Apps</th><td class="meh">Premium</td><td class="yes">Standard</td><td class="meh">Premium</td></tr>
+                <tr><th>User licence</th><td>Power Apps premium (per user or per app) or pay-as-you-go</td><td>Included with Microsoft 365</td><td>Power Apps premium for app users</td></tr>
+                <tr><th>Storage</th><td>Tenant capacity pool: database, file and log</td><td>Tenant SharePoint storage</td><td>Per database: compute plus storage</td></tr>
+                <tr><th>Hidden costs</th><td>Extra capacity add-ons</td><td>Rework when it outgrows a list</td><td>Networking, gateway, DBA time</td></tr>
+              </tbody>
+            </table>
+            <div class="tw-callout"><svg class="ic"><use href="icons.svg#i-lightbulb" /></svg><p><strong>Price the whole solution, not the store:</strong> once one premium connector is in the app, every user needs a premium licence anyway.</p></div>
+          </div>
+          <aside class="notes">
+            <p>Licensing is often the deciding factor, so cover it honestly. SharePoint looks free because it is in Microsoft 365, but the moment an app also uses SQL or Dataverse, users need premium licences regardless.</p>
+            <p>Do not quote prices from this slide: check current Microsoft pricing and your agreement, as entitlements and capacity allowances change.</p>
+          </aside>
+        </section>
+
+        <!-- 32 DECISION MATRIX -->
+        <section class="tw" role="region" aria-label="Slide 32: Decision matrix">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 6 &middot; Choosing</p>
+            <h2>The decision matrix</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <table class="tw-table tw-table-sm">
+              <thead><tr><th>Criterion</th><th>Dataverse</th><th>SharePoint</th><th>Azure SQL</th></tr></thead>
+              <tbody>
+                <tr><th>Relational modelling</th><td class="yes">Strong</td><td class="no">Weak</td><td class="yes">Strongest</td></tr>
+                <tr><th>Row-level security</th><td class="yes">Built in, no code</td><td class="no">Item permissions only</td><td class="meh">RLS, needs design</td></tr>
+                <tr><th>Scale and delegation</th><td class="yes">Good</td><td class="meh">Threshold, limited</td><td class="yes">Excellent</td></tr>
+                <tr><th>Documents</th><td class="meh">Via SharePoint integration</td><td class="yes">Best in class</td><td class="no">Not designed for it</td></tr>
+                <tr><th>ALM and solutions</th><td class="yes">Native solutions</td><td class="meh">Templates, scripts</td><td class="yes">DACPAC, migrations</td></tr>
+                <tr><th>Reporting and integration</th><td class="yes">Web API, Fabric link</td><td class="meh">Graph, REST</td><td class="yes">T-SQL, everything</td></tr>
+                <tr><th>Licensing for app users</th><td class="meh">Premium</td><td class="yes">Standard</td><td class="meh">Premium</td></tr>
+                <tr><th>Skills to run it</th><td class="yes">Makers</td><td class="yes">Makers</td><td class="meh">Developers, DBA</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <aside class="notes">
+            <p>This is the matrix you will fill in for your own scenario in the lab. The colours are a starting point, not a verdict: weight each row by what matters for the solution in front of you.</p>
+          </aside>
+        </section>
+
+        <!-- 33 DECISION FLOW -->
+        <section class="tw" role="region" aria-label="Slide 33: A decision flow">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 6 &middot; Choosing</p>
+            <h2>Four questions, in order</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-flow">
+              <div class="tw-node"><svg class="ic"><use href="icons.svg#i-file-text" /></svg><b>Mostly documents?</b><span>Yes &rarr; <strong>SharePoint library</strong></span></div>
+              <div class="tw-arrow"></div>
+              <div class="tw-node"><svg class="ic"><use href="icons.svg#i-server-cog" /></svg><b>Very large, shared or needs T-SQL?</b><span>Yes &rarr; <strong>Azure SQL</strong></span></div>
+              <div class="tw-arrow"></div>
+              <div class="tw-node tw-node-hot"><svg class="ic"><use href="icons.svg#i-shield-check" /></svg><b>Row-level security, relationships or growth?</b><span>Yes &rarr; <strong>Dataverse</strong></span></div>
+              <div class="tw-arrow"></div>
+              <div class="tw-node"><svg class="ic"><use href="icons.svg#i-clipboard-list" /></svg><b>Small, simple, team-only list?</b><span>Yes &rarr; <strong>SharePoint list</strong></span></div>
+            </div>
+            <div class="tw-callout"><svg class="ic"><use href="icons.svg#i-lightbulb" /></svg><p><strong>Write the decision down</strong> in an architecture decision record: the options, the choice, and what would make you revisit it.</p></div>
+          </div>
+          <aside class="notes">
+            <p>Ask the questions in this order and stop at the first yes. It is deliberately simple: the matrix is for the detailed comparison, this is for the first conversation.</p>
+            <p>Recording the decision matters as much as making it, so the next team knows why and when to revisit.</p>
+          </aside>
+        </section>
+
+        <!-- 34 LAB INTRO -->
+        <section class="tw" role="region" aria-label="Slide 34: Hands-on lab overview">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Hands-on lab &middot; 45 minutes</p>
+            <h2>One app, three stores</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-cols tw-wide-left">
+              <div class="tw-stack">
+                <p class="tw-lead">Build the <strong>asset tracker</strong> data model three ways, then compare them for real.</p>
+                <ul class="tw-list">
+                  <li><strong>Part 1</strong> &mdash; Dataverse table with a security role</li>
+                  <li><strong>Part 2</strong> &mdash; SharePoint list with an index</li>
+                  <li><strong>Part 3</strong> &mdash; Azure SQL table with Entra authentication</li>
+                  <li><strong>Part 4</strong> &mdash; Break delegation, fix it, fill in the matrix</li>
+                </ul>
+              </div>
+              <div class="tw-card">
+                <span class="tw-tag">You need</span>
+                <ul class="tw-list">
+                  <li>A lab account and developer environment (we provide)</li>
+                  <li>The lab SharePoint site and Azure SQL database (pre-created)</li>
+                  <li><code>assets-sample.csv</code> &mdash; 6,000 rows of sample data</li>
+                  <li>A blank decision-matrix template</li>
+                </ul>
+              </div>
+            </div>
+            <div class="tw-callout"><svg class="ic"><use href="icons.svg#i-lock" /></svg><p><strong>Sample data only.</strong> No customer, personal or confidential data in any lab environment.</p></div>
+          </div>
+          <aside class="notes">
+            <p>The sample file deliberately has more than 5,000 rows so people hit both the SharePoint threshold and the delegation limit for themselves.</p>
+            <p>Pair up anyone without Power Platform experience with someone who has it. Timebox each part to around ten minutes.</p>
+          </aside>
+        </section>
+
+        <!-- 35 LAB PART 1 + 2 -->
+        <section class="tw" role="region" aria-label="Slide 35: Lab parts 1 and 2">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Hands-on lab &middot; Parts 1 and 2</p>
+            <h2>Dataverse, then SharePoint</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-cols">
+              <ol class="tw-steps">
+                <li>In your solution, create the <code>Asset</code> table (user/team-owned) with Name, Status (choice), Site and Purchase Date<span class="tw-expect">Logical name starts with your prefix</span></li>
+                <li>Import <code>assets-sample.csv</code> with Name as an alternate key<span class="tw-expect">6,000 rows; re-running creates no duplicates</span></li>
+                <li>Create an <em>Asset reader</em> role at business-unit depth and assign it to the test user<span class="tw-expect">Test user sees only their unit&rsquo;s assets</span></li>
+              </ol>
+              <ol class="tw-steps" style="counter-reset: step 3">
+                <li>Create the <code>Assets</code> list and index <strong>Status</strong> and <strong>SiteCode</strong> before importing<span class="tw-expect">Two indexed columns in list settings</span></li>
+                <li>Import the same CSV<span class="tw-expect">6,000 items &mdash; over the threshold</span></li>
+                <li>Build a view filtered on a non-indexed column, then on an indexed one<span class="tw-expect">The first fails at the threshold; the second works</span></li>
+              </ol>
+            </div>
+          </div>
+          <aside class="notes">
+            <p>Walk the room during part one: the most common mistake is choosing organisation ownership when creating the table, which makes the security role step impossible.</p>
+            <p>In part two, people should see the threshold error for themselves; that is the learning moment.</p>
+          </aside>
+        </section>
+
+        <!-- 36 LAB PART 3 + 4 -->
+        <section class="tw" role="region" aria-label="Slide 36: Lab parts 3 and 4">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Hands-on lab &middot; Parts 3 and 4</p>
+            <h2>Azure SQL, then delegation</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-cols">
+              <ol class="tw-steps" style="counter-reset: step 6">
+                <li>In the query editor, signed in with Entra ID, create <code>dbo.Asset</code> and load the sample rows<span class="tw-expect">6,000 rows; no SQL login used</span></li>
+                <li>Run <code>CREATE USER &hellip; FROM EXTERNAL PROVIDER</code> for your lab group and grant read<span class="tw-expect">A teammate can query it with their own account</span></li>
+                <li>Connect a canvas app to all three sources via the right connectors<span class="tw-expect">Three galleries, one per store</span></li>
+              </ol>
+              <ol class="tw-steps" style="counter-reset: step 9">
+                <li>Set the data row limit to <strong>5</strong>, then filter with <code>Year(PurchaseDate) = 2026</code><span class="tw-expect">Delegation warning; too few rows shown</span></li>
+                <li>Rewrite with a date range and <code>StartsWith</code><span class="tw-expect">Warning gone; correct counts on every source</span></li>
+                <li>Fill in the decision matrix for the asset tracker<span class="tw-expect">A justified choice, ready to share back</span></li>
+              </ol>
+            </div>
+          </div>
+          <aside class="notes">
+            <p>Setting the row limit to five makes delegation problems obvious immediately. Ask people to compare which source still gives correct answers after the rewrite.</p>
+            <p>Leave five minutes for two or three pairs to share their matrix and which store they would pick, and why.</p>
+          </aside>
+        </section>
+
+        <!-- 37 FLIGHT RULES -->
+        <section class="tw" role="region" aria-label="Slide 37: Flight rules">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Flight rules</p>
+            <h2>Rules that save you a migration</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <ul class="tw-checks">
+              <li><strong>Choose per kind of data</strong>, not per project &mdash; hybrids are normal</li>
+              <li><strong>Decide security first</strong> &mdash; if you need row-level access, rule SharePoint lists out</li>
+              <li><strong>Treat delegation warnings as bugs</strong> and test with a tiny row limit</li>
+              <li><strong>Index before you import</strong> on SharePoint; index for real queries on SQL</li>
+              <li><strong>Build Dataverse inside a solution</strong> with your own publisher prefix</li>
+              <li><strong>No passwords</strong> &mdash; Entra ID and managed identities everywhere</li>
+              <li><strong>Price the whole solution</strong>, including licences and capacity</li>
+              <li><strong>Record the decision</strong> and what would make you revisit it</li>
+            </ul>
+          </div>
+          <aside class="notes">
+            <p>If people remember one slide, make it this one. Each rule maps to a module we covered today.</p>
+          </aside>
+        </section>
+
+        <!-- 38 RECAP AND DEEP DIVES -->
+        <section class="tw" role="region" aria-label="Slide 38: Recap and deep dives">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Recap</p>
+            <h2>What we covered, and where next</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-cols">
+              <div class="tw-card">
+                <span class="tw-tag">Today</span>
+                <ul class="tw-list">
+                  <li>Dataverse modelling and security</li>
+                  <li>SharePoint&rsquo;s strengths and edges</li>
+                  <li>Azure SQL tiers, identity and RLS</li>
+                  <li>Delegation and throttling</li>
+                  <li>A matrix and flow for choosing</li>
+                </ul>
+              </div>
+              <div class="tw-card">
+                <span class="tw-tag">Optional deep dives</span>
+                <ul class="tw-list">
+                  <li>Data migration between stores</li>
+                  <li>Dataverse security design for your org</li>
+                  <li>Reporting with Fabric and Power BI</li>
+                  <li>Virtual tables and integration patterns</li>
+                  <li>Related workshops: W-T3 Power Platform, W-T4 CI/CD</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <aside class="notes">
+            <p>Recap the five takeaways, then invite questions. Mention that each deep dive can be run as a shorter follow-up session focused on the team&rsquo;s own solutions.</p>
+          </aside>
+        </section>
+
+        <!-- 39 CTA -->
+        <section class="cta--full-art" role="region" aria-label="Slide 39 of 39: Questions">
+          <div class="cta-top">
+            <h2>Questions?</h2>
+            <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
+          </div>
+          <div class="cta-bottom">
+            <div class="cta-copy">
+              <p class="cta-text">
+                Thank you. Deep dives are available on any topic from today &mdash; <strong>shaped around your own data</strong>.
+              </p>
+              <a class="cta-button" href="mailto:hello@knowall.ai?subject=W-T2%20Data%20storage%20deep%20dive" aria-label="Book a deep dive: email KnowAll AI">
+                <svg class="ic" aria-hidden="true"><use href="icons.svg#i-send" /></svg>
+                Book a deep dive
+              </a>
+            </div>
+            <div class="contact-row">
+              <div class="contact-item">
+                <svg class="ic" aria-hidden="true"><use href="icons.svg#i-mail" /></svg>
+                <a href="mailto:hello@knowall.ai">hello@knowall.ai</a>
+              </div>
+              <div class="contact-item">
+                <svg class="ic" aria-hidden="true"><use href="icons.svg#i-globe" /></svg>
+                <a href="https://www.knowall.ai">knowall.ai</a>
+              </div>
+            </div>
+          </div>
+          <aside class="notes"><p>Close, thank people, and collect feedback. Share the lab materials and slides afterwards.</p></aside>
+        </section>
+      </div>
+    </div>
+
+    <script src="tw-kit.js"></script>
+    <script src="vendor/reveal/reveal.js"></script>
+    <script src="knowall-deck.js"></script>
+  </body>
+</html>

@@ -1,0 +1,1369 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Generated from presentations-src/w-t4-cicd.html by `npm run decks:build`: edit the source, not this file. -->
+    <title>W-T4 CI/CD Workshop — KnowAll AI</title>
+    <meta name="description" content="KnowAll AI technology workshop W-T4: continuous integration and delivery with Azure Pipelines, Bicep and Power Platform Build Tools." />
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+    <meta property="og:title" content="W-T4 CI/CD Workshop — KnowAll AI" />
+    <meta property="og:description" content="KnowAll AI technology workshop W-T4: continuous integration and delivery with Azure Pipelines, Bicep and Power Platform Build Tools." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://www.knowall.ai/presentations/w-t4-cicd.html" />
+    <meta property="og:image" content="https://www.knowall.ai/presentations/images/og/w-t4-cicd.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="W-T4 CI/CD Workshop — KnowAll AI" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="W-T4 CI/CD Workshop — KnowAll AI" />
+    <meta name="twitter:description" content="KnowAll AI technology workshop W-T4: continuous integration and delivery with Azure Pipelines, Bicep and Power Platform Build Tools." />
+    <meta name="twitter:image" content="https://www.knowall.ai/presentations/images/og/w-t4-cicd.jpg" />
+    <link rel="stylesheet" href="vendor/reveal/reset.css" />
+    <link rel="stylesheet" href="vendor/reveal/reveal.css" />
+    <link rel="stylesheet" href="vendor/fonts.css" />
+    <link rel="stylesheet" href="knowall-deck.css" />
+    <link rel="stylesheet" href="tw-kit.css" />
+    <style>
+      /* Deck-specific styles (W-T4). Shared components live in tw-kit.css. */
+      :root {
+        --deck-cover: url('images/tminus15-workshops/t4-cicd.jpg');
+        --deck-hero: url('images/tminus15-workshops/close-liftoff.jpg');
+      }
+
+      .dora .tw-card b {
+        font-family: 'Playfair Display', Georgia, serif;
+        font-size: 40px;
+        line-height: 1.1;
+        color: #ffffff;
+      }
+
+      .dora .tw-card .ic {
+        font-size: 44px;
+        color: var(--lime);
+      }
+
+      .tw-node.tw-node-sm {
+        padding: 18px 14px;
+      }
+
+      .tw-node.tw-node-sm b {
+        font-size: 22px;
+      }
+
+      .tw-node.tw-node-sm span {
+        font-size: 17px;
+      }
+
+      .tw-node.tw-node-sm .ic {
+        font-size: 36px;
+      }
+    </style>
+  </head>
+  <body data-cta="none">
+    <div class="reveal">
+      <div class="slides">
+        <!-- 1 COVER -->
+        <section role="region" aria-label="Slide 1: W-T4 CI/CD">
+          <div class="cover-hero" role="img" aria-label="Robotic arms assembling glowing parts on an automated moon-base assembly line, an astronaut watching from a walkway above"></div>
+          <div class="cover-scrim" aria-hidden="true"></div>
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="cover-copy">
+            <p class="kicker">Technology workshop &middot; W-T4</p>
+            <h1>CI/CD:<br /><em>commit to customer</em></h1>
+            <p class="lead">
+              A hands-on half day on Azure Pipelines: continuous integration, YAML templates,
+              environments and approvals, secret-free identity, Bicep and Power Platform deployments.
+            </p>
+          </div>
+          <aside class="notes">
+            <p>Welcome everyone. This is a hands-on workshop for developers, DevOps and platform engineers and technical leads.</p>
+            <p>By lunchtime everyone will have built a multi-stage pipeline that validates pull requests, deploys infrastructure with Bicep through a federated service connection and waits for a human before production.</p>
+          </aside>
+        </section>
+
+        <!-- 2 AGENDA -->
+        <section class="tw" role="region" aria-label="Slide 2: Agenda">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Agenda</p>
+            <h2>The next three and a half hours</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <ol class="tw-agenda">
+              <li><span class="t">09:30</span><b>Why CI/CD matters</b></li>
+              <li><span class="t">09:40</span><b>1 &middot; Continuous integration</b></li>
+              <li><span class="t">10:05</span><b>2 &middot; YAML pipelines in depth</b></li>
+              <li><span class="t">10:30</span><b>3 &middot; Environments, approvals and release</b></li>
+              <li class="tw-break"><span class="t">10:50</span><b>Break</b></li>
+              <li><span class="t">11:05</span><b>4 &middot; Secrets and identity</b></li>
+              <li><span class="t">11:20</span><b>5 &middot; Infrastructure-as-code</b></li>
+              <li><span class="t">11:35</span><b>6 &middot; Deploying Power Platform solutions</b></li>
+              <li><span class="t">11:50</span><b>Hands-on lab</b></li>
+              <li><span class="t">12:45</span><b>Flight rules and Q&amp;A</b></li>
+            </ol>
+          </div>
+          <aside class="notes">
+            <p>Six short modules, then a 55-minute lab where you build the pipeline yourself.</p>
+            <p>Each module has a live demo. Questions are welcome at any time; deeper topics go on the parking list for follow-up sessions.</p>
+          </aside>
+        </section>
+
+        <!-- 3 WHY -->
+        <section class="tw" role="region" aria-label="Slide 3: Why CI/CD matters">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Why it matters</p>
+            <h2>Measure delivery, not effort</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <p class="tw-lead">The DORA research measures software delivery with four key metrics. Good CI/CD moves all four at once.</p>
+            <div class="tw-cols dora" style="--cols: 4">
+              <div class="tw-card"><svg class="ic"><use href="icons.svg#i-refresh-cw" /></svg><span class="tw-tag">Throughput</span><b>Deployment frequency</b><p>How often you release to production.</p></div>
+              <div class="tw-card"><svg class="ic"><use href="icons.svg#i-timer" /></svg><span class="tw-tag">Throughput</span><b>Lead time for changes</b><p>Commit to running in production.</p></div>
+              <div class="tw-card"><svg class="ic"><use href="icons.svg#i-alert-triangle" /></svg><span class="tw-tag">Stability</span><b>Change failure rate</b><p>Share of releases that need a fix or rollback.</p></div>
+              <div class="tw-card"><svg class="ic"><use href="icons.svg#i-gauge" /></svg><span class="tw-tag">Stability</span><b>Time to restore</b><p>How quickly you recover from a failed change.</p></div>
+            </div>
+            <div class="tw-callout"><svg class="ic"><use href="icons.svg#i-lightbulb" /></svg><p><strong>Speed and stability are not a trade-off.</strong> Teams that deploy small changes often also fail less and recover faster.</p></div>
+          </div>
+          <aside class="notes">
+            <p>These are the four keys from the DORA research programme behind the State of DevOps reports. Recent reports add a fifth measure, rework rate, but these four are the classic starting point.</p>
+            <p>The key message: automation lets you go faster and safer at the same time, because each change is small and goes through the same checks every time.</p>
+            <p>Ask the room: how long does a one-line fix take to reach production today?</p>
+          </aside>
+        </section>
+
+        <!-- 4 WHAT GOOD LOOKS LIKE -->
+        <section class="tw" role="region" aria-label="Slide 4: What good looks like">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">What good looks like</p>
+            <h2>From commit to production</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-flow">
+              <div class="tw-node"><svg class="ic"><use href="icons.svg#i-git-pull-request" /></svg><b>Pull request</b><span>Build validation, review, policies</span></div>
+              <div class="tw-arrow"></div>
+              <div class="tw-node"><svg class="ic"><use href="icons.svg#i-box" /></svg><b>Build once</b><span>Test, scan, version, publish artifact</span></div>
+              <div class="tw-arrow"></div>
+              <div class="tw-node"><svg class="ic"><use href="icons.svg#i-server-cog" /></svg><b>Test</b><span>Bicep + app, deployed automatically</span></div>
+              <div class="tw-arrow"></div>
+              <div class="tw-node tw-node-hot"><svg class="ic"><use href="icons.svg#i-shield-check" /></svg><b>Checks</b><span>Approval, branch control, alerts</span></div>
+              <div class="tw-arrow"></div>
+              <div class="tw-node"><svg class="ic"><use href="icons.svg#i-rocket" /></svg><b>Production</b><span>Same artifact, slot swap</span></div>
+            </div>
+            <div class="tw-cols" style="--cols: 3">
+              <div class="tw-callout"><svg class="ic"><use href="icons.svg#i-scroll-text" /></svg><p><strong>Everything as code:</strong> pipeline, infrastructure and solution in Git.</p></div>
+              <div class="tw-callout"><svg class="ic"><use href="icons.svg#i-lock" /></svg><p><strong>No stored secrets:</strong> federated identity and Key Vault.</p></div>
+              <div class="tw-callout"><svg class="ic"><use href="icons.svg#i-users" /></svg><p><strong>People decide:</strong> humans approve production; machines do the rest.</p></div>
+            </div>
+          </div>
+          <aside class="notes">
+            <p>This is the pipeline we build by the end of the morning. Every box maps to a module.</p>
+            <p>Note the artifact is built once and promoted: what you tested is exactly what reaches production.</p>
+          </aside>
+        </section>
+
+        <!-- 5 DIVIDER 01 -->
+        <section class="tw-divider" role="region" aria-label="Slide 5: Module 1, Continuous integration">
+          <div class="tw-divider-art" style="--art: url('images/tminus15-workshops/t4-cicd.jpg'); --focus: 70%" role="img" aria-label="An automated moon-base assembly line"></div>
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-divider-copy">
+            <p class="tw-mod">01</p>
+            <h2>Continuous integration</h2>
+            <p>Every change built, tested and checked before it reaches main.</p>
+          </div>
+          <aside class="notes">
+            <p>Continuous integration means merging small changes to main often, with an automated build proving each one works.</p>
+            <p>If a build is red, fixing it is the team's top priority.</p>
+          </aside>
+        </section>
+
+        <!-- 6 TRIGGERS -->
+        <section class="tw" role="region" aria-label="Slide 6: Triggers and PR validation">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 1 &middot; Continuous integration</p>
+            <h2>Triggers and pull request validation</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-cols tw-wide-left">
+              <div class="tw-code">
+                <div class="tw-code-title">azure-pipelines.yml</div>
+<pre><code><span class="k">name</span>: <span class="s">1.4.$(Rev:r)</span>          <span class="c"># run number = version</span>
+
+<span class="k">trigger</span>:
+  <span class="k">batch</span>: <span class="n">true</span>                 <span class="c"># queue one run, not many</span>
+  <span class="k">branches</span>:
+    <span class="k">include</span>: [ <span class="s">main</span>, <span class="s">release/*</span> ]
+  <span class="k">paths</span>:
+    <span class="k">exclude</span>: [ <span class="s">docs/*</span>, <span class="s">'*.md'</span> ]
+
+<span class="hl"><span class="k">pr</span>: <span class="n">none</span>   <span class="c"># Azure Repos: PR runs come from a branch policy</span></span></code></pre>
+              </div>
+              <div class="tw-stack">
+                <h3><svg class="ic"><use href="icons.svg#i-git-pull-request" /></svg>Branch policy on main</h3>
+                <ul class="tw-list">
+                  <li><strong>Build validation:</strong> the pipeline must pass</li>
+                  <li><strong>Reviewers:</strong> at least one, not the author</li>
+                  <li><strong>Linked work item</strong> and resolved comments</li>
+                  <li><strong>Squash merge</strong> for a clean history</li>
+                </ul>
+                <div class="tw-callout tw-pitfall"><svg class="ic"><use href="icons.svg#i-alert-triangle" /></svg><p>The YAML <code>pr:</code> trigger only applies to GitHub and Bitbucket repos.</p></div>
+              </div>
+            </div>
+          </div>
+          <aside class="notes">
+            <p>CI triggers fire on pushes to the listed branches; path filters stop documentation changes from triggering builds.</p>
+            <p>For Azure Repos Git, pull request validation is configured as a build validation branch policy, not with the pr keyword. For GitHub repos you use the pr trigger instead.</p>
+            <p>The name line sets the run number, which we reuse as the build version.</p>
+          </aside>
+        </section>
+
+        <!-- 7 CI JOB -->
+        <section class="tw" role="region" aria-label="Slide 7: A fast, trustworthy CI job">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 1 &middot; Continuous integration</p>
+            <h2>A fast, trustworthy CI job</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-cols tw-wide-left">
+              <div class="tw-code tw-code-sm">
+                <div class="tw-code-title">Build stage &middot; steps</div>
+<pre><code><span class="k">variables</span>:
+  <span class="k">npm_config_cache</span>: <span class="s">$(Pipeline.Workspace)/.npm</span>
+
+<span class="k">steps</span>:
+  - <span class="k">task</span>: <span class="f">Cache@2</span>
+    <span class="k">inputs</span>:
+      <span class="k">key</span>: <span class="s">'npm | "$(Agent.OS)" | package-lock.json'</span>
+      <span class="k">path</span>: <span class="s">$(npm_config_cache)</span>
+  - <span class="k">script</span>: <span class="f">npm ci</span>
+  - <span class="k">script</span>: <span class="f">npm run lint</span> &amp;&amp; <span class="f">npm test</span> -- --coverage
+  - <span class="k">task</span>: <span class="f">PublishTestResults@2</span>
+    <span class="k">inputs</span>: { <span class="k">testResultsFiles</span>: <span class="s">'**/junit.xml'</span> }
+  - <span class="k">task</span>: <span class="f">PublishCodeCoverageResults@2</span>
+    <span class="k">inputs</span>: { <span class="k">summaryFileLocation</span>: <span class="s">'coverage/cobertura-coverage.xml'</span> }
+  - <span class="k">script</span>: <span class="f">npm run build</span>
+<span class="hl">  - <span class="k">publish</span>: <span class="s">dist</span>          <span class="c"># pipeline artifact, built once</span></span>
+    <span class="k">artifact</span>: <span class="s">web</span></code></pre>
+              </div>
+              <div class="tw-stack">
+                <h3><svg class="ic"><use href="icons.svg#i-gauge" /></svg>Keep it under 10 minutes</h3>
+                <ul class="tw-list">
+                  <li><strong>Cache</strong> dependencies keyed on the lock file</li>
+                  <li><strong>Fail fast:</strong> lint and unit tests first</li>
+                  <li><strong>Publish results</strong> so failures show in the PR</li>
+                  <li><strong>Static analysis</strong> (e.g. SonarQube, CodeQL) as a gate</li>
+                  <li><strong>Dependency scanning</strong> for vulnerable packages</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <aside class="notes">
+            <p>Walk through the steps top to bottom. The cache key changes when the lock file changes, so restores stay correct.</p>
+            <p>Publishing test and coverage results gives reviewers a Tests and Code Coverage tab on the run and on the pull request.</p>
+            <p>A slow CI pipeline is a pipeline people work around. Aim for feedback in under ten minutes.</p>
+          </aside>
+        </section>
+
+        <!-- 8 BUILD ONCE -->
+        <section class="tw" role="region" aria-label="Slide 8: Build once, promote everywhere">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 1 &middot; Continuous integration</p>
+            <h2>Build once, promote everywhere</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-flow">
+              <div class="tw-node tw-node-hot"><svg class="ic"><use href="icons.svg#i-box" /></svg><b>Artifact 1.4.27</b><span>Built and tested once</span></div>
+              <div class="tw-arrow"></div>
+              <div class="tw-node"><b>Test</b><span>config from test settings</span></div>
+              <div class="tw-arrow"></div>
+              <div class="tw-node"><b>Pre-production</b><span>config from pre-prod settings</span></div>
+              <div class="tw-arrow"></div>
+              <div class="tw-node"><b>Production</b><span>config from prod settings</span></div>
+            </div>
+            <div class="tw-cols">
+              <div class="tw-stack">
+                <h3><svg class="ic"><use href="icons.svg#i-check" /></svg>Do</h3>
+                <ul class="tw-list">
+                  <li>Keep environment config <strong>outside</strong> the artifact</li>
+                  <li>Version every build: <code>MAJOR.MINOR.PATCH</code> + run number</li>
+                  <li>Tag the commit that produced a release</li>
+                </ul>
+              </div>
+              <div class="tw-callout tw-pitfall"><svg class="ic"><use href="icons.svg#i-alert-triangle" /></svg><p><strong>Pitfall:</strong> rebuilding per environment. What you tested is no longer what you ship &mdash; a different package, different dependencies, different bugs.</p></div>
+            </div>
+          </div>
+          <aside class="notes">
+            <p>The most important CI rule: one build, one artifact, promoted through every environment.</p>
+            <p>Environment differences belong in configuration: app settings, Key Vault references, Bicep parameter files and Power Platform deployment settings.</p>
+            <p>Semantic versioning tells consumers what changed; the run number makes every build traceable.</p>
+          </aside>
+        </section>
+
+        <!-- 9 DEMO CI -->
+        <section class="tw tw-scene" style="--scene: url('images/scene-controlroom.jpg')" role="region" aria-label="Slide 9: Demo, PR validation">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <span class="tw-demo-badge"><svg class="ic"><use href="icons.svg#i-play" /></svg>Live demo</span>
+            <h2>A pull request that proves itself</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <ol class="tw-steps">
+              <li>Add a build validation policy to <code>main</code><span class="tw-expect">Direct pushes to main are now blocked</span></li>
+              <li>Open a PR with a failing unit test<span class="tw-expect">Validation fails; the test shows on the PR&rsquo;s Tests tab</span></li>
+              <li>Fix the test and push again<span class="tw-expect">Validation re-runs and passes; the cache restore is quick</span></li>
+              <li>Complete the PR with squash merge<span class="tw-expect">CI on main publishes artifact <code>web</code> with a new version</span></li>
+            </ol>
+          </div>
+          <aside class="notes">
+            <p>Demo in the sample project. Show the branch policy screen, then the failed PR run and its Tests tab.</p>
+            <p>Point out the second run is faster because of the cache hit. Finish on the artifact and run number on main.</p>
+          </aside>
+        </section>
+
+        <!-- 10 DIVIDER 02 -->
+        <section class="tw-divider" role="region" aria-label="Slide 10: Module 2, YAML pipelines in depth">
+          <div class="tw-divider-art" style="--art: url('images/divider-gantry.jpg'); --focus: 60%" role="img" aria-label="A launch gantry at night"></div>
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-divider-copy">
+            <p class="tw-mod">02</p>
+            <h2>YAML pipelines in depth</h2>
+            <p>Pipelines as code: versioned, reviewed and reused like everything else.</p>
+          </div>
+          <aside class="notes">
+            <p>Now we go deeper into YAML: the structure, how to reuse it with templates and how to govern it across many teams.</p>
+          </aside>
+        </section>
+
+        <!-- 11 ANATOMY -->
+        <section class="tw" role="region" aria-label="Slide 11: Stages, jobs and steps">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 2 &middot; YAML pipelines</p>
+            <h2>Stages, jobs, steps &mdash; and how they run</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-cols tw-wide-right">
+              <div class="tw-stack">
+                <ul class="tw-tree">
+                  <li><span class="tw-chip">Pipeline</span><span>one YAML file</span></li>
+                  <li style="--lvl: 1"><span class="tw-chip">Stage</span><span>Build, DeployTest, DeployProd</span></li>
+                  <li style="--lvl: 2"><span class="tw-chip">Job</span><span>runs on one agent</span></li>
+                  <li style="--lvl: 3"><span class="tw-chip">Step</span><span>script or task</span></li>
+                </ul>
+                <ul class="tw-list">
+                  <li>Stages run <strong>in sequence</strong> by default</li>
+                  <li>Jobs in a stage run <strong>in parallel</strong></li>
+                  <li><code>dependsOn</code> and <code>condition</code> change the order</li>
+                </ul>
+              </div>
+              <div class="tw-code tw-code-sm">
+                <div class="tw-code-title">Ordering and conditions</div>
+<pre><code><span class="k">stages</span>:
+  - <span class="k">stage</span>: <span class="s">Build</span>
+    <span class="k">jobs</span>:
+      - <span class="k">job</span>: <span class="s">build</span>
+        <span class="k">strategy</span>:
+          <span class="k">matrix</span>:                 <span class="c"># same job, two OSes</span>
+            <span class="k">linux</span>:   { <span class="k">vmImage</span>: <span class="s">ubuntu-latest</span> }
+            <span class="k">windows</span>: { <span class="k">vmImage</span>: <span class="s">windows-latest</span> }
+        <span class="k">pool</span>: { <span class="k">vmImage</span>: <span class="s">$(vmImage)</span> }
+
+  - <span class="k">stage</span>: <span class="s">DeployTest</span>
+    <span class="k">dependsOn</span>: <span class="s">Build</span>
+
+  - <span class="k">stage</span>: <span class="s">DeployProd</span>
+    <span class="k">dependsOn</span>: <span class="s">DeployTest</span>
+<span class="hl">    <span class="k">condition</span>: |</span>
+<span class="hl">      <span class="f">and</span>(<span class="f">succeeded</span>(),</span>
+<span class="hl">          <span class="f">or</span>(<span class="f">eq</span>(variables[<span class="s">'Build.SourceBranch'</span>], <span class="s">'refs/heads/main'</span>),</span>
+<span class="hl">             <span class="f">startsWith</span>(variables[<span class="s">'Build.SourceBranch'</span>], <span class="s">'refs/heads/release/'</span>)))</span></code></pre>
+              </div>
+            </div>
+          </div>
+          <aside class="notes">
+            <p>A pipeline is a tree. Stages group jobs, jobs get an agent, steps run on that agent.</p>
+            <p>The matrix runs the same job on two operating systems in parallel. The condition makes sure only builds from main or a release branch can ever reach production, even if someone queues a feature branch. It matches the branch control check on the production environment.</p>
+          </aside>
+        </section>
+
+        <!-- 12 TEMPLATES -->
+        <section class="tw" role="region" aria-label="Slide 12: Templates">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 2 &middot; YAML pipelines</p>
+            <h2>Templates: write it once</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-cols">
+              <div class="tw-code tw-code-sm">
+                <div class="tw-code-title">templates/node-build.yml</div>
+<pre><code><span class="k">parameters</span>:
+  - <span class="k">name</span>: <span class="s">nodeVersion</span>
+    <span class="k">type</span>: <span class="s">string</span>
+    <span class="k">default</span>: <span class="s">'22.x'</span>
+  - <span class="k">name</span>: <span class="s">runTests</span>
+    <span class="k">type</span>: <span class="s">boolean</span>
+    <span class="k">default</span>: <span class="n">true</span>
+
+<span class="k">steps</span>:
+  - <span class="k">task</span>: <span class="f">UseNode@1</span>
+    <span class="k">inputs</span>: { <span class="k">version</span>: <span class="v">${{ parameters.nodeVersion }}</span> }
+  - <span class="k">script</span>: <span class="f">npm ci</span>
+<span class="hl">  - <span class="v">${{ if parameters.runTests }}</span>:</span>
+    - <span class="k">script</span>: <span class="f">npm test</span></code></pre>
+              </div>
+              <div class="tw-stack">
+                <div class="tw-code tw-code-sm">
+                  <div class="tw-code-title">azure-pipelines.yml</div>
+<pre><code><span class="k">steps</span>:
+  - <span class="k">template</span>: <span class="s">templates/node-build.yml</span>
+    <span class="k">parameters</span>:
+      <span class="k">nodeVersion</span>: <span class="s">'22.x'</span>
+      <span class="k">runTests</span>: <span class="n">true</span></code></pre>
+                </div>
+                <ul class="tw-list">
+                  <li><strong>Step, job, stage</strong> and <strong>variable</strong> templates</li>
+                  <li><strong>Typed parameters</strong> catch mistakes when the run is created</li>
+                  <li>Share across repos with <code>resources: repositories</code>, pinned to a tag</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <aside class="notes">
+            <p>Templates are how you stop copy-pasting YAML between repositories. A template takes typed parameters and expands into steps, jobs or stages.</p>
+            <p>The if expression is evaluated when the pipeline is compiled, so a disabled step disappears from the run entirely.</p>
+            <p>Keep shared templates in their own repo and pin consumers to a tag so a template change can't break every pipeline at once.</p>
+          </aside>
+        </section>
+
+        <!-- 13 EXTENDS -->
+        <section class="tw" role="region" aria-label="Slide 13: Extends templates for governance">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 2 &middot; YAML pipelines</p>
+            <h2>Extends templates for governance</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-cols tw-wide-left">
+              <div class="tw-code">
+                <div class="tw-code-title">azure-pipelines.yml (in the app repo)</div>
+<pre><code><span class="k">resources</span>:
+  <span class="k">repositories</span>:
+    - <span class="k">repository</span>: <span class="s">templates</span>
+      <span class="k">type</span>: <span class="s">git</span>
+      <span class="k">name</span>: <span class="s">Platform/pipeline-templates</span>
+      <span class="k">ref</span>: <span class="s">refs/tags/v3</span>
+
+<span class="hl"><span class="k">extends</span>:</span>
+  <span class="k">template</span>: <span class="s">secure-pipeline.yml@templates</span>
+  <span class="k">parameters</span>:
+    <span class="k">buildSteps</span>:
+      - <span class="k">script</span>: <span class="f">npm ci</span> &amp;&amp; <span class="f">npm test</span></code></pre>
+              </div>
+              <div class="tw-stack">
+                <p>The platform team owns the outer pipeline. App teams only fill in the gaps.</p>
+                <ul class="tw-list">
+                  <li>The template adds scanning, signing and approved agents</li>
+                  <li>It can <strong>reject</strong> risky steps passed in</li>
+                </ul>
+                <div class="tw-callout"><svg class="ic"><use href="icons.svg#i-shield-check" /></svg><p>Add a <strong>Required template</strong> check on production environments and service connections: only pipelines that extend it can deploy.</p></div>
+              </div>
+            </div>
+          </div>
+          <aside class="notes">
+            <p>Includes let you reuse pieces; extends lets a central template wrap the whole pipeline. That's the difference between convenience and governance.</p>
+            <p>Combined with the required template check, production can only be reached through the approved, scanned path. App teams still own their build steps.</p>
+          </aside>
+        </section>
+
+        <!-- 14 PARAMS VS VARS -->
+        <section class="tw" role="region" aria-label="Slide 14: Parameters vs variables">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Decision</p>
+            <h2>Parameters vs variables</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <table class="tw-table">
+              <thead><tr><th></th><th>Template expression</th><th>Macro</th><th>Runtime expression</th></tr></thead>
+              <tbody>
+                <tr><th>Syntax</th><td><code>${{ parameters.env }}</code></td><td><code>$(appName)</code></td><td><code>$[ variables.ver ]</code></td></tr>
+                <tr><th>Evaluated</th><td>When the run is compiled</td><td>Just before each task runs</td><td>At run time, for variables and conditions</td></tr>
+                <tr><th>Typed</th><td class="yes">Yes &mdash; string, boolean, object&hellip;</td><td class="no">No &mdash; always strings</td><td class="no">No</td></tr>
+                <tr><th>Can shape the pipeline</th><td class="yes">Yes &mdash; loops, ifs, whole stages</td><td class="no">No</td><td class="meh">Conditions only</td></tr>
+                <tr><th>Use it for</th><td>Structure and choices at queue time</td><td>Values passed to tasks</td><td>Values from earlier jobs or stages</td></tr>
+              </tbody>
+            </table>
+            <div class="tw-callout tw-pitfall"><svg class="ic"><use href="icons.svg#i-alert-triangle" /></svg><p><strong>Pitfall:</strong> a variable set by a script (<code>##vso[task.setvariable]</code>) doesn&rsquo;t exist when <code>${{ }}</code> is evaluated &mdash; use <code>$[ ]</code> or an output variable.</p></div>
+          </div>
+          <aside class="notes">
+            <p>This trips up almost everyone. The three syntaxes are evaluated at different times.</p>
+            <p>Rule of thumb: parameters for anything that changes the shape of the pipeline, macros for values, runtime expressions when you need a value produced earlier in the same run.</p>
+          </aside>
+        </section>
+
+        <!-- 15 DIVIDER 03 -->
+        <section class="tw-divider" role="region" aria-label="Slide 15: Module 3, Environments, approvals and release">
+          <div class="tw-divider-art" style="--art: url('images/tminus15-workshops/m6-operate.jpg'); --focus: 60%" role="img" aria-label="A rocket lifting off from the Moon while a reusable booster lands nearby"></div>
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-divider-copy">
+            <p class="tw-mod">03</p>
+            <h2>Environments, approvals and release</h2>
+            <p>Make every release safe, visible and boring.</p>
+          </div>
+          <aside class="notes">
+            <p>Delivery is the other half of CI/CD. We look at deployment jobs, environments, checks and how to release without downtime.</p>
+          </aside>
+        </section>
+
+        <!-- 16 DEPLOYMENT JOB -->
+        <section class="tw" role="region" aria-label="Slide 16: Deployment jobs">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 3 &middot; Release</p>
+            <h2>Deployment jobs and environments</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-cols tw-wide-left">
+              <div class="tw-code tw-code-sm">
+                <div class="tw-code-title">DeployProd stage</div>
+<pre><code>- <span class="k">stage</span>: <span class="s">DeployProd</span>
+  <span class="k">jobs</span>:
+    - <span class="k">deployment</span>: <span class="s">web</span>
+<span class="hl">      <span class="k">environment</span>: <span class="s">app-prod</span>       <span class="c"># checks live here</span></span>
+      <span class="k">strategy</span>:
+        <span class="k">runOnce</span>:
+          <span class="k">deploy</span>:
+            <span class="k">steps</span>:          <span class="c"># artifacts download automatically</span>
+              - <span class="k">task</span>: <span class="f">AzureWebApp@1</span>
+                <span class="k">inputs</span>:
+                  <span class="k">azureSubscription</span>: <span class="s">sc-app-prod</span>
+                  <span class="k">appType</span>: <span class="s">webAppLinux</span>
+                  <span class="k">appName</span>: <span class="s">app-sample-prod</span>
+                  <span class="k">deployToSlotOrASE</span>: <span class="n">true</span>
+                  <span class="k">resourceGroupName</span>: <span class="s">rg-app-prod</span>
+                  <span class="k">slotName</span>: <span class="s">staging</span>
+                  <span class="k">package</span>: <span class="s">$(Pipeline.Workspace)/web</span></code></pre>
+              </div>
+              <div class="tw-stack">
+                <h3><svg class="ic"><use href="icons.svg#i-server-cog" /></svg>An environment gives you</h3>
+                <ul class="tw-list">
+                  <li><strong>Deployment history</strong>: which run, commit and work items went where</li>
+                  <li><strong>Checks</strong> that run before any job targets it</li>
+                  <li><strong>Security</strong>: which pipelines may use it</li>
+                </ul>
+                <table class="tw-table tw-table-sm">
+                  <thead><tr><th>Strategy</th><th>Use for</th></tr></thead>
+                  <tbody>
+                    <tr><th>runOnce</th><td>Most apps: deploy all at once</td></tr>
+                    <tr><th>rolling</th><td>VM targets, in batches</td></tr>
+                    <tr><th>canary</th><td>Small slice of traffic first</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <aside class="notes">
+            <p>A deployment job targets an environment. That single line is what connects your YAML to approvals, checks and deployment history.</p>
+            <p>runOnce is what most PaaS apps need. Rolling and canary work with environment resources such as virtual machines and Kubernetes; for App Service we usually get the same safety from deployment slots.</p>
+          </aside>
+        </section>
+
+        <!-- 17 CHECKS -->
+        <section class="tw" role="region" aria-label="Slide 17: Approvals and checks">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 3 &middot; Release</p>
+            <h2>Approvals and checks</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-cols" style="--cols: 3">
+              <div class="tw-card">
+                <span class="tw-tag">People</span>
+                <ul class="tw-list">
+                  <li><strong>Approvals</strong> by a person or group</li>
+                  <li>Block self-approval by the person who queued the run</li>
+                  <li>Set a timeout</li>
+                </ul>
+              </div>
+              <div class="tw-card">
+                <span class="tw-tag">Policy</span>
+                <ul class="tw-list">
+                  <li><strong>Branch control</strong>: only <code>main</code> or <code>release/*</code></li>
+                  <li><strong>Required template</strong></li>
+                  <li><strong>Business hours</strong></li>
+                  <li><strong>Exclusive lock</strong>: one deployment at a time</li>
+                </ul>
+              </div>
+              <div class="tw-card">
+                <span class="tw-tag">Signals</span>
+                <ul class="tw-list">
+                  <li><strong>Query Azure Monitor alerts</strong></li>
+                  <li><strong>Invoke REST API</strong> or Azure Function, e.g. change ticket status</li>
+                  <li><strong>Evaluate artifact</strong> policies</li>
+                </ul>
+              </div>
+            </div>
+            <div class="tw-callout"><svg class="ic"><use href="icons.svg#i-lightbulb" /></svg><p>Checks belong to the <strong>environment</strong>, not the YAML &mdash; so nobody can remove them in a pull request.</p></div>
+          </div>
+          <aside class="notes">
+            <p>Checks are configured on the protected resource: the environment, service connection, agent pool or variable group.</p>
+            <p>Because they are not in the YAML, a developer can't bypass them by editing the pipeline. That's why production approvals should always live here.</p>
+            <p>Automated checks such as alerts and change tickets let you remove manual steps over time.</p>
+          </aside>
+        </section>
+
+        <!-- 18 BLUE-GREEN -->
+        <section class="tw" role="region" aria-label="Slide 18: Zero-downtime with deployment slots">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 3 &middot; Release</p>
+            <h2>Zero downtime with deployment slots</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-flow">
+              <div class="tw-node"><svg class="ic"><use href="icons.svg#i-box" /></svg><b>Deploy</b><span>New version to the <code>staging</code> slot</span></div>
+              <div class="tw-arrow"></div>
+              <div class="tw-node"><svg class="ic"><use href="icons.svg#i-search" /></svg><b>Warm up and verify</b><span>Smoke tests against the staging URL</span></div>
+              <div class="tw-arrow"></div>
+              <div class="tw-node tw-node-hot"><svg class="ic"><use href="icons.svg#i-refresh-cw" /></svg><b>Swap</b><span>Staging becomes production</span></div>
+              <div class="tw-arrow"></div>
+              <div class="tw-node"><svg class="ic"><use href="icons.svg#i-shield-check" /></svg><b>Roll back?</b><span>Swap again: seconds, not hours</span></div>
+            </div>
+            <div class="tw-cols">
+              <div class="tw-code tw-code-sm">
+                <div class="tw-code-title">Swap step</div>
+<pre><code>- <span class="k">task</span>: <span class="f">AzureAppServiceManage@0</span>
+  <span class="k">inputs</span>:
+    <span class="k">azureSubscription</span>: <span class="s">sc-app-prod</span>
+    <span class="k">Action</span>: <span class="s">'Swap Slots'</span>
+    <span class="k">WebAppName</span>: <span class="s">app-sample-prod</span>
+    <span class="k">ResourceGroupName</span>: <span class="s">rg-app-prod</span>
+    <span class="k">SourceSlot</span>: <span class="s">staging</span></code></pre>
+              </div>
+              <div class="tw-stack">
+                <div class="tw-callout tw-pitfall"><svg class="ic"><use href="icons.svg#i-alert-triangle" /></svg><p>Mark environment-specific settings as <strong>slot settings</strong>, or they swap with the code.</p></div>
+                <div class="tw-callout tw-pitfall"><svg class="ic"><use href="icons.svg#i-database" /></svg><p>Database changes must be <strong>backwards compatible</strong> &mdash; both versions run against the same schema during a swap.</p></div>
+              </div>
+            </div>
+          </div>
+          <aside class="notes">
+            <p>Blue-green on App Service: deploy to a staging slot, check it, then swap. The swap warms the instances first, so users see no downtime.</p>
+            <p>Rolling back is another swap. The catch is data: use expand-and-contract migrations so old and new code both work with the schema.</p>
+          </aside>
+        </section>
+
+        <!-- 19 RELEASE FLOW -->
+        <section class="tw" role="region" aria-label="Slide 19: Release Flow branching">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 3 &middot; Release</p>
+            <h2>Release Flow: branching that fits CI/CD</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-flow">
+              <div class="tw-node tw-node-sm"><svg class="ic"><use href="icons.svg#i-git-branch" /></svg><b>Topic branch</b><span>Short-lived: hours to days</span></div>
+              <div class="tw-arrow"></div>
+              <div class="tw-node tw-node-sm tw-node-hot"><svg class="ic"><use href="icons.svg#i-git-pull-request" /></svg><b>PR into main</b><span>Always releasable</span></div>
+              <div class="tw-arrow"></div>
+              <div class="tw-node tw-node-sm"><svg class="ic"><use href="icons.svg#i-git-branch" /></svg><b>release/2026.11</b><span>Cut per sprint</span></div>
+              <div class="tw-arrow"></div>
+              <div class="tw-node tw-node-sm"><svg class="ic"><use href="icons.svg#i-rocket" /></svg><b>Deploy</b><span>From the release branch</span></div>
+            </div>
+            <div class="tw-cols">
+              <ul class="tw-list">
+                <li><strong>One long-lived branch:</strong> <code>main</code></li>
+                <li><strong>Release branches</strong> are never merged back</li>
+                <li><strong>Hotfixes</strong> go to <code>main</code> first, then cherry-pick to the release branch</li>
+              </ul>
+              <div class="tw-callout"><svg class="ic"><use href="icons.svg#i-lightbulb" /></svg><p>Unfinished work ships behind <strong>feature flags</strong>, not on long-running branches.</p></div>
+            </div>
+          </div>
+          <aside class="notes">
+            <p>Release Flow is the trunk-based model Microsoft uses for Azure DevOps itself. It avoids the merge pain of GitFlow.</p>
+            <p>Fix forward on main first so the fix is never lost, then cherry-pick it into the current release branch. The W-M6 Operate workshop covers branching strategies in more depth.</p>
+          </aside>
+        </section>
+
+        <!-- 20 DEMO APPROVALS -->
+        <section class="tw tw-scene" style="--scene: url('images/scene-opsfloor.jpg')" role="region" aria-label="Slide 20: Demo, approvals and slot swap">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <span class="tw-demo-badge"><svg class="ic"><use href="icons.svg#i-play" /></svg>Live demo</span>
+            <h2>A gated, zero-downtime release</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <ol class="tw-steps">
+              <li>Create the <code>app-prod</code> environment with an approval and branch control<span class="tw-expect">Checks listed on the environment</span></li>
+              <li>Merge a change to <code>main</code><span class="tw-expect">Test deploys; production waits for approval</span></li>
+              <li>Try queuing the pipeline from a feature branch<span class="tw-expect">Branch control check fails &mdash; production is never reached</span></li>
+              <li>Approve the main run, then watch the slot swap<span class="tw-expect">New version live; environment history shows the commit and work items</span></li>
+            </ol>
+          </div>
+          <aside class="notes">
+            <p>Show the environment settings first, then the waiting run with the Review button.</p>
+            <p>The feature-branch attempt is the moment people get it: the protection doesn't depend on anyone remembering to do the right thing.</p>
+          </aside>
+        </section>
+
+        <!-- 21 DIVIDER 04 -->
+        <section class="tw-divider" role="region" aria-label="Slide 21: Module 4, Secrets and identity">
+          <div class="tw-divider-art" style="--art: url('images/scene-vault.jpg'); --focus: 60%" role="img" aria-label="A vault door in a dark corridor"></div>
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-divider-copy">
+            <p class="tw-mod">04</p>
+            <h2>Secrets and identity</h2>
+            <p>The best secret is the one that doesn&rsquo;t exist.</p>
+          </div>
+          <aside class="notes">
+            <p>Pipelines hold the keys to production, so they're a prime target. This module is about removing stored credentials altogether.</p>
+          </aside>
+        </section>
+
+        <!-- 22 WIF -->
+        <section class="tw" role="region" aria-label="Slide 22: Workload identity federation">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 4 &middot; Identity</p>
+            <h2>Service connections without secrets</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-flow">
+              <div class="tw-node"><svg class="ic"><use href="icons.svg#i-workflow" /></svg><b>Pipeline job</b><span>Uses service connection <code>sc-app-test</code></span></div>
+              <div class="tw-arrow"></div>
+              <div class="tw-node"><svg class="ic"><use href="icons.svg#i-key-round" /></svg><b>Short-lived token</b><span>Issued by Azure DevOps for this job (OIDC)</span></div>
+              <div class="tw-arrow"></div>
+              <div class="tw-node tw-node-hot"><svg class="ic"><use href="icons.svg#i-shield-check" /></svg><b>Microsoft Entra ID</b><span>Federated credential trusts that issuer and subject</span></div>
+              <div class="tw-arrow"></div>
+              <div class="tw-node"><svg class="ic"><use href="icons.svg#i-cloud" /></svg><b>Azure</b><span>Access token, scoped by RBAC</span></div>
+            </div>
+            <div class="tw-cols">
+              <ul class="tw-list">
+                <li><strong>Workload identity federation:</strong> no client secret to store, leak or rotate</li>
+                <li>Backed by an <strong>app registration</strong> or a <strong>user-assigned managed identity</strong></li>
+                <li>Subject is tied to the connection: <code>sc://org/project/connection</code></li>
+              </ul>
+              <div class="tw-callout"><svg class="ic"><use href="icons.svg#i-lock" /></svg><p><strong>Least privilege:</strong> one connection per environment, scoped to its resource group, with a role such as Contributor &mdash; not Owner on the subscription.</p></div>
+            </div>
+          </div>
+          <aside class="notes">
+            <p>Workload identity federation replaces stored client secrets. The job gets a short-lived token from Azure DevOps, and Entra ID exchanges it for an Azure access token because a federated credential trusts that exact connection.</p>
+            <p>Existing secret-based connections can be converted in place. Separate connections per environment mean a test pipeline can never touch production.</p>
+          </aside>
+        </section>
+
+        <!-- 23 KEY VAULT -->
+        <section class="tw" role="region" aria-label="Slide 23: Secrets from Key Vault">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 4 &middot; Secrets</p>
+            <h2>When you need a secret, get it from Key Vault</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-cols tw-wide-left">
+              <div class="tw-stack">
+                <div class="tw-code tw-code-sm">
+                  <div class="tw-code-title">Option 1 &middot; task</div>
+<pre><code>- <span class="k">task</span>: <span class="f">AzureKeyVault@2</span>
+  <span class="k">inputs</span>:
+    <span class="k">azureSubscription</span>: <span class="s">sc-app-test</span>
+    <span class="k">KeyVaultName</span>: <span class="s">kv-sample-test</span>
+    <span class="k">SecretsFilter</span>: <span class="s">'ApiKey,SqlPassword'</span>
+- <span class="k">script</span>: <span class="f">./smoke-test.sh</span>
+  <span class="k">env</span>:
+<span class="hl">    <span class="k">API_KEY</span>: <span class="s">$(ApiKey)</span>      <span class="c"># secrets must be mapped explicitly</span></span></code></pre>
+                </div>
+                <div class="tw-code tw-code-sm">
+                  <div class="tw-code-title">Option 2 &middot; variable group linked to Key Vault</div>
+<pre><code><span class="k">variables</span>:
+  - <span class="k">group</span>: <span class="s">app-test-secrets</span></code></pre>
+                </div>
+              </div>
+              <div class="tw-stack">
+                <h3><svg class="ic"><use href="icons.svg#i-check" /></svg>Better still</h3>
+                <ul class="tw-list">
+                  <li>Apps use <strong>managed identity</strong> and Key Vault references &mdash; the pipeline never sees the secret</li>
+                  <li>Secret variables are <strong>masked</strong> in logs and not passed to scripts unless mapped</li>
+                </ul>
+                <div class="tw-callout tw-pitfall"><svg class="ic"><use href="icons.svg#i-alert-triangle" /></svg><p>Never <code>echo</code> secrets or write them to artifacts. Masking can&rsquo;t catch transformed values.</p></div>
+              </div>
+            </div>
+          </div>
+          <aside class="notes">
+            <p>Two ways to pull secrets into a pipeline: the Key Vault task, or a Library variable group linked to a vault. Both use the federated service connection.</p>
+            <p>The best design is for the app itself to read Key Vault with its managed identity, so secrets never pass through the pipeline at all.</p>
+          </aside>
+        </section>
+
+        <!-- 24 DEMO WIF -->
+        <section class="tw tw-scene" style="--scene: url('images/scene-serverhall.jpg')" role="region" aria-label="Slide 24: Demo, a federated service connection">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <span class="tw-demo-badge"><svg class="ic"><use href="icons.svg#i-play" /></svg>Live demo</span>
+            <h2>Create a federated service connection</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <ol class="tw-steps">
+              <li>Project settings &rarr; Service connections &rarr; Azure Resource Manager<span class="tw-expect">Workload identity federation is the recommended option</span></li>
+              <li>Scope it to <code>rg-app-test</code> and name it <code>sc-app-test</code><span class="tw-expect">An identity is created with a federated credential</span></li>
+              <li>Open the identity in Entra ID<span class="tw-expect">No client secrets; issuer and subject on the federated credential</span></li>
+              <li>Run <code>az group show</code> through <code>AzureCLI@2</code><span class="tw-expect">Works; the same call against another resource group is denied</span></li>
+            </ol>
+          </div>
+          <aside class="notes">
+            <p>Create the connection live. Show the empty Certificates and secrets blade on the identity: there is nothing to leak.</p>
+            <p>Then prove least privilege by trying a resource group the identity has no role on.</p>
+          </aside>
+        </section>
+
+        <!-- 25 DIVIDER 05 -->
+        <section class="tw-divider" role="region" aria-label="Slide 25: Module 5, Infrastructure-as-code">
+          <div class="tw-divider-art" style="--art: url('images/scene-blocks.jpg'); --focus: 60%" role="img" aria-label="Glowing building blocks stacked in a dark hall"></div>
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-divider-copy">
+            <p class="tw-mod">05</p>
+            <h2>Infrastructure-as-code</h2>
+            <p>Environments you can rebuild from Git in minutes.</p>
+          </div>
+          <aside class="notes">
+            <p>If an environment can only be rebuilt from memory and portal clicks, it isn't really under control. We use Bicep for Azure.</p>
+          </aside>
+        </section>
+
+        <!-- 26 BICEP -->
+        <section class="tw" role="region" aria-label="Slide 26: Bicep modules">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 5 &middot; Infrastructure-as-code</p>
+            <h2>Bicep: one template, every environment</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-cols tw-wide-left">
+              <div class="tw-code tw-code-sm">
+                <div class="tw-code-title">infra/main.bicep</div>
+<pre><code><span class="k">targetScope</span> = <span class="s">'resourceGroup'</span>
+
+<span class="k">@allowed</span>([ <span class="s">'test'</span>, <span class="s">'prod'</span> ])
+<span class="k">param</span> <span class="v">env</span> <span class="f">string</span>
+
+<span class="k">module</span> <span class="v">plan</span> <span class="s">'modules/plan.bicep'</span> = {
+  params: {
+    name: <span class="s">'asp-sample-${env}'</span>
+<span class="hl">    sku: <span class="v">env</span> == <span class="s">'prod'</span> ? <span class="s">'P1v3'</span> : <span class="s">'B1'</span></span>
+  }
+}
+
+<span class="k">module</span> <span class="v">web</span> <span class="s">'modules/webapp.bicep'</span> = {
+  params: {
+    name: <span class="s">'app-sample-${env}'</span>
+    planId: <span class="v">plan</span>.outputs.id   <span class="c">// wires modules together</span>
+  }
+}</code></pre>
+              </div>
+              <div class="tw-stack">
+                <div class="tw-code tw-code-sm">
+                  <div class="tw-code-title">infra/test.bicepparam</div>
+<pre><code><span class="k">using</span> <span class="s">'main.bicep'</span>
+<span class="k">param</span> <span class="v">env</span> = <span class="s">'test'</span></code></pre>
+                </div>
+                <ul class="tw-list">
+                  <li><strong>Modules</strong> for reuse; share them through a Bicep registry</li>
+                  <li><strong>One parameter file</strong> per environment</li>
+                  <li>Outputs wire modules together &mdash; no hard-coded IDs</li>
+                  <li>Lint with <code>az bicep build</code> in CI</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <aside class="notes">
+            <p>Same template, different parameter file per environment. The SKU expression shows how to keep test cheap without a second template.</p>
+            <p>Bicep compiles to ARM, so anything Azure supports, Bicep supports on day one.</p>
+          </aside>
+        </section>
+
+        <!-- 27 WHAT-IF -->
+        <section class="tw" role="region" aria-label="Slide 27: What-if then deploy">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 5 &middot; Infrastructure-as-code</p>
+            <h2>Preview, then deploy, from the pipeline</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-cols tw-wide-left">
+              <div class="tw-code tw-code-sm">
+                <div class="tw-code-title">DeployTest stage &middot; infrastructure</div>
+<pre><code>- <span class="k">task</span>: <span class="f">AzureCLI@2</span>
+  <span class="k">displayName</span>: <span class="s">Bicep what-if, then deploy</span>
+  <span class="k">inputs</span>:
+    <span class="k">azureSubscription</span>: <span class="s">sc-app-test</span>   <span class="c"># federated</span>
+    <span class="k">scriptType</span>: <span class="s">bash</span>
+    <span class="k">scriptLocation</span>: <span class="s">inlineScript</span>
+    <span class="k">inlineScript</span>: |
+<span class="hl">      <span class="f">az deployment group what-if</span> \</span>
+        --resource-group <span class="s">rg-app-test</span> \
+        --parameters <span class="s">infra/test.bicepparam</span>
+
+      <span class="f">az deployment group create</span> \
+        --name <span class="s">infra-$(Build.BuildId)</span> \
+        --resource-group <span class="s">rg-app-test</span> \
+        --parameters <span class="s">infra/test.bicepparam</span></code></pre>
+              </div>
+              <div class="tw-stack">
+                <h3><svg class="ic"><use href="icons.svg#i-search" /></svg>What-if</h3>
+                <p>Shows what will be created, changed or deleted &mdash; before anything happens.</p>
+                <ul class="tw-list">
+                  <li>Run it in the <strong>PR build</strong> so reviewers see the impact</li>
+                  <li>For production, put an <strong>approval</strong> between what-if and deploy</li>
+                  <li>Infrastructure deploys <strong>before</strong> the app in each stage</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <aside class="notes">
+            <p>Two steps: what-if previews the change, create applies it. Both run as the federated service connection.</p>
+            <p>Naming the deployment after the build ID gives you a deployment history in the resource group that maps back to the pipeline run.</p>
+          </aside>
+        </section>
+
+        <!-- 28 DRIFT -->
+        <section class="tw" role="region" aria-label="Slide 28: Drift and tool choice">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Decision</p>
+            <h2>Drift, and choosing a tool</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-cols tw-wide-right">
+              <div class="tw-stack">
+                <h3><svg class="ic"><use href="icons.svg#i-alert-triangle" /></svg>Stopping drift</h3>
+                <ul class="tw-list">
+                  <li><strong>Read-only portal</strong> access in test and production</li>
+                  <li><strong>Deployment stacks</strong> to manage resource lifecycle and deny manual changes</li>
+                  <li>Scheduled <strong>what-if</strong> runs to spot changes</li>
+                  <li><strong>Azure Policy</strong> for guardrails such as regions, SKUs and tags</li>
+                </ul>
+              </div>
+              <table class="tw-table tw-table-sm">
+                <thead><tr><th></th><th>Bicep</th><th>Terraform</th></tr></thead>
+                <tbody>
+                  <tr><th>Clouds</th><td>Azure only</td><td>Multi-cloud and SaaS providers</td></tr>
+                  <tr><th>State file</th><td class="yes">None &mdash; Azure is the state</td><td class="meh">Must store and lock it</td></tr>
+                  <tr><th>New Azure features</th><td class="yes">Day one</td><td class="meh">When the provider adds them</td></tr>
+                  <tr><th>Preview changes</th><td><code>what-if</code></td><td><code>plan</code></td></tr>
+                  <tr><th>Best for</th><td>Azure-centric teams</td><td>Mixed estates</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <aside class="notes">
+            <p>Drift happens when someone fixes production in the portal. The next deployment either undoes the fix or fails.</p>
+            <p>Both Bicep and Terraform are good choices. For an Azure-only estate, Bicep has less to manage because there's no state file.</p>
+          </aside>
+        </section>
+
+        <!-- 29 DIVIDER 06 -->
+        <section class="tw-divider" role="region" aria-label="Slide 29: Module 6, Deploying Power Platform solutions">
+          <div class="tw-divider-art" style="--art: url('images/scene-interchange.jpg'); --focus: 60%" role="img" aria-label="A glowing transport interchange at night"></div>
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-divider-copy">
+            <p class="tw-mod">06</p>
+            <h2>Deploying Power Platform solutions</h2>
+            <p>Low-code deserves the same pipeline discipline as code.</p>
+          </div>
+          <aside class="notes">
+            <p>Power Platform solutions can and should go through the same source control, review and release process as everything else.</p>
+          </aside>
+        </section>
+
+        <!-- 30 PP ALM FLOW -->
+        <section class="tw" role="region" aria-label="Slide 30: Solution ALM flow">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 6 &middot; Power Platform</p>
+            <h2>Solutions through source control</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-flow">
+              <div class="tw-node tw-node-sm"><svg class="ic"><use href="icons.svg#i-zap" /></svg><b>Dev environment</b><span>Makers build in an unmanaged solution</span></div>
+              <div class="tw-arrow"></div>
+              <div class="tw-node tw-node-sm"><svg class="ic"><use href="icons.svg#i-box" /></svg><b>Export</b><span>Unmanaged .zip</span></div>
+              <div class="tw-arrow"></div>
+              <div class="tw-node tw-node-sm"><svg class="ic"><use href="icons.svg#i-layers" /></svg><b>Unpack</b><span>Readable XML and files</span></div>
+              <div class="tw-arrow"></div>
+              <div class="tw-node tw-node-sm tw-node-hot"><svg class="ic"><use href="icons.svg#i-git-pull-request" /></svg><b>Commit + PR</b><span>Reviewed diff</span></div>
+              <div class="tw-arrow"></div>
+              <div class="tw-node tw-node-sm"><svg class="ic"><use href="icons.svg#i-box" /></svg><b>Pack managed</b><span>Built from Git</span></div>
+              <div class="tw-arrow"></div>
+              <div class="tw-node tw-node-sm"><svg class="ic"><use href="icons.svg#i-rocket" /></svg><b>Import</b><span>Test, then prod, with settings</span></div>
+            </div>
+            <div class="tw-cols">
+              <ul class="tw-list">
+                <li><strong>Git is the source of truth</strong>, not the dev environment</li>
+                <li><strong>Managed</strong> solutions only beyond dev</li>
+                <li>Bump the <strong>solution version</strong> on every build</li>
+              </ul>
+              <div class="tw-callout tw-pitfall"><svg class="ic"><use href="icons.svg#i-alert-triangle" /></svg><p><strong>Pitfall:</strong> importing unmanaged solutions into test or production. You can&rsquo;t cleanly remove or upgrade them later.</p></div>
+            </div>
+          </div>
+          <aside class="notes">
+            <p>Export from dev, unpack into source files, review them in a pull request, then build a managed solution from Git and import it downstream.</p>
+            <p>Run the Power Apps solution checker in the build to catch problems early. The W-T3 Power Platform workshop covers solutions and environments in more depth.</p>
+          </aside>
+        </section>
+
+        <!-- 31 BUILD TOOLS YAML -->
+        <section class="tw" role="region" aria-label="Slide 31: Power Platform Build Tools">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 6 &middot; Power Platform</p>
+            <h2>Power Platform Build Tools in YAML</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-cols">
+              <div class="tw-code tw-code-sm">
+                <div class="tw-code-title">Export pipeline (from dev)</div>
+<pre><code>- <span class="k">task</span>: <span class="f">PowerPlatformToolInstaller@2</span>
+- <span class="k">task</span>: <span class="f">PowerPlatformExportSolution@2</span>
+  <span class="k">inputs</span>:
+    <span class="k">authenticationType</span>: <span class="s">PowerPlatformSPN</span>
+    <span class="k">PowerPlatformSPN</span>: <span class="s">sc-pp-dev</span>
+    <span class="k">SolutionName</span>: <span class="s">SampleApp</span>
+    <span class="k">SolutionOutputFile</span>: <span class="s">out/SampleApp.zip</span>
+    <span class="k">Managed</span>: <span class="n">false</span>
+- <span class="k">task</span>: <span class="f">PowerPlatformUnpackSolution@2</span>
+  <span class="k">inputs</span>:
+    <span class="k">SolutionInputFile</span>: <span class="s">out/SampleApp.zip</span>
+<span class="hl">    <span class="k">SolutionTargetFolder</span>: <span class="s">solutions/SampleApp</span></span>
+<span class="c"># then commit to a branch and open a PR</span></code></pre>
+              </div>
+              <div class="tw-code tw-code-sm">
+                <div class="tw-code-title">Release pipeline (from Git)</div>
+<pre><code>- <span class="k">task</span>: <span class="f">PowerPlatformToolInstaller@2</span>
+- <span class="k">task</span>: <span class="f">PowerPlatformPackSolution@2</span>
+  <span class="k">inputs</span>:
+    <span class="k">SolutionSourceFolder</span>: <span class="s">solutions/SampleApp</span>
+    <span class="k">SolutionOutputFile</span>: <span class="s">out/SampleApp_managed.zip</span>
+    <span class="k">SolutionType</span>: <span class="s">Managed</span>
+- <span class="k">task</span>: <span class="f">PowerPlatformImportSolution@2</span>
+  <span class="k">inputs</span>:
+    <span class="k">authenticationType</span>: <span class="s">PowerPlatformSPN</span>
+    <span class="k">PowerPlatformSPN</span>: <span class="s">sc-pp-test</span>
+    <span class="k">SolutionInputFile</span>: <span class="s">out/SampleApp_managed.zip</span>
+<span class="hl">    <span class="k">UseDeploymentSettingsFile</span>: <span class="n">true</span></span>
+    <span class="k">DeploymentSettingsFile</span>: <span class="s">config/test.settings.json</span>
+    <span class="k">AsyncOperation</span>: <span class="n">true</span></code></pre>
+              </div>
+            </div>
+            <div class="tw-callout"><svg class="ic"><use href="icons.svg#i-terminal" /></svg><p>Same steps by hand with the <code>pac</code> CLI: <code>pac solution export</code>, <code>unpack</code>, <code>pack</code>, <code>import</code>. Use it locally, and in GitHub Actions.</p></div>
+          </div>
+          <aside class="notes">
+            <p>Two pipelines: one exports and unpacks from dev into a pull request; the other packs a managed solution from Git and imports it, one stage per environment.</p>
+            <p>The service connections authenticate as an application user in each environment. Check the current task versions in the Marketplace before the lab; these are the v2 tasks.</p>
+          </aside>
+        </section>
+
+        <!-- 32 SETTINGS -->
+        <section class="tw" role="region" aria-label="Slide 32: Deployment settings">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 6 &middot; Power Platform</p>
+            <h2>One solution, per-environment settings</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-cols tw-wide-left">
+              <div class="tw-code tw-code-sm">
+                <div class="tw-code-title">config/test.settings.json</div>
+<pre><code>{
+  <span class="k">"EnvironmentVariables"</span>: [
+    { <span class="k">"SchemaName"</span>: <span class="s">"sample_ApiBaseUrl"</span>,
+      <span class="k">"Value"</span>: <span class="s">"https://api-test.example.org"</span> }
+  ],
+  <span class="k">"ConnectionReferences"</span>: [
+    { <span class="k">"LogicalName"</span>: <span class="s">"sample_sharedoffice365_ref"</span>,
+<span class="hl">      <span class="k">"ConnectionId"</span>: <span class="s">"&lt;connection id in test&gt;"</span>,</span>
+      <span class="k">"ConnectorId"</span>: <span class="s">"/providers/Microsoft.PowerApps/apis/shared_office365"</span> }
+  ]
+}</code></pre>
+              </div>
+              <div class="tw-stack">
+                <div class="tw-code tw-code-sm">
+                  <div class="tw-code-title">Generate the template</div>
+<pre><code><span class="f">pac solution create-settings</span> \
+  --solution-zip <span class="s">SampleApp.zip</span> \
+  --settings-file <span class="s">test.settings.json</span></code></pre>
+                </div>
+                <ul class="tw-list">
+                  <li><strong>Environment variables</strong> for URLs, IDs and flags</li>
+                  <li><strong>Connection references</strong> bound to connections owned by a service account</li>
+                  <li>No manual fix-ups after import</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <aside class="notes">
+            <p>Environment variables and connection references are the Power Platform version of environment config. The deployment settings file sets them during import.</p>
+            <p>Create the connections in each target environment once, owned by a service account, and record their IDs in the settings file. Keep secret values in Key Vault-backed environment variables, not in this file.</p>
+          </aside>
+        </section>
+
+        <!-- 33 BUILD TOOLS VS PIPELINES IN PP -->
+        <section class="tw" role="region" aria-label="Slide 33: Build Tools vs Pipelines in Power Platform">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Decision</p>
+            <h2>Build Tools or Pipelines in Power Platform?</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <table class="tw-table">
+              <thead><tr><th></th><th>Pipelines in Power Platform</th><th>Azure DevOps + Build Tools</th></tr></thead>
+              <tbody>
+                <tr><th>Set up by</th><td>Makers and admins, in the maker portal</td><td>Developers and DevOps engineers, in YAML</td></tr>
+                <tr><th>Source control</th><td class="meh">Optional, via Git integration</td><td class="yes">Built in: unpacked solution in Git</td></tr>
+                <tr><th>Pull request review</th><td class="no">No</td><td class="yes">Yes</td></tr>
+                <tr><th>Mixed releases (code + Azure + solution)</th><td class="no">No</td><td class="yes">Yes, in one pipeline</td></tr>
+                <tr><th>Best for</th><td>Citizen-developer apps, simple promotion</td><td>Professional teams and critical solutions</td></tr>
+              </tbody>
+            </table>
+            <div class="tw-callout"><svg class="ic"><use href="icons.svg#i-lightbulb" /></svg><p>They can coexist: makers self-serve low-risk apps; important solutions go through the full pipeline.</p></div>
+          </div>
+          <aside class="notes">
+            <p>Pipelines in Power Platform is the in-product option and is great for getting makers off manual exports. It's quick to adopt but has less control.</p>
+            <p>When a solution matters, or when it ships alongside Azure resources and custom code, use Azure DevOps with Build Tools so everything is reviewed and released together.</p>
+          </aside>
+        </section>
+
+        <!-- 34 GITHUB ACTIONS -->
+        <section class="tw" role="region" aria-label="Slide 34: GitHub Actions equivalents">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Reference</p>
+            <h2>Same ideas in GitHub Actions</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <table class="tw-table tw-table-sm">
+              <thead><tr><th>Azure Pipelines</th><th>GitHub Actions</th></tr></thead>
+              <tbody>
+                <tr><td><code>azure-pipelines.yml</code></td><td><code>.github/workflows/*.yml</code></td></tr>
+                <tr><td>Stage &rarr; job &rarr; step / task</td><td>Job (with <code>needs</code>) &rarr; step / action</td></tr>
+                <tr><td>Templates and <code>extends</code></td><td>Reusable workflows and composite actions</td></tr>
+                <tr><td>Environment with approvals and checks</td><td>Environment with required reviewers and protection rules</td></tr>
+                <tr><td>Workload identity federation service connection</td><td>OIDC with <code>azure/login</code> and a federated credential</td></tr>
+                <tr><td>Variable groups and Key Vault</td><td>Secrets and variables, or Key Vault via <code>azure/login</code></td></tr>
+                <tr><td>Pipeline artifacts</td><td><code>actions/upload-artifact</code> and <code>download-artifact</code></td></tr>
+                <tr><td>Power Platform Build Tools</td><td>Power Platform Actions (<code>microsoft/powerplatform-actions</code>)</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <aside class="notes">
+            <p>Everything we covered maps to GitHub Actions. The concepts — build once, environments with protection, OIDC instead of secrets — are the same.</p>
+            <p>Use this as a crib sheet if your code lives in GitHub but your work items stay in Azure DevOps.</p>
+          </aside>
+        </section>
+
+        <!-- 35 LAB OVERVIEW -->
+        <section class="tw tw-scene" style="--scene: url('images/scene-team-studio.jpg')" role="region" aria-label="Slide 35: Lab overview">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Hands-on lab &middot; 55 minutes</p>
+            <h2>Build a pipeline from commit to production</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-flow">
+              <div class="tw-node tw-node-sm"><svg class="ic"><use href="icons.svg#i-git-pull-request" /></svg><b>PR validation</b><span>Branch policy</span></div>
+              <div class="tw-arrow"></div>
+              <div class="tw-node tw-node-sm"><svg class="ic"><use href="icons.svg#i-box" /></svg><b>Build</b><span>Test, publish artifact</span></div>
+              <div class="tw-arrow"></div>
+              <div class="tw-node tw-node-sm"><svg class="ic"><use href="icons.svg#i-server-cog" /></svg><b>Deploy test</b><span>Bicep + app</span></div>
+              <div class="tw-arrow"></div>
+              <div class="tw-node tw-node-sm tw-node-hot"><svg class="ic"><use href="icons.svg#i-shield-check" /></svg><b>Approval</b><span>lab-prod environment</span></div>
+              <div class="tw-arrow"></div>
+              <div class="tw-node tw-node-sm"><svg class="ic"><use href="icons.svg#i-rocket" /></svg><b>Deploy prod</b><span>Same artifact</span></div>
+            </div>
+            <div class="tw-cols">
+              <div class="tw-card">
+                <span class="tw-tag">You need</span>
+                <ul class="tw-list">
+                  <li>A lab Azure DevOps project and Azure subscription (we provide)</li>
+                  <li>The <code>sample-web</code> repo: a small Node app, tests and <code>infra/</code></li>
+                  <li>Federated connections <code>sc-lab-test</code> and <code>sc-lab-prod</code>, pre-created</li>
+                </ul>
+              </div>
+              <div class="tw-card">
+                <span class="tw-tag">Ground rules</span>
+                <ul class="tw-list">
+                  <li>Sample data only &mdash; nothing from your own systems</li>
+                  <li>Work in pairs; one drives, one reviews</li>
+                  <li>Solution files are in the <code>solution</code> branch if you get stuck</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <aside class="notes">
+            <p>Everything runs in our lab tenant, so there's nothing to install and no access needed to your own systems.</p>
+            <p>Pairs work best: the reviewer approves the pull requests and the production deployment, which is exactly how it should work in real life.</p>
+          </aside>
+        </section>
+
+        <!-- 36 LAB PART 1 -->
+        <section class="tw" role="region" aria-label="Slide 36: Lab part 1, continuous integration">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Hands-on lab &middot; Part 1 &middot; 20 minutes</p>
+            <h2>Continuous integration</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <ol class="tw-steps">
+              <li>Clone <code>sample-web</code> and create branch <code>topic/pipeline</code><span class="tw-expect">Repo contains <code>src/</code>, <code>tests/</code> and <code>infra/</code></span></li>
+              <li>Add <code>azure-pipelines.yml</code> with a <strong>Build</strong> stage: the <code>Cache@2</code> step, then <code>templates/node-build.yml</code>, then the publish-results, build and <code>publish</code> steps from slide 7<span class="tw-expect">Steps: cache, <code>npm ci</code>, test, publish results, publish artifact <code>web</code></span></li>
+              <li>Create the pipeline from the YAML and run it on your branch<span class="tw-expect">A green run with a Tests tab and artifact <code>web</code></span></li>
+              <li>Add a build validation branch policy to <code>main</code><span class="tw-expect">Direct pushes to main are rejected</span></li>
+              <li>Open a pull request from <code>topic/pipeline</code><span class="tw-expect">Validation runs automatically on the PR</span></li>
+            </ol>
+          </div>
+          <aside class="notes">
+            <p>Give pairs twenty minutes. The most common snag is indentation in the YAML; the pipeline editor's validate button helps.</p>
+            <p>Check everyone has a green PR validation run before moving to part 2.</p>
+          </aside>
+        </section>
+
+        <!-- 37 LAB PART 2 -->
+        <section class="tw" role="region" aria-label="Slide 37: Lab part 2, continuous delivery">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Hands-on lab &middot; Part 2 &middot; 35 minutes</p>
+            <h2>Continuous delivery</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-cols tw-wide-left">
+              <ol class="tw-steps" style="counter-reset: step 5">
+                <li>Add a <strong>DeployTest</strong> stage: Bicep what-if, then create, using <code>sc-lab-test</code><span class="tw-expect">What-if lists new resources; <code>rg-lab-test</code> fills up</span></li>
+                <li>Add a deployment job to environment <code>lab-test</code> that deploys artifact <code>web</code><span class="tw-expect">App responds on its test URL</span></li>
+                <li>Create environment <code>lab-prod</code> with an approval (your partner) and branch control (<code>main</code>)<span class="tw-expect">Two checks listed on the environment</span></li>
+                <li>Add a <strong>DeployProd</strong> stage targeting <code>lab-prod</code>; merge your PR<span class="tw-expect">Test deploys, then the run waits for approval</span></li>
+                <li>Your partner approves<span class="tw-expect">Production deploys the same artifact; history shows the commit</span></li>
+              </ol>
+              <div class="tw-card">
+                <span class="tw-tag">Stretch goals</span>
+                <ul class="tw-list">
+                  <li>Deploy to a <code>staging</code> slot and swap</li>
+                  <li>Move the deploy steps into a stage template</li>
+                  <li>Add a Power Platform stage: pack <code>solutions/SampleApp</code> as managed and import it to the lab test environment with <code>config/test.settings.json</code></li>
+                  <li>Add <code>PowerPlatformChecker@2</code> to the build</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <aside class="notes">
+            <p>This is the heart of the lab. Remind pairs that the federated connections already exist; they just reference them by name.</p>
+            <p>Fast pairs can take the stretch goals. The Power Platform stretch uses a sample solution already unpacked in the repo.</p>
+          </aside>
+        </section>
+
+        <!-- 38 FLIGHT RULES -->
+        <section class="tw" role="region" aria-label="Slide 38: Flight rules">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Flight rules</p>
+            <h2>Rules that speed you up</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <ul class="tw-checks">
+              <li><strong>Everything as code</strong> &mdash; pipelines, infrastructure and solutions in Git</li>
+              <li><strong>Every change through a PR</strong> with build validation</li>
+              <li><strong>Build once</strong>, promote the same artifact everywhere</li>
+              <li><strong>No stored secrets</strong> &mdash; federated identity and Key Vault</li>
+              <li><strong>Checks on environments</strong>, not in the YAML</li>
+              <li><strong>Humans approve production</strong>; automation does the rest</li>
+              <li><strong>What-if</strong> before you change infrastructure</li>
+              <li><strong>Managed solutions only</strong> beyond dev</li>
+              <li><strong>Templates</strong> for the boring bits, <code>extends</code> for governance</li>
+              <li><strong>Make rollback boring</strong> &mdash; slots and previous artifacts</li>
+            </ul>
+          </div>
+          <aside class="notes">
+            <p>If you remember one slide, make it this one. Each rule removes a whole category of release-day problems.</p>
+            <p>Suggest teams turn these into a Definition of Done item for any new pipeline.</p>
+          </aside>
+        </section>
+
+        <!-- 39 RECAP -->
+        <section class="tw" role="region" aria-label="Slide 39: Recap and deep dives">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Recap</p>
+            <h2>What we covered, and where to go next</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-cols">
+              <div class="tw-stack">
+                <h3><svg class="ic"><use href="icons.svg#i-check" /></svg>Today</h3>
+                <ul class="tw-list">
+                  <li>CI with PR validation, caching and test results</li>
+                  <li>YAML templates and <code>extends</code> for governance</li>
+                  <li>Environments, checks and zero-downtime releases</li>
+                  <li>Workload identity federation and Key Vault</li>
+                  <li>Bicep with what-if from the pipeline</li>
+                  <li>Power Platform solutions through Git</li>
+                </ul>
+              </div>
+              <div class="tw-card">
+                <span class="tw-tag">Optional deep dives</span>
+                <ul class="tw-list">
+                  <li>Pipeline security hardening</li>
+                  <li>Self-hosted agents and Managed DevOps Pools</li>
+                  <li>Automated UI testing in the pipeline with Playwright</li>
+                  <li>Database migrations without downtime</li>
+                  <li>Power Platform ALM at scale</li>
+                  <li>Containers and Kubernetes deployments</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <aside class="notes">
+            <p>Recap the six modules quickly and ask each pair for one thing they'll change in their own pipelines next week.</p>
+            <p>Collect interest in the deep dives; each can run as a short follow-up session.</p>
+          </aside>
+        </section>
+
+        <!-- 40 CTA -->
+        <section class="cta--full-art" role="region" aria-label="Slide 40 of 40: Questions">
+          <div class="cta-top">
+            <h2>Questions?</h2>
+            <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
+          </div>
+          <div class="cta-bottom">
+            <div class="cta-copy">
+              <p class="cta-text">
+                Thank you. Talk to us about <strong>follow-up deep dives</strong> or help setting up pipelines for your own solutions.
+              </p>
+              <a class="cta-button" href="mailto:hello@knowall.ai?subject=W-T4%20CI%2FCD%20deep%20dive" aria-label="Book a deep dive: email KnowAll AI">
+                <svg class="ic" aria-hidden="true"><use href="icons.svg#i-send" /></svg>
+                Book a deep dive
+              </a>
+            </div>
+            <div class="contact-row">
+              <div class="contact-item">
+                <svg class="ic" aria-hidden="true"><use href="icons.svg#i-mail" /></svg>
+                <a href="mailto:hello@knowall.ai">hello@knowall.ai</a>
+              </div>
+              <div class="contact-item">
+                <svg class="ic" aria-hidden="true"><use href="icons.svg#i-globe" /></svg>
+                <a href="https://www.knowall.ai">knowall.ai</a>
+              </div>
+            </div>
+          </div>
+          <aside class="notes"><p>Open the floor for questions. Point people at the lab repo, which they can keep, and at the deep-dive options.</p></aside>
+        </section>
+      </div>
+    </div>
+
+    <script src="tw-kit.js"></script>
+    <script src="vendor/reveal/reveal.js"></script>
+    <script src="knowall-deck.js"></script>
+  </body>
+</html>

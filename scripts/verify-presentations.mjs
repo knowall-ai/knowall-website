@@ -104,7 +104,7 @@ try {
           };
         };
         const SHELL =
-          '.content,.dark-inner,.band,.cover-hero,.cover-scrim,.cta-top,.cta-bottom,.hero-bleed,.cover-copy,.pill-row,.kpi-row,.cards-2,.cards-3,.cards-5,.checks,.agent-row,.timeline,.partner-grid,.lifecycle-8,.ws-art';
+          '.content,.dark-inner,.band,.cover-hero,.cover-scrim,.cta-top,.cta-bottom,.hero-bleed,.cover-copy,.pill-row,.kpi-row,.cards-2,.cards-3,.cards-5,.checks,.agent-row,.timeline,.partner-grid,.lifecycle-8,.ws-art,.tw-divider-art';
         const ctls = Array.from(sec.querySelectorAll('.slide-cta, .slide-detail')).map((e) => ({
           sel: e.className,
           r: box(e),
