@@ -1158,25 +1158,20 @@ typecheck are clean. Plan first and wait for my OK.
         </section>
 
         <!-- 37 CTA -->
-        <section class="cta--full-art" role="region" aria-label="Slide 37: Questions">
-          <div class="cta-top">
-            <h2>Questions?</h2>
-            <img class="logo-dark" src="images/logo.png" alt="KnowAll.ai" />
-          </div>
-          <div class="cta-bottom">
-            <div class="cta-copy">
-              <p class="cta-text">Deep dives are available on any topic &mdash; on your own repositories, with your own team.</p>
-              <a class="cta-button" href="mailto:hello@knowall.ai?subject=Agentic%20coding%20deep%20dive" aria-label="Email KnowAll AI about an agentic coding deep dive"><svg class="ic" aria-hidden="true"><use href="icons.svg#i-send" /></svg>Book a deep dive</a>
-            </div>
-            <div class="contact-row">
-              <div class="contact-item"><svg class="ic" aria-hidden="true"><use href="icons.svg#i-mail" /></svg><a href="mailto:hello@knowall.ai">hello@knowall.ai</a></div>
-              <div class="contact-item"><svg class="ic" aria-hidden="true"><use href="icons.svg#i-globe" /></svg><a href="https://www.knowall.ai">knowall.ai</a></div>
-            </div>
-          </div>
-          <aside class="notes">
-            <p>Open the floor. Common questions: cost per developer, which model to use, how to handle licensing and data terms, and how to start without disrupting delivery. A good first step is one team, one repo, one month, with the flight rules in place.</p>
-          </aside>
-        </section>
+        <!-- @include cta {
+          "label": "Slide 37 of 37: Questions",
+          "className": "cta--full-art",
+          "heading": "Questions?",
+          "pitch": "Deep dives are available on any topic &mdash; on your own repositories, with your own team.",
+          "button": {
+            "text": "Book a deep dive",
+            "icon": "send",
+            "ariaLabel": "Book a deep dive: email KnowAll AI"
+          },
+          "mailSubject": "Agentic coding deep dive",
+          "buttonOnlySubject": true,
+          "notes": "<p>Open the floor. Common questions: cost per developer, which model to use, how to handle licensing and data terms, and how to start without disrupting delivery. A good first step is one team, one repo, one month, with the flight rules in place.</p>"
+        } -->
       </div>
     </div>
 

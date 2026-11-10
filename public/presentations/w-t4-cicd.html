@@ -380,13 +380,14 @@
     <span class="k">dependsOn</span>: <span class="s">DeployTest</span>
 <span class="hl">    <span class="k">condition</span>: |</span>
 <span class="hl">      <span class="f">and</span>(<span class="f">succeeded</span>(),</span>
-<span class="hl">          <span class="f">eq</span>(variables[<span class="s">'Build.SourceBranch'</span>], <span class="s">'refs/heads/main'</span>))</span></code></pre>
+<span class="hl">          <span class="f">or</span>(<span class="f">eq</span>(variables[<span class="s">'Build.SourceBranch'</span>], <span class="s">'refs/heads/main'</span>),</span>
+<span class="hl">             <span class="f">startsWith</span>(variables[<span class="s">'Build.SourceBranch'</span>], <span class="s">'refs/heads/release/'</span>)))</span></code></pre>
               </div>
             </div>
           </div>
           <aside class="notes">
             <p>A pipeline is a tree. Stages group jobs, jobs get an agent, steps run on that agent.</p>
-            <p>The matrix runs the same job on two operating systems in parallel. The condition makes sure only builds from main can ever reach production, even if someone queues a feature branch.</p>
+            <p>The matrix runs the same job on two operating systems in parallel. The condition makes sure only builds from main or a release branch can ever reach production, even if someone queues a feature branch. It matches the branch control check on the production environment.</p>
           </aside>
         </section>
 
@@ -542,6 +543,7 @@
               - <span class="k">task</span>: <span class="f">AzureWebApp@1</span>
                 <span class="k">inputs</span>:
                   <span class="k">azureSubscription</span>: <span class="s">sc-app-prod</span>
+                  <span class="k">appType</span>: <span class="s">webAppLinux</span>
                   <span class="k">appName</span>: <span class="s">app-sample-prod</span>
                   <span class="k">deployToSlotOrASE</span>: <span class="n">true</span>
                   <span class="k">resourceGroupName</span>: <span class="s">rg-app-prod</span>
@@ -1217,7 +1219,7 @@
           <div class="tw-body" data-fit>
             <ol class="tw-steps">
               <li>Clone <code>sample-web</code> and create branch <code>topic/pipeline</code><span class="tw-expect">Repo contains <code>src/</code>, <code>tests/</code> and <code>infra/</code></span></li>
-              <li>Add <code>azure-pipelines.yml</code> with a <strong>Build</strong> stage that uses <code>templates/node-build.yml</code><span class="tw-expect">Steps: cache, <code>npm ci</code>, test, publish results, publish artifact <code>web</code></span></li>
+              <li>Add <code>azure-pipelines.yml</code> with a <strong>Build</strong> stage: the <code>Cache@2</code> step, then <code>templates/node-build.yml</code>, then the publish-results, build and <code>publish</code> steps from slide 7<span class="tw-expect">Steps: cache, <code>npm ci</code>, test, publish results, publish artifact <code>web</code></span></li>
               <li>Create the pipeline from the YAML and run it on your branch<span class="tw-expect">A green run with a Tests tab and artifact <code>web</code></span></li>
               <li>Add a build validation branch policy to <code>main</code><span class="tw-expect">Direct pushes to main are rejected</span></li>
               <li>Open a pull request from <code>topic/pipeline</code><span class="tw-expect">Validation runs automatically on the PR</span></li>
@@ -1329,24 +1331,33 @@
         </section>
 
         <!-- 40 CTA -->
-        <section class="cta--full-art" role="region" aria-label="Slide 40: Questions">
+        <section class="cta--full-art" role="region" aria-label="Slide 40 of 40: Questions">
           <div class="cta-top">
             <h2>Questions?</h2>
-            <img class="logo-dark" src="images/logo.png" alt="KnowAll.ai" />
+            <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
           </div>
           <div class="cta-bottom">
             <div class="cta-copy">
-              <p class="cta-text">Thank you. Talk to us about <strong>follow-up deep dives</strong> or help setting up pipelines for your own solutions.</p>
-              <a class="cta-button" href="mailto:hello@knowall.ai?subject=W-T4%20CI%2FCD%20deep%20dive"><svg class="ic" aria-hidden="true"><use href="icons.svg#i-send" /></svg>Book a deep dive</a>
+              <p class="cta-text">
+                Thank you. Talk to us about <strong>follow-up deep dives</strong> or help setting up pipelines for your own solutions.
+              </p>
+              <a class="cta-button" href="mailto:hello@knowall.ai?subject=W-T4%20CI%2FCD%20deep%20dive" aria-label="Book a deep dive: email KnowAll AI">
+                <svg class="ic" aria-hidden="true"><use href="icons.svg#i-send" /></svg>
+                Book a deep dive
+              </a>
             </div>
             <div class="contact-row">
-              <div class="contact-item"><svg class="ic" aria-hidden="true"><use href="icons.svg#i-mail" /></svg><a href="mailto:hello@knowall.ai">hello@knowall.ai</a></div>
-              <div class="contact-item"><svg class="ic" aria-hidden="true"><use href="icons.svg#i-globe" /></svg><a href="https://www.knowall.ai">knowall.ai</a></div>
+              <div class="contact-item">
+                <svg class="ic" aria-hidden="true"><use href="icons.svg#i-mail" /></svg>
+                <a href="mailto:hello@knowall.ai">hello@knowall.ai</a>
+              </div>
+              <div class="contact-item">
+                <svg class="ic" aria-hidden="true"><use href="icons.svg#i-globe" /></svg>
+                <a href="https://www.knowall.ai">knowall.ai</a>
+              </div>
             </div>
           </div>
-          <aside class="notes">
-            <p>Open the floor for questions. Point people at the lab repo, which they can keep, and at the deep-dive options.</p>
-          </aside>
+          <aside class="notes"><p>Open the floor for questions. Point people at the lab repo, which they can keep, and at the deep-dive options.</p></aside>
         </section>
       </div>
     </div>

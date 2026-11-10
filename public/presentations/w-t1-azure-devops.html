@@ -94,7 +94,7 @@
             <h1>Azure DevOps:<br /><em>the delivery flight deck</em></h1>
             <p class="lead">Backlogs, boards, queries, test plans, repos and automation &mdash; a hands-on half day for engineers, tech leads, product owners and testers.</p>
           </div>
-          <aside class="notes"><p>Welcome everyone, introduce yourself and the format: short concept blocks, live demos, then a one-hour hands-on lab.</p><p>Set expectations: this is about running delivery day to day in Azure DevOps, the way the T-Minus-15 process uses it. Pipelines get a quick look here; the CI/CD workshop (W-T4) goes deep.</p><p>Ask the room: who already uses Boards, Repos, Test Plans? Adjust depth accordingly.</p></aside>
+          <aside class="notes"><p>Welcome everyone, introduce yourself and the format: short concept blocks, live demos, then a 45-minute hands-on lab.</p><p>Set expectations: this is about running delivery day to day in Azure DevOps, the way the T-Minus-15 process uses it. Pipelines get a quick look here; the CI/CD workshop (W-T4) goes deep.</p><p>Ask the room: who already uses Boards, Repos, Test Plans? Adjust depth accordingly.</p></aside>
         </section>
 
         <!-- 2 · AGENDA -->
@@ -854,9 +854,9 @@ TOKEN=$(<span class="f">az</span> account get-access-token \
   --resource <span class="s">499b84ac-1321-427f-aa17-267ca6975798</span> \
   --query accessToken -o tsv)
 
-<span class="f">curl</span> -X PATCH \
-  <span class="s">"https://dev.azure.com/contoso/Delivery/_apis/</span>
-<span class="s">wit/workitems/1042?api-version=7.1"</span> \
+<span class="v">URL</span>=<span class="s">"https://dev.azure.com/contoso/Delivery/_apis/wit/workitems/1042?api-version=7.1"</span>
+
+<span class="f">curl</span> -X PATCH <span class="s">"$URL"</span> \
   -H <span class="s">"Authorization: Bearer $TOKEN"</span> \
   -H <span class="s">"Content-Type: application/json-patch+json"</span> \
   -d <span class="s">'[{ "op": "add",
@@ -1104,19 +1104,30 @@ TOKEN=$(<span class="f">az</span> account get-access-token \
         </section>
 
         <!-- 39 · CTA -->
-        <section class="cta--full-art" role="region" aria-label="Slide 39: Questions">
+        <section class="cta--full-art" role="region" aria-label="Slide 39 of 39: Questions">
           <div class="cta-top">
             <h2>Questions?</h2>
-            <img class="logo-dark" src="images/logo.png" alt="KnowAll.ai" />
+            <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
           </div>
           <div class="cta-bottom">
             <div class="cta-copy">
-              <p class="cta-text">Thanks for joining <strong>W-T1 Azure DevOps</strong>. Deep dives are available on any topic from today.</p>
-              <a class="cta-button" href="mailto:hello@knowall.ai?subject=Azure%20DevOps%20deep%20dive"><svg class="ic" aria-hidden="true"><use href="icons.svg#i-send" /></svg>Book a deep dive</a>
+              <p class="cta-text">
+                Thanks for joining <strong>W-T1 Azure DevOps</strong>. Deep dives are available on any topic from today.
+              </p>
+              <a class="cta-button" href="mailto:hello@knowall.ai?subject=Azure%20DevOps%20deep%20dive" aria-label="Book a deep dive: email KnowAll AI">
+                <svg class="ic" aria-hidden="true"><use href="icons.svg#i-send" /></svg>
+                Book a deep dive
+              </a>
             </div>
             <div class="contact-row">
-              <div class="contact-item"><svg class="ic" aria-hidden="true"><use href="icons.svg#i-mail" /></svg><a href="mailto:hello@knowall.ai">hello@knowall.ai</a></div>
-              <div class="contact-item"><svg class="ic" aria-hidden="true"><use href="icons.svg#i-globe" /></svg><a href="https://www.knowall.ai">knowall.ai</a></div>
+              <div class="contact-item">
+                <svg class="ic" aria-hidden="true"><use href="icons.svg#i-mail" /></svg>
+                <a href="mailto:hello@knowall.ai">hello@knowall.ai</a>
+              </div>
+              <div class="contact-item">
+                <svg class="ic" aria-hidden="true"><use href="icons.svg#i-globe" /></svg>
+                <a href="https://www.knowall.ai">knowall.ai</a>
+              </div>
             </div>
           </div>
           <aside class="notes"><p>Open the floor for questions. Collect follow-up topics on a whiteboard or in a work item, then share the deck and lab instructions afterwards.</p></aside>

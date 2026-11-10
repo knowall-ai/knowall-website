@@ -316,6 +316,25 @@
         }
       }
 
+      /* more than six decks on a short desktop screen: two rows of cards no
+         longer fit, so the page scrolls and each thumbnail keeps its shape */
+      @media (min-width: 900px) and (min-height: 560px) and (max-height: 699px) {
+        body:has(.presentations-grid > .presentation-card:nth-child(7)) {
+          height: auto;
+          overflow: auto;
+        }
+
+        body:has(.presentations-grid > .presentation-card:nth-child(7)) .presentations-grid {
+          flex: none;
+          grid-auto-rows: auto;
+        }
+
+        body:has(.presentations-grid > .presentation-card:nth-child(7)) .thumb {
+          flex: none;
+          aspect-ratio: 16 / 9;
+        }
+      }
+
       /* shorter desktop screens: a slimmer header leaves more room for thumbnails */
       @media (min-width: 900px) and (max-height: 960px) {
         .band {

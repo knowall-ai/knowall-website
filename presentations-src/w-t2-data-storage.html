@@ -307,9 +307,14 @@
 <pre><code>&lt;<span class="k">fetch</span> <span class="v">top</span>=<span class="s">"50"</span>&gt;
   &lt;<span class="k">entity</span> <span class="v">name</span>=<span class="s">"kai_asset"</span>&gt;
     &lt;<span class="k">attribute</span> <span class="v">name</span>=<span class="s">"kai_name"</span> /&gt;
+    &lt;<span class="k">attribute</span> <span class="v">name</span>=<span class="s">"kai_status"</span> /&gt;
+    &lt;<span class="k">attribute</span> <span class="v">name</span>=<span class="s">"createdon"</span> /&gt;
+    &lt;<span class="k">order</span> <span class="v">attribute</span>=<span class="s">"createdon"</span> <span class="v">descending</span>=<span class="s">"true"</span> /&gt;
     &lt;<span class="k">filter</span>&gt;
       &lt;<span class="k">condition</span> <span class="v">attribute</span>=<span class="s">"kai_status"</span>
                  <span class="v">operator</span>=<span class="s">"eq"</span> <span class="v">value</span>=<span class="s">"1"</span> /&gt;
+      &lt;<span class="k">condition</span> <span class="v">attribute</span>=<span class="s">"kai_name"</span>
+                 <span class="v">operator</span>=<span class="s">"like"</span> <span class="v">value</span>=<span class="s">"%pump%"</span> /&gt;
     &lt;/<span class="k">filter</span>&gt;
     &lt;<span class="k">link-entity</span> <span class="v">name</span>=<span class="s">"kai_site"</span>
         <span class="v">from</span>=<span class="s">"kai_siteid"</span> <span class="v">to</span>=<span class="s">"kai_siteid"</span>&gt;
@@ -442,7 +447,7 @@
                 <ul class="tw-list">
                   <li>Mark a column as secured</li>
                   <li>Grant read / update / create via a <strong>column security profile</strong></li>
-                  <li>Everyone else sees it blank</li>
+                  <li>Everyone else sees it locked, the value masked as ********</li>
                 </ul>
               </div>
               <div class="tw-card">
@@ -481,7 +486,7 @@
             <ol class="tw-steps">
               <li>Create a <em>Requester</em> role: Service request read and write at <strong>user</strong> depth<span class="tw-expect">The requester only sees their own requests</span></li>
               <li>Create a <em>Team lead</em> role: read at <strong>business unit</strong> depth<span class="tw-expect">The lead sees every request in their unit</span></li>
-              <li>Secure the <code>kai_notes</code> column and grant it to leads only<span class="tw-expect">Requesters see the field, but empty and read-only</span></li>
+              <li>Secure the <code>kai_notes</code> column and grant it to leads only<span class="tw-expect">Requesters see the field locked, its value masked as ********</span></li>
               <li>Open the audit history on a changed row<span class="tw-expect">Old and new values, who and when</span></li>
             </ol>
           </div>
@@ -702,14 +707,16 @@
   <span class="k">ADD FILTER PREDICATE</span> sec.<span class="f">fn_SiteFilter</span>(SiteId)
     <span class="k">ON</span> dbo.Asset,
   <span class="k">ADD BLOCK PREDICATE</span> sec.<span class="f">fn_SiteFilter</span>(SiteId)
-    <span class="k">ON</span> dbo.Asset <span class="k">AFTER INSERT</span>
+    <span class="k">ON</span> dbo.Asset <span class="k">AFTER INSERT</span>,
+  <span class="k">ADD BLOCK PREDICATE</span> sec.<span class="f">fn_SiteFilter</span>(SiteId)
+    <span class="k">ON</span> dbo.Asset <span class="k">AFTER UPDATE</span>
   <span class="k">WITH</span> (STATE = <span class="k">ON</span>);</code></pre>
               </div>
               <div class="tw-stack">
                 <h3><svg class="ic"><use href="icons.svg#i-check" /></svg>What to notice</h3>
                 <ul class="tw-list">
                   <li><strong>Filter predicate</strong> hides rows on read</li>
-                  <li><strong>Block predicate</strong> stops writes into other sites</li>
+                  <li><strong>Block predicates</strong> stop inserts into other sites, and updates that move a row to one</li>
                   <li>Applies to every client: apps, APIs, reports</li>
                   <li>Index the predicate columns</li>
                 </ul>
@@ -1164,23 +1171,20 @@
         </section>
 
         <!-- 39 CTA -->
-        <section class="cta--full-art" role="region" aria-label="Slide 39: Questions">
-          <div class="cta-top">
-            <h2>Questions?</h2>
-            <img class="logo-dark" src="images/logo.png" alt="KnowAll.ai" />
-          </div>
-          <div class="cta-bottom">
-            <div class="cta-copy">
-              <p class="cta-text">Thank you. Deep dives are available on any topic from today &mdash; <strong>shaped around your own data</strong>.</p>
-              <a class="cta-button" href="mailto:hello@knowall.ai?subject=W-T2%20Data%20storage%20deep%20dive" aria-label="Email KnowAll AI about a data storage deep dive"><svg class="ic" aria-hidden="true"><use href="icons.svg#i-send" /></svg>Book a deep dive</a>
-            </div>
-            <div class="contact-row">
-              <div class="contact-item"><svg class="ic" aria-hidden="true"><use href="icons.svg#i-mail" /></svg><a href="mailto:hello@knowall.ai">hello@knowall.ai</a></div>
-              <div class="contact-item"><svg class="ic" aria-hidden="true"><use href="icons.svg#i-globe" /></svg><a href="https://www.knowall.ai">knowall.ai</a></div>
-            </div>
-          </div>
-          <aside class="notes"><p>Close, thank people, and collect feedback. Share the lab materials and slides afterwards.</p></aside>
-        </section>
+        <!-- @include cta {
+          "label": "Slide 39 of 39: Questions",
+          "className": "cta--full-art",
+          "heading": "Questions?",
+          "pitch": "Thank you. Deep dives are available on any topic from today &mdash; <strong>shaped around your own data</strong>.",
+          "button": {
+            "text": "Book a deep dive",
+            "icon": "send",
+            "ariaLabel": "Book a deep dive: email KnowAll AI"
+          },
+          "mailSubject": "W-T2 Data storage deep dive",
+          "buttonOnlySubject": true,
+          "notes": "<p>Close, thank people, and collect feedback. Share the lab materials and slides afterwards.</p>"
+        } -->
       </div>
     </div>
 

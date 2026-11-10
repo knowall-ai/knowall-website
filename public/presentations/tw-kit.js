@@ -1,8 +1,11 @@
 // Technology workshop kit: runs before reveal.js / knowall-deck.js.
-// 1. Inlines the icon sprite (tw-icons.js) so icons show when a deck is opened
-//    from a local file, where the browser blocks the external icons.svg.
-// 2. Press N to show or hide the current slide's speaker notes
+// 1. Press N to show or hide the current slide's speaker notes
 //    (<aside class="notes"> inside a slide). Notes never print.
+// 2. Optional: if a page defines window.TW_ICONS (the icons.svg markup), the
+//    sprite is inlined so icons still show when a copy of a deck is opened
+//    from a local file, where browsers block the external icons.svg. The
+//    site serves the decks over HTTP, so it doesn't need this and leaves
+//    TW_ICONS unset.
 (function () {
   if (window.TW_ICONS) {
     const holder = document.createElement('div');
@@ -30,12 +33,23 @@
       (notes ? notes.innerHTML : '<p>No notes for this slide.</p>');
   }
 
-  document.addEventListener('keydown', (e) => {
-    if (e.key !== 'n' && e.key !== 'N') return;
-    if (e.ctrlKey || e.metaKey || e.altKey) return;
-    panel.hidden = !panel.hidden;
-    showNotes();
-  });
+  // Capture phase on window runs before reveal.js's own keydown listener on
+  // the document, which maps N to "next slide": stop the event there so N
+  // only toggles the notes and never moves the deck on.
+  window.addEventListener(
+    'keydown',
+    (e) => {
+      if (e.key !== 'n' && e.key !== 'N') return;
+      if (e.ctrlKey || e.metaKey || e.altKey) return;
+      const t = e.target;
+      if (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return;
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      panel.hidden = !panel.hidden;
+      showNotes();
+    },
+    true
+  );
 
   window.addEventListener('load', () => {
     if (typeof Reveal !== 'undefined') Reveal.on('slidechanged', showNotes);

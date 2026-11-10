@@ -682,12 +682,15 @@ power.config.json           <span class="c">// sources,</span>
 <span class="k">export function</span> <span class="f">useAccounts</span>(city: <span class="k">string</span>) {
   <span class="k">const</span> [rows, setRows] = <span class="f">useState</span>&lt;Accounts[]&gt;([]);
   <span class="f">useEffect</span>(() => {
+    <span class="k">let</span> live = <span class="k">true</span>;
     AccountsService.<span class="f">getAll</span>({
 <span class="hl">      select: [<span class="s">'name'</span>, <span class="s">'accountnumber'</span>, <span class="s">'address1_city'</span>],</span>
       filter: <span class="s">`address1_city eq '${</span>city.<span class="f">replace</span>(<span class="s">/'/g</span>, <span class="s">"''"</span>)<span class="s">}'`</span>,
       orderBy: [<span class="s">'name asc'</span>],
       top: <span class="n">50</span>,
-    }).<span class="f">then</span>((r) => <span class="f">setRows</span>(r.data ?? []));
+    }).<span class="f">then</span>((r) => live &amp;&amp; <span class="f">setRows</span>(r.data ?? []))
+      .<span class="f">catch</span>(console.<span class="f">error</span>);
+    <span class="k">return</span> () => { live = <span class="k">false</span>; };  <span class="c">// ignore stale replies</span>
   }, [city]);
   <span class="k">return</span> rows;
 }</code></pre>
@@ -844,20 +847,22 @@ power.config.json           <span class="c">// sources,</span>
               <div class="tw-group t3-catch"><span class="tw-group-label">Scope: Catch</span>
                 <div class="tw-node"><b>Filter failed actions</b></div>
                 <div class="tw-node"><b>Alert the team</b></div>
-                <div class="tw-node"><b>Terminate: Failed</b></div>
+                <div class="tw-node"><b>Set varFailed = true</b></div>
                 <p class="t3-runafter">Run after Try: has failed, has timed out</p>
               </div>
               <div class="tw-arrow"></div>
               <div class="tw-group"><span class="tw-group-label">Scope: Finally</span>
                 <div class="tw-node"><b>Log the run</b></div>
                 <div class="tw-node"><b>Release lock</b></div>
+                <div class="tw-node"><b>If varFailed: Terminate: Failed</b></div>
                 <p class="t3-runafter">Run after Catch: all four outcomes</p>
               </div>
             </div>
-            <div class="tw-callout tw-pitfall"><svg class="ic"><use href="icons.svg#i-alert-triangle" /></svg><p>Without <strong>Terminate: Failed</strong>, a handled error shows as <strong>Succeeded</strong> in run history &mdash; and your monitoring misses it.</p></div>
+            <div class="tw-callout tw-pitfall"><svg class="ic"><use href="icons.svg#i-alert-triangle" /></svg><p>Without <strong>Terminate: Failed</strong>, a handled error shows as <strong>Succeeded</strong> in run history. Put it <strong>last</strong>: nothing runs after Terminate, so in Catch it would skip Finally.</p></div>
           </div>
           <aside class="notes">
             <p>Scopes plus &ldquo;Configure run after&rdquo; give you structured error handling. Catch only runs when Try fails or times out; Finally runs whatever happens.</p>
+            <p>Terminate ends the run on the spot, and no action after it runs, not even one set to run after failure. So Catch only records the failure in a variable, and the last action in Finally terminates the run as Failed when that variable is set. Logging and releasing the lock always happen first.</p>
             <p>Note that Finally is set to run after Catch with all outcomes ticked, including skipped, otherwise it won&rsquo;t run on the happy path.</p>
           </aside>
         </section>
@@ -1068,7 +1073,10 @@ power.config.json           <span class="c">// sources,</span>
             <div class="tw-code tw-code-sm">
               <div class="tw-code-title">Terminal &middot; pac CLI</div>
 <pre><code><span class="f">pac auth create</span> --name dev --environment <span class="s">https://contoso-dev.crm11.dynamics.com</span>
+<span class="f">pac auth create</span> --name test --environment <span class="s">https://contoso-test.crm11.dynamics.com</span>
+<span class="f">pac auth select</span> --name dev
 <span class="f">pac solution export</span> --name ReferralTracker --path ./out/ReferralTracker_managed.zip --managed
+<span class="c"># once: generate the template, fill it in (slide 32), commit it</span>
 <span class="f">pac solution create-settings</span> --solution-zip ./out/ReferralTracker_managed.zip --settings-file ./deploy/test.settings.json
 <span class="f">pac auth select</span> --name test
 <span class="f">pac solution import</span> --path ./out/ReferralTracker_managed.zip --settings-file ./deploy/test.settings.json</code></pre>
@@ -1076,7 +1084,7 @@ power.config.json           <span class="c">// sources,</span>
             <div class="tw-callout"><svg class="ic"><use href="icons.svg#i-lightbulb" /></svg><p>No DevOps team? <strong>Pipelines in Power Platform</strong> do this from the maker portal, with approvals. Full CI/CD with Azure DevOps is <strong>W-T4</strong>.</p></div>
           </div>
           <aside class="notes">
-            <p>These five commands are the whole manual deployment. Once they work by hand, putting them in a pipeline is straightforward.</p>
+            <p>These commands are the whole manual deployment. Create the settings file once and fill it in; regenerating it before each import would overwrite your values with blanks. Once this works by hand, putting it in a pipeline is straightforward.</p>
             <p>Pipelines in Power Platform are the built-in option: a host environment, deployment stages and optional pre-deployment approvals. For Git, branching and Azure DevOps pipelines, point people to W-T4.</p>
           </aside>
         </section>
@@ -1248,25 +1256,20 @@ power.config.json           <span class="c">// sources,</span>
         </section>
 
         <!-- 40 CTA -->
-        <section class="cta--full-art" role="region" aria-label="Slide 40: Questions">
-          <div class="cta-top">
-            <h2>Questions?</h2>
-            <img class="logo-dark" src="images/logo.png" alt="KnowAll.ai" />
-          </div>
-          <div class="cta-bottom">
-            <div class="cta-copy">
-              <p class="cta-text">Want to go deeper on Code Apps, ALM or governance? We run <strong>follow-up deep dives</strong> on any topic from today.</p>
-              <a class="cta-button" href="mailto:hello@knowall.ai?subject=W-T3%20Power%20Platform%20deep%20dive"><svg class="ic" aria-hidden="true"><use href="icons.svg#i-send" /></svg>Book a deep dive</a>
-            </div>
-            <div class="contact-row">
-              <div class="contact-item"><svg class="ic" aria-hidden="true"><use href="icons.svg#i-mail" /></svg><a href="mailto:hello@knowall.ai">hello@knowall.ai</a></div>
-              <div class="contact-item"><svg class="ic" aria-hidden="true"><use href="icons.svg#i-globe" /></svg><a href="https://www.knowall.ai">knowall.ai</a></div>
-            </div>
-          </div>
-          <aside class="notes">
-            <p>Open the floor for questions. Share the deck and the lab instructions afterwards.</p>
-          </aside>
-        </section>
+        <!-- @include cta {
+          "label": "Slide 40 of 40: Questions",
+          "className": "cta--full-art",
+          "heading": "Questions?",
+          "pitch": "Want to go deeper on Code Apps, ALM or governance? We run <strong>follow-up deep dives</strong> on any topic from today.",
+          "button": {
+            "text": "Book a deep dive",
+            "icon": "send",
+            "ariaLabel": "Book a deep dive: email KnowAll AI"
+          },
+          "mailSubject": "W-T3 Power Platform deep dive",
+          "buttonOnlySubject": true,
+          "notes": "<p>Open the floor for questions. Share the deck and the lab instructions afterwards.</p>"
+        } -->
       </div>
     </div>
 
