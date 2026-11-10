@@ -1,0 +1,1277 @@
+<!-- @include head {"title":"W-T3 Power Platform Workshop — KnowAll AI","description":"A hands-on, half-day technical workshop on Power Platform: choosing the app type, canvas and model-driven apps, Code Apps, Power Automate, connectors and ALM."} -->
+    <link rel="stylesheet" href="tw-kit.css" />
+    <style>
+      /* Deck-specific styles: everything shared lives in knowall-deck.css and tw-kit.css */
+      :root {
+        --deck-cover: url('images/tminus15-workshops/t3-power-platform.jpg');
+        --deck-hero: url('images/tminus15-workshops/close-liftoff.jpg');
+      }
+
+      /* Two code blocks stacked in one column */
+      .t3-codes {
+        display: flex;
+        flex-direction: column;
+        gap: 22px;
+      }
+
+      /* Small "where it runs" labels under a flow */
+      .t3-caption {
+        font-size: 22px !important;
+        color: var(--mist);
+        text-align: center;
+      }
+
+      /* Try / Catch / Finally scope boxes */
+      .t3-scopes {
+        display: flex;
+        align-items: stretch;
+        gap: 0;
+      }
+
+      .t3-scopes .tw-group {
+        flex: 1 1 0;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .t3-scopes .tw-group.t3-catch {
+        border-color: rgba(255, 138, 128, 0.55);
+      }
+
+      .t3-scopes .tw-group.t3-catch > .tw-group-label {
+        color: #ff8a80;
+      }
+
+      .t3-scopes .tw-node {
+        flex: none;
+        padding: 16px 18px;
+      }
+
+      .t3-scopes .tw-node b {
+        font-size: 22px;
+      }
+
+      .t3-runafter {
+        font-size: 19px !important;
+        color: var(--mist);
+        font-style: italic;
+      }
+    </style>
+  </head>
+  <body data-cta="none">
+    <div class="reveal">
+      <div class="slides">
+        <!-- 1 COVER -->
+        <section role="region" aria-label="Slide 1: W-T3 Power Platform">
+          <div class="cover-hero" role="img" aria-label="Close-up of a rocket engine's nozzles and glowing power conduits, an astronaut engineer connecting a power cable"></div>
+          <div class="cover-scrim" aria-hidden="true"></div>
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="cover-copy">
+            <p class="kicker">Technology workshop &middot; W-T3</p>
+            <h1>Power Platform:<br /><em>low-code, done properly</em></h1>
+            <p class="lead">Canvas, model-driven and Code Apps, Power Automate, connectors and ALM &mdash; a hands-on half day for makers, developers and technical leads.</p>
+          </div>
+          <aside class="notes">
+            <p>Welcome everyone. Introduce yourself and ask the room for a quick show of hands: who builds canvas apps, who builds model-driven apps, and who has written code against Power Platform.</p>
+            <p>Set the tone: this is a technical session. We will look at real Power Fx, CLI commands and TypeScript, and finish with a lab.</p>
+          </aside>
+        </section>
+
+        <!-- 2 AGENDA -->
+        <section class="tw" role="region" aria-label="Slide 2: Agenda">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Agenda</p>
+            <h2>The next three and a half hours</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <ol class="tw-agenda">
+              <li><span class="t">09:30</span><b>Why it matters</b></li>
+              <li><span class="t">09:40</span><b>1 &middot; Choosing the app type</b></li>
+              <li><span class="t">09:55</span><b>2 &middot; Canvas apps done properly</b></li>
+              <li><span class="t">10:30</span><b>3 &middot; Model-driven apps</b></li>
+              <li class="tw-break"><span class="t">10:50</span><b>Break</b></li>
+              <li><span class="t">11:05</span><b>4 &middot; Code Apps</b></li>
+              <li><span class="t">11:40</span><b>5 &middot; Power Automate that doesn&rsquo;t fail silently</b></li>
+              <li><span class="t">12:00</span><b>6 &middot; Connectors, solutions and ALM</b></li>
+              <li><span class="t">12:20</span><b>Hands-on lab</b></li>
+              <li><span class="t">12:50</span><b>Flight rules and Q&amp;A</b></li>
+            </ol>
+          </div>
+          <aside class="notes">
+            <p>Six modules, a break at 10:50, and a 30-minute lab at the end. Each module is concept, then code, then a short live demo.</p>
+            <p>The lab has stretch goals, so faster people won&rsquo;t sit idle. Anything we don&rsquo;t finish can be picked up in a follow-up session.</p>
+          </aside>
+        </section>
+
+        <!-- 3 WHY IT MATTERS -->
+        <section class="tw" role="region" aria-label="Slide 3: Why it matters">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Why it matters</p>
+            <h2>Low-code is still code</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-cols">
+              <div class="tw-card">
+                <span class="tw-tag" style="color: #ff8a80">What we usually find</span>
+                <ul class="tw-list">
+                  <li>Apps built in the <strong>default environment</strong>, owned by one person</li>
+                  <li><strong>No solutions</strong>, so nothing can be moved or versioned</li>
+                  <li><strong>Hard-coded</strong> URLs, site IDs and e-mail addresses</li>
+                  <li>Flows that <strong>fail silently</strong> for weeks</li>
+                  <li>Delegation warnings ignored &mdash; data quietly <strong>capped at 500 rows</strong></li>
+                  <li>Personal connections, so the app breaks when someone leaves</li>
+                </ul>
+              </div>
+              <div class="tw-card">
+                <span class="tw-tag">What good looks like</span>
+                <ul class="tw-list">
+                  <li>Dev, test and prod <strong>environments</strong>, governed by DLP</li>
+                  <li>Everything in a <strong>solution</strong> with your own publisher</li>
+                  <li><strong>Environment variables</strong> and connection references</li>
+                  <li>Flows with <strong>try / catch / finally</strong> and alerts</li>
+                  <li>Delegable queries and <strong>named formulas</strong></li>
+                  <li><strong>Managed</strong> solutions deployed by a pipeline</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <aside class="notes">
+            <p>Ask the room which of the left-hand column they recognise. Usually all of them.</p>
+            <p>The message: Power Platform is fast, but the same engineering discipline applies. Everything on the right is what we build up to by the end of the session.</p>
+          </aside>
+        </section>
+
+        <!-- 4 PLATFORM AT A GLANCE -->
+        <section class="tw" role="region" aria-label="Slide 4: The platform at a glance">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">The platform</p>
+            <h2>One platform, many building blocks</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-flow">
+              <div class="tw-node"><svg class="ic"><use href="icons.svg#i-layers" /></svg><b>Apps</b><span>Canvas, model-driven, Code Apps</span></div>
+              <div class="tw-arrow"></div>
+              <div class="tw-node"><svg class="ic"><use href="icons.svg#i-workflow" /></svg><b>Power Automate</b><span>Cloud flows, child flows, approvals</span></div>
+              <div class="tw-arrow"></div>
+              <div class="tw-node"><svg class="ic"><use href="icons.svg#i-network" /></svg><b>Connectors</b><span>1,500+ standard, premium and custom</span></div>
+              <div class="tw-arrow"></div>
+              <div class="tw-node tw-node-hot"><svg class="ic"><use href="icons.svg#i-database" /></svg><b>Dataverse</b><span>Tables, security, business logic</span></div>
+            </div>
+            <div class="tw-group"><span class="tw-group-label">Governance around all of it</span>
+              <div class="tw-node"><svg class="ic"><use href="icons.svg#i-server-cog" /></svg><b>Environments</b><span>Dev, test, prod</span></div>
+              <div class="tw-node"><svg class="ic"><use href="icons.svg#i-shield-check" /></svg><b>DLP policies</b><span>Which connectors mix</span></div>
+              <div class="tw-node"><svg class="ic"><use href="icons.svg#i-box" /></svg><b>Solutions</b><span>The unit of ALM</span></div>
+              <div class="tw-node"><svg class="ic"><use href="icons.svg#i-lock" /></svg><b>Entra ID</b><span>Identity and Conditional Access</span></div>
+            </div>
+          </div>
+          <aside class="notes">
+            <p>A quick map so everyone shares the same vocabulary. The top row is what makers build; the bottom row is what keeps it safe and portable.</p>
+            <p>Data storage choices (Dataverse vs SharePoint vs SQL) get their own workshop, W-T2, so we only touch on them today.</p>
+          </aside>
+        </section>
+
+        <!-- 5 DIVIDER 01 -->
+        <section class="tw-divider" role="region" aria-label="Slide 5: Module 1, Choosing the app type">
+          <div class="tw-divider-art" style="--art: url('images/tminus15-workshops/t3-power-platform.jpg'); --focus: 60%" role="img" aria-label="Rocket engine nozzles with glowing power conduits"></div>
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-divider-copy">
+            <p class="tw-mod">01</p>
+            <h2>Choosing the app type</h2>
+            <p>Canvas, model-driven or Code App? The right choice up front saves a rebuild later.</p>
+          </div>
+          <aside class="notes">
+            <p>Module 1, about 15 minutes. The most expensive mistake in Power Platform is picking the wrong app type and rebuilding six months later.</p>
+          </aside>
+        </section>
+
+        <!-- 6 DECISION TABLE -->
+        <section class="tw" role="region" aria-label="Slide 6: Canvas vs model-driven vs Code Apps">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 1 &middot; Decision</p>
+            <h2>Canvas vs model-driven vs Code Apps</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <table class="tw-table tw-table-sm">
+              <thead><tr><th></th><th>Canvas</th><th>Model-driven</th><th>Code App</th></tr></thead>
+              <tbody>
+                <tr><th>Built with</th><td>Power Fx in Studio</td><td>Configuration over Dataverse</td><td>React / Vue + TypeScript in your IDE</td></tr>
+                <tr><th>UI control</th><td class="yes">Pixel-level</td><td class="meh">Standard forms and views</td><td class="yes">Total &mdash; any npm library</td></tr>
+                <tr><th>Data</th><td>Any connector</td><td class="meh">Dataverse only</td><td>Dataverse and connectors from code</td></tr>
+                <tr><th>Best for</th><td>Task apps, mobile, field work</td><td>Case and record management, back office</td><td>Complex UI and logic, pro-dev teams</td></tr>
+                <tr><th>Skills</th><td>Makers</td><td>Makers and analysts</td><td>Front-end developers</td></tr>
+                <tr><th>Source control</th><td class="meh">Via solutions</td><td class="meh">Via solutions</td><td class="yes">Native Git</td></tr>
+                <tr><th>Licence (end users)</th><td>Standard or Premium, by connector</td><td>Premium (Dataverse)</td><td>Premium</td></tr>
+              </tbody>
+            </table>
+            <div class="tw-callout"><svg class="ic"><use href="icons.svg#i-lightbulb" /></svg><p><strong>Rule of thumb:</strong> data-heavy back office &rarr; model-driven. Task-focused or mobile &rarr; canvas. Outgrowing Power Fx, or you have React developers &rarr; Code App.</p></div>
+          </div>
+          <aside class="notes">
+            <p>Walk the table row by row. The key trade-off is control versus speed: model-driven is fastest for data-centric apps, Code Apps give total control but need developers.</p>
+            <p>Mixing is normal: a model-driven back office for staff plus a canvas or Code App for a focused task. Licensing changes regularly, so always check the current licensing guide before committing.</p>
+          </aside>
+        </section>
+
+        <!-- 7 DIVIDER 02 -->
+        <section class="tw-divider" role="region" aria-label="Slide 7: Module 2, Canvas apps done properly">
+          <div class="tw-divider-art" style="--art: url('images/tminus15-workshops/m4-engineer.jpg'); --focus: 74%" role="img" aria-label="A rocket being assembled inside a launch gantry"></div>
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-divider-copy">
+            <p class="tw-mod">02</p>
+            <h2>Canvas apps done properly</h2>
+            <p>Declarative Power Fx, reusable components, delegation and performance.</p>
+          </div>
+          <aside class="notes">
+            <p>Module 2, about 35 minutes. Most people learned canvas apps by putting everything in OnStart and OnSelect. Modern Power Fx gives us better tools.</p>
+          </aside>
+        </section>
+
+        <!-- 8 NAMED FORMULAS -->
+        <section class="tw" role="region" aria-label="Slide 8: Named formulas">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 2 &middot; Power Fx</p>
+            <h2>Named formulas replace OnStart</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-cols tw-wide-left">
+              <div class="tw-code">
+                <div class="tw-code-title">App.Formulas</div>
+<pre><code><span class="c">// Declared once, evaluated when first used, always up to date</span>
+<span class="v">CurrentUserEmail</span> = <span class="f">User</span>().Email;
+
+<span class="v">OpenReferrals</span> =
+    <span class="f">Filter</span>(Referrals, Status = <span class="s">'Status (Referrals)'</span>.Open);
+
+<span class="v">UrgentCount</span> =
+    <span class="f">CountRows</span>(<span class="f">Filter</span>(OpenReferrals, Priority = <span class="s">'Priority'</span>.Urgent));
+
+<span class="c">// Theme values in one place</span>
+<span class="v">BrandPrimary</span> = <span class="f">ColorValue</span>(<span class="s">"#9DFE0A"</span>);
+<span class="v">SpacingM</span>     = <span class="n">16</span>;</code></pre>
+              </div>
+              <div class="tw-stack">
+                <h3><svg class="ic"><use href="icons.svg#i-check" /></svg>Why it&rsquo;s better</h3>
+                <ul class="tw-list">
+                  <li><strong>No load-time cost</strong> &mdash; nothing runs until a screen needs it</li>
+                  <li><strong>Can&rsquo;t go stale</strong>, unlike a variable set once in OnStart</li>
+                  <li><strong>Immutable</strong> &mdash; nothing else can overwrite it</li>
+                  <li>Reads like a spreadsheet: define once, reference everywhere</li>
+                </ul>
+                <div class="tw-callout tw-pitfall"><svg class="ic"><use href="icons.svg#i-alert-triangle" /></svg><p>Keep <code>Set()</code> for real state, e.g. the selected record &mdash; not for data you could derive.</p></div>
+              </div>
+            </div>
+          </div>
+          <aside class="notes">
+            <p>Named formulas live in App.Formulas. They are lazily evaluated and recalculated automatically when their dependencies change, which is why they never go stale.</p>
+            <p>The classic anti-pattern is a 200-line OnStart that loads ten collections. Converting those to named formulas usually speeds up app start noticeably.</p>
+          </aside>
+        </section>
+
+        <!-- 9 UDFs AND WITH -->
+        <section class="tw" role="region" aria-label="Slide 9: User-defined functions and With">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 2 &middot; Power Fx</p>
+            <h2>User-defined functions and <code style="font-size: 0.8em">With()</code></h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-cols">
+              <div class="t3-codes">
+                <div class="tw-code">
+                  <div class="tw-code-title">App.Formulas &middot; user-defined functions</div>
+<pre><code><span class="f">DaysOpen</span>(created: <span class="k">DateTime</span>): <span class="k">Number</span> =
+    <span class="f">DateDiff</span>(created, <span class="f">Now</span>(), TimeUnit.Days);
+
+<span class="f">IsOverdue</span>(created: <span class="k">DateTime</span>, sla: <span class="k">Number</span>): <span class="k">Boolean</span> =
+    <span class="f">DaysOpen</span>(created) > sla;</code></pre>
+                </div>
+                <div class="tw-code">
+                  <div class="tw-code-title">Gallery item &middot; Fill</div>
+<pre><code><span class="f">If</span>(<span class="f">IsOverdue</span>(ThisItem.CreatedOn, <span class="n">5</span>),
+   <span class="f">ColorFade</span>(Color.Red, <span class="n">85%</span>), Color.Transparent)</code></pre>
+                </div>
+              </div>
+              <div class="t3-codes">
+                <div class="tw-code">
+                  <div class="tw-code-title">btnClose &middot; OnSelect</div>
+<pre><code><span class="f">With</span>(
+    { r: <span class="f">LookUp</span>(Referrals, Referral = varSelectedId) },
+    <span class="f">Patch</span>(Referrals, r, {
+        Status:   <span class="s">'Status (Referrals)'</span>.Closed,
+        ClosedOn: <span class="f">Now</span>()
+    })
+);
+<span class="f">Notify</span>(<span class="s">"Referral closed"</span>, NotificationType.Success)</code></pre>
+                </div>
+                <div class="tw-callout"><svg class="ic"><use href="icons.svg#i-lightbulb" /></svg><p><code>With()</code> gives a formula local names &mdash; no global variable just to hold a lookup.</p></div>
+              </div>
+            </div>
+          </div>
+          <aside class="notes">
+            <p>User-defined functions let you write business rules once and reuse them everywhere, with typed parameters. They live in App.Formulas next to named formulas.</p>
+            <p>With() scopes a value to one formula. Use it instead of Set() whenever the value is only needed inside that formula. If UDFs aren&rsquo;t available in someone&rsquo;s tenant yet, check the app&rsquo;s Settings &gt; Updates page.</p>
+          </aside>
+        </section>
+
+        <!-- 10 DELEGATION -->
+        <section class="tw" role="region" aria-label="Slide 10: Delegation">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 2 &middot; Delegation</p>
+            <h2>Delegation: let the server do the work</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-cols tw-wide-right">
+              <div class="tw-stack">
+                <p class="tw-lead">A delegable query runs <strong>at the data source</strong>. A non-delegable one pulls the first <strong>500 rows</strong> (max 2,000) and filters locally.</p>
+                <div class="tw-callout tw-pitfall"><svg class="ic"><use href="icons.svg#i-alert-triangle" /></svg><p>No error, just <strong>missing data</strong> once the table grows. Treat the yellow triangle as a build failure.</p></div>
+                <div class="tw-callout"><svg class="ic"><use href="icons.svg#i-lightbulb" /></svg><p>Test with the row limit set to <strong>1</strong> in Settings to flush out delegation bugs early.</p></div>
+              </div>
+              <table class="tw-table tw-table-sm">
+                <thead><tr><th>Pattern</th><th>Dataverse</th><th>SharePoint</th></tr></thead>
+                <tbody>
+                  <tr><th><code>Filter</code> with <code>=</code> on text</th><td class="yes">Yes</td><td class="yes">Yes</td></tr>
+                  <tr><th><code>StartsWith</code></th><td class="yes">Yes</td><td class="yes">Yes</td></tr>
+                  <tr><th><code>Search</code> / <code>in</code> substring</th><td class="yes">Yes</td><td class="no">No</td></tr>
+                  <tr><th><code>CountRows</code>, <code>Sum</code></th><td class="yes">Yes</td><td class="no">No</td></tr>
+                  <tr><th><code>Sort</code> on a column</th><td class="yes">Yes</td><td class="meh">Simple columns</td></tr>
+                  <tr><th><code>Len</code>, <code>Lower</code> inside a filter</th><td class="no">No</td><td class="no">No</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <aside class="notes">
+            <p>Delegation is the number-one source of &ldquo;the app worked in testing but not in production&rdquo; bugs. The app silently works on a partial dataset.</p>
+            <p>Delegation support varies by connector and changes over time, so treat this table as a guide and always check the yellow warnings and the docs for the connector you use. This is also a big factor in choosing a data store, which W-T2 covers in depth.</p>
+          </aside>
+        </section>
+
+        <!-- 11 PERFORMANCE -->
+        <section class="tw" role="region" aria-label="Slide 11: Performance">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 2 &middot; Performance</p>
+            <h2>Fast to open, fast to use</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-cols tw-wide-left">
+              <div class="tw-code">
+                <div class="tw-code-title">App.StartScreen and Screen.OnVisible</div>
+<pre><code><span class="c">// App.StartScreen: deep links without OnStart navigation</span>
+<span class="f">If</span>(!<span class="f">IsBlank</span>(<span class="f">Param</span>(<span class="s">"id"</span>)), DetailScreen, HomeScreen)
+
+<span class="c">// DetailScreen.OnVisible: load only what this screen needs,</span>
+<span class="c">// in parallel</span>
+<span class="f">Concurrent</span>(
+    <span class="f">Set</span>(varReferral, <span class="f">LookUp</span>(Referrals, Referral = <span class="f">GUID</span>(<span class="f">Param</span>(<span class="s">"id"</span>)))),
+    <span class="f">ClearCollect</span>(colTeams, <span class="f">ShowColumns</span>(Teams, Name, Region))
+)</code></pre>
+              </div>
+              <div class="tw-stack">
+                <ul class="tw-list">
+                  <li><strong><code>StartScreen</code></strong> instead of <code>Navigate()</code> in OnStart</li>
+                  <li><strong><code>Concurrent()</code></strong> for independent loads</li>
+                  <li><strong><code>ShowColumns</code></strong> &mdash; fetch only the columns you use</li>
+                  <li>Fewer controls per screen; use galleries and components</li>
+                  <li>Run <strong>App Checker</strong> and Monitor before every release</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <aside class="notes">
+            <p>StartScreen is evaluated declaratively, so the app can render the first screen without waiting for OnStart. Concurrent runs independent calls in parallel.</p>
+            <p>Monitor (from Advanced tools) shows every network call with timings. It is the quickest way to find the one slow query that dominates load time.</p>
+          </aside>
+        </section>
+
+        <!-- 12 COMPONENTS AND ACCESSIBILITY -->
+        <section class="tw" role="region" aria-label="Slide 12: Components and accessibility">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 2 &middot; Reuse</p>
+            <h2>Components and accessibility</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-cols">
+              <div class="tw-card">
+                <span class="tw-tag"><svg class="ic" style="vertical-align: -3px"><use href="icons.svg#i-box" /></svg> Components</span>
+                <ul class="tw-list">
+                  <li>Build headers, nav bars and status chips <strong>once</strong></li>
+                  <li><strong>Custom input and output properties</strong> &mdash; no reaching into globals</li>
+                  <li><strong>Behaviour properties</strong> (e.g. <code>OnBack</code>) raise events to the host screen</li>
+                  <li>Share through a <strong>component library</strong> in a solution; apps get update prompts</li>
+                </ul>
+              </div>
+              <div class="tw-card">
+                <span class="tw-tag"><svg class="ic" style="vertical-align: -3px"><use href="icons.svg#i-users" /></svg> Accessibility</span>
+                <ul class="tw-list">
+                  <li>Set <strong><code>AccessibleLabel</code></strong> on every icon and image button</li>
+                  <li>Check <strong>tab order</strong> and focus with the keyboard only</li>
+                  <li>Contrast at least <strong>4.5 : 1</strong> for text</li>
+                  <li>Don&rsquo;t rely on colour alone for status &mdash; add text or an icon</li>
+                  <li>Run the <strong>Accessibility checker</strong> in App Checker</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <aside class="notes">
+            <p>Components are the canvas equivalent of reusable UI components in code. The key discipline: a component should only talk to the outside world through its properties.</p>
+            <p>Accessibility is a legal requirement for public-sector apps in the UK, not a nice-to-have. The built-in checker catches most of the basics.</p>
+          </aside>
+        </section>
+
+        <!-- 13 DEMO CANVAS -->
+        <section class="tw tw-scene" style="--scene: url('images/scene-team-studio.jpg')" role="region" aria-label="Slide 13: Demo, refactor a canvas app">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <span class="tw-demo-badge"><svg class="ic"><use href="icons.svg#i-play" /></svg>Live demo</span>
+            <h2>Refactor an OnStart-heavy app</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <ol class="tw-steps">
+              <li>Open a sample app with a long OnStart and run Monitor<span class="tw-expect">A slow start and a wall of network calls</span></li>
+              <li>Move derived data into <code>App.Formulas</code> as named formulas<span class="tw-expect">OnStart shrinks to almost nothing</span></li>
+              <li>Add a <code>IsOverdue()</code> function and use it in the gallery<span class="tw-expect">Rule written once, reused on two screens</span></li>
+              <li>Set the data row limit to 1 and fix the delegation warnings<span class="tw-expect">No yellow triangles; results still correct</span></li>
+            </ol>
+          </div>
+          <aside class="notes">
+            <p>Use the sample &ldquo;Referral Tracker&rdquo; app with sample data. Show Monitor before and after so the audience sees the difference in load time.</p>
+            <p>Keep the demo to 10 minutes. If time is short, skip step 4 and show it in the lab instead.</p>
+          </aside>
+        </section>
+
+        <!-- 14 DIVIDER 03 -->
+        <section class="tw-divider" role="region" aria-label="Slide 14: Module 3, Model-driven apps">
+          <div class="tw-divider-art" style="--art: url('images/scene-controlroom.jpg'); --focus: 60%" role="img" aria-label="A control room lined with screens"></div>
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-divider-copy">
+            <p class="tw-mod">03</p>
+            <h2>Model-driven apps</h2>
+            <p>Start with the data model; the UI follows. Business logic lives in Dataverse.</p>
+          </div>
+          <aside class="notes">
+            <p>Module 3, about 20 minutes. Model-driven apps flip the approach: you design tables and relationships, and the platform generates a consistent, accessible UI.</p>
+          </aside>
+        </section>
+
+        <!-- 15 MODEL-DRIVEN ANATOMY -->
+        <section class="tw" role="region" aria-label="Slide 15: Model-driven anatomy">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 3 &middot; Anatomy</p>
+            <h2>Data first, then the app</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-flow">
+              <div class="tw-node tw-node-hot"><svg class="ic"><use href="icons.svg#i-table" /></svg><b>Tables</b><span>Columns, relationships, choices</span></div>
+              <div class="tw-arrow"></div>
+              <div class="tw-node"><svg class="ic"><use href="icons.svg#i-file-text" /></svg><b>Forms and views</b><span>Main, quick create, quick view</span></div>
+              <div class="tw-arrow"></div>
+              <div class="tw-node"><svg class="ic"><use href="icons.svg#i-workflow" /></svg><b>Business process flows</b><span>Guided stages</span></div>
+              <div class="tw-arrow"></div>
+              <div class="tw-node"><svg class="ic"><use href="icons.svg#i-layers" /></svg><b>App and sitemap</b><span>Navigation and areas</span></div>
+              <div class="tw-arrow"></div>
+              <div class="tw-node"><svg class="ic"><use href="icons.svg#i-lock" /></svg><b>Security roles</b><span>Who sees which rows</span></div>
+            </div>
+            <div class="tw-cols">
+              <div class="tw-callout"><svg class="ic"><use href="icons.svg#i-lightbulb" /></svg><p>Design the <strong>data model on a whiteboard first</strong>: tables, relationships, ownership (user or team) and which columns are required.</p></div>
+              <div class="tw-callout tw-pitfall"><svg class="ic"><use href="icons.svg#i-alert-triangle" /></svg><p>Changing a table&rsquo;s <strong>ownership type</strong> or a column&rsquo;s <strong>data type</strong> after go-live is painful or impossible.</p></div>
+            </div>
+          </div>
+          <aside class="notes">
+            <p>Walk left to right. Tables are where the real design work happens; forms, views and the app itself are mostly configuration.</p>
+            <p>Security roles are row-level: user-owned or team-owned tables plus business units decide who sees what. Get ownership right on day one.</p>
+          </aside>
+        </section>
+
+        <!-- 16 COMMAND BAR AND BUSINESS LOGIC -->
+        <section class="tw" role="region" aria-label="Slide 16: Command bar and business logic">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 3 &middot; Logic</p>
+            <h2>Command bar Power Fx and business logic</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-cols tw-wide-right">
+              <div class="tw-code tw-code-sm">
+                <div class="tw-code-title">Command &ldquo;Close referral&rdquo; (main form)</div>
+<pre><code><span class="c">// Visible</span>
+Self.Selected.Item.Status =
+    <span class="s">'Status (Referrals)'</span>.Open
+
+<span class="c">// OnSelect</span>
+<span class="f">Patch</span>(Referrals, Self.Selected.Item,
+    { Status: <span class="s">'Status (Referrals)'</span>.Closed });
+<span class="f">Notify</span>(<span class="s">"Referral closed"</span>,
+    NotificationType.Success)</code></pre>
+              </div>
+              <table class="tw-table tw-table-sm">
+                <thead><tr><th>Option</th><th>Runs</th><th>Use for</th></tr></thead>
+                <tbody>
+                  <tr><th>Business rule</th><td>Form and server</td><td>Simple show, hide, require, default</td></tr>
+                  <tr><th>Formula column</th><td>Server, on read</td><td>Calculated values in Power Fx</td></tr>
+                  <tr><th>Power Automate</th><td>Server, async</td><td>Notifications, integrations</td></tr>
+                  <tr><th>Plug-in (C#)</th><td>Server, sync, in transaction</td><td>Validation that must never be bypassed</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <aside class="notes">
+            <p>Modern commanding lets you write command visibility and actions in Power Fx rather than JavaScript ribbon customisations.</p>
+            <p>The table is about where rules should live. If a rule must hold no matter how data arrives &mdash; app, API, import &mdash; it belongs on the server: a plug-in or, for simple cases, a business rule scoped to the table.</p>
+          </aside>
+        </section>
+
+        <!-- 17 DIVIDER 04 -->
+        <section class="tw-divider" role="region" aria-label="Slide 17: Module 4, Code Apps">
+          <div class="tw-divider-art" style="--art: url('images/tminus15-workshops/t5-agentic-coding.jpg'); --focus: 40%" role="img" aria-label="An astronaut at a workbench with floating holographic panels"></div>
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-divider-copy">
+            <p class="tw-mod">04</p>
+            <h2>Code Apps</h2>
+            <p>Your own React or Vue app, hosted and governed by Power Platform.</p>
+          </div>
+          <aside class="notes">
+            <p>Module 4, about 35 minutes &mdash; the longest module. Code Apps went generally available in early 2026 and close the gap between low-code and pro-code.</p>
+          </aside>
+        </section>
+
+        <!-- 18 CODE APPS ARCHITECTURE -->
+        <section class="tw" role="region" aria-label="Slide 18: What a Code App is">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 4 &middot; Code Apps</p>
+            <h2>Pro-code UI, managed platform</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-flow">
+              <div class="tw-node"><svg class="ic"><use href="icons.svg#i-code-xml" /></svg><b>Your app</b><span>React or Vue, TypeScript, Vite</span></div>
+              <div class="tw-arrow"></div>
+              <div class="tw-node tw-node-hot"><svg class="ic"><use href="icons.svg#i-box" /></svg><b>Client library</b><span><code>@microsoft/power-apps</code> + generated services</span></div>
+              <div class="tw-arrow"></div>
+              <div class="tw-node"><svg class="ic"><use href="icons.svg#i-network" /></svg><b>Connectors and Dataverse</b><span>1,500+ connectors from JavaScript</span></div>
+            </div>
+            <div class="tw-cols">
+              <div class="tw-card">
+                <span class="tw-tag">The platform gives you</span>
+                <ul class="tw-list">
+                  <li><strong>Entra ID sign-in</strong> &mdash; no auth code to write</li>
+                  <li>Hosting, sharing limits, <strong>DLP</strong> and Conditional Access</li>
+                  <li>Solutions for <strong>ALM</strong>; health metrics in the admin centre</li>
+                </ul>
+              </div>
+              <div class="tw-card">
+                <span class="tw-tag">Before you start</span>
+                <ul class="tw-list">
+                  <li>Admin turns on <strong>Enable code apps</strong> per environment</li>
+                  <li>Node.js LTS, Git and the <strong>Power Apps CLI</strong></li>
+                  <li>End users need <strong>Power Apps Premium</strong> (or pay-as-you-go)</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <aside class="notes">
+            <p>A Code App is a normal single-page app. The difference is that it is published to and run by Power Platform, which handles identity, connections and governance.</p>
+            <p>The environment setting lives in the admin centre under Settings, Product, Features. Remind people the end-user licence is Premium, which matters for the business case.</p>
+          </aside>
+        </section>
+
+        <!-- 19 CODE APPS CLI WORKFLOW -->
+        <section class="tw" role="region" aria-label="Slide 19: The Code Apps CLI workflow">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 4 &middot; Code Apps</p>
+            <h2>From scaffold to published in four steps</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-cols tw-wide-left">
+              <div class="tw-code">
+                <div class="tw-code-title">Terminal</div>
+<pre><code><span class="c"># 1. Scaffold from the official Vite template</span>
+<span class="f">npx degit</span> github:microsoft/PowerAppsCodeApps/templates/vite my-app
+<span class="f">cd</span> my-app
+
+<span class="c"># 2. Install the Power Apps CLI and dependencies</span>
+<span class="f">npm install</span> --global @microsoft/power-apps-cli
+<span class="f">npm install</span>
+
+<span class="c"># 3. Bind to an environment, then run locally</span>
+<span class="f">pa app init</span> --display-name <span class="s">"Referral Tracker"</span> --environment-id <span class="v">&lt;env-id&gt;</span>
+<span class="f">pa app run</span>        <span class="c"># open the "Local Play" URL</span>
+
+<span class="c"># 4. Build and publish into a solution</span>
+<span class="f">npm run build</span>
+<span class="f">pa app push</span> --solution-id <span class="v">&lt;solution-id&gt;</span></code></pre>
+              </div>
+              <div class="tw-stack">
+                <div class="tw-callout"><svg class="ic"><use href="icons.svg#i-terminal" /></svg><p><strong>New CLI.</strong> Preview-era projects used <code>pac code init</code>, <code>add-data-source</code> and <code>push</code>. Current docs use the Power Apps CLI: <code>pa app &hellip;</code></p></div>
+                <div class="tw-callout tw-pitfall"><svg class="ic"><use href="icons.svg#i-alert-triangle" /></svg><p>Open Local Play in the <strong>same browser profile</strong> as your tenant. Chrome and Edge may ask to allow <strong>local network access</strong>.</p></div>
+              </div>
+            </div>
+          </div>
+          <aside class="notes">
+            <p>This is the whole inner loop. pa app run serves the app locally but inside the Power Apps host, so connectors and auth behave exactly as in production.</p>
+            <p>If your team started during the preview with pac code commands, the concepts are identical; the commands moved to the new pa CLI. Check pa --version and the Microsoft Learn CLI reference, as this tooling is moving quickly.</p>
+          </aside>
+        </section>
+
+        <!-- 20 DATA SOURCES -->
+        <section class="tw" role="region" aria-label="Slide 20: Adding data sources">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 4 &middot; Code Apps</p>
+            <h2>Add data sources, get typed services</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-cols tw-wide-left">
+              <div class="tw-code tw-code-sm">
+                <div class="tw-code-title">Terminal</div>
+<pre><code><span class="c"># A Dataverse table (one table per command)</span>
+<span class="f">pa app add data-source</span> --connector dataverse --table kna_referral
+
+<span class="c"># Connector actions, e.g. Office 365 Users</span>
+<span class="f">pa app add data-source</span> --connector shared_office365users
+
+<span class="c"># A SharePoint list as a table, via a connection reference</span>
+<span class="f">pa app add data-source</span> --connector shared_sharepointonline --as table \
+  --connection-ref kna_sharedsharepointonline_1a2b3 \
+  --dataset <span class="s">"https://contoso.sharepoint.com/sites/demo"</span> --table <span class="s">"Tasks"</span>
+
+<span class="c"># Schema changed? Regenerate rather than hand-edit</span>
+<span class="f">pa app refresh data-source</span></code></pre>
+              </div>
+              <div class="tw-code tw-code-sm">
+                <div class="tw-code-title">What gets generated</div>
+<pre><code>src/generated/
+  models/
+    <span class="s">Kna_referralsModel.ts</span>   <span class="c">// types</span>
+  services/
+    <span class="s">Kna_referralsService.ts</span> <span class="c">// CRUD</span>
+power.config.json           <span class="c">// sources,</span>
+                            <span class="c">// conn. refs</span></code></pre>
+              </div>
+            </div>
+            <div class="tw-callout tw-pitfall"><svg class="ic"><use href="icons.svg#i-alert-triangle" /></svg><p><strong>Never hand-edit <code>generated/</code></strong> &mdash; it is overwritten on refresh. Wrap services in your own hooks or modules instead.</p></div>
+          </div>
+          <aside class="notes">
+            <p>Every data source becomes a strongly typed model and service. Use connection references rather than connection IDs so the app moves cleanly between environments.</p>
+            <p>Exact file names depend on the table name; the pattern is a Model and a Service per source. For Dataverse actions and functions there is a separate command, pa app add dataverse-api.</p>
+          </aside>
+        </section>
+
+        <!-- 21 USING THE SERVICE -->
+        <section class="tw" role="region" aria-label="Slide 21: Querying Dataverse from TypeScript">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 4 &middot; Code Apps</p>
+            <h2>Querying Dataverse from TypeScript</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-cols tw-wide-left">
+              <div class="tw-code tw-code-sm">
+                <div class="tw-code-title">src/hooks/useAccounts.ts</div>
+<pre><code><span class="k">import</span> { useEffect, useState } <span class="k">from</span> <span class="s">'react'</span>;
+<span class="k">import</span> { AccountsService } <span class="k">from</span> <span class="s">'../generated/services/AccountsService'</span>;
+<span class="k">import type</span> { Accounts } <span class="k">from</span> <span class="s">'../generated/models/AccountsModel'</span>;
+
+<span class="k">export function</span> <span class="f">useAccounts</span>(city: <span class="k">string</span>) {
+  <span class="k">const</span> [rows, setRows] = <span class="f">useState</span>&lt;Accounts[]&gt;([]);
+  <span class="f">useEffect</span>(() => {
+    AccountsService.<span class="f">getAll</span>({
+<span class="hl">      select: [<span class="s">'name'</span>, <span class="s">'accountnumber'</span>, <span class="s">'address1_city'</span>],</span>
+      filter: <span class="s">`address1_city eq '${</span>city.<span class="f">replace</span>(<span class="s">/'/g</span>, <span class="s">"''"</span>)<span class="s">}'`</span>,
+      orderBy: [<span class="s">'name asc'</span>],
+      top: <span class="n">50</span>,
+    }).<span class="f">then</span>((r) => <span class="f">setRows</span>(r.data ?? []));
+  }, [city]);
+  <span class="k">return</span> rows;
+}</code></pre>
+              </div>
+              <div class="tw-stack">
+                <h3><svg class="ic"><use href="icons.svg#i-check" /></svg>What to notice</h3>
+                <ul class="tw-list">
+                  <li><strong><code>select</code></strong> only the columns you need &mdash; always</li>
+                  <li><code>filter</code>, <code>orderBy</code> and <code>top</code> are <strong>delegated</strong> to Dataverse; page with <code>skipToken</code></li>
+                  <li>Escape quotes in OData strings</li>
+                  <li>Also: <code>get</code>, <code>create</code>, <code>update</code>, <code>delete</code> &mdash; send <strong>only changed fields</strong> on update</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <aside class="notes">
+            <p>This example uses the built-in Accounts table, as in Microsoft&rsquo;s docs. The service returns a result object; the rows are on result.data.</p>
+            <p>Two Dataverse habits carry straight over from canvas: select only the columns you need, and on update send only the changed fields. Sending unchanged fields triggers business logic and pollutes the audit log.</p>
+          </aside>
+        </section>
+
+        <!-- 22 FLOWS FROM CODE -->
+        <section class="tw" role="region" aria-label="Slide 22: Calling Power Automate from a Code App">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 4 &middot; Code Apps</p>
+            <h2>Calling a flow from code</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-cols">
+              <div class="t3-codes">
+                <div class="tw-code tw-code-sm">
+                  <div class="tw-code-title">Terminal</div>
+<pre><code><span class="f">pa app list-flows</span> --search approval
+<span class="f">pa app add flow</span> --flow-id <span class="v">&lt;flow-id&gt;</span>   <span class="c"># re-run after flow changes</span></code></pre>
+                </div>
+                <div class="tw-code tw-code-sm">
+                  <div class="tw-code-title">src/actions/requestApproval.ts</div>
+<pre><code><span class="k">import</span> { ApprovalWorkflowService } <span class="k">from</span>
+  <span class="s">'../generated/services/ApprovalWorkflowService'</span>;
+
+<span class="k">const</span> result = <span class="k">await</span> ApprovalWorkflowService.<span class="f">Run</span>({
+  requester: <span class="s">'Alex'</span>,
+  amount: <span class="n">1500</span>,
+});
+<span class="k">if</span> (!result.success) console.<span class="f">error</span>(result.error);</code></pre>
+                </div>
+              </div>
+              <div class="tw-stack">
+                <h3><svg class="ic"><use href="icons.svg#i-alert-triangle" /></svg>Rules</h3>
+                <ul class="tw-list">
+                  <li>Only <strong>instant flows with the Power Apps trigger</strong></li>
+                  <li>The flow must be <strong>solution-aware</strong></li>
+                  <li>The developer adding it needs access to the flow <strong>and its connections</strong></li>
+                  <li>End users need Dataverse permissions to run it</li>
+                </ul>
+                <div class="tw-callout"><svg class="ic"><use href="icons.svg#i-lightbulb" /></svg><p>Put server-side work &mdash; e-mails, approvals, integrations &mdash; in a flow, not the browser.</p></div>
+              </div>
+            </div>
+          </div>
+          <aside class="notes">
+            <p>Calling flows directly from Code Apps arrived in 2026. The CLI downloads the flow&rsquo;s OpenAPI definition and generates a typed Run method.</p>
+            <p>Scheduled and automated flows can&rsquo;t be called this way. Check the generated file for the exact service name and result types.</p>
+          </aside>
+        </section>
+
+        <!-- 23 CODE APPS ALM AND LIMITS -->
+        <section class="tw" role="region" aria-label="Slide 23: Code Apps ALM and limitations">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 4 &middot; Code Apps</p>
+            <h2>ALM and current limitations</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-cols">
+              <div class="tw-card">
+                <span class="tw-tag">ALM</span>
+                <ul class="tw-list">
+                  <li>Source in <strong>your own Git repo</strong> &mdash; PRs, reviews, tests as normal</li>
+                  <li><code>pa app push --solution-id</code> places the app in a <strong>solution</strong></li>
+                  <li>Export and import that solution like any other</li>
+                  <li>Same command interactively or in <strong>CI/CD</strong> (<code>PA_CLI_SOLUTION_ID</code>)</li>
+                </ul>
+              </div>
+              <div class="tw-card">
+                <span class="tw-tag" style="color: #f7c56b">Limitations today</span>
+                <ul class="tw-list">
+                  <li>No Power Platform <strong>Git integration</strong> (use your repo)</li>
+                  <li>Assets served from a public endpoint &mdash; restrict with <strong>Conditional Access</strong>, not IP binding</li>
+                  <li>No SharePoint forms integration or Power Apps for Windows</li>
+                  <li>No Secure Implicit Connections yet</li>
+                </ul>
+              </div>
+            </div>
+            <div class="tw-callout"><svg class="ic"><use href="icons.svg#i-lightbulb" /></svg><p>Check the Microsoft Learn limitations page before each project &mdash; this list is shrinking fast.</p></div>
+          </div>
+          <aside class="notes">
+            <p>The good news for developers: Code Apps fit a normal Git workflow, with unit tests and Playwright end-to-end tests like any React app.</p>
+            <p>The limitations listed are from Microsoft&rsquo;s documentation at the time of writing. Confirm them before committing a design, especially the security ones.</p>
+          </aside>
+        </section>
+
+        <!-- 24 DEMO CODE APP -->
+        <section class="tw tw-scene" style="--scene: url('images/scene-serverhall.jpg')" role="region" aria-label="Slide 24: Demo, build and publish a Code App">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <span class="tw-demo-badge"><svg class="ic"><use href="icons.svg#i-play" /></svg>Live demo</span>
+            <h2>Build and publish a Code App</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <ol class="tw-steps">
+              <li>Scaffold from the Vite template and run <code>pa app init</code><span class="tw-expect">A <code>power.config.json</code> bound to the dev environment</span></li>
+              <li>Add the sample Referral table with <code>pa app add data-source</code><span class="tw-expect">Typed model and service under <code>src/generated</code></span></li>
+              <li>Render a table of open referrals with a React hook; <code>pa app run</code><span class="tw-expect">Live Dataverse data on the Local Play URL</span></li>
+              <li><code>npm run build</code> then <code>pa app push --solution-id</code><span class="tw-expect">The app appears inside the solution in make.powerapps.com</span></li>
+            </ol>
+          </div>
+          <aside class="notes">
+            <p>Pre-stage the environment: code apps enabled, the Referral table and sample rows created, and the CLI already signed in. Network hiccups are the usual demo killer.</p>
+            <p>Finish by opening the solution to show the Code App sitting next to the canvas app and flow &mdash; same ALM for all three.</p>
+          </aside>
+        </section>
+
+        <!-- 25 DIVIDER 05 -->
+        <section class="tw-divider" role="region" aria-label="Slide 25: Module 5, Power Automate">
+          <div class="tw-divider-art" style="--art: url('images/tminus15-workshops/t4-cicd.jpg'); --focus: 65%" role="img" aria-label="Robotic arms on an automated assembly line"></div>
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-divider-copy">
+            <p class="tw-mod">05</p>
+            <h2>Power Automate that doesn&rsquo;t fail silently</h2>
+            <p>Error handling, reuse and throughput for flows you can run in production.</p>
+          </div>
+          <aside class="notes">
+            <p>Module 5, about 20 minutes. Most production incidents in Power Platform are flows that failed and nobody noticed.</p>
+          </aside>
+        </section>
+
+        <!-- 26 TRY CATCH FINALLY -->
+        <section class="tw" role="region" aria-label="Slide 26: Try, catch, finally with scopes">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 5 &middot; Error handling</p>
+            <h2>Try / catch / finally with scopes</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="t3-scopes">
+              <div class="tw-group"><span class="tw-group-label">Scope: Try</span>
+                <div class="tw-node"><b>Get row</b></div>
+                <div class="tw-node"><b>Call API</b></div>
+                <div class="tw-node"><b>Update row</b></div>
+                <p class="t3-runafter">Runs normally</p>
+              </div>
+              <div class="tw-arrow"></div>
+              <div class="tw-group t3-catch"><span class="tw-group-label">Scope: Catch</span>
+                <div class="tw-node"><b>Filter failed actions</b></div>
+                <div class="tw-node"><b>Alert the team</b></div>
+                <div class="tw-node"><b>Terminate: Failed</b></div>
+                <p class="t3-runafter">Run after Try: has failed, has timed out</p>
+              </div>
+              <div class="tw-arrow"></div>
+              <div class="tw-group"><span class="tw-group-label">Scope: Finally</span>
+                <div class="tw-node"><b>Log the run</b></div>
+                <div class="tw-node"><b>Release lock</b></div>
+                <p class="t3-runafter">Run after Catch: all four outcomes</p>
+              </div>
+            </div>
+            <div class="tw-callout tw-pitfall"><svg class="ic"><use href="icons.svg#i-alert-triangle" /></svg><p>Without <strong>Terminate: Failed</strong>, a handled error shows as <strong>Succeeded</strong> in run history &mdash; and your monitoring misses it.</p></div>
+          </div>
+          <aside class="notes">
+            <p>Scopes plus &ldquo;Configure run after&rdquo; give you structured error handling. Catch only runs when Try fails or times out; Finally runs whatever happens.</p>
+            <p>Note that Finally is set to run after Catch with all outcomes ticked, including skipped, otherwise it won&rsquo;t run on the happy path.</p>
+          </aside>
+        </section>
+
+        <!-- 27 EXPRESSIONS -->
+        <section class="tw" role="region" aria-label="Slide 27: Useful expressions">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 5 &middot; Expressions</p>
+            <h2>Expressions for the Catch scope</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-cols tw-wide-left">
+              <div class="tw-code tw-code-sm">
+                <div class="tw-code-title">Expressions</div>
+<pre><code><span class="c">// Filter array &middot; From: every action result inside Try</span>
+<span class="f">result</span>(<span class="s">'Try'</span>)
+<span class="c">// Filter array &middot; condition: keep only the failures</span>
+@<span class="f">equals</span>(<span class="f">item</span>()?[<span class="s">'status'</span>], <span class="s">'Failed'</span>)
+
+<span class="c">// A link to this run, for the alert</span>
+<span class="f">concat</span>(<span class="s">'https://make.powerautomate.com/environments/'</span>,
+  <span class="f">workflow</span>()?[<span class="s">'tags'</span>]?[<span class="s">'environmentName'</span>], <span class="s">'/flows/'</span>,
+  <span class="f">workflow</span>()?[<span class="s">'name'</span>], <span class="s">'/runs/'</span>, <span class="f">workflow</span>()?[<span class="s">'run'</span>]?[<span class="s">'name'</span>])
+
+<span class="c">// Safe defaults and null-safe access</span>
+<span class="f">coalesce</span>(<span class="f">triggerBody</span>()?[<span class="s">'priority'</span>], <span class="s">'Normal'</span>)
+
+<span class="c">// Due date from an environment variable</span>
+<span class="f">addDays</span>(<span class="f">utcNow</span>(), <span class="f">int</span>(<span class="v">parameters('SLA days (kna_SlaDays)')</span>))</code></pre>
+              </div>
+              <div class="tw-stack">
+                <ul class="tw-list">
+                  <li><code>result('Scope')</code> returns the outcome of every action inside a scope</li>
+                  <li>The run link lets whoever gets the alert <strong>jump straight to the failure</strong></li>
+                  <li>Use <code>?[ ]</code> everywhere: missing properties return null instead of failing</li>
+                  <li>Environment variables appear as <strong>parameters</strong> in solution flows</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <aside class="notes">
+            <p>These are the expressions we use in almost every production flow. The run URL is the single most useful thing in an alert e-mail.</p>
+            <p>Environment variables show up in the dynamic content pane under their display name; the exact parameter name in the expression comes from that display name and schema name.</p>
+          </aside>
+        </section>
+
+        <!-- 28 CHILD FLOWS, CONCURRENCY, RETRY -->
+        <section class="tw" role="region" aria-label="Slide 28: Reuse and throughput">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 5 &middot; Reuse and throughput</p>
+            <h2>Child flows, concurrency and retries</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <table class="tw-table tw-table-sm">
+              <thead><tr><th>Technique</th><th>What it does</th><th>Watch out for</th></tr></thead>
+              <tbody>
+                <tr><th>Child flows</th><td>Reusable logic called with <em>Run a Child Flow</em>; returns data with <em>Respond to a Power App or flow</em></td><td>Both flows must be in a <strong>solution</strong>; set the child&rsquo;s run-only connections</td></tr>
+                <tr><th>Trigger concurrency</th><td>Limits how many runs execute at once</td><td>Set to 1 when order matters; it can&rsquo;t be switched off again once set</td></tr>
+                <tr><th>Apply to each concurrency</th><td>Processes items in parallel (up to 50)</td><td>Don&rsquo;t set variables inside a parallel loop &mdash; use <em>Compose</em></td></tr>
+                <tr><th>Retry policy</th><td>Default: exponential, 4 retries; or fixed / none</td><td>Use <strong>none</strong> for non-idempotent calls, e.g. payments</td></tr>
+                <tr><th>Pagination</th><td><em>List rows</em> returns 5,000 rows by default</td><td>Turn on pagination or use <code>$filter</code>; avoid loops over big tables</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <aside class="notes">
+            <p>Child flows are the flow equivalent of functions. They are the main way to stop copy-pasting the same 20 actions across ten flows.</p>
+            <p>The concurrency and retry settings are on each action&rsquo;s Settings tab. Most performance problems in flows are loops that should have been a single filtered query.</p>
+          </aside>
+        </section>
+
+        <!-- 29 DIVIDER 06 -->
+        <section class="tw-divider" role="region" aria-label="Slide 29: Module 6, Connectors, solutions and ALM">
+          <div class="tw-divider-art" style="--art: url('images/scene-interchange.jpg'); --focus: 55%" role="img" aria-label="A busy interchange of routes"></div>
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-divider-copy">
+            <p class="tw-mod">06</p>
+            <h2>Connectors, solutions and ALM</h2>
+            <p>Making apps and flows portable, governable and safe to deploy.</p>
+          </div>
+          <aside class="notes">
+            <p>Module 6, about 20 minutes. Everything we built today is only valuable if we can move it safely from dev to test to production.</p>
+          </aside>
+        </section>
+
+        <!-- 30 DLP AND CONNECTORS -->
+        <section class="tw" role="region" aria-label="Slide 30: Connectors and DLP">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 6 &middot; Governance</p>
+            <h2>Connectors and data loss prevention</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-cols" style="--cols: 3">
+              <div class="tw-node tw-node-hot"><svg class="ic"><use href="icons.svg#i-shield-check" /></svg><b>Business</b><span>e.g. Dataverse, SharePoint, Outlook, Teams</span></div>
+              <div class="tw-node"><svg class="ic"><use href="icons.svg#i-globe" /></svg><b>Non-business</b><span>e.g. social media, personal storage</span></div>
+              <div class="tw-node"><svg class="ic"><use href="icons.svg#i-lock" /></svg><b>Blocked</b><span>Can&rsquo;t be used at all</span></div>
+            </div>
+            <div class="tw-callout tw-pitfall"><svg class="ic"><use href="icons.svg#i-x" /></svg><p>An app or flow <strong>can&rsquo;t mix</strong> business and non-business connectors.</p></div>
+            <div class="tw-cols">
+              <ul class="tw-list">
+                <li><strong>Standard</strong> vs <strong>premium</strong> connectors drive licensing</li>
+                <li><strong>Custom connectors</strong> wrap your own APIs (OpenAPI), with OAuth or API key</li>
+                <li>Classify custom connectors in DLP too &mdash; they default to non-business</li>
+              </ul>
+              <ul class="tw-list">
+                <li>A <strong>tenant-wide policy</strong> plus stricter ones per environment</li>
+                <li>Lock down the <strong>default environment</strong> hardest</li>
+                <li><strong>Endpoint filtering</strong> limits HTTP and SQL to approved hosts</li>
+              </ul>
+            </div>
+          </div>
+          <aside class="notes">
+            <p>DLP policies group connectors so business data can&rsquo;t flow into non-business services in the same app or flow. Blocked connectors can&rsquo;t be used at all.</p>
+            <p>The default environment is where every licensed user can create things, so it needs the strictest policy. Real work belongs in dedicated environments.</p>
+          </aside>
+        </section>
+
+        <!-- 31 SOLUTIONS -->
+        <section class="tw" role="region" aria-label="Slide 31: Solutions">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 6 &middot; Solutions</p>
+            <h2>Solutions: the unit of deployment</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <table class="tw-table tw-table-sm">
+              <thead><tr><th></th><th>Unmanaged</th><th>Managed</th></tr></thead>
+              <tbody>
+                <tr><th>Where</th><td>Development only</td><td>Test and production</td></tr>
+                <tr><th>Editable</th><td class="yes">Yes</td><td class="no">No &mdash; locked components</td></tr>
+                <tr><th>Delete solution</th><td class="meh">Removes the container, leaves the components</td><td class="yes">Removes the components cleanly</td></tr>
+                <tr><th>Upgrades</th><td class="no">Overwrite</td><td class="yes">Versioned layers, clean upgrades</td></tr>
+              </tbody>
+            </table>
+            <div class="tw-cols">
+              <div class="tw-callout"><svg class="ic"><use href="icons.svg#i-lightbulb" /></svg><p>Create <strong>your own publisher</strong> with a short prefix (e.g. <code>kna_</code>) before the first table. It&rsquo;s baked into every schema name.</p></div>
+              <div class="tw-callout tw-pitfall"><svg class="ic"><use href="icons.svg#i-alert-triangle" /></svg><p>Never use the <strong>Default Solution</strong> or <code>cr123_</code> prefix, and never edit in test or prod &mdash; it creates an unmanaged layer.</p></div>
+            </div>
+          </div>
+          <aside class="notes">
+            <p>Rule one: unmanaged in dev, managed everywhere else. Managed solutions are the only way to get clean upgrades and clean removal.</p>
+            <p>The publisher prefix appears in every table and column name forever, so agree it as a team on day one.</p>
+          </aside>
+        </section>
+
+        <!-- 32 ENV VARS AND CONNECTION REFS -->
+        <section class="tw" role="region" aria-label="Slide 32: Environment variables and connection references">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 6 &middot; Configuration</p>
+            <h2>No hard-coding: variables and references</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-cols tw-wide-right">
+              <div class="tw-stack">
+                <div class="tw-card">
+                  <span class="tw-tag">Environment variables</span>
+                  <p>Text, number, yes/no, JSON, <strong>data source</strong> (e.g. a SharePoint site) and <strong>secret</strong> (from Azure Key Vault). One value per environment.</p>
+                </div>
+                <div class="tw-card">
+                  <span class="tw-tag">Connection references</span>
+                  <p>A named pointer to a connection. Flows and apps use the reference; each environment binds it to <strong>its own connection</strong>, ideally a service account.</p>
+                </div>
+              </div>
+              <div class="tw-code tw-code-sm">
+                <div class="tw-code-title">deploy/test.settings.json</div>
+<pre><code>{
+  <span class="k">"EnvironmentVariables"</span>: [
+    { <span class="k">"SchemaName"</span>: <span class="s">"kna_SlaDays"</span>, <span class="k">"Value"</span>: <span class="s">"3"</span> },
+    { <span class="k">"SchemaName"</span>: <span class="s">"kna_ApiBaseUrl"</span>,
+      <span class="k">"Value"</span>: <span class="s">"https://api-test.contoso.com"</span> }
+  ],
+  <span class="k">"ConnectionReferences"</span>: [
+    { <span class="k">"LogicalName"</span>: <span class="s">"kna_sharedoffice365_ref"</span>,
+      <span class="k">"ConnectionId"</span>: <span class="s">"&lt;test-connection-id&gt;"</span>,
+      <span class="k">"ConnectorId"</span>:
+        <span class="s">"/providers/Microsoft.PowerApps/apis/shared_office365"</span> }
+  ]
+}</code></pre>
+              </div>
+            </div>
+          </div>
+          <aside class="notes">
+            <p>Environment variables replace every hard-coded URL, site ID, e-mail address and threshold. Secret variables read from Key Vault, so no secrets in solutions.</p>
+            <p>The settings file supplies values at import time, so a pipeline can deploy unattended. pac solution create-settings generates a blank one from a solution zip.</p>
+          </aside>
+        </section>
+
+        <!-- 33 ENVIRONMENT STRATEGY AND PAC -->
+        <section class="tw" role="region" aria-label="Slide 33: Moving solutions between environments">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 6 &middot; ALM</p>
+            <h2>Dev &rarr; test &rarr; prod, by script or pipeline</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-flow">
+              <div class="tw-node"><svg class="ic"><use href="icons.svg#i-code-xml" /></svg><b>Dev</b><span>Unmanaged; makers build here</span></div>
+              <div class="tw-arrow"></div>
+              <div class="tw-node"><svg class="ic"><use href="icons.svg#i-git-branch" /></svg><b>Source control</b><span><code>pac solution unpack</code> into Git</span></div>
+              <div class="tw-arrow"></div>
+              <div class="tw-node"><svg class="ic"><use href="icons.svg#i-flask-conical" /></svg><b>Test</b><span>Managed import + settings</span></div>
+              <div class="tw-arrow"></div>
+              <div class="tw-node tw-node-hot"><svg class="ic"><use href="icons.svg#i-shield-check" /></svg><b>Prod</b><span>Managed environment, approval gate</span></div>
+            </div>
+            <div class="tw-code tw-code-sm">
+              <div class="tw-code-title">Terminal &middot; pac CLI</div>
+<pre><code><span class="f">pac auth create</span> --name dev --environment <span class="s">https://contoso-dev.crm11.dynamics.com</span>
+<span class="f">pac solution export</span> --name ReferralTracker --path ./out/ReferralTracker_managed.zip --managed
+<span class="f">pac solution create-settings</span> --solution-zip ./out/ReferralTracker_managed.zip --settings-file ./deploy/test.settings.json
+<span class="f">pac auth select</span> --name test
+<span class="f">pac solution import</span> --path ./out/ReferralTracker_managed.zip --settings-file ./deploy/test.settings.json</code></pre>
+            </div>
+            <div class="tw-callout"><svg class="ic"><use href="icons.svg#i-lightbulb" /></svg><p>No DevOps team? <strong>Pipelines in Power Platform</strong> do this from the maker portal, with approvals. Full CI/CD with Azure DevOps is <strong>W-T4</strong>.</p></div>
+          </div>
+          <aside class="notes">
+            <p>These five commands are the whole manual deployment. Once they work by hand, putting them in a pipeline is straightforward.</p>
+            <p>Pipelines in Power Platform are the built-in option: a host environment, deployment stages and optional pre-deployment approvals. For Git, branching and Azure DevOps pipelines, point people to W-T4.</p>
+          </aside>
+        </section>
+
+        <!-- 34 LAB OVERVIEW -->
+        <section class="tw" role="region" aria-label="Slide 34: Lab overview">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Hands-on lab &middot; 30 minutes</p>
+            <h2>Lab: ship a Referral Tracker, properly</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-cols tw-wide-left">
+              <div class="tw-stack">
+                <p class="tw-lead">Build a small solution in dev &mdash; table, canvas app, flow and configuration &mdash; then deploy it as a <strong>managed</strong> solution to test.</p>
+                <div class="tw-flow">
+                  <div class="tw-node"><b>Part 1</b><span>Solution and data</span></div>
+                  <div class="tw-arrow"></div>
+                  <div class="tw-node"><b>Part 2</b><span>App and flow</span></div>
+                  <div class="tw-arrow"></div>
+                  <div class="tw-node tw-node-hot"><b>Part 3</b><span>Deploy to test</span></div>
+                </div>
+              </div>
+              <div class="tw-card">
+                <span class="tw-tag">You need</span>
+                <ul class="tw-list">
+                  <li>A lab account and <strong>dev + test</strong> environments (we provide)</li>
+                  <li>A browser; optional: Node.js LTS and the <code>pac</code> / <code>pa</code> CLIs</li>
+                  <li>The sample data CSV &mdash; <strong>no real data</strong></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <aside class="notes">
+            <p>Pair people up if environments are limited. Everything happens in our lab tenant, with sample data only.</p>
+            <p>Thirty minutes is enough for parts 1 and 2 for most people. Part 3 and the Code App stretch goal can carry on afterwards or in a follow-up.</p>
+          </aside>
+        </section>
+
+        <!-- 35 LAB PART 1 -->
+        <section class="tw" role="region" aria-label="Slide 35: Lab part 1">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Hands-on lab &middot; Part 1</p>
+            <h2>Solution, publisher and data</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <ol class="tw-steps">
+              <li>In <strong>dev</strong>, create a publisher with prefix <code>kna</code> and a solution <code>ReferralTracker</code><span class="tw-expect">An empty unmanaged solution with your publisher</span></li>
+              <li>Add a table <strong>Referral</strong>: Title, Priority (choice), Status (choice), Due date<span class="tw-expect">Columns named <code>kna_priority</code>, <code>kna_status</code>&hellip;</span></li>
+              <li>Import the sample CSV into the table<span class="tw-expect">About 50 sample rows in the table view</span></li>
+              <li>Add an environment variable <code>kna_SlaDays</code> (Number, default <code>5</code>)<span class="tw-expect">The variable appears in the solution</span></li>
+            </ol>
+          </div>
+          <aside class="notes">
+            <p>Check everyone has the right prefix before they create the table &mdash; it can&rsquo;t be changed afterwards.</p>
+            <p>Common snag: creating the table outside the solution. If that happens, use Add existing to bring it in.</p>
+          </aside>
+        </section>
+
+        <!-- 36 LAB PART 2 -->
+        <section class="tw" role="region" aria-label="Slide 36: Lab part 2">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Hands-on lab &middot; Part 2</p>
+            <h2>Canvas app and a flow that handles errors</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <ol class="tw-steps">
+              <li>Inside the solution, create a canvas app; add <code>OpenReferrals</code> and <code>IsOverdue()</code> to <code>App.Formulas</code><span class="tw-expect">A gallery of open referrals, overdue ones highlighted</span></li>
+              <li>Build a <strong>header component</strong> with a <code>Title</code> input property; use it on two screens<span class="tw-expect">One component, two screens, no copy-paste</span></li>
+              <li>Create a flow &ldquo;When a row is added&rdquo; with Try / Catch / Finally scopes<span class="tw-expect">Due date set from <code>kna_SlaDays</code>; an e-mail via a connection reference</span></li>
+              <li>Break it on purpose (e.g. an invalid e-mail address) and run again<span class="tw-expect">Catch runs, you get the alert with a run link, and the run shows <strong>Failed</strong></span></li>
+            </ol>
+          </div>
+          <aside class="notes">
+            <p>Point back to slides 8, 9 and 26 for the formulas and scope layout. Creating the flow from inside the solution makes the connection reference automatically.</p>
+            <p>The deliberate failure in step 4 is the important bit: people should see a handled error still show as Failed.</p>
+          </aside>
+        </section>
+
+        <!-- 37 LAB PART 3 -->
+        <section class="tw" role="region" aria-label="Slide 37: Lab part 3">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Hands-on lab &middot; Part 3</p>
+            <h2>Deploy to test as managed</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-cols tw-wide-left">
+              <ol class="tw-steps">
+                <li>Run the solution checker; fix anything critical<span class="tw-expect">No critical issues</span></li>
+                <li>Export as <strong>managed</strong> (portal or <code>pac solution export --managed</code>)<span class="tw-expect">A <code>_managed.zip</code> file</span></li>
+                <li>Import into <strong>test</strong>; set <code>kna_SlaDays</code> to <code>3</code> and bind the connection<span class="tw-expect">The app and flow run in test with test settings</span></li>
+                <li>Try to edit the app in test<span class="tw-expect">It&rsquo;s locked &mdash; exactly what we want</span></li>
+              </ol>
+              <div class="tw-card">
+                <span class="tw-tag">Stretch &middot; Code App</span>
+                <ul class="tw-list">
+                  <li>Scaffold the Vite template; <code>pa app init</code></li>
+                  <li><code>pa app add data-source --connector dataverse --table kna_referral</code></li>
+                  <li>List open referrals in React</li>
+                  <li><code>pa app push --solution-id</code> into ReferralTracker</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <aside class="notes">
+            <p>This is the moment it all comes together: same solution, different settings, nothing edited by hand in test.</p>
+            <p>Developers who finish early can do the Code App stretch, which ends up in the same solution and deploys the same way.</p>
+          </aside>
+        </section>
+
+        <!-- 38 FLIGHT RULES -->
+        <section class="tw" role="region" aria-label="Slide 38: Flight rules">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Flight rules</p>
+            <h2>Rules that speed you up</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <ul class="tw-checks">
+              <li><strong>Never build in the default environment</strong></li>
+              <li><strong>Everything in a solution</strong>, with your own publisher prefix</li>
+              <li><strong>No hard-coded values</strong> &mdash; environment variables</li>
+              <li><strong>Connection references</strong>, owned by a service account</li>
+              <li><strong>Managed only</strong> outside dev; never edit in test or prod</li>
+              <li><strong>Delegation warnings are build failures</strong></li>
+              <li>Every flow has <strong>try / catch / finally</strong> and alerts</li>
+              <li><strong>Named formulas</strong> over OnStart collections</li>
+              <li><strong>DLP policy</strong> on every environment</li>
+              <li>Code Apps: <strong>never hand-edit <code>generated/</code></strong></li>
+            </ul>
+          </div>
+          <aside class="notes">
+            <p>If people remember one slide, it should be this one. Suggest they paste it into their team wiki or definition of done.</p>
+            <p>Each rule maps to a problem from the &ldquo;what we usually find&rdquo; slide at the start.</p>
+          </aside>
+        </section>
+
+        <!-- 39 RECAP AND DEEP DIVES -->
+        <section class="tw" role="region" aria-label="Slide 39: Recap and deep dives">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Recap</p>
+            <h2>What we covered, and where next</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-cols">
+              <ul class="tw-list">
+                <li>Pick the <strong>app type</strong> from the problem, not habit</li>
+                <li><strong>Declarative Power Fx</strong>: named formulas, functions, delegation</li>
+                <li><strong>Model-driven</strong>: data first; logic on the server</li>
+                <li><strong>Code Apps</strong>: React and TypeScript on a governed platform</li>
+                <li><strong>Flows</strong> that fail loudly and recover</li>
+                <li><strong>Solutions, variables and references</strong> for safe deployment</li>
+              </ul>
+              <div class="tw-stack">
+                <div class="tw-card"><span class="tw-tag">W-T2 &middot; Data storage</span><p>Dataverse vs SharePoint vs SQL: security, delegation, licensing and cost.</p></div>
+                <div class="tw-card"><span class="tw-tag">W-T4 &middot; CI/CD</span><p>Azure DevOps pipelines that deploy Power Platform solutions automatically.</p></div>
+                <div class="tw-card"><span class="tw-tag">Deep dives on request</span><p>PCF components, Power Apps Test Engine, Managed Environments, custom connectors.</p></div>
+              </div>
+            </div>
+          </div>
+          <aside class="notes">
+            <p>Recap the six modules in one sentence each. Then point to the next steps: W-T2 for data decisions and W-T4 for automated deployment.</p>
+            <p>Ask the group which deep dive would help most and note it for follow-up.</p>
+          </aside>
+        </section>
+
+        <!-- 40 CTA -->
+        <section class="cta--full-art" role="region" aria-label="Slide 40: Questions">
+          <div class="cta-top">
+            <h2>Questions?</h2>
+            <img class="logo-dark" src="images/logo.png" alt="KnowAll.ai" />
+          </div>
+          <div class="cta-bottom">
+            <div class="cta-copy">
+              <p class="cta-text">Want to go deeper on Code Apps, ALM or governance? We run <strong>follow-up deep dives</strong> on any topic from today.</p>
+              <a class="cta-button" href="mailto:hello@knowall.ai?subject=W-T3%20Power%20Platform%20deep%20dive"><svg class="ic" aria-hidden="true"><use href="icons.svg#i-send" /></svg>Book a deep dive</a>
+            </div>
+            <div class="contact-row">
+              <div class="contact-item"><svg class="ic" aria-hidden="true"><use href="icons.svg#i-mail" /></svg><a href="mailto:hello@knowall.ai">hello@knowall.ai</a></div>
+              <div class="contact-item"><svg class="ic" aria-hidden="true"><use href="icons.svg#i-globe" /></svg><a href="https://www.knowall.ai">knowall.ai</a></div>
+            </div>
+          </div>
+          <aside class="notes">
+            <p>Open the floor for questions. Share the deck and the lab instructions afterwards.</p>
+          </aside>
+        </section>
+      </div>
+    </div>
+
+    <script src="tw-kit.js"></script>
+    <script src="vendor/reveal/reveal.js"></script>
+    <script src="knowall-deck.js"></script>
+  </body>
+</html>

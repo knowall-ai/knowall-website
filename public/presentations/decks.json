@@ -40,6 +40,46 @@
       "cover": "images/tminus15-workshops/cover.jpg",
       "thumb": "images/thumbs/tminus15-workshops.jpg",
       "order": 5
+    },
+    {
+      "slug": "w-t1-azure-devops",
+      "title": "W-T1 Azure DevOps",
+      "description": "A hands-on, half-day technology workshop on running delivery in Azure DevOps: process templates, backlogs and boards, queries and dashboards, Test Plans, Repos and pull requests, and automation, with a step-by-step lab.",
+      "cover": "images/tminus15-workshops/t1-azure-devops.jpg",
+      "thumb": "images/thumbs/w-t1-azure-devops.jpg",
+      "order": 6
+    },
+    {
+      "slug": "w-t2-data-storage",
+      "title": "W-T2 Data Storage",
+      "description": "Dataverse vs SharePoint vs Azure SQL, hands on: security models, scale and delegation, relationships, integration and licensing, and how to choose the right store for each solution, with a step-by-step lab.",
+      "cover": "images/tminus15-workshops/t2-data-storage.jpg",
+      "thumb": "images/thumbs/w-t2-data-storage.jpg",
+      "order": 7
+    },
+    {
+      "slug": "w-t3-power-platform",
+      "title": "W-T3 Power Platform",
+      "description": "Canvas, model-driven and Code Apps, Power Automate, connectors and data loss prevention, and solution-based ALM: a hands-on half day for makers and developers, with a step-by-step lab.",
+      "cover": "images/tminus15-workshops/t3-power-platform.jpg",
+      "thumb": "images/thumbs/w-t3-power-platform.jpg",
+      "order": 8
+    },
+    {
+      "slug": "w-t4-cicd",
+      "title": "W-T4 CI/CD",
+      "description": "YAML pipelines in Azure DevOps, from build and test to environments, approvals, secrets, Bicep infrastructure-as-code and Power Platform solution deployment, with a step-by-step lab.",
+      "cover": "images/tminus15-workshops/t4-cicd.jpg",
+      "thumb": "images/thumbs/w-t4-cicd.jpg",
+      "order": 9
+    },
+    {
+      "slug": "w-t5-agentic-coding",
+      "title": "W-T5 Agentic Coding",
+      "description": "Agentic coding with Claude Code: the agent loop, CLAUDE.md, skills and subagents, specs from acceptance criteria, MCP, hooks, CI and the guardrails that keep agent work trustworthy, with a step-by-step lab.",
+      "cover": "images/tminus15-workshops/t5-agentic-coding.jpg",
+      "thumb": "images/thumbs/w-t5-agentic-coding.jpg",
+      "order": 10
     }
   ],
   "retired": [

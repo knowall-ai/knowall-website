@@ -1,0 +1,753 @@
+/* Technology workshop kit — components shared by the W-T1..W-T5 teaching decks.
+   Builds on knowall-deck.css (tokens: --lime, --charcoal, --panel, --text, --mist, --line).
+   Slides are 1920x1080. Do not redefine knowall-deck.css classes here. */
+
+/* --- Content slide frame ------------------------------------------------- */
+section.tw {
+  background:
+    radial-gradient(1100px 550px at 92% -12%, rgba(157, 254, 10, 0.08), transparent 60%),
+    var(--charcoal);
+}
+
+/* Optional faint scene art behind a content slide: style="--scene: url(...)" */
+section.tw.tw-scene::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(15, 18, 22, 0.78), rgba(15, 18, 22, 0.9)),
+    var(--scene) center / cover no-repeat;
+}
+
+.tw-head {
+  position: absolute;
+  top: 78px;
+  left: 96px;
+  right: 380px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.tw-head h2 {
+  font-size: 66px;
+  line-height: 1.06;
+  color: #ffffff;
+}
+
+.tw-head .tw-sub {
+  font-size: 28px;
+  color: var(--mist);
+}
+
+.tw-body {
+  position: absolute;
+  top: 250px;
+  left: 96px;
+  right: 96px;
+  bottom: calc(36px + var(--ctl-band));
+  display: flex;
+  flex-direction: column;
+  justify-content: safe center;
+  gap: 32px;
+}
+
+/* Layout helpers */
+.tw-cols {
+  display: grid;
+  grid-template-columns: repeat(var(--cols, 2), minmax(0, 1fr));
+  gap: 40px;
+  align-items: start;
+}
+
+.tw-cols.tw-wide-left {
+  grid-template-columns: 1.35fr 1fr;
+}
+
+.tw-cols.tw-wide-right {
+  grid-template-columns: 1fr 1.35fr;
+}
+
+.tw-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+/* --- Text ----------------------------------------------------------------- */
+.tw p,
+.tw li {
+  font-size: 27px;
+  line-height: 1.45;
+  color: var(--mist);
+}
+
+.tw strong {
+  color: var(--text);
+}
+
+.tw .tw-lead {
+  font-size: 32px;
+  color: var(--text);
+}
+
+.tw code,
+.tw kbd {
+  font-family: 'Cascadia Code', Consolas, 'SF Mono', Menlo, monospace;
+  font-size: 0.88em;
+  color: var(--lime);
+  background: rgba(157, 254, 10, 0.08);
+  border: 1px solid rgba(157, 254, 10, 0.18);
+  border-radius: 6px;
+  padding: 1px 8px;
+}
+
+.tw h3 {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-family: var(--font-sans, 'Mulish'), sans-serif;
+  font-size: 30px;
+  font-weight: 800;
+  color: var(--text);
+}
+
+.tw h3 .ic {
+  color: var(--lime);
+}
+
+/* Bulleted list with lime dots */
+.tw-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.tw-list li {
+  position: relative;
+  padding-left: 30px;
+}
+
+.tw-list li::before {
+  content: '';
+  position: absolute;
+  left: 2px;
+  top: 0.6em;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--lime);
+}
+
+/* --- Panel / card ---------------------------------------------------------- */
+.tw-card {
+  background: linear-gradient(180deg, var(--panel), var(--panel-lo));
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  box-shadow: var(--shadow-card), var(--inset-top);
+  padding: 32px 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.tw-card .tw-tag {
+  font-weight: 800;
+  font-size: 20px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--lime);
+}
+
+.tw-card p,
+.tw-card li {
+  font-size: 23px;
+}
+
+/* --- Code block ---------------------------------------------------------- */
+.tw-code {
+  background: #0a0d10;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+
+.tw-code-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 22px;
+  background: #151a20;
+  border-bottom: 1px solid var(--line);
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--mist);
+}
+
+.tw-code-title::before {
+  content: '';
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--lime);
+  box-shadow:
+    20px 0 0 #3a4450,
+    40px 0 0 #3a4450;
+  margin-right: 46px;
+}
+
+.tw-code pre {
+  margin: 0;
+  padding: 22px 26px;
+  font-family: 'Cascadia Code', Consolas, 'SF Mono', Menlo, monospace;
+  font-size: 21px;
+  line-height: 1.5;
+  color: #dfe6ec;
+  white-space: pre;
+  overflow: hidden;
+  tab-size: 2;
+}
+
+.tw-code.tw-code-sm pre {
+  font-size: 18px;
+}
+
+.tw-code pre code {
+  all: unset;
+  font: inherit;
+}
+
+/* Hand-applied syntax colours: <span class="k">keyword</span> etc. */
+.tw-code .k {
+  color: #c792ea;
+} /* keyword / YAML key */
+.tw-code .s {
+  color: #9dfe0a;
+} /* string */
+.tw-code .n {
+  color: #f7c56b;
+} /* number / constant */
+.tw-code .c {
+  color: #6b7886;
+  font-style: italic;
+} /* comment */
+.tw-code .f {
+  color: #82aaff;
+} /* function / command */
+.tw-code .v {
+  color: #ff9e80;
+} /* variable / parameter */
+.tw-code .hl {
+  /* highlighted line */
+  display: inline-block;
+  width: 100%;
+  background: rgba(157, 254, 10, 0.1);
+  box-shadow:
+    -26px 0 0 rgba(157, 254, 10, 0.1),
+    26px 0 0 rgba(157, 254, 10, 0.1);
+}
+
+/* --- Comparison table -------------------------------------------------------- */
+.tw-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: linear-gradient(180deg, var(--panel), var(--panel-lo));
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+}
+
+.tw-table th,
+.tw-table td {
+  padding: 16px 24px;
+  text-align: left;
+  font-size: 23px;
+  line-height: 1.35;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+  color: var(--mist);
+}
+
+.tw-table thead th {
+  background: rgba(157, 254, 10, 0.08);
+  color: var(--lime);
+  font-weight: 800;
+  font-size: 20px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.tw-table tbody th {
+  color: var(--text);
+  font-weight: 800;
+}
+
+.tw-table tr:last-child th,
+.tw-table tr:last-child td {
+  border-bottom: 0;
+}
+
+.tw-table .yes {
+  color: var(--lime);
+  font-weight: 800;
+}
+.tw-table .no {
+  color: var(--danger, #ff8a80);
+  font-weight: 800;
+}
+.tw-table .meh {
+  color: #f7c56b;
+  font-weight: 800;
+}
+
+.tw-table.tw-table-sm th,
+.tw-table.tw-table-sm td {
+  font-size: 20px;
+  padding: 12px 20px;
+}
+
+/* --- Flow diagram: nodes and arrows in a row (or column with .tw-flow-v) ---- */
+.tw-flow {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  gap: 0;
+}
+
+.tw-flow.tw-flow-v {
+  flex-direction: column;
+  align-items: center;
+}
+
+.tw-node {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 26px 22px;
+  text-align: center;
+  background: linear-gradient(180deg, var(--panel-hi), var(--panel));
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  box-shadow: var(--shadow-card), var(--inset-top);
+}
+
+.tw-node .ic {
+  font-size: 46px;
+  color: var(--lime);
+}
+
+.tw-node b {
+  font-size: 26px;
+  color: var(--text);
+}
+
+.tw-node span {
+  font-size: 19px;
+  line-height: 1.35;
+  color: var(--mist);
+}
+
+.tw-node.tw-node-hot {
+  border-color: var(--line-lime);
+  box-shadow:
+    var(--shadow-card),
+    0 0 0 1px rgba(157, 254, 10, 0.35),
+    0 0 34px -6px rgba(157, 254, 10, 0.45);
+}
+
+.tw-arrow {
+  flex: none;
+  align-self: center;
+  width: 64px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  color: var(--lime);
+}
+
+.tw-arrow::before {
+  content: '';
+  width: 44px;
+  height: 3px;
+  background: var(--lime);
+  -webkit-mask: none;
+}
+
+.tw-arrow::after {
+  content: '';
+  margin-top: -13px;
+  margin-left: 30px;
+  width: 0;
+  height: 0;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-left: 14px solid var(--lime);
+}
+
+.tw-flow-v .tw-arrow {
+  width: auto;
+  height: 48px;
+  transform: rotate(90deg);
+}
+
+/* Grouping box around nodes, e.g. an environment or a resource group */
+.tw-group {
+  border: 2px dashed rgba(157, 254, 10, 0.35);
+  border-radius: 22px;
+  padding: 44px 24px 24px;
+  position: relative;
+  display: flex;
+  gap: 20px;
+}
+
+.tw-group > .tw-group-label {
+  position: absolute;
+  top: 10px;
+  left: 22px;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--lime);
+}
+
+/* Hierarchy / tree: nested levels shown as indented chips */
+.tw-tree {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.tw-tree li {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding-left: calc(var(--lvl, 0) * 56px);
+  font-size: 25px;
+  color: var(--text);
+}
+
+.tw-tree li .tw-chip {
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink);
+  background: var(--lime);
+  border-radius: 999px;
+  padding: 4px 14px;
+  min-width: 120px;
+  text-align: center;
+}
+
+.tw-tree li span:last-child {
+  color: var(--mist);
+  font-size: 22px;
+}
+
+/* --- Callouts --------------------------------------------------------------- */
+.tw-callout {
+  display: flex;
+  gap: 18px;
+  align-items: flex-start;
+  padding: 22px 28px;
+  border-radius: 16px;
+  background: rgba(157, 254, 10, 0.07);
+  border: 1px solid rgba(157, 254, 10, 0.3);
+}
+
+.tw-callout > .ic {
+  font-size: 34px;
+  color: var(--lime);
+  margin-top: 2px;
+}
+
+.tw-callout p {
+  font-size: 24px;
+  color: var(--text);
+}
+
+.tw-callout.tw-pitfall {
+  background: rgba(255, 138, 128, 0.08);
+  border-color: rgba(255, 138, 128, 0.4);
+}
+
+.tw-callout.tw-pitfall > .ic {
+  color: #ff8a80;
+}
+
+/* --- Agenda --------------------------------------------------------------- */
+.tw-agenda {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px 48px;
+}
+
+.tw-agenda li {
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  align-items: baseline;
+  gap: 18px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.tw-agenda .t {
+  font-weight: 800;
+  font-size: 22px;
+  letter-spacing: 0.06em;
+  color: var(--lime);
+}
+
+.tw-agenda b {
+  font-size: 27px;
+  color: var(--text);
+}
+
+.tw-agenda .tw-break b {
+  color: var(--mist);
+  font-weight: 600;
+}
+
+/* --- Module divider slide ------------------------------------------------- */
+section.tw-divider .tw-divider-art {
+  position: absolute;
+  inset: 0;
+  background: var(--art) var(--focus, 50%) center / cover no-repeat;
+}
+
+section.tw-divider .tw-divider-art::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(15, 18, 22, 0.95) 0%,
+    rgba(15, 18, 22, 0.75) 45%,
+    rgba(15, 18, 22, 0.15) 100%
+  );
+}
+
+section.tw-divider .tw-divider-copy {
+  position: absolute;
+  left: 96px;
+  right: 700px;
+  top: 0;
+  /* clear the controls band so the copy never sits under the slide number */
+  bottom: var(--ctl-band);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 28px;
+}
+
+section.tw-divider .tw-mod {
+  font-family: var(--font-display, 'Playfair Display'), serif;
+  font-size: 200px;
+  line-height: 0.9;
+  color: var(--lime);
+  font-variant-numeric: lining-nums;
+  text-shadow: 0 0 40px rgba(157, 254, 10, 0.35);
+}
+
+section.tw-divider h2 {
+  font-size: 96px;
+  line-height: 1.04;
+  color: #ffffff;
+}
+
+section.tw-divider p {
+  font-size: 32px;
+  line-height: 1.45;
+  color: var(--mist);
+  max-width: 1000px;
+}
+
+/* --- Demo cue ------------------------------------------------------------- */
+.tw-demo-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  width: fit-content;
+  padding: 10px 26px;
+  border-radius: 999px;
+  background: var(--lime);
+  color: var(--ink);
+  font-weight: 900;
+  font-size: 22px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+/* --- Lab steps ----------------------------------------------------------- */
+.tw-steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  counter-reset: step;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.tw-steps > li {
+  counter-increment: step;
+  position: relative;
+  padding-left: 72px;
+  min-height: 48px;
+  font-size: 25px;
+  line-height: 1.42;
+  color: var(--text);
+}
+
+.tw-steps > li::before {
+  content: counter(step);
+  position: absolute;
+  left: 0;
+  top: -2px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--lime);
+  color: var(--ink);
+  font-weight: 900;
+  font-size: 24px;
+}
+
+.tw-steps .tw-expect {
+  display: block;
+  margin-top: 4px;
+  font-size: 21px;
+  color: var(--mist);
+}
+
+.tw-steps .tw-expect::before {
+  content: '✓ Expect: ';
+  color: var(--lime);
+  font-weight: 800;
+}
+
+/* --- Checklist (flight rules) ---------------------------------------------- */
+.tw-checks {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(var(--cols, 2), minmax(0, 1fr));
+  gap: 18px 44px;
+}
+
+.tw-checks li {
+  position: relative;
+  padding-left: 50px;
+  font-size: 25px;
+  line-height: 1.4;
+  color: var(--mist);
+}
+
+.tw-checks li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 2px;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: var(--lime)
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230d1013' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E")
+    center / 22px no-repeat;
+}
+
+/* --- Speaker notes panel (press N) ----------------------------------------- */
+.tw-notes-panel {
+  position: fixed;
+  left: 16px;
+  right: 16px;
+  bottom: 16px;
+  max-height: 40vh;
+  overflow: auto;
+  z-index: 1000;
+  padding: 18px 24px;
+  background: rgba(10, 13, 16, 0.96);
+  border: 1px solid var(--line-lime);
+  border-radius: 14px;
+  color: var(--text);
+  font:
+    16px/1.5 'Mulish',
+    system-ui,
+    sans-serif;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+}
+
+.tw-notes-panel[hidden] {
+  display: none;
+}
+
+.tw-notes-panel .tw-notes-title {
+  color: var(--lime);
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-size: 12px;
+  margin-bottom: 8px;
+}
+
+.tw-notes-panel p,
+.tw-notes-panel li {
+  margin: 0 0 6px;
+}
+
+@media print {
+  .tw-notes-panel {
+    display: none !important;
+  }
+}
+
+/* --- Closing slide: full-bleed art (from the T-Minus-15 workshops deck) ----- */
+.cta--full-art .cta-top::before {
+  background:
+    linear-gradient(
+      90deg,
+      rgba(15, 18, 22, 0.9) 0%,
+      rgba(15, 18, 22, 0.62) 32%,
+      rgba(15, 18, 22, 0.1) 58%,
+      rgba(15, 18, 22, 0) 100%
+    ),
+    var(--deck-hero) center 0% / cover no-repeat;
+}
+
+.cta--full-art .cta-bottom {
+  background: linear-gradient(
+    180deg,
+    rgba(15, 18, 22, 0) 0%,
+    rgba(15, 18, 22, 0.45) 30%,
+    rgba(15, 18, 22, 0.72) 62%,
+    rgba(15, 18, 22, 0.86) 100%
+  );
+}
+
+/* Kicker keeps its house style inside .tw slides (beats the .tw p rule) */
+.tw p.kicker {
+  color: var(--lime);
+  font-size: 23px;
+  line-height: normal;
+}

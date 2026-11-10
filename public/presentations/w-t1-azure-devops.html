@@ -1,0 +1,1131 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Generated from presentations-src/w-t1-azure-devops.html by `npm run decks:build`: edit the source, not this file. -->
+    <title>W-T1 Azure DevOps Workshop — KnowAll AI</title>
+    <meta name="description" content="A hands-on, half-day technical workshop on running delivery in Azure DevOps: process, backlogs and boards, queries and dashboards, Test Plans, Repos and pull requests, and automation." />
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+    <meta property="og:title" content="W-T1 Azure DevOps Workshop — KnowAll AI" />
+    <meta property="og:description" content="A hands-on, half-day technical workshop on running delivery in Azure DevOps: process, backlogs and boards, queries and dashboards, Test Plans, Repos and pull requests, and automation." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://www.knowall.ai/presentations/w-t1-azure-devops.html" />
+    <meta property="og:image" content="https://www.knowall.ai/presentations/images/og/w-t1-azure-devops.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="W-T1 Azure DevOps Workshop — KnowAll AI" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="W-T1 Azure DevOps Workshop — KnowAll AI" />
+    <meta name="twitter:description" content="A hands-on, half-day technical workshop on running delivery in Azure DevOps: process, backlogs and boards, queries and dashboards, Test Plans, Repos and pull requests, and automation." />
+    <meta name="twitter:image" content="https://www.knowall.ai/presentations/images/og/w-t1-azure-devops.jpg" />
+    <link rel="stylesheet" href="vendor/reveal/reset.css" />
+    <link rel="stylesheet" href="vendor/reveal/reveal.css" />
+    <link rel="stylesheet" href="vendor/fonts.css" />
+    <link rel="stylesheet" href="knowall-deck.css" />
+    <link rel="stylesheet" href="tw-kit.css" />
+    <style>
+      /* Deck-specific styles — everything shared lives in knowall-deck.css and tw-kit.css */
+      :root {
+        --deck-cover: url('images/tminus15-workshops/t1-azure-devops.jpg');
+        --deck-hero: url('images/tminus15-workshops/close-liftoff.jpg');
+      }
+
+      /* Code fonts: no ligatures, so <> and <!-- --> read literally */
+      .tw code,
+      .tw-code pre {
+        font-variant-ligatures: none;
+        font-feature-settings: "liga" 0, "calt" 0;
+      }
+
+      /* Small "WIP n" badge on board-column nodes */
+      .t1-wip {
+        font-size: 17px;
+        font-weight: 800;
+        letter-spacing: 0.12em;
+        color: var(--ink);
+        background: var(--lime);
+        border-radius: 999px;
+        padding: 2px 12px;
+      }
+
+      .tw-node span.t1-wip {
+        color: var(--ink);
+        font-size: 17px;
+      }
+
+      /* Work item type chips for the "other types" card */
+      .t1-types {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+
+      .t1-types li {
+        display: grid;
+        grid-template-columns: 190px 1fr;
+        align-items: baseline;
+        gap: 16px;
+        font-size: 22px;
+      }
+
+      .t1-types li b {
+        color: var(--lime);
+        font-size: 22px;
+      }
+
+      .tw .t1-types {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+  <body data-cta="none">
+    <div class="reveal">
+      <div class="slides">
+        <!-- 1 · COVER -->
+        <section role="region" aria-label="Slide 1: W-T1 Azure DevOps">
+          <div class="cover-hero" role="img" aria-label="An astronaut moving a lit card between columns on a wall of glowing boards in a moon-base operations room"></div>
+          <div class="cover-scrim" aria-hidden="true"></div>
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="cover-copy">
+            <p class="kicker">Technology workshop &middot; W-T1</p>
+            <h1>Azure DevOps:<br /><em>the delivery flight deck</em></h1>
+            <p class="lead">Backlogs, boards, queries, test plans, repos and automation &mdash; a hands-on half day for engineers, tech leads, product owners and testers.</p>
+          </div>
+          <aside class="notes"><p>Welcome everyone, introduce yourself and the format: short concept blocks, live demos, then a one-hour hands-on lab.</p><p>Set expectations: this is about running delivery day to day in Azure DevOps, the way the T-Minus-15 process uses it. Pipelines get a quick look here; the CI/CD workshop (W-T4) goes deep.</p><p>Ask the room: who already uses Boards, Repos, Test Plans? Adjust depth accordingly.</p></aside>
+        </section>
+
+        <!-- 2 · AGENDA -->
+        <section class="tw" role="region" aria-label="Slide 2: Agenda">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Agenda</p>
+            <h2>The next three and a half hours</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <ol class="tw-agenda">
+              <li><span class="t">09:30</span><b>Welcome and why it matters</b></li>
+              <li><span class="t">09:45</span><b>1 &middot; Organisation, projects and process</b></li>
+              <li><span class="t">10:05</span><b>2 &middot; Backlogs and boards</b></li>
+              <li><span class="t">10:30</span><b>3 &middot; Queries and dashboards</b></li>
+              <li class="tw-break"><span class="t">10:50</span><b>Break</b></li>
+              <li><span class="t">11:05</span><b>4 &middot; Test Plans</b></li>
+              <li><span class="t">11:20</span><b>5 &middot; Repos and pull requests</b></li>
+              <li><span class="t">11:45</span><b>6 &middot; Automation: CLI, REST and hooks</b></li>
+              <li><span class="t">12:00</span><b>Hands-on lab</b></li>
+              <li><span class="t">12:45</span><b>Flight rules, recap and Q&amp;A</b></li>
+            </ol>
+          </div>
+          <aside class="notes"><p>Walk through the agenda quickly. Six modules of 15 to 25 minutes, each with a demo or worked example, then a 45-minute lab where everyone builds a working project end to end.</p><p>Point out the break at 10:50. Tell people the lab builds on everything, so keep the demo project open.</p></aside>
+        </section>
+
+        <!-- 3 · WHY IT MATTERS -->
+        <section class="tw" role="region" aria-label="Slide 3: Why it matters">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Why it matters</p>
+            <h2>One source of truth, or many sources of noise</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-cols">
+              <div class="tw-card">
+                <span class="tw-tag">Common anti-patterns</span>
+                <ul class="tw-list">
+                  <li>Work tracked in spreadsheets, email and chat &mdash; the board is out of date by Tuesday</li>
+                  <li>One giant backlog with no epics or features, so nobody can see progress</li>
+                  <li>Stories with no acceptance criteria: &ldquo;done&rdquo; means &ldquo;I stopped typing&rdquo;</li>
+                  <li>Direct pushes to <code>main</code>, no reviews, no link from code to work</li>
+                  <li>Manual status reports rebuilt every week</li>
+                </ul>
+              </div>
+              <div class="tw-card">
+                <span class="tw-tag">What good looks like</span>
+                <ul class="tw-list">
+                  <li>Every piece of work is a work item, in a clear hierarchy</li>
+                  <li>Boards reflect reality, with WIP limits that expose bottlenecks</li>
+                  <li>Testable acceptance criteria, linked to test cases</li>
+                  <li>Every change goes through a PR linked to a story</li>
+                  <li>Dashboards and queries replace status meetings</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <aside class="notes"><p>Ask which of the anti-patterns people recognise. Most teams have at least two.</p><p>The message: Azure DevOps only helps if it is the single source of truth. Traceability from epic to story to commit to test to release is the real prize, and it costs very little once the habits are in place.</p></aside>
+        </section>
+
+        <!-- 4 · DIVIDER 01 -->
+        <section class="tw-divider" role="region" aria-label="Slide 4: Module 1, Organisation, projects and process">
+          <div class="tw-divider-art" style="--art: url('images/tminus15-workshops/t1-azure-devops.jpg'); --focus: 70%" role="img" aria-label="Glowing boards in an operations room"></div>
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-divider-copy">
+            <p class="tw-mod">01</p>
+            <h2>Organisation, projects and process</h2>
+            <p>Get the structure right first: it is far harder to change once the work is in.</p>
+          </div>
+          <aside class="notes"><p>Module 1, about 20 minutes. We cover how an organisation is structured, which process to pick, the T-Minus-15 work item types and how area and iteration paths work.</p></aside>
+        </section>
+
+        <!-- 5 · STRUCTURE -->
+        <section class="tw" role="region" aria-label="Slide 5: How Azure DevOps is organised">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 1 &middot; Structure</p>
+            <h2>How Azure DevOps is organised</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-cols tw-wide-right">
+              <ul class="tw-tree">
+                <li><span class="tw-chip">Org</span><span>dev.azure.com/contoso</span></li>
+                <li style="--lvl: 1"><span class="tw-chip">Project</span><span>Delivery</span></li>
+                <li style="--lvl: 2"><span class="tw-chip">Team</span><span>Apps squad</span></li>
+                <li style="--lvl: 2"><span class="tw-chip">Team</span><span>Data squad</span></li>
+                <li style="--lvl: 2"><span class="tw-chip">Area</span><span>Delivery\Apps</span></li>
+                <li style="--lvl: 2"><span class="tw-chip">Iteration</span><span>Delivery\2026\Sprint 21</span></li>
+              </ul>
+              <div class="tw-stack">
+                <ul class="tw-list">
+                  <li><strong>Organisation</strong> &mdash; billing, users, Entra ID connection, policies</li>
+                  <li><strong>Project</strong> &mdash; a security and process boundary; one process per project</li>
+                  <li><strong>Team</strong> &mdash; its own backlog, board and sprints, scoped by <strong>area paths</strong></li>
+                  <li><strong>Iteration paths</strong> &mdash; the sprint calendar, shared across teams</li>
+                </ul>
+                <div class="tw-callout"><svg class="ic"><use href="icons.svg#i-lightbulb" /></svg><p><strong>Tip:</strong> prefer <strong>fewer, larger projects</strong> with many teams. Cross-project queries and reporting are harder.</p></div>
+              </div>
+            </div>
+          </div>
+          <aside class="notes"><p>Organisation at the top, connected to Entra ID for sign-in. A project is the boundary for process and permissions. Teams live inside projects and see work through area paths.</p><p>The common mistake is one project per application or per team. That fragments the backlog and makes portfolio views painful. Start with one project and use teams and area paths.</p></aside>
+        </section>
+
+        <!-- 6 · PROCESSES -->
+        <section class="tw" role="region" aria-label="Slide 6: Choosing a process">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 1 &middot; Process</p>
+            <h2>Choosing a process</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <table class="tw-table tw-table-sm">
+              <thead><tr><th>Process</th><th>Backlog types</th><th>Good for</th><th>Watch out</th></tr></thead>
+              <tbody>
+                <tr><th>Basic</th><td>Epic &rarr; Issue &rarr; Task</td><td>Small teams starting out</td><td class="meh">Outgrown quickly</td></tr>
+                <tr><th>Agile</th><td>Epic &rarr; Feature &rarr; User Story &rarr; Task, Bug</td><td>Most product teams</td><td>Good default base</td></tr>
+                <tr><th>Scrum</th><td>Epic &rarr; Feature &rarr; Product Backlog Item &rarr; Task</td><td>Strict Scrum teams</td><td>Effort, not story points</td></tr>
+                <tr><th>CMMI</th><td>Epic &rarr; Feature &rarr; Requirement &rarr; Task</td><td>Formal, audited change control</td><td class="no">Heavyweight</td></tr>
+                <tr><th>Inherited (custom)</th><td>Your types, fields, states and rules</td><td>A house process such as T-Minus-15</td><td class="meh">Changes apply to every project using it</td></tr>
+              </tbody>
+            </table>
+            <div class="tw-callout"><svg class="ic"><use href="icons.svg#i-alert-triangle" /></svg><p>You can&rsquo;t edit the four system processes. Create an <strong>inherited</strong> process from one of them, customise that, then point projects at it.</p></div>
+          </div>
+          <aside class="notes"><p>The four system processes are locked. All customisation happens in an inherited process, which you derive from Basic, Agile, Scrum or CMMI.</p><p>Recommendation: inherit from Agile. It has the right backlog levels and story points. The T-Minus-15 process template is exactly that: an inherited Agile process with extra types and fields.</p><p>Hosted XML processes still exist for some legacy collections; avoid them for anything new.</p></aside>
+        </section>
+
+        <!-- 7 · T-MINUS-15 TYPES -->
+        <section class="tw" role="region" aria-label="Slide 7: The T-Minus-15 work item types">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 1 &middot; T-Minus-15 process</p>
+            <h2>The T-Minus-15 work item types</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-cols">
+              <div class="tw-stack">
+                <h3><svg class="ic"><use href="icons.svg#i-layers" /></svg>The backlog hierarchy</h3>
+                <ul class="tw-tree">
+                  <li><span class="tw-chip">Epic</span><span>Lean business case, outcome, go/no-go</span></li>
+                  <li style="--lvl: 1"><span class="tw-chip">Feature</span><span>A shippable deliverable, MoSCoW priority</span></li>
+                  <li style="--lvl: 2"><span class="tw-chip">Story</span><span>User value, AMP acceptance criteria</span></li>
+                  <li style="--lvl: 3"><span class="tw-chip">Task</span><span>Hours of work to deliver the story</span></li>
+                </ul>
+              </div>
+              <div class="tw-card">
+                <span class="tw-tag">Plus the types that keep delivery honest</span>
+                <ul class="t1-types">
+                  <li><b>Bug</b><span>Fails a story&rsquo;s acceptance criteria</span></li>
+                  <li><b>Enhancement</b><span>An improvement that doesn&rsquo;t block acceptance</span></li>
+                  <li><b>Issue</b><span>A blocker or impediment, now</span></li>
+                  <li><b>Risk</b><span>Something that might go wrong later</span></li>
+                  <li><b>Question</b><span>A clarification needed before work can proceed</span></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <aside class="notes"><p>This is the T-Minus-15 hierarchy. Epics carry the business case and are where you make go/no-go decisions. Features are deliverables with MoSCoW priority. Stories carry the acceptance criteria. Tasks are the hours.</p><p>The distinction between bug and enhancement matters: a bug means the story did not meet its acceptance criteria; an enhancement is an improvement that does not block acceptance. Issues, risks and questions keep blockers and unknowns visible on the board instead of hidden in email.</p></aside>
+        </section>
+
+        <!-- 8 · AMP -->
+        <section class="tw" role="region" aria-label="Slide 8: AMP acceptance criteria">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 1 &middot; Acceptance criteria</p>
+            <h2>AMP: Acceptance, Measure, Proof</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-cols tw-wide-left">
+              <div class="tw-code">
+                <div class="tw-code-title">User Story 1042 &middot; Acceptance Criteria</div>
+<pre><code><span class="c"># A · Acceptance (Gherkin)</span>
+<span class="k">SCENARIO:</span> Add a new contact
+<span class="k">GIVEN</span> I am on the Add Contact screen
+<span class="k">WHEN</span>  I enter First Name <span class="s">"Jane"</span>, Last Name <span class="s">"Smith"</span>
+<span class="k">THEN</span>  the contact is saved
+<span class="k">AND</span>   Display Name shows <span class="s">"Jane Smith"</span>
+
+<span class="c"># M · Measure</span>
+- Save completes within <span class="n">2</span> seconds
+- Zero validation errors on valid input
+
+<span class="c"># P · Proof</span>
+- TC1: Add contact with valid data
+- Playwright: <span class="f">contacts.spec.ts</span> › add contact</code></pre>
+              </div>
+              <div class="tw-stack">
+                <ul class="tw-list">
+                  <li><strong>A</strong> &mdash; testable scenarios in Gherkin</li>
+                  <li><strong>M</strong> &mdash; numbers: speed, accuracy, coverage</li>
+                  <li><strong>P</strong> &mdash; how we prove it: test case IDs, automated tests, screenshots</li>
+                </ul>
+                <div class="tw-callout"><svg class="ic"><use href="icons.svg#i-bot" /></svg><p>Criteria this precise can be handed to a tester, a developer <strong>or an AI agent</strong> without a meeting.</p></div>
+              </div>
+            </div>
+          </div>
+          <aside class="notes"><p>AMP is the T-Minus-15 format for acceptance criteria and it lives in the standard Acceptance Criteria field.</p><p>Acceptance is Gherkin, so it maps straight to test cases. Measure adds the numbers people usually forget. Proof says exactly how we will show it is done, which is what testers and reviewers need.</p><p>Point out that this precision is what makes agentic coding work too; see W-T5.</p></aside>
+        </section>
+
+        <!-- 9 · AREAS & ITERATIONS CLI -->
+        <section class="tw" role="region" aria-label="Slide 9: Areas and iterations as code">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 1 &middot; Areas and iterations</p>
+            <h2>Set up the project from the command line</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-cols tw-wide-left">
+              <div class="tw-code tw-code-sm">
+                <div class="tw-code-title">setup-project.sh</div>
+<pre><code><span class="f">az</span> extension add --name azure-devops
+<span class="f">az</span> devops configure --defaults \
+  organization=<span class="s">https://dev.azure.com/contoso</span> project=<span class="s">Delivery</span>
+
+<span class="c"># Project from an inherited process</span>
+<span class="f">az</span> devops project create --name <span class="s">Delivery</span> --process <span class="s">"T-Minus-15"</span>
+
+<span class="c"># Area paths: one per team or product area</span>
+<span class="f">az</span> boards area project create --name <span class="s">Apps</span>
+<span class="f">az</span> boards area project create --name <span class="s">Data</span>
+
+<span class="c"># Iterations: a two-week sprint</span>
+<span class="f">az</span> boards iteration project create --name <span class="s">"Sprint 21"</span> \
+  --path <span class="s">"\Delivery\Iteration\2026"</span> \
+  --start-date <span class="n">2026-11-16</span> --finish-date <span class="n">2026-11-27</span></code></pre>
+              </div>
+              <div class="tw-stack">
+                <ul class="tw-list">
+                  <li><strong>Areas</strong> = <em>what</em>: product, component or team</li>
+                  <li><strong>Iterations</strong> = <em>when</em>: release and sprint calendar</li>
+                  <li>Each team picks its area paths and subscribes to iterations</li>
+                </ul>
+                <div class="tw-callout tw-pitfall"><svg class="ic"><use href="icons.svg#i-alert-triangle" /></svg><p><strong>Pitfall:</strong> using areas for status or people. Use states and the Assigned To field instead.</p></div>
+              </div>
+            </div>
+          </div>
+          <aside class="notes"><p>Everything in the UI can be scripted. That matters when you set up several projects or want a repeatable baseline.</p><p>Areas answer "what is this about"; iterations answer "when". Teams then select which areas they own and which iterations they work in, under Project settings, Team configuration.</p><p>If the iteration create command complains about the path, create the parent 2026 node first. Paths include the hidden Iteration root.</p></aside>
+        </section>
+
+        <!-- 10 · DIVIDER 02 -->
+        <section class="tw-divider" role="region" aria-label="Slide 10: Module 2, Backlogs and boards">
+          <div class="tw-divider-art" style="--art: url('images/scene-opsfloor.jpg'); --focus: 60%" role="img" aria-label="An operations floor"></div>
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-divider-copy">
+            <p class="tw-mod">02</p>
+            <h2>Backlogs and boards</h2>
+            <p>A board people trust is the cheapest status report you&rsquo;ll ever have.</p>
+          </div>
+          <aside class="notes"><p>Module 2, about 25 minutes: backlog levels, board configuration, WIP limits, Definition of Done, sprints and capacity, then a live demo.</p></aside>
+        </section>
+
+        <!-- 11 · BOARD CONFIG -->
+        <section class="tw" role="region" aria-label="Slide 11: Configuring the board">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 2 &middot; Boards</p>
+            <h2>A board that shows where work is stuck</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-flow">
+              <div class="tw-node"><b>New</b><span>Captured, not ready</span></div>
+              <div class="tw-arrow"></div>
+              <div class="tw-node"><b>Ready</b><span>AMP criteria agreed</span></div>
+              <div class="tw-arrow"></div>
+              <div class="tw-node tw-node-hot"><b>In progress</b><span class="t1-wip">WIP 4</span></div>
+              <div class="tw-arrow"></div>
+              <div class="tw-node tw-node-hot"><b>Review / test</b><span class="t1-wip">WIP 3</span></div>
+              <div class="tw-arrow"></div>
+              <div class="tw-node"><b>Done</b><span>Meets the DoD</span></div>
+            </div>
+            <div class="tw-cols">
+              <ul class="tw-list">
+                <li><strong>Columns</strong> map to states; add columns without changing the process</li>
+                <li><strong>Split columns</strong> (Doing / Done) show work waiting to be pulled</li>
+                <li><strong>WIP limits</strong> turn red when exceeded &mdash; stop starting, start finishing</li>
+              </ul>
+              <ul class="tw-list">
+                <li><strong>Definition of Done</strong> per column, shown on the board</li>
+                <li><strong>Swimlanes</strong> for an Expedite lane, not for people</li>
+                <li><strong>Card styles</strong> and tag colours to flag blocked or overdue work</li>
+              </ul>
+            </div>
+          </div>
+          <aside class="notes"><p>Board columns are configured per team and per backlog level, and map onto the process states. You can have more columns than states.</p><p>WIP limits are advisory in Azure DevOps: the column count turns red but nothing is blocked. That is fine; the point is to make the bottleneck visible and discuss it at stand-up.</p><p>Split columns help you see work that is finished in one stage but not yet pulled into the next, which is often where the real delay is.</p></aside>
+        </section>
+
+        <!-- 12 · SPRINTS -->
+        <section class="tw" role="region" aria-label="Slide 12: Sprints and capacity">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 2 &middot; Sprints</p>
+            <h2>Sprints, capacity and burndown</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-cols">
+              <div class="tw-card">
+                <span class="tw-tag">Plan</span>
+                <ul class="tw-list">
+                  <li>Order the backlog by priority; drag stories into the sprint</li>
+                  <li>Set <strong>capacity</strong> per person per day, and days off</li>
+                  <li>Break stories into tasks with <strong>Remaining Work</strong></li>
+                  <li>Use <strong>Forecast</strong> with your velocity to see what fits</li>
+                </ul>
+              </div>
+              <div class="tw-card">
+                <span class="tw-tag">Track</span>
+                <ul class="tw-list">
+                  <li>Taskboard for daily stand-up</li>
+                  <li>Sprint burndown on remaining work or story points</li>
+                  <li>Velocity chart across the last sprints</li>
+                  <li>Cumulative flow diagram to spot growing queues</li>
+                </ul>
+              </div>
+            </div>
+            <div class="tw-callout tw-pitfall"><svg class="ic"><use href="icons.svg#i-alert-triangle" /></svg><p><strong>Pitfall:</strong> a flat burndown usually means Remaining Work isn&rsquo;t being updated, not that nobody is working. Make updating it part of stand-up.</p></div>
+          </div>
+          <aside class="notes"><p>Capacity planning is under the sprint's Capacity tab. Set hours per day per person and activity, and record days off; the capacity bars then turn red when someone is over-allocated.</p><p>Forecast on the backlog uses a velocity number you type in to draw lines showing which stories should fit in future sprints.</p><p>Encourage teams to update Remaining Work before stand-up. Without it the burndown is meaningless.</p></aside>
+        </section>
+
+        <!-- 13 · DEMO -->
+        <section class="tw tw-scene" style="--scene: url('images/scene-opsfloor.jpg')" role="region" aria-label="Slide 13: Live demo, set up a team board">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <span class="tw-demo-badge"><svg class="ic"><use href="icons.svg#i-play" /></svg>Live demo</span>
+            <h2>Set up a team board in ten minutes</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <ol class="tw-steps">
+              <li>Team settings &rsaquo; select area paths and sprints<span class="tw-expect">The team backlog only shows its own work</span></li>
+              <li>Board settings &rsaquo; add a Review column, split columns, WIP limits<span class="tw-expect">Column counts turn red when over the limit</span></li>
+              <li>Add a Definition of Done to the In progress column<span class="tw-expect">An info icon on the column header shows the DoD</span></li>
+              <li>Add an Expedite swimlane and a card style for the <code>blocked</code> tag<span class="tw-expect">Blocked cards stand out instantly</span></li>
+              <li>Open the sprint, set capacity and show the burndown<span class="tw-expect">Capacity bars per person and a burndown chart</span></li>
+            </ol>
+          </div>
+          <aside class="notes"><p>Do this live in the demo project. Keep to ten minutes; the lab repeats it.</p><p>Tip: prepare the demo project with a seeded backlog beforehand so the board is not empty. Have a backup screenshot of each step in case of network trouble.</p></aside>
+        </section>
+
+        <!-- 14 · DIVIDER 03 -->
+        <section class="tw-divider" role="region" aria-label="Slide 14: Module 3, Queries and dashboards">
+          <div class="tw-divider-art" style="--art: url('images/scene-controlroom.jpg'); --focus: 60%" role="img" aria-label="A control room wall of screens"></div>
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-divider-copy">
+            <p class="tw-mod">03</p>
+            <h2>Queries and dashboards</h2>
+            <p>Ask the data, don&rsquo;t ask the team: replace status meetings with live views.</p>
+          </div>
+          <aside class="notes"><p>Module 3, about 20 minutes: WIQL, the three query types, charts, dashboards and Analytics for Power BI.</p></aside>
+        </section>
+
+        <!-- 15 · WIQL -->
+        <section class="tw" role="region" aria-label="Slide 15: WIQL flat query">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 3 &middot; WIQL</p>
+            <h2>Queries are just WIQL</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-cols tw-wide-left">
+              <div class="tw-code">
+                <div class="tw-code-title">Open stories in the current sprint</div>
+<pre><code><span class="k">SELECT</span> [System.Id], [System.Title],
+       [System.State], [System.AssignedTo]
+<span class="k">FROM</span>   WorkItems
+<span class="k">WHERE</span>  [System.TeamProject] = <span class="v">@project</span>
+  <span class="k">AND</span>  [System.WorkItemType] = <span class="s">'User Story'</span>
+  <span class="k">AND</span>  [System.State] &lt;&gt; <span class="s">'Closed'</span>
+<span class="hl">  <span class="k">AND</span>  [System.IterationPath] = <span class="v">@CurrentIteration</span></span>
+  <span class="k">AND</span>  [System.AreaPath] <span class="k">UNDER</span> <span class="s">'Delivery\Apps'</span>
+<span class="k">ORDER BY</span> [Microsoft.VSTS.Common.BacklogPriority]</code></pre>
+              </div>
+              <div class="tw-stack">
+                <ul class="tw-list">
+                  <li>Macros: <code>@Me</code>, <code>@Today - 7</code>, <code>@project</code>, <code>@CurrentIteration</code></li>
+                  <li><code>UNDER</code> includes child area or iteration paths</li>
+                  <li>Save to <strong>Shared Queries</strong> so dashboards and alerts can use them</li>
+                </ul>
+                <div class="tw-callout"><svg class="ic"><use href="icons.svg#i-lightbulb" /></svg><p>Build in the query editor; to see the WIQL text, use the <strong>WIQL Editor</strong> extension or fetch the query from the REST API.</p></div>
+              </div>
+            </div>
+          </div>
+          <aside class="notes"><p>Every query in the UI is WIQL underneath. The query editor doesn&rsquo;t show the text, so install the WIQL Editor extension from the Marketplace, or fetch the saved query with the REST API (expand=wiql).</p><p>@CurrentIteration depends on team context, so in the API you may need the team-qualified form. @Today minus 7 is handy for "changed this week" queries.</p><p>Save team queries under Shared Queries in a folder per team; personal queries can't be used on dashboards.</p></aside>
+        </section>
+
+        <!-- 16 · TREE QUERY -->
+        <section class="tw" role="region" aria-label="Slide 16: Query types">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 3 &middot; Query types</p>
+            <h2>Flat, direct links and tree queries</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-cols">
+              <table class="tw-table tw-table-sm">
+                <thead><tr><th>Type</th><th>Use it for</th></tr></thead>
+                <tbody>
+                  <tr><th>Flat list</th><td>Lists, charts, bulk edits</td></tr>
+                  <tr><th>Direct links</th><td>Stories with no test cases; bugs linked to a story</td></tr>
+                  <tr><th>Tree of work items</th><td>Epic &rarr; Feature &rarr; Story roll-ups and progress</td></tr>
+                </tbody>
+              </table>
+              <div class="tw-code tw-code-sm">
+                <div class="tw-code-title">Epic tree</div>
+<pre><code><span class="k">SELECT</span> [System.Id], [System.Title], [System.State]
+<span class="k">FROM</span>   WorkItemLinks
+<span class="k">WHERE</span>  ([Source].[System.WorkItemType] = <span class="s">'Epic'</span>)
+  <span class="k">AND</span>  ([System.Links.LinkType] =
+        <span class="s">'System.LinkTypes.Hierarchy-Forward'</span>)
+  <span class="k">AND</span>  ([Target].[System.State] &lt;&gt; <span class="s">'Removed'</span>)
+<span class="k">MODE</span>   (Recursive)</code></pre>
+              </div>
+            </div>
+            <div class="tw-callout"><svg class="ic"><use href="icons.svg#i-lightbulb" /></svg><p><strong>Quality check query:</strong> a direct-links query for <em>User Stories</em> that do <strong>not</strong> have a <em>Tested By</em> link finds stories nobody has written tests for.</p></div>
+          </div>
+          <aside class="notes"><p>Three query types. Flat lists are the default. Direct links let you find work items with or without a particular link, which is great for quality checks. Tree queries show the hierarchy and are the basis for epic progress views.</p><p>Charts only work on flat queries; that catches people out.</p></aside>
+        </section>
+
+        <!-- 17 · DASHBOARDS & ANALYTICS -->
+        <section class="tw" role="region" aria-label="Slide 17: Dashboards and Analytics">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 3 &middot; Reporting</p>
+            <h2>Dashboards and Analytics</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-cols">
+              <div class="tw-stack">
+                <h3><svg class="ic"><use href="icons.svg#i-gauge" /></svg>Team dashboard widgets</h3>
+                <ul class="tw-list">
+                  <li>Query tile and chart for work item queries</li>
+                  <li>Sprint burndown and velocity</li>
+                  <li>Cumulative flow, lead time and cycle time</li>
+                  <li>Build history and test results trend</li>
+                  <li>Markdown tile for the sprint goal</li>
+                </ul>
+              </div>
+              <div class="tw-stack">
+                <div class="tw-code tw-code-sm">
+                  <div class="tw-code-title">Analytics OData feed (Power BI)</div>
+<pre><code><span class="f">GET</span> https://analytics.dev.azure.com/
+    contoso/Delivery/_odata/v4.0-preview/WorkItems
+  ?<span class="k">$filter</span>=WorkItemType eq <span class="s">'User Story'</span>
+     and State ne <span class="s">'Removed'</span>
+  &amp;<span class="k">$select</span>=WorkItemId,Title,State,StoryPoints
+  &amp;<span class="k">$expand</span>=Iteration($select=IterationPath)</code></pre>
+                </div>
+                <div class="tw-callout"><svg class="ic"><use href="icons.svg#i-lightbulb" /></svg><p>Dashboards for the team; <strong>Analytics views or OData + Power BI</strong> for portfolio and trend reporting.</p></div>
+              </div>
+            </div>
+          </div>
+          <aside class="notes"><p>Dashboards are per team or per project. Keep one dashboard per team with the sprint goal, burndown, a few query tiles and the build status.</p><p>For anything across projects or over long periods, use the Analytics service: Analytics views in Power BI, or OData queries directly. Always use $select and $filter; unfiltered OData queries are slow and can be throttled.</p></aside>
+        </section>
+
+        <!-- 18 · DIVIDER 04 -->
+        <section class="tw-divider" role="region" aria-label="Slide 18: Module 4, Test Plans">
+          <div class="tw-divider-art" style="--art: url('images/tminus15-workshops/m5-test.jpg'); --focus: 66%" role="img" aria-label="A rocket engine test-firing"></div>
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-divider-copy">
+            <p class="tw-mod">04</p>
+            <h2>Test Plans</h2>
+            <p>Every story is proved, not promised: from acceptance criteria to test runs.</p>
+          </div>
+          <aside class="notes"><p>Module 4, about 15 minutes: how plans, suites and cases are structured, and how they trace back to stories.</p></aside>
+        </section>
+
+        <!-- 19 · TEST PLAN STRUCTURE -->
+        <section class="tw" role="region" aria-label="Slide 19: Test plan structure">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 4 &middot; Structure</p>
+            <h2>Plans, suites and cases</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-cols">
+              <ul class="tw-tree">
+                <li><span class="tw-chip">Plan</span><span>Sprint 21 test plan</span></li>
+                <li style="--lvl: 1"><span class="tw-chip">Suite</span><span>Story 1042 &middot; Add contact</span></li>
+                <li style="--lvl: 2"><span class="tw-chip">Case</span><span>TC1 Add contact with valid data</span></li>
+                <li style="--lvl: 2"><span class="tw-chip">Case</span><span>TC2 Reject invalid email</span></li>
+                <li style="--lvl: 3"><span class="tw-chip">Shared</span><span>Shared steps: sign in</span></li>
+              </ul>
+              <table class="tw-table tw-table-sm">
+                <thead><tr><th>Suite type</th><th>Contains</th></tr></thead>
+                <tbody>
+                  <tr><th>Requirement-based</th><td>Cases linked to one story; results roll up to it</td></tr>
+                  <tr><th>Query-based</th><td>Cases matching a query, e.g. priority 1</td></tr>
+                  <tr><th>Static</th><td>A hand-picked folder, e.g. regression</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="tw-callout"><svg class="ic"><use href="icons.svg#i-lightbulb" /></svg><p>Turn each AMP <strong>scenario</strong> into a test case and each <strong>Proof</strong> line into a test case ID. Use <strong>shared steps</strong> for sign-in and other common setup.</p></div>
+          </div>
+          <aside class="notes"><p>One test plan per sprint or per release. Requirement-based suites are the most useful: one per story, so test results show up on the story itself.</p><p>Query-based suites are great for smoke or priority-1 regression packs that update themselves. Shared steps and parameters avoid duplicating the same steps across dozens of cases.</p></aside>
+        </section>
+
+        <!-- 20 · TRACEABILITY -->
+        <section class="tw" role="region" aria-label="Slide 20: Traceability">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 4 &middot; Traceability</p>
+            <h2>From story to test run to bug</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-flow">
+              <div class="tw-node"><svg class="ic"><use href="icons.svg#i-file-text" /></svg><b>User Story</b><span>AMP criteria</span></div>
+              <div class="tw-arrow"></div>
+              <div class="tw-node"><svg class="ic"><use href="icons.svg#i-clipboard-list" /></svg><b>Test case</b><span>Tested By link</span></div>
+              <div class="tw-arrow"></div>
+              <div class="tw-node"><svg class="ic"><use href="icons.svg#i-play" /></svg><b>Test run</b><span>Manual or automated</span></div>
+              <div class="tw-arrow"></div>
+              <div class="tw-node tw-node-hot"><svg class="ic"><use href="icons.svg#i-alert-triangle" /></svg><b>Bug</b><span>Created from the failed step</span></div>
+              <div class="tw-arrow"></div>
+              <div class="tw-node"><svg class="ic"><use href="icons.svg#i-check" /></svg><b>Retest</b><span>Story accepted</span></div>
+            </div>
+            <div class="tw-cols">
+              <ul class="tw-list">
+                <li>The <strong>Test Runner</strong> records pass or fail per step, with screenshots and notes</li>
+                <li>A bug raised from a failed step carries the repro steps and links back to the story</li>
+              </ul>
+              <ul class="tw-list">
+                <li>Automated tests from a pipeline can be <strong>associated with test cases</strong>, so results appear in the plan</li>
+                <li>The <strong>Progress report</strong> shows pass rate per suite</li>
+              </ul>
+            </div>
+            <div class="tw-callout tw-pitfall"><svg class="ic"><use href="icons.svg#i-alert-triangle" /></svg><p>Creating and managing test plans needs the <strong>Basic + Test Plans</strong> access level. Check licences before the team relies on it.</p></div>
+          </div>
+          <aside class="notes"><p>This is the traceability chain auditors and product owners care about. The story links to test cases via Tested By; runs record results; bugs created from a failed step carry the repro steps automatically.</p><p>Licensing: full test management needs Basic plus Test Plans. Stakeholders and Basic users can still run tests and give feedback, but check the current licensing page before promising anything.</p><p>W-T4 shows how to publish automated test results from a pipeline.</p></aside>
+        </section>
+
+        <!-- 21 · DIVIDER 05 -->
+        <section class="tw-divider" role="region" aria-label="Slide 21: Module 5, Repos and pull requests">
+          <div class="tw-divider-art" style="--art: url('images/divider-gantry.jpg'); --focus: 60%" role="img" aria-label="A launch gantry"></div>
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-divider-copy">
+            <p class="tw-mod">05</p>
+            <h2>Repos and pull requests</h2>
+            <p>Short branches, protected main, and every change linked to the work it delivers.</p>
+          </div>
+          <aside class="notes"><p>Module 5, about 25 minutes: branching strategy, branch policies, PR templates and work item linking, then a live demo.</p></aside>
+        </section>
+
+        <!-- 22 · RELEASE FLOW -->
+        <section class="tw" role="region" aria-label="Slide 22: Release Flow branching">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 5 &middot; Branching</p>
+            <h2>Release Flow branching</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-flow">
+              <div class="tw-node"><svg class="ic"><use href="icons.svg#i-git-branch" /></svg><b>Topic branch</b><span><code>users/jo/1042-add-contact</code></span></div>
+              <div class="tw-arrow"></div>
+              <div class="tw-node"><svg class="ic"><use href="icons.svg#i-git-pull-request" /></svg><b>Pull request</b><span>Policies, review, build</span></div>
+              <div class="tw-arrow"></div>
+              <div class="tw-node tw-node-hot"><svg class="ic"><use href="icons.svg#i-shield-check" /></svg><b>main</b><span>Always releasable</span></div>
+              <div class="tw-arrow"></div>
+              <div class="tw-node"><svg class="ic"><use href="icons.svg#i-rocket" /></svg><b>releases/2026.11</b><span>Cut per release</span></div>
+            </div>
+            <div class="tw-cols">
+              <ul class="tw-list">
+                <li>Topic branches live for <strong>days, not weeks</strong></li>
+                <li>All PRs target <code>main</code>; no long-lived develop branch</li>
+              </ul>
+              <ul class="tw-list">
+                <li>Hotfix: fix in <code>main</code> first, then <strong>cherry-pick</strong> to the release branch</li>
+                <li>Feature flags hide unfinished work instead of long branches</li>
+              </ul>
+            </div>
+          </div>
+          <aside class="notes"><p>Release Flow is how Microsoft runs Azure DevOps itself: trunk-based development with short topic branches and release branches cut when you ship.</p><p>The key rule for hotfixes is "main first, then cherry-pick". That way a fix is never lost in the next release. Azure Repos has a cherry-pick button on completed PRs to make this easy.</p><p>Compare with GitFlow briefly if asked; the W-M6 Operate workshop covers branching strategy in more depth.</p></aside>
+        </section>
+
+        <!-- 23 · BRANCH POLICIES -->
+        <section class="tw" role="region" aria-label="Slide 23: Branch policies">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 5 &middot; Branch policies</p>
+            <h2>Lock down <code>main</code> with policies</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <table class="tw-table tw-table-sm">
+              <thead><tr><th>Policy</th><th>Why</th><th>Recommended</th></tr></thead>
+              <tbody>
+                <tr><th>Minimum number of reviewers</th><td>Four eyes on every change</td><td>2 (1 for small teams); reset votes on new pushes</td></tr>
+                <tr><th>Check for linked work items</th><td>Traceability to the story</td><td class="yes">Required</td></tr>
+                <tr><th>Check for comment resolution</th><td>No review comment left hanging</td><td class="yes">Required</td></tr>
+                <tr><th>Limit merge types</th><td>A readable history</td><td>Squash merge</td></tr>
+                <tr><th>Build validation</th><td>Main never breaks</td><td class="yes">Required, expires on new pushes</td></tr>
+                <tr><th>Automatically included reviewers</th><td>Owners review their code</td><td>By path, e.g. <code>/infra/*</code> &rarr; platform team</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <aside class="notes"><p>These are the policies we turn on for every repo. Once any policy is on, direct pushes to main are blocked and everything goes through a PR.</p><p>Reset votes on new pushes, so an approval can't be reused after code changes. Squash merge keeps one commit per PR on main, which makes history and cherry-picks clean.</p><p>Path-based required reviewers act like a CODEOWNERS file: infra changes need the platform team, and so on.</p></aside>
+        </section>
+
+        <!-- 24 · POLICIES AS CODE -->
+        <section class="tw" role="region" aria-label="Slide 24: Branch policies from the CLI">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 5 &middot; Policies as code</p>
+            <h2>Apply the same policies to every repo</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-code tw-code-sm">
+              <div class="tw-code-title">protect-main.sh</div>
+<pre><code>REPO_ID=$(<span class="f">az</span> repos show --repository <span class="s">web-app</span> --query id -o tsv)
+
+<span class="f">az</span> repos policy approver-count create --repository-id <span class="v">$REPO_ID</span> --branch <span class="s">main</span> \
+  --minimum-approver-count <span class="n">2</span> --creator-vote-counts <span class="n">false</span> --allow-downvotes <span class="n">false</span> \
+  --reset-on-source-push <span class="n">true</span> --blocking <span class="n">true</span> --enabled <span class="n">true</span>
+
+<span class="f">az</span> repos policy work-item-linking create --repository-id <span class="v">$REPO_ID</span> --branch <span class="s">main</span> \
+  --blocking <span class="n">true</span> --enabled <span class="n">true</span>
+
+<span class="f">az</span> repos policy comment-required create --repository-id <span class="v">$REPO_ID</span> --branch <span class="s">main</span> \
+  --blocking <span class="n">true</span> --enabled <span class="n">true</span>
+
+<span class="f">az</span> repos policy merge-strategy create --repository-id <span class="v">$REPO_ID</span> --branch <span class="s">main</span> \
+  --allow-squash <span class="n">true</span> --blocking <span class="n">true</span> --enabled <span class="n">true</span>
+
+<span class="f">az</span> repos policy build create --repository-id <span class="v">$REPO_ID</span> --branch <span class="s">main</span> \
+  --build-definition-id <span class="n">12</span> --display-name <span class="s">"PR build"</span> --queue-on-source-update-only <span class="n">true</span> \
+  --manual-queue-only <span class="n">false</span> --valid-duration <span class="n">720</span> --blocking <span class="n">true</span> --enabled <span class="n">true</span></code></pre>
+            </div>
+          </div>
+          <aside class="notes"><p>The same policies, scripted. Run this for every new repo so nobody has to remember the settings, or loop over all repos in a project.</p><p>Policies can also be set at project level for all repositories, under Project settings, Repositories, Policies. Script it when you need consistency across many projects.</p><p>Check flag names against the current az devops extension with --help before relying on them; the extension changes occasionally.</p></aside>
+        </section>
+
+        <!-- 25 · PR TEMPLATE + LINKING -->
+        <section class="tw" role="region" aria-label="Slide 25: PR templates and work item linking">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 5 &middot; Pull requests</p>
+            <h2>PR templates and work item links</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-cols">
+              <div class="tw-code tw-code-sm">
+                <div class="tw-code-title">.azuredevops/pull_request_template.md</div>
+<pre><code><span class="k">## What and why</span>
+<span class="c">&lt;!-- One or two sentences --&gt;</span>
+
+<span class="k">## Work items</span>
+Fixes <span class="s">#1042</span>
+
+<span class="k">## How to test</span>
+1. ...
+
+<span class="k">## Checklist</span>
+- [ ] AMP criteria met (link test cases)
+- [ ] Unit / E2E tests added or updated
+- [ ] Screenshots for UI changes
+- [ ] No secrets in code or config</code></pre>
+              </div>
+              <div class="tw-stack">
+                <h3><svg class="ic"><use href="icons.svg#i-git-pull-request" /></svg>Linking code to work</h3>
+                <ul class="tw-list">
+                  <li>Azure Repos: mention <code>#1042</code> in a commit or PR to link it</li>
+                  <li><code>Fixes #1042</code> in a commit can resolve the story (a repository setting)</li>
+                  <li>GitHub repos connected to Boards: use <code>AB#1042</code></li>
+                  <li>Or link from the story&rsquo;s <strong>Development</strong> section, or create the branch from the story</li>
+                </ul>
+                <div class="tw-callout"><svg class="ic"><use href="icons.svg#i-lightbulb" /></svg><p>Turn on <strong>&ldquo;complete linked work items after merging&rdquo;</strong> so the board updates itself.</p></div>
+              </div>
+            </div>
+          </div>
+          <aside class="notes"><p>A PR template in the .azuredevops folder, or the repo root or docs folder, pre-fills every new PR description. Keep it short or people ignore it.</p><p>Linking: in Azure Repos you mention the work item with a hash and the ID. The AB-hash syntax is for GitHub repositories connected to Azure Boards; both are worth knowing as many teams use GitHub for code and Boards for work.</p><p>Creating the branch from the story's Development section links everything automatically, which is the simplest habit to teach.</p></aside>
+        </section>
+
+        <!-- 26 · DEMO -->
+        <section class="tw tw-scene" style="--scene: url('images/divider-gantry.jpg')" role="region" aria-label="Slide 26: Live demo, a pull request end to end">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <span class="tw-demo-badge"><svg class="ic"><use href="icons.svg#i-play" /></svg>Live demo</span>
+            <h2>A pull request, end to end</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <ol class="tw-steps">
+              <li>Create a branch from story 1042&rsquo;s Development section<span class="tw-expect">Branch is linked to the story</span></li>
+              <li>Commit a change and open a PR to <code>main</code><span class="tw-expect">Template fills the description; policies listed on the PR</span></li>
+              <li>Try to complete with no approvals<span class="tw-expect">Blocked: reviewers and build required</span></li>
+              <li>Review, resolve a comment, approve, squash merge<span class="tw-expect">Story moves to the next state; commit shows on the story</span></li>
+            </ol>
+          </div>
+          <aside class="notes"><p>Run this live with a co-presenter or a second account so you can approve. Show the policy section of the PR failing first; it lands the point better than a slide.</p><p>Finish by opening the story and showing the linked branch, PR and commit under Development.</p></aside>
+        </section>
+
+        <!-- 27 · DIVIDER 06 -->
+        <section class="tw-divider" role="region" aria-label="Slide 27: Module 6, Automation">
+          <div class="tw-divider-art" style="--art: url('images/scene-serverhall.jpg'); --focus: 60%" role="img" aria-label="A server hall"></div>
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-divider-copy">
+            <p class="tw-mod">06</p>
+            <h2>Automation: CLI, REST and hooks</h2>
+            <p>Automate everything unhuman: let the platform keep itself tidy.</p>
+          </div>
+          <aside class="notes"><p>Module 6, about 15 minutes: the az CLI, the REST API and how to authenticate safely, service hooks and Logic Apps, and pipelines at a glance.</p></aside>
+        </section>
+
+        <!-- 28 · CLI -->
+        <section class="tw" role="region" aria-label="Slide 28: The az boards CLI">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 6 &middot; CLI</p>
+            <h2>Work items from the command line</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-cols tw-wide-left">
+              <div class="tw-code tw-code-sm">
+                <div class="tw-code-title">boards.sh</div>
+<pre><code><span class="c"># Create a story under a feature</span>
+ID=$(<span class="f">az</span> boards work-item create --type <span class="s">"User Story"</span> \
+  --title <span class="s">"Add a new contact"</span> --area <span class="s">"Delivery\Apps"</span> \
+  --iteration <span class="s">"Delivery\2026\Sprint 21"</span> \
+  --fields <span class="s">"Microsoft.VSTS.Scheduling.StoryPoints=3"</span> \
+  --query id -o tsv)
+
+<span class="f">az</span> boards work-item relation add --id <span class="v">$ID</span> \
+  --relation-type parent --target-id <span class="n">1001</span>
+
+<span class="c"># Run WIQL and list the results</span>
+<span class="f">az</span> boards query --wiql <span class="s">"SELECT [System.Id], [System.Title]
+  FROM WorkItems WHERE [System.State] = 'Active'
+  AND [System.AssignedTo] = @Me"</span> -o table
+
+<span class="c"># Open a PR linked to the story</span>
+<span class="f">az</span> repos pr create --source-branch <span class="s">users/jo/1042-add-contact</span> \
+  --target-branch <span class="s">main</span> --work-items <span class="v">$ID</span> --auto-complete <span class="n">true</span></code></pre>
+              </div>
+              <div class="tw-stack">
+                <ul class="tw-list">
+                  <li><code>az devops</code> &mdash; projects, teams, users, security</li>
+                  <li><code>az boards</code> &mdash; work items, areas, iterations, queries</li>
+                  <li><code>az repos</code> &mdash; repos, PRs, policies</li>
+                  <li><code>az pipelines</code> &mdash; runs, variables, environments</li>
+                  <li><code>az devops invoke</code> &mdash; any REST call the CLI lacks</li>
+                </ul>
+                <div class="tw-callout"><svg class="ic"><use href="icons.svg#i-terminal" /></svg><p>Add <code>-o json</code> and <code>--query</code> (JMESPath) to script the output.</p></div>
+              </div>
+            </div>
+          </div>
+          <aside class="notes"><p>The azure-devops extension for the Azure CLI covers most daily tasks. Use it for bulk changes, setup scripts and for AI agents, which are very good at driving CLIs.</p><p>When something isn't covered, az devops invoke or az rest call the REST API using the same sign-in.</p></aside>
+        </section>
+
+        <!-- 29 · REST + AUTH -->
+        <section class="tw" role="region" aria-label="Slide 29: REST API and authentication">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 6 &middot; REST API</p>
+            <h2>The REST API, without stored secrets</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-cols">
+              <div class="tw-code tw-code-sm">
+                <div class="tw-code-title">update-story.sh</div>
+<pre><code><span class="c"># Entra token for Azure DevOps (fixed resource ID)</span>
+TOKEN=$(<span class="f">az</span> account get-access-token \
+  --resource <span class="s">499b84ac-1321-427f-aa17-267ca6975798</span> \
+  --query accessToken -o tsv)
+
+<span class="f">curl</span> -X PATCH \
+  <span class="s">"https://dev.azure.com/contoso/Delivery/_apis/</span>
+<span class="s">wit/workitems/1042?api-version=7.1"</span> \
+  -H <span class="s">"Authorization: Bearer $TOKEN"</span> \
+  -H <span class="s">"Content-Type: application/json-patch+json"</span> \
+  -d <span class="s">'[{ "op": "add",
+        "path": "/fields/System.State",
+        "value": "Active" }]'</span></code></pre>
+              </div>
+              <table class="tw-table tw-table-sm">
+                <thead><tr><th>Auth</th><th>Use for</th></tr></thead>
+                <tbody>
+                  <tr><th>Entra ID user token</th><td>Scripts you run yourself</td></tr>
+                  <tr><th>Managed identity / service principal</th><td>Logic Apps, Functions, pipelines; add the identity as a user</td></tr>
+                  <tr><th>Personal access token</th><td class="meh">Last resort: narrow scope, short expiry, never in code</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <aside class="notes"><p>The REST API is versioned; pin api-version. Updates use JSON Patch with the json-patch content type.</p><p>For authentication, Microsoft is steering everyone towards Entra ID tokens and away from PATs. Services should use a managed identity or service principal added to the organisation, so there is no secret to leak or rotate. If you must use a PAT, scope it narrowly and give it a short expiry.</p></aside>
+        </section>
+
+        <!-- 30 · SERVICE HOOKS + LOGIC APPS -->
+        <section class="tw" role="region" aria-label="Slide 30: Service hooks and Logic Apps">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 6 &middot; Event-driven automation</p>
+            <h2>Service hooks and Logic Apps</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-flow">
+              <div class="tw-node"><svg class="ic"><use href="icons.svg#i-file-text" /></svg><b>Feature updated</b><span>Effort or MoSCoW changes</span></div>
+              <div class="tw-arrow"></div>
+              <div class="tw-node"><svg class="ic"><use href="icons.svg#i-radio-tower" /></svg><b>Service hook</b><span>Web Hook subscription</span></div>
+              <div class="tw-arrow"></div>
+              <div class="tw-node tw-node-hot"><svg class="ic"><use href="icons.svg#i-workflow" /></svg><b>Logic App</b><span>Managed identity, no secrets</span></div>
+              <div class="tw-arrow"></div>
+              <div class="tw-node"><svg class="ic"><use href="icons.svg#i-refresh-cw" /></svg><b>REST API</b><span>Recalculate the Epic, add a comment</span></div>
+            </div>
+            <div class="tw-cols">
+              <ul class="tw-list">
+                <li>Service hooks fire on events: work item created or updated, PR created or merged, build completed</li>
+                <li>Filter the subscription (type, area, field) to avoid noise</li>
+              </ul>
+              <ul class="tw-list">
+                <li>Real example: T-Minus-15&rsquo;s <code>effort-rollup</code> Logic App recalculates an Epic&rsquo;s effort from its Features (excluding Won&rsquo;t Have)</li>
+                <li>Deployed with Bicep, system-assigned managed identity</li>
+              </ul>
+            </div>
+          </div>
+          <aside class="notes"><p>Service hooks push events out of Azure DevOps. The Web Hooks target can call a Logic App HTTP trigger, an Azure Function or anything else.</p><p>The T-Minus-15 open-source project has a t-15-logicapps repo with real examples. effort-rollup keeps epic totals in sync with their features. It is deployed with Bicep and uses a managed identity, so no secret lives anywhere.</p><p>Watch for loops: an automation that updates a work item can trigger itself. Filter on the fields you care about.</p></aside>
+        </section>
+
+        <!-- 31 · PIPELINES AT A GLANCE -->
+        <section class="tw" role="region" aria-label="Slide 31: Pipelines at a glance">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 6 &middot; Pipelines</p>
+            <h2>Pipelines at a glance</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-cols tw-wide-left">
+              <div class="tw-code">
+                <div class="tw-code-title">azure-pipelines.yml &middot; PR validation</div>
+<pre><code><span class="k">trigger</span>: <span class="s">none</span>   <span class="c"># run from the build validation policy</span>
+<span class="k">pool</span>:
+  <span class="k">vmImage</span>: <span class="s">ubuntu-latest</span>
+<span class="k">steps</span>:
+  - <span class="k">script</span>: <span class="f">npm ci</span>
+  - <span class="k">script</span>: <span class="f">npm run lint</span> &amp;&amp; <span class="f">npm test</span>
+  - <span class="k">task</span>: <span class="s">PublishTestResults@2</span>
+    <span class="k">inputs</span>:
+      <span class="k">testResultsFiles</span>: <span class="s">'**/junit.xml'</span></code></pre>
+              </div>
+              <div class="tw-stack">
+                <ul class="tw-list">
+                  <li>YAML in the repo, reviewed in PRs like any code</li>
+                  <li>Wired to <code>main</code> through the build validation policy</li>
+                  <li>Test results flow into the Tests tab and Test Plans</li>
+                </ul>
+                <div class="tw-callout"><svg class="ic"><use href="icons.svg#i-rocket" /></svg><p><strong>Going deeper:</strong> multi-stage pipelines, environments, approvals, Key Vault and Bicep are all in <strong>W-T4 CI/CD</strong>.</p></div>
+              </div>
+            </div>
+          </div>
+          <aside class="notes"><p>Just enough pipelines to make build validation work: a single job that installs, lints, tests and publishes results.</p><p>Point people to W-T4 for multi-stage deployments, environments and approvals, secrets and infrastructure-as-code. Don't get pulled into those topics here.</p></aside>
+        </section>
+
+        <!-- 32 · LAB OVERVIEW -->
+        <section class="tw" role="region" aria-label="Slide 32: Hands-on lab overview">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Hands-on lab &middot; 45 minutes</p>
+            <h2>Lab: a working project, end to end</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-cols tw-wide-left">
+              <div class="tw-stack">
+                <p class="tw-lead">Build a small project for a sample <strong>&ldquo;Contacts&rdquo; app</strong>, from process to dashboard, in four parts.</p>
+                <ul class="tw-list">
+                  <li><strong>Part 1</strong> &middot; Project, areas, iterations and backlog <em>(15 min)</em></li>
+                  <li><strong>Part 2</strong> &middot; Board, WIP limits and sprint <em>(10 min)</em></li>
+                  <li><strong>Part 3</strong> &middot; Repo, branch policy and a linked PR <em>(10 min)</em></li>
+                  <li><strong>Part 4</strong> &middot; Query and dashboard <em>(10 min)</em></li>
+                </ul>
+              </div>
+              <div class="tw-card">
+                <span class="tw-tag">You need</span>
+                <ul class="tw-list">
+                  <li>A lab organisation account (we provide)</li>
+                  <li>Basic access level; Project Administrator in your lab project</li>
+                  <li>A browser; optionally Azure CLI with the <code>azure-devops</code> extension</li>
+                  <li>Sample data only &mdash; no real or personal data</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <aside class="notes"><p>Everyone works in our lab organisation, so there is nothing to install and no access to their own systems is needed.</p><p>Pair people up if anyone has trouble signing in. Facilitators should walk the room. The CLI is optional; everything can be done in the browser.</p></aside>
+        </section>
+
+        <!-- 33 · LAB PART 1 -->
+        <section class="tw" role="region" aria-label="Slide 33: Lab part 1">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Lab &middot; Part 1 &middot; 15 minutes</p>
+            <h2>Project, areas, iterations and backlog</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <ol class="tw-steps">
+              <li>Create project <code>Contacts-&lt;your initials&gt;</code> using the <strong>T-Minus-15</strong> process (or Agile)<span class="tw-expect">Boards, Repos and Test Plans available</span></li>
+              <li>Add area paths <code>Web</code> and <code>Data</code>; add <code>Sprint 1</code> and <code>Sprint 2</code> with dates<span class="tw-expect">The team is subscribed to both sprints</span></li>
+              <li>Create Epic &ldquo;Contact management&rdquo; &rarr; Feature &ldquo;Add and edit contacts&rdquo;<span class="tw-expect">Feature shows under the Epic on the Epics backlog</span></li>
+              <li>Add three User Stories under the Feature, each with <strong>AMP</strong> acceptance criteria and story points<span class="tw-expect">At least one Gherkin scenario, one Measure and one Proof per story</span></li>
+            </ol>
+          </div>
+          <aside class="notes"><p>Part 1. Have the AMP example slide available to flip back to. Most people will spend most time on writing good acceptance criteria; that is fine, it's the most valuable skill.</p><p>If anyone finishes early, ask them to add a Risk and a Question work item and link them to the Feature.</p></aside>
+        </section>
+
+        <!-- 34 · LAB PART 2 -->
+        <section class="tw" role="region" aria-label="Slide 34: Lab part 2">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Lab &middot; Part 2 &middot; 10 minutes</p>
+            <h2>Board, WIP limits and sprint</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <ol class="tw-steps" style="counter-reset: step 4">
+              <li>On the Stories board add a <strong>Review</strong> column; set WIP limits of 3 and 2<span class="tw-expect">Limits appear in the column headers</span></li>
+              <li>Split the In progress column and add a Definition of Done<span class="tw-expect">Doing / Done sub-columns and a DoD info icon</span></li>
+              <li>Move two stories into Sprint 1; set your capacity to 6 hours a day<span class="tw-expect">Capacity bar shows on the sprint</span></li>
+              <li>Add two tasks to a story with Remaining Work<span class="tw-expect">Burndown chart has data</span></li>
+            </ol>
+          </div>
+          <aside class="notes"><p>Part 2 repeats the earlier board demo. Remind people that board settings are per team, under the gear icon on the board.</p><p>Common snag: stories not appearing on the board because their area path isn't one the team owns. Check Team configuration.</p></aside>
+        </section>
+
+        <!-- 35 · LAB PART 3 -->
+        <section class="tw" role="region" aria-label="Slide 35: Lab part 3">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Lab &middot; Part 3 &middot; 10 minutes</p>
+            <h2>Repo, branch policy and a linked PR</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <ol class="tw-steps" style="counter-reset: step 8">
+              <li>Initialise the default repo with a README<span class="tw-expect">A <code>main</code> branch exists</span></li>
+              <li>On <code>main</code> require 1 reviewer, linked work items and comment resolution<span class="tw-expect">Direct pushes to main are now blocked</span></li>
+              <li>From a story&rsquo;s Development section create a branch; edit the README and commit<span class="tw-expect">Branch and commit appear on the story</span></li>
+              <li>Open a PR; ask your neighbour to review and approve; squash merge<span class="tw-expect">PR completes; the story is linked and moves state</span></li>
+            </ol>
+          </div>
+          <aside class="notes"><p>Part 3 needs pairs, because you can't approve your own PR by default. Pair people up now if you haven't already, and add each other as project members.</p><p>If the PR won't complete, the policies panel on the PR shows exactly which policy is failing.</p></aside>
+        </section>
+
+        <!-- 36 · LAB PART 4 -->
+        <section class="tw" role="region" aria-label="Slide 36: Lab part 4">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Lab &middot; Part 4 &middot; 10 minutes</p>
+            <h2>Query and dashboard</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <ol class="tw-steps" style="counter-reset: step 12">
+              <li>Create a flat query: open User Stories in <code>@CurrentIteration</code>; save to Shared Queries<span class="tw-expect">Your sprint stories are listed</span></li>
+              <li>Add a pie chart grouped by State<span class="tw-expect">Chart shows on the query&rsquo;s Charts tab</span></li>
+              <li>Create a tree query of Epic &rarr; Feature &rarr; Story<span class="tw-expect">The hierarchy from Part 1</span></li>
+              <li>Build a team dashboard: sprint goal (Markdown), burndown, query chart, query tile<span class="tw-expect">A one-screen status view, no meeting needed</span></li>
+            </ol>
+            <div class="tw-callout"><svg class="ic"><use href="icons.svg#i-terminal" /></svg><p><strong>Stretch:</strong> recreate one story with <code>az boards work-item create</code> and run your query with <code>az boards query</code>.</p></div>
+          </div>
+          <aside class="notes"><p>Part 4 ties it together. When most people are done, ask two volunteers to share their dashboards on screen.</p><p>The stretch goal is for engineers who want to script it; the commands are on the CLI slide earlier.</p></aside>
+        </section>
+
+        <!-- 37 · FLIGHT RULES -->
+        <section class="tw" role="region" aria-label="Slide 37: Flight rules">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Flight rules</p>
+            <h2>Rules that speed you up</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <ul class="tw-checks">
+              <li><strong>One project, many teams</strong> &mdash; areas for what, iterations for when</li>
+              <li><strong>Inherit, don&rsquo;t fork</strong> the process; change it centrally</li>
+              <li><strong>No story without AMP criteria</strong> before it enters a sprint</li>
+              <li><strong>WIP limits on every board</strong>; talk about red columns at stand-up</li>
+              <li><strong>Protect <code>main</code></strong>: reviewers, linked work, build validation</li>
+              <li><strong>Every PR linked to a work item</strong>; branches from the story</li>
+              <li><strong>Shared queries and dashboards</strong> instead of status reports</li>
+              <li><strong>No PATs in code</strong>: Entra tokens and managed identities</li>
+            </ul>
+          </div>
+          <aside class="notes"><p>These eight rules are the takeaway. If the team only adopts these, Azure DevOps will be a reliable source of truth.</p><p>Suggest they print this slide or pin it to the team wiki.</p></aside>
+        </section>
+
+        <!-- 38 · RECAP + DEEP DIVES -->
+        <section class="tw" role="region" aria-label="Slide 38: Recap and deep dives">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Recap</p>
+            <h2>What we covered, and where to go next</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-cols">
+              <div class="tw-card">
+                <span class="tw-tag">Today</span>
+                <ul class="tw-list">
+                  <li>Structure and the T-Minus-15 process</li>
+                  <li>Backlogs, boards, sprints and capacity</li>
+                  <li>WIQL, dashboards and Analytics</li>
+                  <li>Test Plans and traceability</li>
+                  <li>Release Flow, branch policies and PRs</li>
+                  <li>CLI, REST, service hooks and Logic Apps</li>
+                </ul>
+              </div>
+              <div class="tw-card">
+                <span class="tw-tag">Optional deep dives</span>
+                <ul class="tw-list">
+                  <li><strong>W-T4 CI/CD</strong> &mdash; multi-stage YAML, environments, approvals, Bicep</li>
+                  <li><strong>W-T5 Agentic coding</strong> &mdash; agents that work from your backlog</li>
+                  <li>Process customisation: fields, rules, states</li>
+                  <li>Analytics and Power BI portfolio reporting</li>
+                  <li>Migrating from Jira or spreadsheets</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <aside class="notes"><p>Recap the six modules in one sentence each. Then point to the follow-ups: W-T4 for pipelines, W-T5 for agentic coding, and deep dives on process customisation, reporting or migration if the team needs them.</p></aside>
+        </section>
+
+        <!-- 39 · CTA -->
+        <section class="cta--full-art" role="region" aria-label="Slide 39: Questions">
+          <div class="cta-top">
+            <h2>Questions?</h2>
+            <img class="logo-dark" src="images/logo.png" alt="KnowAll.ai" />
+          </div>
+          <div class="cta-bottom">
+            <div class="cta-copy">
+              <p class="cta-text">Thanks for joining <strong>W-T1 Azure DevOps</strong>. Deep dives are available on any topic from today.</p>
+              <a class="cta-button" href="mailto:hello@knowall.ai?subject=Azure%20DevOps%20deep%20dive"><svg class="ic" aria-hidden="true"><use href="icons.svg#i-send" /></svg>Book a deep dive</a>
+            </div>
+            <div class="contact-row">
+              <div class="contact-item"><svg class="ic" aria-hidden="true"><use href="icons.svg#i-mail" /></svg><a href="mailto:hello@knowall.ai">hello@knowall.ai</a></div>
+              <div class="contact-item"><svg class="ic" aria-hidden="true"><use href="icons.svg#i-globe" /></svg><a href="https://www.knowall.ai">knowall.ai</a></div>
+            </div>
+          </div>
+          <aside class="notes"><p>Open the floor for questions. Collect follow-up topics on a whiteboard or in a work item, then share the deck and lab instructions afterwards.</p></aside>
+        </section>
+      </div>
+    </div>
+
+    <script src="tw-kit.js"></script>
+    <script src="vendor/reveal/reveal.js"></script>
+    <script src="knowall-deck.js"></script>
+  </body>
+</html>
