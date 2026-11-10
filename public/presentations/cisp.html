@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- Generated from presentations-src/cisp.html by `npm run decks:build`: edit the source, not this file. -->
     <title>Continuous Improvement Service Plan — KnowAll AI</title>
-    <meta name="description" content="CISP from KnowAll AI: the Continuous Improvement Service Plan — proactive, flexible ongoing support via pre-purchased time-and-material blocks that keeps your Microsoft, AI and custom solutions improving, month after month." />
+    <meta name="description" content="CISP from KnowAll AI: one Continuous Improvement Service Plan for every app you rely on — the ones we build and the ones your own teams build — supported, improved and security-tested by the Purple Team, month after month." />
     <link rel="icon" href="/favicon.ico" type="image/x-icon" />
     <meta property="og:title" content="Continuous Improvement Service Plan — KnowAll AI" />
-    <meta property="og:description" content="CISP from KnowAll AI: the Continuous Improvement Service Plan — proactive, flexible ongoing support via pre-purchased time-and-material blocks that keeps your Microsoft, AI and custom solutions improving, month after month." />
+    <meta property="og:description" content="CISP from KnowAll AI: one Continuous Improvement Service Plan for every app you rely on — the ones we build and the ones your own teams build — supported, improved and security-tested by the Purple Team, month after month." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://www.knowall.ai/presentations/cisp.html" />
     <meta property="og:image" content="https://www.knowall.ai/presentations/images/og/cisp.jpg" />
@@ -17,7 +17,7 @@
     <meta property="og:image:alt" content="Continuous Improvement Service Plan — KnowAll AI" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Continuous Improvement Service Plan — KnowAll AI" />
-    <meta name="twitter:description" content="CISP from KnowAll AI: the Continuous Improvement Service Plan — proactive, flexible ongoing support via pre-purchased time-and-material blocks that keeps your Microsoft, AI and custom solutions improving, month after month." />
+    <meta name="twitter:description" content="CISP from KnowAll AI: one Continuous Improvement Service Plan for every app you rely on — the ones we build and the ones your own teams build — supported, improved and security-tested by the Purple Team, month after month." />
     <meta name="twitter:image" content="https://www.knowall.ai/presentations/images/og/cisp.jpg" />
     <link rel="stylesheet" href="vendor/reveal/reset.css" />
     <link rel="stylesheet" href="vendor/reveal/reveal.css" />
@@ -28,6 +28,274 @@
       :root {
         --deck-cover: url('images/cover-cisp.jpg');
         --deck-hero: url('images/close-cisp.jpg');
+        --purple: #b98cff;
+        --purple-line: rgba(185, 140, 255, 0.6);
+        --purple-wash: rgba(185, 140, 255, 0.08);
+      }
+
+      /* ---- The pipeline: two sources -> readiness review -> supported apps ---- */
+      .pipe {
+        display: grid;
+        grid-template-columns: 500px 60px 340px 60px 1fr;
+        align-items: stretch;
+        gap: 0 18px;
+      }
+      .pipe-col {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 22px;
+      }
+      .pipe-box {
+        background: rgba(255, 255, 255, 0.045);
+        border-left: 3px solid var(--lime);
+        padding: 26px 30px 28px;
+      }
+      .pipe-box .tag {
+        font-size: 19px;
+        font-weight: 800;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--lime);
+      }
+      .pipe-box h4 {
+        font-size: 36px;
+        color: var(--text);
+        margin: 6px 0 6px;
+      }
+      .pipe-box p {
+        font-size: 25px;
+        color: var(--mist);
+        line-height: 1.4;
+      }
+      .pipe-arrow {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--lime);
+        font-size: 54px;
+      }
+      .pipe-gate {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        gap: 12px;
+        border: 2px dashed var(--line-lime);
+        padding: 22px 20px;
+      }
+      .pipe-gate .ic {
+        font-size: 68px;
+        color: var(--lime);
+      }
+      .pipe-gate h4 {
+        font-size: 34px;
+        color: var(--text);
+      }
+      .pipe-gate p {
+        font-size: 24px;
+        color: var(--mist);
+        line-height: 1.4;
+      }
+      .pipe-plan {
+        position: relative;
+        border: 2px solid var(--purple-line);
+        background: var(--purple-wash);
+        padding: 54px 32px 30px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 18px;
+      }
+      .pipe-plan .shield {
+        position: absolute;
+        top: -19px;
+        left: 24px;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 5px 16px;
+        background: var(--charcoal);
+        border: 2px solid var(--purple-line);
+        color: var(--purple);
+        font-size: 18px;
+        font-weight: 800;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+      .pipe-plan h4 {
+        font-size: 36px;
+        color: var(--text);
+      }
+      .apps {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+      .app {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 15px 18px;
+        background: rgba(255, 255, 255, 0.06);
+        font-size: 25px;
+        font-weight: 700;
+        color: var(--text);
+      }
+      .app .ic {
+        color: var(--lime);
+        font-size: 26px;
+        flex: none;
+      }
+      .app--next {
+        background: none;
+        border: 2px dashed var(--line-lime);
+        color: var(--lime);
+        padding: 13px 16px;
+      }
+      .pipe-plan .plan-note {
+        font-size: 24px;
+        color: var(--mist);
+        line-height: 1.4;
+      }
+
+      /* ---- The twelve monthly blocks ---- */
+      .blocks {
+        display: grid;
+        grid-template-columns: 210px repeat(12, 1fr);
+        align-items: center;
+        gap: 10px;
+      }
+      .blocks .blocks-label {
+        font-size: 19px;
+        font-weight: 800;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--lime);
+        line-height: 1.3;
+      }
+      .block {
+        height: 70px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(180deg, rgba(157, 254, 10, 0.22), rgba(157, 254, 10, 0.08));
+        border-top: 3px solid var(--lime);
+        font-size: 24px;
+        font-weight: 800;
+        color: var(--text);
+      }
+      .blocks--tall .block {
+        height: 96px;
+        font-size: 26px;
+      }
+      .blocks-caption {
+        font-size: 21px;
+        color: var(--mist);
+        margin-top: -22px;
+      }
+
+      /* ---- Onboarding a new app: four steps in a row ---- */
+      .onboard {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 40px;
+      }
+      .onboard .stage h4 {
+        letter-spacing: 0.02em;
+        font-size: 36px;
+      }
+      .onboard .stage p {
+        font-size: 27px;
+      }
+
+      /* ---- Purple Team slide ---- */
+      .pt-steps {
+        display: grid;
+        gap: 26px;
+        max-width: 900px;
+      }
+      .pt-step {
+        display: grid;
+        grid-template-columns: 92px 1fr;
+        gap: 22px;
+        align-items: start;
+      }
+      .pt-step img {
+        width: 92px;
+        height: 92px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid var(--purple-line);
+      }
+      .pt-step h4 {
+        font-size: 35px;
+        color: var(--text);
+        margin-bottom: 4px;
+      }
+      .pt-step p {
+        font-size: 28px;
+        color: var(--mist);
+        line-height: 1.45;
+      }
+      .they {
+        color: var(--purple);
+      }
+      .pt-link {
+        font-size: 26px;
+        font-weight: 700;
+        color: var(--purple);
+      }
+      .pt-link a {
+        color: inherit;
+      }
+
+      /* ---- Draw-down days vs a CISP ---- */
+      .versus {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 56px;
+      }
+      .versus-col {
+        padding: 36px 44px 42px;
+        background: rgba(255, 255, 255, 0.035);
+        border-top: 3px solid rgba(255, 255, 255, 0.28);
+      }
+      .versus-col--plan {
+        border-top-color: var(--lime);
+        background: rgba(157, 254, 10, 0.07);
+      }
+      .versus-col h4 {
+        font-size: 38px;
+        color: var(--text);
+        margin-bottom: 18px;
+      }
+      .versus-col ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: grid;
+        gap: 20px;
+      }
+      .versus-col li {
+        display: grid;
+        grid-template-columns: 34px 1fr;
+        gap: 14px;
+        font-size: 30px;
+        line-height: 1.4;
+        color: var(--mist);
+      }
+      .versus-col li .ic {
+        font-size: 30px;
+        margin-top: 3px;
+        color: rgba(255, 255, 255, 0.45);
+      }
+      .versus-col--plan li {
+        color: #e6ecf1;
+      }
+      .versus-col--plan li .ic {
+        color: var(--lime);
       }
     </style>
   </head>
@@ -38,7 +306,7 @@
         <!-- Slide 1: Title -->
         <section
           role="region"
-          aria-label="Slide 1 of 6: Continuous Improvement Service Plan"
+          aria-label="Slide 1 of 10: Continuous Improvement Service Plan"
         >
           <div
             class="cover-hero"
@@ -49,131 +317,300 @@
           <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
           <div class="cover-copy">
             <p class="kicker">KnowAll AI &middot; Continuous Improvement Service Plan</p>
-            <h1>Solutions that keep<br /><em>getting better</em></h1>
+            <h1>Every app you rely on,<br /><em>supported and improving</em></h1>
             <p class="lead">
-              The Continuous Improvement Service Plan &mdash; proactive, flexible ongoing support
-              that keeps your Microsoft, AI and custom solutions improving, month after month.
+              One plan for the apps we build and the apps your own teams build &mdash; supported,
+              improved and security-tested, month after month.
             </p>
           </div>
         </section>
 
-        <!-- Slide 2: What it is -->
-        <section class="scene" style="--scene: url('images/scene-walkway.jpg')" role="region" aria-label="Slide 2 of 6: What it is">
+        <!-- Slide 2: The problem -->
+        <section class="scene" style="--scene: url('images/scene-walkway.jpg')" role="region" aria-label="Slide 2 of 10: After go-live, then what?">
           <div class="band">
             <div>
-              <h2>What it is</h2>
-              <p class="band-sub">A proactive, flexible framework for continual improvement</p>
-            </div>
-            <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
-          </div>
-          <div class="content">
-            <p class="lead">
-              The Continuous Improvement Service Plan (CISP) is a proactive and flexible framework for ongoing support and enhancement of your
-              Microsoft, AI and custom-developed solutions &mdash; keeping your systems effective,
-              secure and aligned with evolving business needs. A dynamic, adaptable service model
-              that grows with you for long-term value and resilience.
-            </p>
-            <div class="cards-3">
-              <div class="card stack">
-                <div class="chip" aria-hidden="true">
-                  <svg class="ic"><use href="icons.svg#i-shield-check" /></svg>
-                </div>
-                <div>
-                  <h4>Proactive support</h4>
-                  <p>
-                    Goes beyond monitoring and maintenance &mdash; we actively introduce
-                    enhancements that strengthen performance, reliability and adaptability.
-                  </p>
-                </div>
-              </div>
-              <div class="card stack">
-                <div class="chip" aria-hidden="true">
-                  <svg class="ic"><use href="icons.svg#i-coins" /></svg>
-                </div>
-                <div>
-                  <h4>Flexible blocks</h4>
-                  <p>
-                    Support effort is grouped into flexible time-and-material blocks you can direct
-                    at whatever backlog items or enhancements matter most.
-                  </p>
-                </div>
-              </div>
-              <div class="card stack">
-                <div class="chip" aria-hidden="true">
-                  <svg class="ic"><use href="icons.svg#i-trending-up" /></svg>
-                </div>
-                <div>
-                  <h4>Continuous improvement</h4>
-                  <p>
-                    A predictable cadence of value delivery that keeps solutions aligned to your
-                    processes without the overhead of many small projects.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- Slide 3: How it works -->
-        <section class="scene" style="--scene: url('images/scene-blocks.jpg')" role="region" aria-label="Slide 3 of 6: How it works">
-          <div class="band">
-            <div>
-              <h2>How it works</h2>
-              <p class="band-sub">Flexible blocks, predictable cadence</p>
+              <h2>After go-live, then what?</h2>
+              <p class="band-sub">Building an app is the easy part now. Looking after it is not.</p>
             </div>
             <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
           </div>
           <div class="content">
             <p class="lead lead--wide">
-              Support effort is grouped into flexible time-and-material &ldquo;blocks&rdquo; so you
-              can prioritise backlog items or enhancements as needs change &mdash; a predictable
-              cadence of value without the overhead of many small projects.
+              AI has made apps quick to build, so every organisation is collecting more of them.
+              Each one needs someone to answer for it once people depend on it.
             </p>
             <div class="cards-3">
-              <div class="card">
+              <div class="card stack">
                 <div class="chip" aria-hidden="true">
-                  <svg class="ic"><use href="icons.svg#i-coins" /></svg>
+                  <svg class="ic"><use href="icons.svg#i-timer" /></svg>
                 </div>
                 <div>
-                  <h4>Model</h4>
-                  <p>Pre-purchased time-and-material blocks.</p>
+                  <h4>Ad-hoc days run dry</h4>
+                  <p>
+                    A handful of draw-down days is not support. Nobody is watching, nothing is
+                    promised, and the days are gone when you need them.
+                  </p>
                 </div>
               </div>
-              <div class="card">
+              <div class="card stack">
                 <div class="chip" aria-hidden="true">
-                  <svg class="ic"><use href="icons.svg#i-calendar-check" /></svg>
+                  <svg class="ic"><use href="icons.svg#i-file-question" /></svg>
                 </div>
                 <div>
-                  <h4>Contract</h4>
-                  <p>Around a twelve-month term &mdash; blocks consumable faster when needed.</p>
+                  <h4>Home-built apps have no net</h4>
+                  <p>
+                    The app a colleague built in Power Platform is now business-critical, and
+                    the only person who understands it is on holiday.
+                  </p>
                 </div>
               </div>
-              <div class="card">
+              <div class="card stack">
                 <div class="chip" aria-hidden="true">
-                  <svg class="ic"><use href="icons.svg#i-compass" /></svg>
+                  <svg class="ic"><use href="icons.svg#i-zap" /></svg>
                 </div>
                 <div>
-                  <h4>Scope</h4>
-                  <p>Microsoft, AI and custom-developed solutions.</p>
+                  <h4>Vulnerabilities don&rsquo;t wait</h4>
+                  <p>
+                    New advisories land every day. An app that was secure at go-live is not
+                    secure a year later unless someone keeps it that way.
+                  </p>
                 </div>
               </div>
-            </div>
-            <div class="pill-row" role="list" aria-label="Technologies covered">
-              <span class="pill" role="listitem">Copilot Studio &amp; AI Foundry</span>
-              <span class="pill" role="listitem">Dataverse &amp; SharePoint</span>
-              <span class="pill" role="listitem">Logic Apps</span>
-              <span class="pill" role="listitem">Power Platform</span>
-              <span class="pill" role="listitem">Custom apps (incl. React)</span>
             </div>
           </div>
         </section>
 
-        <!-- Slide 4: Service tiers -->
-        <section class="scene" style="--scene: url('images/scene-terraces.jpg')" role="region" aria-label="Slide 4 of 6: Service tiers">
+        <!-- Slide 3: The pipeline -->
+        <section class="scene" style="--scene: url('images/scene-blocks.jpg')" role="region" aria-label="Slide 3 of 10: One plan for every app">
           <div class="band">
             <div>
-              <h2>Service tiers</h2>
-              <p class="band-sub">Match responsiveness to the criticality of each solution</p>
+              <h2>One plan for every app</h2>
+              <p class="band-sub">Apps flow in from us and from your business. Blocks keep them all running.</p>
+            </div>
+            <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
+          </div>
+          <div class="content content--dense">
+            <div class="pipe" role="img" aria-label="Diagram: apps built by KnowAll AI and apps built by your own teams pass a readiness review and join the supported solutions on your plan, all covered by the Purple Team and powered by twelve monthly blocks">
+              <div class="pipe-col">
+                <div class="pipe-box">
+                  <p class="tag">Source 1</p>
+                  <h4>Built by KnowAll AI</h4>
+                  <p>Agentic workshops, proofs of concept and full projects.</p>
+                </div>
+                <div class="pipe-box">
+                  <p class="tag">Source 2</p>
+                  <h4>Built by your teams</h4>
+                  <p>Power Platform, Copilot Studio, AI agents and custom code.</p>
+                </div>
+              </div>
+              <div class="pipe-arrow" aria-hidden="true">&rarr;</div>
+              <div class="pipe-gate">
+                <svg class="ic" aria-hidden="true"><use href="icons.svg#i-clipboard-list" /></svg>
+                <h4>Readiness review</h4>
+                <p>Documentation, monitoring and access checked first.</p>
+              </div>
+              <div class="pipe-arrow" aria-hidden="true">&rarr;</div>
+              <div class="pipe-plan">
+                <span class="shield">
+                  <svg class="ic" aria-hidden="true"><use href="icons.svg#i-shield-check" /></svg>
+                  Covered by the Purple Team
+                </span>
+                <h4>Supported solutions on your plan</h4>
+                <div class="apps">
+                  <div class="app"><svg class="ic" aria-hidden="true"><use href="icons.svg#i-check" /></svg>Stock control</div>
+                  <div class="app"><svg class="ic" aria-hidden="true"><use href="icons.svg#i-check" /></svg>Site inspections</div>
+                  <div class="app"><svg class="ic" aria-hidden="true"><use href="icons.svg#i-check" /></svg>Customer portal</div>
+                  <div class="app"><svg class="ic" aria-hidden="true"><use href="icons.svg#i-check" /></svg>Invoice agent</div>
+                  <div class="app"><svg class="ic" aria-hidden="true"><use href="icons.svg#i-check" /></svg>Your team&rsquo;s app</div>
+                  <div class="app app--next">+ Your next app</div>
+                </div>
+                <p class="plan-note">Supported, improved and security-tested under one agreement.</p>
+              </div>
+            </div>
+            <div class="blocks" role="img" aria-label="Twelve monthly blocks, one for each month of the plan">
+              <p class="blocks-label">Monthly blocks</p>
+              <div class="block">1</div>
+              <div class="block">2</div>
+              <div class="block">3</div>
+              <div class="block">4</div>
+              <div class="block">5</div>
+              <div class="block">6</div>
+              <div class="block">7</div>
+              <div class="block">8</div>
+              <div class="block">9</div>
+              <div class="block">10</div>
+              <div class="block">11</div>
+              <div class="block">12</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Slide 4: Blocks -->
+        <section class="scene" style="--scene: url('images/scene-terraces.jpg')" role="region" aria-label="Slide 4 of 10: Blocks, not tickets">
+          <div class="band">
+            <div>
+              <h2>Blocks, not tickets</h2>
+              <p class="band-sub">A block of time every month, pointed at whatever matters most</p>
+            </div>
+            <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
+          </div>
+          <div class="content">
+            <div class="blocks blocks--tall" role="img" aria-label="Twelve monthly blocks across a twelve-month plan">
+              <p class="blocks-label">Twelve months, twelve blocks</p>
+              <div class="block">1</div>
+              <div class="block">2</div>
+              <div class="block">3</div>
+              <div class="block">4</div>
+              <div class="block">5</div>
+              <div class="block">6</div>
+              <div class="block">7</div>
+              <div class="block">8</div>
+              <div class="block">9</div>
+              <div class="block">10</div>
+              <div class="block">11</div>
+              <div class="block">12</div>
+            </div>
+            <div class="cards-3">
+              <div class="card stack">
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="icons.svg#i-coins" /></svg>
+                </div>
+                <div>
+                  <h4>Bought up front</h4>
+                  <p>
+                    You choose the size of the monthly block. One purchase order covers the
+                    year, so support never waits on paperwork.
+                  </p>
+                </div>
+              </div>
+              <div class="card stack">
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="icons.svg#i-refresh-cw" /></svg>
+                </div>
+                <div>
+                  <h4>Flexible in use</h4>
+                  <p>
+                    A quiet month does not waste the time and a busy one can draw ahead.
+                    Blocks can grow as more apps join the plan.
+                  </p>
+                </div>
+              </div>
+              <div class="card stack">
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="icons.svg#i-gauge" /></svg>
+                </div>
+                <div>
+                  <h4>Always visible</h4>
+                  <p>
+                    Every checkpoint shows what was done, what is left and what is next. You
+                    decide where the remaining time goes.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="pill-row" role="list" aria-label="What block time is used for">
+              <span class="pill" role="listitem">Support and bug fixes</span>
+              <span class="pill" role="listitem">Small enhancements</span>
+              <span class="pill" role="listitem">Security fixes</span>
+              <span class="pill" role="listitem">Advice for your developers</span>
+              <span class="pill" role="listitem">AI and innovation workshops</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Slide 5: Onboarding a new app -->
+        <section class="scene" style="--scene: url('images/scene-highway.jpg')" role="region" aria-label="Slide 5 of 10: A new app joins the plan">
+          <div class="band">
+            <div>
+              <h2>A new app joins the plan</h2>
+              <p class="band-sub">Whoever built it, it is supported from its first day in production</p>
+            </div>
+            <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
+          </div>
+          <div class="content">
+            <div class="onboard">
+              <div class="stage">
+                <div class="step" aria-hidden="true">01</div>
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="icons.svg#i-code-xml" /></svg>
+                </div>
+                <h4>It gets built</h4>
+                <p>By us in an agentic workshop or project, or by your own team with the tools they already use.</p>
+              </div>
+              <div class="stage">
+                <div class="step" aria-hidden="true">02</div>
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="icons.svg#i-clipboard-list" /></svg>
+                </div>
+                <h4>Readiness review</h4>
+                <p>We check its documentation, monitoring, access and security, and close the gaps before go-live.</p>
+              </div>
+              <div class="stage">
+                <div class="step" aria-hidden="true">03</div>
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="icons.svg#i-scroll-text" /></svg>
+                </div>
+                <h4>Added to the schedule</h4>
+                <p>The app is named in your plan&rsquo;s list of supported solutions. No new contract, no new purchase order.</p>
+              </div>
+              <div class="stage">
+                <div class="step" aria-hidden="true">04</div>
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="icons.svg#i-shield-check" /></svg>
+                </div>
+                <h4>Supported and secured</h4>
+                <p>Service levels apply at once and the Purple Team starts testing it. Block size is reviewed at the next checkpoint.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Slide 6: Covered by the Purple Team -->
+        <section role="region" aria-label="Slide 6 of 10: Covered by the Purple Team">
+          <img class="logo-light" src="/images/logo.png" alt="KnowAll.ai" />
+          <div
+            class="dark-inner with-agent with-agent--wide"
+            style="--deck-agent: url('images/divider-purple-team-core.jpg')"
+          >
+            <div class="col">
+              <p class="kicker">Covered by the Purple Team</p>
+              <h2>Secure every month,<br />not just at <span class="they">go-live</span>.</h2>
+            </div>
+            <div class="pt-steps">
+              <div class="pt-step">
+                <img src="images/purple-team/pennie-portrait.jpg" alt="Pennie, the red robot" />
+                <div>
+                  <h4>Pennie attacks</h4>
+                  <p>She tests every app on your plan and checks each new advisory against its code.</p>
+                </div>
+              </div>
+              <div class="pt-step">
+                <img src="images/purple-team/ollie-portrait.jpg" alt="Ollie, the blue robot" />
+                <div>
+                  <h4>Ollie fixes</h4>
+                  <p>He opens the fix as a pull request for your review, paid for from block time.</p>
+                </div>
+              </div>
+              <div class="pt-step">
+                <img src="images/purple-team/poppie-report.jpg" alt="Poppie, the copper robot" />
+                <div>
+                  <h4>Poppie reports</h4>
+                  <p>Your security score and open findings are on the agenda at every checkpoint.</p>
+                </div>
+              </div>
+            </div>
+            <p class="pt-link">
+              <a href="purple-team.html">See how the Purple Team works &rarr;</a>
+            </p>
+          </div>
+        </section>
+
+        <!-- Slide 7: A month on the plan -->
+        <section class="scene" style="--scene: url('images/scene-greenhouse.jpg')" role="region" aria-label="Slide 7 of 10: A month on the plan">
+          <div class="band">
+            <div>
+              <h2>A month on the plan</h2>
+              <p class="band-sub">Ongoing value &mdash; not just keeping the lights on</p>
             </div>
             <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
           </div>
@@ -181,17 +618,84 @@
             <div class="cards-2">
               <div class="card">
                 <div class="chip" aria-hidden="true">
-                  <svg class="ic"><use href="icons.svg#i-gauge" /></svg>
+                  <svg class="ic"><use href="icons.svg#i-mail" /></svg>
                 </div>
                 <div>
-                  <h4>Choose your tier</h4>
+                  <h4>Something breaks</h4>
                   <p>
-                    Tiered service levels match the priority and responsiveness of support to the
-                    criticality of your solutions &mdash; business-critical systems get faster
-                    attention, everything else is covered by the same flexible plan.
+                    Email the service desk. A ticket is raised, you get a first response within
+                    hours, and the fix is deployed only with your approval.
                   </p>
                 </div>
               </div>
+              <div class="card">
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="icons.svg#i-trending-up" /></svg>
+                </div>
+                <div>
+                  <h4>Something could be better</h4>
+                  <p>
+                    Small enhancements go into a shared backlog and are delivered from the
+                    block, so apps keep pace with how your business changes.
+                  </p>
+                </div>
+              </div>
+              <div class="card">
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="icons.svg#i-calendar-check" /></svg>
+                </div>
+                <div>
+                  <h4>The checkpoint</h4>
+                  <p>
+                    A regular review of tickets, security findings, risks and block usage, where
+                    you set the priorities for the month ahead.
+                  </p>
+                </div>
+              </div>
+              <div class="card">
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="icons.svg#i-graduation-cap" /></svg>
+                </div>
+                <div>
+                  <h4>Your team gets stronger</h4>
+                  <p>
+                    Your developers can ask us anything, from architecture to DevOps. Every fix
+                    is explained and documented, so the knowledge stays with you.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Slide 8: Service level and rates -->
+        <section class="scene" style="--scene: url('images/scene-observatory.jpg')" role="region" aria-label="Slide 8 of 10: One service level, one rate card">
+          <div class="band">
+            <div>
+              <h2>One service level, one rate card</h2>
+              <p class="band-sub">Every client gets our best response. No tiers to choose between.</p>
+            </div>
+            <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
+          </div>
+          <div class="content">
+            <div class="kpi-row kpi-hero" role="list" aria-label="Service levels and day rates">
+              <div class="kpi" role="listitem">
+                <div class="kpi-val">4 hours</div>
+                <div class="kpi-label">First response &middot; high priority</div>
+                <div class="kpi-sub">Target resolution within 8 working hours</div>
+              </div>
+              <div class="kpi" role="listitem">
+                <div class="kpi-val">8 hours</div>
+                <div class="kpi-label">First response &middot; normal priority</div>
+                <div class="kpi-sub">Target resolution within 16 working hours</div>
+              </div>
+              <div class="kpi" role="listitem">
+                <div class="kpi-val">&euro;950</div>
+                <div class="kpi-label">Per day &middot; delivery roles</div>
+                <div class="kpi-sub">Strategic advice &euro;1,250 per day</div>
+              </div>
+            </div>
+            <div class="cards-2">
               <div class="card">
                 <div class="chip" aria-hidden="true">
                   <svg class="ic"><use href="icons.svg#i-handshake" /></svg>
@@ -199,28 +703,22 @@
                 <div>
                   <h4>One simple agreement</h4>
                   <p>
-                    Blocks are drawn from the same time-and-material agreement regardless of tier
-                    &mdash; response and resolution targets are set by the tier, and day rates are
+                    Time and materials, drawn from the blocks you have bought. Day rates are
                     fixed by role, not negotiated per ticket.
                   </p>
                 </div>
               </div>
-            </div>
-            <div class="kpi-row" role="list" aria-label="Service tiers with their day rates">
-              <div class="kpi" role="listitem">
-                <div class="kpi-val">Gold</div>
-                <div class="kpi-label">4&nbsp;h response &middot; 1 business day</div>
-                <div class="kpi-sub">Strategic &euro;1,250 &middot; delivery roles &euro;950 per day</div>
-              </div>
-              <div class="kpi" role="listitem">
-                <div class="kpi-val">Silver</div>
-                <div class="kpi-label">8&nbsp;h response &middot; 2 business days</div>
-                <div class="kpi-sub">Strategic &euro;1,200 &middot; delivery roles &euro;900 per day</div>
-              </div>
-              <div class="kpi" role="listitem">
-                <div class="kpi-val">Bronze</div>
-                <div class="kpi-label">16&nbsp;h response &middot; 3 business days</div>
-                <div class="kpi-sub">Strategic &euro;1,150 &middot; delivery roles &euro;850 per day</div>
+              <div class="card">
+                <div class="chip" aria-hidden="true">
+                  <svg class="ic"><use href="icons.svg#i-clock" /></svg>
+                </div>
+                <div>
+                  <h4>Service hours</h4>
+                  <p>
+                    Monday to Friday, 9am to 5pm UK time. Service levels apply to incidents;
+                    enhancements are scheduled through the backlog.
+                  </p>
+                </div>
               </div>
             </div>
             <div class="pill-row" role="list" aria-label="Delivery roles">
@@ -231,71 +729,43 @@
           </div>
         </section>
 
-        <!-- Slide 5: Why a Continuous Improvement Service Plan -->
-        <section class="scene" style="--scene: url('images/scene-greenhouse.jpg')" role="region" aria-label="Slide 5 of 6: Why a Continuous Improvement Service Plan">
+        <!-- Slide 9: Draw-down days vs a CISP -->
+        <section class="scene" style="--scene: url('images/scene-skybridge.jpg')" role="region" aria-label="Slide 9 of 10: Why not just buy a few days?">
           <div class="band">
             <div>
-              <h2>Why a Continuous Improvement Service Plan?</h2>
-              <p class="band-sub">Ongoing value &mdash; not just keeping the lights on</p>
+              <h2>Why not just buy a few days?</h2>
+              <p class="band-sub">The same day rate buys a very different service</p>
             </div>
             <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
           </div>
           <div class="content">
-            <div class="cards-2">
-              <div class="card">
-                <div class="chip" aria-hidden="true">
-                  <svg class="ic"><use href="icons.svg#i-users" /></svg>
-                </div>
-                <div>
-                  <h4>Expertise on tap</h4>
-                  <p>
-                    Direct access to domain experts across the Microsoft, AI and custom technologies
-                    your solutions are built on &mdash; without hiring in-house.
-                  </p>
-                </div>
+            <div class="versus">
+              <div class="versus-col">
+                <h4>A few draw-down days</h4>
+                <ul>
+                  <li><svg class="ic" aria-hidden="true"><use href="icons.svg#i-message-square-x" /></svg><span>No response times. You wait until someone is free.</span></li>
+                  <li><svg class="ic" aria-hidden="true"><use href="icons.svg#i-message-square-x" /></svg><span>Nobody watches the apps between requests.</span></li>
+                  <li><svg class="ic" aria-hidden="true"><use href="icons.svg#i-message-square-x" /></svg><span>Every new app needs a new conversation.</span></li>
+                  <li><svg class="ic" aria-hidden="true"><use href="icons.svg#i-message-square-x" /></svg><span>Security is checked once, at go-live.</span></li>
+                  <li><svg class="ic" aria-hidden="true"><use href="icons.svg#i-message-square-x" /></svg><span>When the days run out, so does the support.</span></li>
+                </ul>
               </div>
-              <div class="card">
-                <div class="chip" aria-hidden="true">
-                  <svg class="ic"><use href="icons.svg#i-refresh-cw" /></svg>
-                </div>
-                <div>
-                  <h4>Always improving</h4>
-                  <p>
-                    Continuous improvement keeps your solutions aligned to your business processes
-                    as they evolve &mdash; not just kept running.
-                  </p>
-                </div>
-              </div>
-              <div class="card">
-                <div class="chip" aria-hidden="true">
-                  <svg class="ic"><use href="icons.svg#i-flask-conical" /></svg>
-                </div>
-                <div>
-                  <h4>Innovation workshops</h4>
-                  <p>
-                    Dedicated sessions to explore how emerging AI and automation can unlock new
-                    value across your organisation.
-                  </p>
-                </div>
-              </div>
-              <div class="card">
-                <div class="chip" aria-hidden="true">
-                  <svg class="ic"><use href="icons.svg#i-scroll-text" /></svg>
-                </div>
-                <div>
-                  <h4>Simple &amp; predictable</h4>
-                  <p>
-                    One straightforward time-and-material block-hours agreement &mdash; a
-                    predictable cadence of value without project overhead.
-                  </p>
-                </div>
+              <div class="versus-col versus-col--plan">
+                <h4>A Continuous Improvement Service Plan</h4>
+                <ul>
+                  <li><svg class="ic" aria-hidden="true"><use href="icons.svg#i-check" /></svg><span>Agreed response and resolution targets.</span></li>
+                  <li><svg class="ic" aria-hidden="true"><use href="icons.svg#i-check" /></svg><span>Proactive monitoring and regular checkpoints.</span></li>
+                  <li><svg class="ic" aria-hidden="true"><use href="icons.svg#i-check" /></svg><span>New apps join the same plan, yours or ours.</span></li>
+                  <li><svg class="ic" aria-hidden="true"><use href="icons.svg#i-check" /></svg><span>The Purple Team keeps testing every app.</span></li>
+                  <li><svg class="ic" aria-hidden="true"><use href="icons.svg#i-check" /></svg><span>A year of cover on one purchase order.</span></li>
+                </ul>
               </div>
             </div>
           </div>
         </section>
 
-        <!-- Slide 6: CTA -->
-        <section role="region" aria-label="Slide 6 of 6: Keep improving, together">
+        <!-- Slide 10: CTA -->
+        <section role="region" aria-label="Slide 10 of 10: Keep improving, together">
           <div class="cta-top">
             <h2>Keep improving,<br />together.</h2>
             <img class="logo-dark" src="/images/logo.png" alt="KnowAll.ai" />
@@ -303,9 +773,9 @@
           <div class="cta-bottom">
             <div class="cta-copy">
               <p class="cta-text">
-                Talk to us about a <strong>Continuous Improvement Service Plan</strong> for your solutions &mdash; and keep them effective, secure and aligned with your business, month after month.
+                Tell us which apps you rely on &mdash; ours, yours or both. We&rsquo;ll come back with a <strong>Continuous Improvement Service Plan</strong> sized to support them, improve them and keep them secure.
               </p>
-              <a class="cta-button" href="mailto:hello@knowall.ai?subject=Continuous%20Improvement%20enquiry" aria-label="Email KnowAll AI about Continuous Improvement">
+              <a class="cta-button" href="mailto:hello@knowall.ai?subject=Continuous%20Improvement%20enquiry" aria-label="Email KnowAll AI about a Continuous Improvement Service Plan">
                 <svg class="ic" aria-hidden="true"><use href="icons.svg#i-send" /></svg>
                 Start the conversation
               </a>
