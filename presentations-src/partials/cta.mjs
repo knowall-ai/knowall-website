@@ -9,6 +9,9 @@
 //   mailSubject  optional subject line for the email links
 //   site         optional { href, text } for the web link (default knowall.ai)
 //   className    optional class on the <section>, e.g. "cta--mid-subject"
+//   buttonOnlySubject  optional: put mailSubject on the button only, so the
+//                plain contact email link has no subject
+//   notes        optional speaker notes (HTML), as <aside class="notes">
 export default function cta({
   label,
   heading,
@@ -17,8 +20,11 @@ export default function cta({
   mailSubject,
   site = { href: 'https://www.knowall.ai', text: 'knowall.ai' },
   className,
+  buttonOnlySubject = false,
+  notes,
 }) {
   const mailto = `mailto:hello@knowall.ai${mailSubject ? `?subject=${encodeURIComponent(mailSubject)}` : ''}`;
+  const contactMailto = buttonOnlySubject ? 'mailto:hello@knowall.ai' : mailto;
   return `        <section${className ? ` class="${className}"` : ''} role="region" aria-label="${label}">
           <div class="cta-top">
             <h2>${heading}</h2>
@@ -37,14 +43,14 @@ export default function cta({
             <div class="contact-row">
               <div class="contact-item">
                 <svg class="ic" aria-hidden="true"><use href="icons.svg#i-mail" /></svg>
-                <a href="${mailto}">hello@knowall.ai</a>
+                <a href="${contactMailto}">hello@knowall.ai</a>
               </div>
               <div class="contact-item">
                 <svg class="ic" aria-hidden="true"><use href="icons.svg#i-globe" /></svg>
                 <a href="${site.href}">${site.text}</a>
               </div>
             </div>
-          </div>
+          </div>${notes ? `\n          <aside class="notes">${notes}</aside>` : ''}
         </section>
 `;
 }

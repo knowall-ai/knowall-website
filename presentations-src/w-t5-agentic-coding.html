@@ -1,0 +1,455 @@
+<!-- @include head {"title":"W-T5 Agentic Coding Workshop — KnowAll AI","description":"A demo-led, half-day workshop on agentic coding with Claude Code: the agent loop, CLAUDE.md, skills and subagents, specs from AMP acceptance criteria, MCP, hooks, CI and the guardrails that keep agent work trustworthy."} -->
+    <link rel="stylesheet" href="tw-kit.css" />
+    <style>
+      /* Deck-specific styles — shared components live in tw-kit.css */
+      :root {
+        --deck-cover: url('images/tminus15-workshops/t5-agentic-coding.jpg');
+        --deck-hero: url('images/tminus15-workshops/close-liftoff.jpg');
+      }
+
+      /* Agent loop: the return arrow under the flow */
+      .w5-loopback {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+        margin-top: -6px;
+        font-size: 22px;
+        color: var(--mist);
+      }
+
+      .w5-loopback .ic {
+        color: var(--lime);
+        font-size: 28px;
+      }
+    </style>
+  </head>
+  <body data-cta="none">
+    <div class="reveal">
+      <div class="slides">
+        <!-- 1 COVER -->
+        <section role="region" aria-label="Slide 1: Agentic coding">
+          <div class="cover-hero" role="img" aria-label="An astronaut at a workbench with floating holographic panels, three small robot crew members building alongside"></div>
+          <div class="cover-scrim" aria-hidden="true"></div>
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="cover-copy">
+            <p class="kicker">Technology workshop &middot; W-T5</p>
+            <h1>Agentic coding:<br /><em>people and agents</em></h1>
+            <p class="lead">A demo-led half day on building software with AI agents &mdash; with people firmly in charge.</p>
+          </div>
+          <aside class="notes">
+            <p>Welcome everyone. Introduce yourself and your experience shipping code with agents. Set the format: a short slide to frame each module, then most of the time in a live demo on a sample repo. Questions are welcome during the demos.</p>
+            <p>Set the ground rule early: everything we show today uses sample data only.</p>
+          </aside>
+        </section>
+
+        <!-- 2 AGENDA -->
+        <section class="tw" role="region" aria-label="Slide 2: Agenda">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Agenda</p>
+            <h2>Four hours, mostly live demo</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <ol class="tw-agenda">
+              <li><span class="t">09:00</span><b>Welcome &middot; 1 &middot; What agentic coding is</b></li>
+              <li><span class="t">09:25</span><b>2 &middot; Claude Code in practice, with demo</b></li>
+              <li><span class="t">10:10</span><b>3 &middot; Skills and specialist agents, with demo</b></li>
+              <li class="tw-break"><span class="t">10:50</span><b>Break</b></li>
+              <li><span class="t">11:05</span><b>4 &middot; Specs and prompts, with demo</b></li>
+              <li><span class="t">11:45</span><b>5 &middot; Tools and integration, with demo</b></li>
+              <li><span class="t">12:20</span><b>6 &middot; Quality and guardrails, with demo</b></li>
+              <li><span class="t">12:45</span><b>Recap and Q&amp;A</b></li>
+            </ol>
+          </div>
+          <aside class="notes">
+            <p>Walk through the shape of the morning. Each module is one framing slide, then a live demo on the same sample repo, so the demos build on each other: by the end one story has gone from spec to merged pull request.</p>
+            <p>Mention that if a demo misbehaves we keep going; that is part of working with agents.</p>
+          </aside>
+        </section>
+
+        <!-- 3 WHAT CHANGED + MODULE 1 -->
+        <section class="tw" role="region" aria-label="Slide 3: From autocomplete to agents">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Why it matters &middot; Module 1</p>
+            <h2>From autocomplete to agents</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-flow">
+              <div class="tw-node"><svg class="ic"><use href="icons.svg#i-target" /></svg><b>Goal</b><span>A task with clear acceptance criteria</span></div>
+              <div class="tw-arrow"></div>
+              <div class="tw-node"><svg class="ic"><use href="icons.svg#i-compass" /></svg><b>Plan</b><span>Read the code, propose an approach</span></div>
+              <div class="tw-arrow"></div>
+              <div class="tw-node"><svg class="ic"><use href="icons.svg#i-terminal" /></svg><b>Act</b><span>Use tools: edit files, run commands</span></div>
+              <div class="tw-arrow"></div>
+              <div class="tw-node"><svg class="ic"><use href="icons.svg#i-search" /></svg><b>Observe</b><span>Read test output, errors, diffs</span></div>
+              <div class="tw-arrow"></div>
+              <div class="tw-node tw-node-hot"><svg class="ic"><use href="icons.svg#i-users" /></svg><b>Human review</b><span>Approve, redirect or reject</span></div>
+            </div>
+            <p class="w5-loopback"><svg class="ic"><use href="icons.svg#i-refresh-cw" /></svg>Plan &rarr; act &rarr; observe repeats until the goal is met, or the agent stops and asks.</p>
+            <div class="tw-cols">
+              <div class="tw-callout"><svg class="ic"><use href="icons.svg#i-lightbulb" /></svg><p><strong>The shift:</strong> the unit of work moves from a line of code to a task. Agents shine where the goal is clear and the result can be checked: features with tests, refactoring, upgrades, explaining code.</p></div>
+              <div class="tw-callout tw-pitfall"><svg class="ic"><use href="icons.svg#i-alert-triangle" /></svg><p><strong>The catch:</strong> an agent can be confidently wrong, fast. Vague goals, no tests or regulated logic without human sign-off just produce rework.</p></div>
+            </div>
+          </div>
+          <aside class="notes">
+            <p>Most teams have used autocomplete and chat. Agents are different because they act: they read files, run commands and check their own work in a loop. Tests and builds are the agent&rsquo;s eyes, so a task it can&rsquo;t verify is a task it can&rsquo;t do well.</p>
+            <p>Point out the human review step: it is not optional. The agent proposes, people decide what ships. Ask the room who has already used an agent on a real codebase, and what surprised them.</p>
+          </aside>
+        </section>
+
+        <!-- 4 MODULE 2 · CLAUDE CODE IN PRACTICE -->
+        <section class="tw" role="region" aria-label="Slide 4: Claude Code in practice">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 2 &middot; Claude Code in practice</p>
+            <h2>Commands, project memory and permissions</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-cols" style="--cols: 3">
+              <div class="tw-card">
+                <span class="tw-tag">Everyday commands</span>
+                <ul class="tw-list">
+                  <li><code>claude</code> for a session, <code>claude -p</code> for scripts</li>
+                  <li><code>/init</code> drafts a CLAUDE.md</li>
+                  <li><code>/clear</code> for each new task, <code>/context</code> to see what is loaded</li>
+                  <li>Also in VS Code, JetBrains, the desktop app and the web</li>
+                </ul>
+              </div>
+              <div class="tw-card">
+                <span class="tw-tag">CLAUDE.md</span>
+                <ul class="tw-list">
+                  <li>The onboarding doc for agents, loaded every session</li>
+                  <li>Commands, architecture and rules</li>
+                  <li>Committed and reviewed like code</li>
+                  <li>Short and specific beats an essay</li>
+                </ul>
+              </div>
+              <div class="tw-card">
+                <span class="tw-tag">Permissions</span>
+                <ul class="tw-list">
+                  <li>Modes from <code>plan</code> (read only) to <code>acceptEdits</code></li>
+                  <li>Allow, ask and deny rules in <code>.claude/settings.json</code></li>
+                  <li><strong>deny</strong> wins; real isolation comes from containers or VMs</li>
+                </ul>
+              </div>
+            </div>
+            <div class="tw-callout"><svg class="ic"><use href="icons.svg#i-lightbulb" /></svg><p><strong>Habit:</strong> start in plan mode, read the plan, then switch to <code>acceptEdits</code> to execute. <kbd>Shift+Tab</kbd> cycles modes.</p></div>
+          </div>
+          <aside class="notes">
+            <p>Keep this slide short and show everything live in the next demo. The ideas &mdash; project memory, planning, permissions &mdash; apply to any coding agent; we use Claude Code because it is what we use day to day.</p>
+            <p>Permission mode names change between versions, so check claude --help on the demo machine beforehand. Plan mode is the single biggest quality lever: reviewing a plan takes a minute, reviewing a wrong implementation takes an hour.</p>
+          </aside>
+        </section>
+
+        <!-- 5 DEMO · INIT TO PLAN -->
+        <section class="tw tw-scene" style="--scene: url('images/scene-controlroom.jpg')" role="region" aria-label="Slide 5: Demo, from init to a planned change">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <span class="tw-demo-badge"><svg class="ic"><use href="icons.svg#i-play" /></svg>Live demo</span>
+            <h2>From /init to a planned change</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <ol class="tw-steps">
+              <li>Open the sample repo and run <code>/init</code><span class="tw-expect">A draft CLAUDE.md with commands and structure</span></li>
+              <li>Edit it: add rules such as tests required, no <code>.env</code> access, sample data only<span class="tw-expect">Short, specific, committed on a branch</span></li>
+              <li>Add allow and deny rules to <code>.claude/settings.json</code><span class="tw-expect">Safe commands run without prompts; <code>.env</code> reads are refused</span></li>
+              <li>Switch to plan mode and ask for a small feature<span class="tw-expect">A written plan, no files changed</span></li>
+              <li>Challenge one step of the plan, then approve it<span class="tw-expect">Agent adjusts the plan, then implements with tests</span></li>
+            </ol>
+          </div>
+          <aside class="notes">
+            <p>Keep the feature small, such as adding a filter to a list endpoint. The point is the workflow, not the feature. Deliberately push back on part of the plan to show that steering early is cheap.</p>
+            <p>Prep: a sample repo with a working test command, a ready-made settings.json to paste, and a recording or screenshots as a fallback in case the network misbehaves.</p>
+          </aside>
+        </section>
+
+        <!-- 6 MODULE 3 · BUILDING BLOCKS -->
+        <section class="tw" role="region" aria-label="Slide 6: Skills, subagents and plugins">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 3 &middot; Skills and specialist agents</p>
+            <h2>Skills, subagents and plugins</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <table class="tw-table">
+              <thead><tr><th></th><th>Skill</th><th>Subagent</th><th>Plugin</th></tr></thead>
+              <tbody>
+                <tr><th>What it is</th><td>Instructions and files for one kind of task</td><td>A specialist with its own prompt, tools and context</td><td>A bundle of skills, agents, hooks and MCP servers</td></tr>
+                <tr><th>Where it lives</th><td><code>.claude/skills/&lt;name&gt;/SKILL.md</code></td><td><code>.claude/agents/&lt;name&gt;.md</code></td><td>A marketplace or Git repo</td></tr>
+                <tr><th>How it runs</th><td>Loaded when relevant, or <code>/name</code></td><td>Delegated to; works in a separate context</td><td>Installed with <code>/plugin</code></td></tr>
+                <tr><th>Use it for</th><td>&ldquo;How we create a PR&rdquo;</td><td>&ldquo;A tester who reviews coverage&rdquo;</td><td>Sharing the lot across teams</td></tr>
+              </tbody>
+            </table>
+            <div class="tw-callout"><svg class="ic"><use href="icons.svg#i-lightbulb" /></svg><p><strong>Worked example:</strong> the T-Minus-15 plugin gives each lifecycle stage an agent &mdash; planner, prepper, designer, engineer, tester, operator &mdash; plus reviewers for architecture, performance and security.</p></div>
+          </div>
+          <aside class="notes">
+            <p>A simple way to remember it: a skill is a recipe, a subagent is a colleague, and a plugin is how you share both. Subagents also manage context: a big search runs in the subagent&rsquo;s context and only the summary comes back.</p>
+            <p>The lesson for the team: map agents to your process, not the other way round. Start with one or two, such as a story writer and a reviewer.</p>
+          </aside>
+        </section>
+
+        <!-- 7 DEMO · SKILL AND SPECIALIST -->
+        <section class="tw tw-scene" style="--scene: url('images/scene-team-studio.jpg')" role="region" aria-label="Slide 7: Demo, a skill and a specialist at work">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <span class="tw-demo-badge"><svg class="ic"><use href="icons.svg#i-play" /></svg>Live demo</span>
+            <h2>A skill and a specialist at work</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <ol class="tw-steps">
+              <li>Install the plugin with <code>/plugin</code> and list what it adds<span class="tw-expect">New skills and agents appear in <code>/agents</code> and the skill list</span></li>
+              <li>Create <code>.claude/skills/create-pr/SKILL.md</code> with the team&rsquo;s PR checklist<span class="tw-expect">The skill appears when you ask &ldquo;what skills do you have?&rdquo;</span></li>
+              <li>Ask for a user story for a small screen<span class="tw-expect">The <code>user-story</code> skill drafts a story with AMP criteria</span></li>
+              <li>Run the read-only reviewer agent on the branch<span class="tw-expect">Ranked findings with <code>file:line</code> references</span></li>
+            </ol>
+          </div>
+          <aside class="notes">
+            <p>Show how a skill is picked up from its description without naming it, then show it invoked explicitly with a slash command. The create-pr skill gets used again in the last demo.</p>
+            <p>When the reviewer reports findings, decide out loud which to accept. That human judgement is the point. Prep: install the plugin once beforehand so the download doesn&rsquo;t eat demo time.</p>
+          </aside>
+        </section>
+
+        <!-- 8 MODULE 4 · SPECS AND PROMPTS -->
+        <section class="tw" role="region" aria-label="Slide 8: Specs and prompts">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 4 &middot; Specs and prompts</p>
+            <h2>Agents build exactly what you ask for</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-cols tw-wide-left">
+              <div class="tw-code tw-code-sm">
+                <div class="tw-code-title">User story 1234 &middot; Filter orders by status</div>
+<pre><code><span class="k">Acceptance (A)</span>
+<span class="f">SCENARIO</span>: Filter the order list by status
+<span class="f">GIVEN</span> 20 sample orders, 5 with status <span class="s">"Shipped"</span>
+<span class="f">WHEN</span>  the user selects <span class="s">"Shipped"</span> in the status filter
+<span class="f">THEN</span>  exactly 5 orders are listed
+
+<span class="k">Measure (M)</span>
+- List updates within <span class="n">500 ms</span> for <span class="n">1,000</span> orders
+
+<span class="k">Proof (P)</span>
+- TC1: Playwright test <span class="s">orders-filter.spec.ts</span></code></pre>
+              </div>
+              <div class="tw-stack">
+                <h3><svg class="ic"><use href="icons.svg#i-target" /></svg>A prompt an agent can execute</h3>
+                <ul class="tw-list">
+                  <li><strong>Goal:</strong> the story and its AMP criteria</li>
+                  <li><strong>Context:</strong> files and patterns to follow</li>
+                  <li><strong>Constraints:</strong> what not to change</li>
+                  <li><strong>Done when:</strong> named tests pass, lint is clean</li>
+                </ul>
+                <div class="tw-callout"><svg class="ic"><use href="icons.svg#i-lightbulb" /></svg><p>One story per session. Plan first. Two failed corrections? <code>/clear</code> and sharpen the spec.</p></div>
+              </div>
+            </div>
+          </div>
+          <aside class="notes">
+            <p>Welcome back from the break. This is the highest-value skill of the day. AMP is the T-Minus-15 format for acceptance criteria: Acceptance in Gherkin the agent can turn into tests, Measure with numbers so &ldquo;fast&rdquo; isn&rsquo;t opinion, and Proof naming the tests that show it&rsquo;s done.</p>
+            <p>Where requirements are vague, the right move is not a better prompt but a better story. Every correction you make twice belongs in CLAUDE.md or a skill.</p>
+          </aside>
+        </section>
+
+        <!-- 9 DEMO · STORY TO TESTED CODE -->
+        <section class="tw tw-scene" style="--scene: url('images/scene-opsfloor.jpg')" role="region" aria-label="Slide 9: Demo, from story to tested code">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <span class="tw-demo-badge"><svg class="ic"><use href="icons.svg#i-play" /></svg>Live demo</span>
+            <h2>From story to tested code</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <ol class="tw-steps">
+              <li>Try a vague prompt in plan mode: &ldquo;Add filtering to the orders page and make it fast&rdquo;<span class="tw-expect">A plan full of guesses, with nothing to check it against</span></li>
+              <li><code>/clear</code>, then give story 1234 with its criteria, context and constraints<span class="tw-expect">A plan that names the files and the tests it will write</span></li>
+              <li>Ask for the failing tests first, and review them<span class="tw-expect">Tests fail for the right reason</span></li>
+              <li>Switch to <code>acceptEdits</code> and let it implement<span class="tw-expect">Tests pass; lint and typecheck clean</span></li>
+            </ol>
+          </div>
+          <aside class="notes">
+            <p>The contrast between the two prompts is the lesson, so let the room see the vague plan before clearing it. Ask them what is missing before you show the good prompt.</p>
+            <p>Prep: the story and the executable prompt saved in a text file to paste, and the repo&rsquo;s test command checked on the demo machine.</p>
+          </aside>
+        </section>
+
+        <!-- 10 MODULE 5 · TOOLS AND INTEGRATION -->
+        <section class="tw" role="region" aria-label="Slide 10: Tools and integration">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 5 &middot; Tools and integration</p>
+            <h2>MCP, hooks and headless mode</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-cols" style="--cols: 3">
+              <div class="tw-card">
+                <span class="tw-tag">MCP servers</span>
+                <ul class="tw-list">
+                  <li>An open standard for plugging in external tools</li>
+                  <li>Azure DevOps, GitHub, Playwright and more</li>
+                  <li>Shared with the team in <code>.mcp.json</code></li>
+                </ul>
+              </div>
+              <div class="tw-card">
+                <span class="tw-tag">Hooks</span>
+                <ul class="tw-list">
+                  <li>Shell commands on events such as <code>PreToolUse</code> and <code>PostToolUse</code></li>
+                  <li>Exit code <code>2</code> blocks the action</li>
+                  <li>Enforcement, where CLAUDE.md is guidance</li>
+                </ul>
+              </div>
+              <div class="tw-card">
+                <span class="tw-tag">Headless and CI</span>
+                <ul class="tw-list">
+                  <li><code>claude -p</code> as a pipeline step</li>
+                  <li>Strict allow list and a budget cap per run</li>
+                  <li>Advisory first: post findings, don&rsquo;t gate merges</li>
+                </ul>
+              </div>
+            </div>
+            <div class="tw-callout tw-pitfall"><svg class="ic"><use href="icons.svg#i-alert-triangle" /></svg><p>Each MCP server is code with your credentials, and anything the agent reads can carry prompt injection. Trusted servers only, least privilege.</p></div>
+          </div>
+          <aside class="notes">
+            <p>This module widens the agent&rsquo;s reach beyond the repo. If something must always happen, such as formatting or blocking pushes to main, make it a hook rather than an instruction.</p>
+            <p>For CI, start with agent review as advice to a human reviewer. Only consider gating on it once you trust its signal on your codebase. The CLI evolves quickly, so check flags against claude --help.</p>
+          </aside>
+        </section>
+
+        <!-- 11 DEMO · BROWSER AND HOOKS -->
+        <section class="tw tw-scene" style="--scene: url('images/scene-interchange.jpg')" role="region" aria-label="Slide 11: Demo, the agent drives a browser">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <span class="tw-demo-badge"><svg class="ic"><use href="icons.svg#i-play" /></svg>Live demo</span>
+            <h2>The agent drives a browser</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <ol class="tw-steps">
+              <li>Start the sample app locally<span class="tw-expect">The orders page on localhost</span></li>
+              <li>Ask the agent to use Playwright MCP to check story 1234&rsquo;s criteria<span class="tw-expect">It opens the page, filters, and reports what it sees</span></li>
+              <li>Ask it to turn the walkthrough into <code>orders-filter.spec.ts</code><span class="tw-expect">A Playwright test mapped to TC1</span></li>
+              <li>Edit a file and watch the formatting hook run<span class="tw-expect">Prettier runs after every edit, no prompt needed</span></li>
+              <li>Run a review headless with <code>claude -p</code> and a strict allow list<span class="tw-expect">Findings as JSON, as a pipeline step would produce</span></li>
+            </ol>
+          </div>
+          <aside class="notes">
+            <p>This is often the moment the room gets it: the agent can see the running app, not just the code. Point out that the test it writes is ordinary Playwright code, reviewed and committed like any other.</p>
+            <p>Prep: the Playwright MCP server and the formatting hook configured beforehand, and the app already running in a second terminal.</p>
+          </aside>
+        </section>
+
+        <!-- 12 MODULE 6 · QUALITY AND GUARDRAILS -->
+        <section class="tw" role="region" aria-label="Slide 12: Quality and guardrails">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Module 6 &middot; Quality and guardrails</p>
+            <h2>Every change, the same path</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-flow">
+              <div class="tw-node"><svg class="ic"><use href="icons.svg#i-file-text" /></svg><b>Story</b><span>AMP criteria</span></div>
+              <div class="tw-arrow"></div>
+              <div class="tw-node"><svg class="ic"><use href="icons.svg#i-git-branch" /></svg><b>Branch</b><span>Agent builds with tests</span></div>
+              <div class="tw-arrow"></div>
+              <div class="tw-node"><svg class="ic"><use href="icons.svg#i-bot" /></svg><b>Agent review</b><span>Reviewer and security checks</span></div>
+              <div class="tw-arrow"></div>
+              <div class="tw-node"><svg class="ic"><use href="icons.svg#i-check" /></svg><b>CI</b><span>Build, tests, scans</span></div>
+              <div class="tw-arrow"></div>
+              <div class="tw-node tw-node-hot"><svg class="ic"><use href="icons.svg#i-users" /></svg><b>Human review</b><span>Approves the PR</span></div>
+              <div class="tw-arrow"></div>
+              <div class="tw-node"><svg class="ic"><use href="icons.svg#i-git-pull-request" /></svg><b>Merge</b><span>Branch policy enforced</span></div>
+            </div>
+            <div class="tw-cols" style="--cols: 3">
+              <div class="tw-card"><span class="tw-tag">Guardrails</span><ul class="tw-list"><li>Deny rules and hooks for secrets and risky commands</li><li>Least-privilege tools and MCP servers</li><li>Budget caps in CI</li></ul></div>
+              <div class="tw-card"><span class="tw-tag">Governance</span><ul class="tw-list"><li>Sample data only unless approved</li><li>Agreed data-use terms and a short AI use policy</li><li>A named human accountable for every merge</li></ul></div>
+              <div class="tw-callout tw-pitfall"><svg class="ic"><use href="icons.svg#i-alert-triangle" /></svg><p><strong>Watch the tests:</strong> an agent may &ldquo;fix&rdquo; a failing test by weakening it. Review test changes as closely as code.</p></div>
+            </div>
+          </div>
+          <aside class="notes">
+            <p>The principle is simple: no special treatment. Agent-authored changes go through the same branch policies, required reviewers and CI as human code, and meet the same Definition of Done.</p>
+            <p>For regulated organisations, governance is what unlocks adoption. Check provider terms and your information governance team&rsquo;s requirements; this is a starting checklist, not legal advice.</p>
+          </aside>
+        </section>
+
+        <!-- 13 DEMO · REVIEW, PR AND MERGE -->
+        <section class="tw tw-scene" style="--scene: url('images/scene-serverhall.jpg')" role="region" aria-label="Slide 13: Demo, review, pull request and merge">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <span class="tw-demo-badge"><svg class="ic"><use href="icons.svg#i-play" /></svg>Live demo</span>
+            <h2>Review, pull request and merge</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <ol class="tw-steps">
+              <li>Ask the agent to push straight to <code>main</code><span class="tw-expect">A <code>PreToolUse</code> hook blocks it and says why</span></li>
+              <li>Run the reviewer agent on the story 1234 branch<span class="tw-expect">Findings ranked by severity; fix or justify each one</span></li>
+              <li>Check the diff for test changes the story didn&rsquo;t ask for<span class="tw-expect">No weakened tests, no unrequested changes</span></li>
+              <li>Ask the agent to open the PR using the <code>create-pr</code> skill<span class="tw-expect">A PR with what, why and how tested</span></li>
+              <li>A second person reviews, approves and merges<span class="tw-expect">A merged PR, approved by a human who didn&rsquo;t write it</span></li>
+            </ol>
+          </div>
+          <aside class="notes">
+            <p>This closes the loop: the story from Module 4 ends as a merged pull request through the same path as any human change. Make the human approval visible; it is the step that makes agent work trustworthy.</p>
+            <p>Prep: the blocking hook script in place, a branch policy on main in the demo repo, and a second person or account ready to approve.</p>
+          </aside>
+        </section>
+
+        <!-- 14 RECAP -->
+        <section class="tw" role="region" aria-label="Slide 14: Recap and next steps">
+          <img class="logo-light" src="images/logo.png" alt="KnowAll.ai" />
+          <div class="tw-head">
+            <p class="kicker">Recap</p>
+            <h2>Flight rules, and where next</h2>
+          </div>
+          <div class="tw-body" data-fit>
+            <div class="tw-cols">
+              <div class="tw-card">
+                <span class="tw-tag">Flight rules</span>
+                <ul class="tw-list">
+                  <li><strong>People are accountable</strong> &mdash; a human approves every merge</li>
+                  <li><strong>Spec before code</strong> &mdash; AMP criteria, then plan mode</li>
+                  <li><strong>Tests are the agent&rsquo;s eyes</strong> &mdash; no tests, no agent</li>
+                  <li><strong>Memory as code</strong> &mdash; CLAUDE.md, skills and settings in Git</li>
+                  <li><strong>Enforce with hooks</strong>, least privilege everywhere</li>
+                  <li><strong>Small stories</strong>, sample data only</li>
+                </ul>
+              </div>
+              <div class="tw-card">
+                <span class="tw-tag">Optional deep dives</span>
+                <ul class="tw-list">
+                  <li>Building a skill and agent library for your team</li>
+                  <li>MCP for Azure DevOps and internal systems</li>
+                  <li>Agents in CI/CD: review, triage and release notes</li>
+                  <li>Governance and an AI use policy for engineering</li>
+                </ul>
+              </div>
+            </div>
+            <div class="tw-callout"><svg class="ic"><use href="icons.svg#i-scroll-text" /></svg><p>Related workshops: <strong>W-T1 Azure DevOps</strong> for the backlog and boards agents work from, and <strong>W-T4 CI/CD</strong> for the pipelines they run in.</p></div>
+          </div>
+          <aside class="notes">
+            <p>Each flight rule maps back to a module and a demo, so walk through them as the recap. Suggest the team agrees them as a standard.</p>
+            <p>Ask each person for one thing they will try next week. The most common good answer is &ldquo;write a CLAUDE.md for our main repo&rdquo;. Offer the deep dives as follow-ups on their own repositories.</p>
+          </aside>
+        </section>
+
+        <!-- 15 CTA -->
+        <!-- @include cta {
+          "label": "Slide 15 of 15: Questions",
+          "className": "cta--full-art",
+          "heading": "Questions?",
+          "pitch": "Deep dives are available on any topic &mdash; on your own repositories, with your own team.",
+          "button": {
+            "text": "Book a deep dive",
+            "icon": "send",
+            "ariaLabel": "Book a deep dive: email KnowAll AI"
+          },
+          "mailSubject": "Agentic coding deep dive",
+          "buttonOnlySubject": true,
+          "notes": "<p>Open the floor. Common questions: cost per developer, which model to use, licensing and data terms, and how to start without disrupting delivery. A good first step is one team, one repo, one month, with the flight rules in place. Share the deck and the demo repo afterwards so people can repeat the demos.</p>"
+        } -->
+      </div>
+    </div>
+
+    <script src="tw-kit.js"></script>
+    <script src="vendor/reveal/reveal.js"></script>
+    <script src="knowall-deck.js"></script>
+  </body>
+</html>
